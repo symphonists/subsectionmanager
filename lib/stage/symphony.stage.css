@@ -1,0 +1,184 @@
+/**
+ * STAGE for Symphony
+ *
+ * @author Nils Hörrmann, http://www.nilshoerrmann.de
+ */
+
+div.stage {
+	margin: -1.75em 0 1.75em;
+}
+
+div.stage ul {
+	border-top: 1px solid #c2c2c2;
+	border-bottom: 1px solid #c2c2c2;
+	list-style: none;
+	margin: 0;
+	overflow: hidden;
+	-webkit-border-top-left-radius: 1px;
+	-webkit-border-top-right-radius: 1px;
+	-moz-border-radius-topleft: 1px;
+	-moz-border-radius-topright: 1px;
+}
+
+div.stage ul li {
+	position: relative;
+	background: #e6e6e5;
+	border-top: 1px solid transparent;
+	border-bottom: 1px solid #f3f3f3;
+	border-left: 1px solid #d3d3d3;
+	border-right: 1px solid #d3d3d3;
+	height: 30px;
+	color: #3f3d35;
+}
+
+div.stage ul li.active {
+/*	border-top: 1px solid #f3f3f3;
+	background: #d3d3d3;
+	-moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+	-webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+	z-index: 1000;*/
+}
+
+
+
+div.stage.ordering li {
+	background: #d0cfc9;
+	border-bottom: 1px solid #deddd9;
+	border-left: 1px solid #b5b4af;
+	border-right: 1px solid #b5b4af;
+}
+
+div.stage li.ordering {
+	background: #e6e6e5;
+	border-top: 1px solid #fff;
+	border-bottom: 1px solid #fff;
+	border-left: 1px solid #b5b4af;
+	border-right: 1px solid #b5b4af;
+	-moz-box-shadow: 0 0 4px rgba(46, 45, 40, 0.4);
+	-webkit-box-shadow: 0 0 4px rgba(46, 45, 40, 0.4);
+	cursor: move;
+	z-index: 1000;
+}
+
+
+
+
+div.stage a.destructor {
+	position: absolute;
+	top: 7px;
+	right: 14px;
+	text-decoration: none;
+	color: #353533;
+	height: 16px;
+	width: 16px;
+	line-height: 1.5;
+	background: #d3d3d2 url(images/delete.png) center no-repeat;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	text-align: center;
+	overflow: hidden;
+	text-indent: -1000em;
+}
+
+div.stage a.destructor:hover {
+	background-color: #a59e9e;
+}
+
+div.stage ul li span {
+	display: block;
+	padding: 7px 14px;
+}
+
+div.stage ul li.template {
+	display: none;
+}
+
+div.stage ul li.drawer {
+	padding: 0;
+	background: #353533;
+	border-bottom: 1px solid #353533;
+	border-left: 1px solid #353533;
+	border-right: 1px solid #353533;
+}
+
+div.stage div.queue {
+	background: #f5f5f3;
+	border: 1px solid #e4e4de;
+	padding: 5px 0 0;
+	-webkit-border-bottom-left-radius: 2px;
+	-webkit-border-bottom-right-radius: 2px;
+	-moz-border-radius-bottomleft: 2px;
+	-moz-border-radius-bottomright: 2px;
+}
+
+div.stage div.queue input {
+	padding: 2px 5px;
+	margin: 0 0 5px 12px;
+	width: 60%;
+	height: 20px;
+
+	border: 1px solid #C2C2C2;
+	-moz-border-radius: 10px;
+	-moz-box-shadow: inset 1px 1px 2px rgba(69, 69, 69, 0.2);
+	-moz-box-sizing: border-box;
+	font-size: 1em;
+}
+
+
+
+div.stage div.queue button.create {
+	float: right;
+	margin: 0 12px 0 0;
+	border: 1px solid #e4e4e2;
+	background-color: #ebebe9;
+	color: #353533;
+	cursor: pointer;
+	padding: 0 10px 0 10px;
+	line-height: 1;
+	font-size: 0.95em;
+	height: 19px;
+	border-radius: 1em;
+	-moz-border-radius: 1em;
+	-webkit-border-radius: 1em;
+}
+
+div.stage li a.create {
+	background-color: transparent !important;
+}
+
+
+div.stage div.queue button:hover {
+	color: #fff;
+	background: #81b934;
+	border: 1px solid #81b934;
+}
+
+div.stage div.queue ul {
+	border-top: 1px solid #e6e6e5;
+	border-bottom: none;
+	margin: 0 0 5px;
+	max-height: 270px;
+	overflow: auto;
+}
+
+div.stage div.queue li {
+	border-left: none;
+	border-right: none;
+	background: #fff;
+	border-bottom: 1px solid #e6e6e5;
+	cursor: pointer;
+}
+
+div.stage div.queue li.odd {
+	background: #f5f5f4;
+}
+
+div.stage div.queue li.selected {
+	color: #fff;
+	background: #5677c3;
+	border-bottom: 1px solid #617dc5;
+}
+
+div.stage div.queue li.odd.selected {
+	background: #5273c0;
+}

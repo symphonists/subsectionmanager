@@ -1,0 +1,47 @@
+/*
+ * SUBSECTION for Symphony
+ *
+ * @author: Nils Hörrmann, post@nilshoerrmann.de
+ * @source: http://github.com/nilshoerrmann/stage
+ */
+
+
+div.field-subsectionmanager select {
+	display: none;
+}
+
+div.stage.preview li {
+	height: 52px;
+	padding: 0 0 0 52px;
+}
+
+div.queue li.message, div.stage li.empty {
+	padding: 0 !important;
+	height: 32px;
+}
+
+div.stage.preview img {
+	position: absolute;
+	border: 1px solid #ccc;
+	top: 5px;
+	left: 12px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+}
+
+div.stage li.drawer iframe {
+	width: 100%;
+}
+
+div.stage li em {
+	font-style: normal;
+	color: #908e88;
+}
+
+div.stage div.queue li.selected em {
+	color: #aabbee;
+}
+
+div.stage div.queue li.selected img {
+	border-color: #335e9e;
+}

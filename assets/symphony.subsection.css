@@ -1,0 +1,63 @@
+/*
+ * SUBSECTION for Symphony CMS
+ *
+ * @author: Nils Hörrmann, post@nilshoerrmann.de
+ * @source: http://github.com/nilshoerrmann/mediathek
+ */
+
+body.subsection {
+	background: #353533;
+	overflow: hidden;
+	border: none;
+	padding: 10px;
+}
+
+body.subsection form {
+/*	width: 100%;*/
+	margin: 0;
+	padding: 0;
+	position: relative;
+	top: 0;
+	bottom: 0;
+	border: none;
+}
+
+body.subsection form fieldset {
+	float: none !important;
+	width: 100% !important;
+	border: 1px solid transpareant;
+	border-bottom: 1px solid #F5F5F4 !important;
+	margin: 1em 0;
+	padding: 0;
+}
+
+body.subsection fieldset input {
+	width: 100%;
+}
+
+body.subsection form input.button {
+	width: auto;
+}
+
+body.subsection form label span {
+	border: 1px solid #b4b5a3;
+	background: #F5F5F4;
+}
+
+body.subsection form .actions {
+	border: none;
+	padding: 0;
+	margin: 0;
+	height: 4em;
+}
+
+body.subsection #notice {
+	display: none;
+}
+
+body.subsection #notice.success, body.subsection #notice.error {
+	display: block;
+	margin: 1em 0 0 0 !important;
+	padding: 0.2em 1em !important;
+	border-bottom: none !important;
+}
