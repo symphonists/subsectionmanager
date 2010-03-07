@@ -17,7 +17,7 @@
 		
 		function generate($items, $subsection_field, $subsection_id, $full=false) {
 		
-			if($items == null) $items = array();
+			if(!is_array($items)) $items = array($items);
 			$this->_Items = $items;
 		
 			// Fetch subsection meta data
