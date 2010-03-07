@@ -1,0 +1,3 @@
+[submodule "lib/stage"]
+	path = lib/stage
+	url = http://github.com/nilshoerrmann/stage.git
