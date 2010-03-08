@@ -321,8 +321,8 @@
 			$stage->appendChild($selected);
 			
 			// Append item template
-			$thumb = '<img src="' . URL . '/image/2/40/40/5/placeholder.gif" width="40" height="40" class="thumb" />';
-			$item = new XMLElement('li', $thumb . '<span>' . $this->get('caption') . '</span>', array('class' => 'item template'));
+			$thumb = '<img src="' . URL . '/extensions/subsectionmanager/assets/images/new.gif" width="40" height="40" class="thumb" />';
+			$item = new XMLElement('li', $thumb . '<span>' . __('New item') . '<br /><em>' . __('Please fill out the form below.') . '</em></span><a class="destructor">' . __('Remove Item') . '</a>', array('class' => 'item template'));
 			$selected->appendChild($item);
 			
 			// Append drawer template

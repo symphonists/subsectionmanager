@@ -4,6 +4,7 @@
  * @author: Nils Hörrmann, post@nilshoerrmann.de
  * @source: http://github.com/nilshoerrmann/mediathek
  */
+ 
 body.subsection {
 	background: #353533;
 	border: none;
@@ -57,10 +58,6 @@ body.subsection form .actions {
 	height: 4em;
 }
 
-/*body.subsection #notice {
-	display: none;
-}*/
-
 body.subsection #notice {
 	display: block;
 	margin: 0 -12px !important;
@@ -69,4 +66,8 @@ body.subsection #notice {
 	border-bottom: 1px solid #616057 !important;
 	background: #504f49 !important;
 	color: #fff !important;
+}
+
+body.subsection form input[type="file"] {
+	color: #fff;
 }
