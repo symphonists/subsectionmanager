@@ -45,3 +45,25 @@ div.stage div.queue li.selected em {
 div.stage div.queue li.selected img {
 	border-color: #335e9e;
 }
+
+div.stage ul.selection span {
+	cursor: pointer;
+}
+
+div.stage li.active {
+	background: #d3d3d3;
+	border-bottom: 1px solid #deddd9;
+	border-left: 1px solid #b5b4af;
+	border-right: 1px solid #b5b4af;
+	border-top: 1px solid #c2c2c2;
+	-moz-box-shadow: 0 0 4px rgba(46, 45, 40, 0.3);
+	-webkit-box-shadow: 0 0 4px rgba(46, 45, 40, 0.3);
+}
+
+div.stage ul li.drawer {
+	-moz-box-shadow: 0 0 4px rgba(46, 45, 40, 0.3);
+	-webkit-box-shadow: 0 0 4px rgba(46, 45, 40, 0.3);
+	z-index: 1000;
+	overflow: hidden;
+	background: #353533 url(images/loading-dark.gif) center no-repeat;
+}

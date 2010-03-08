@@ -15,7 +15,7 @@
 			$this->_Parent = $parent;
 		}
 		
-		function generate($items, $subsection_field, $subsection_id, $full=false) {
+		function generate($items, $subsection_field, $subsection_id, $entry_id=NULL, $full=false) {
 		
 			if(!is_array($items)) $items = array($items);
 			$this->_Items = $items;
@@ -32,7 +32,7 @@
 			$sectionManager = new SectionManager($this->_Parent);
 		  	$subsection = $sectionManager->fetch($subsection_id, 'ASC', 'name');
 		  	$fields = $subsection->fetchFields();
-		  	$entries = $this->__filterEntries($subsection_id, $fields, $meta[0]['filter_tags']);
+		  	$entries = $this->__filterEntries($subsection_id, $fields, $meta[0]['filter_tags'], $entry_id);
 		  	
 		  	// Layout subsection data
 		  	$data = $this->__layoutSubsection($entries, $fields, $meta[0]['caption'], $full);
@@ -40,7 +40,7 @@
 		  	
 		}
 		
-		function __filterEntries($subsection_id, $fields, $filter) {
+		function __filterEntries($subsection_id, $fields, $filter, $entry_id) {
 		
 		  	// Fetch taglist, select and upload fields
 		  	$tag_fields = array();
@@ -52,7 +52,7 @@
 
 			// Fetch entry data
 			$entryManager = new EntryManager($this->_Parent);
-			$entries = $entryManager->fetch(NULL, $subsection_id);
+			$entries = $entryManager->fetch($entry_id, $subsection_id);
 
 			// Setup filter
 			$gogoes = array();

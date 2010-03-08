@@ -274,7 +274,7 @@
 
 			// Get Subsection
 			$subsection = new SubsectionManager($this->_Parent);
-			$content = $subsection->generate($data['relation_id'], $this->get('id'), $this->get('subsection_id'));
+			$content = $subsection->generate($data['relation_id'], $this->get('id'), $this->get('subsection_id'), NULL, false);
 
 			// Prepare select options
 			$options = $content['options'];
@@ -326,7 +326,13 @@
 			$selected->appendChild($item);
 			
 			// Append drawer template
-			$create_new = URL . '/symphony/publish/' . $section->_data['handle'] . '/new/';
+			$subsection_handle = Administration::instance()->Database->fetchVar('handle', 0,
+				"SELECT `handle`
+				FROM `tbl_sections`
+				WHERE `id` = '" . $this->get('subsection_id') . "'
+				LIMIT 1"
+			);
+			$create_new = URL . '/symphony/publish/' . $subsection_handle . '/{$action}/{$id}';
 			$item = new XMLElement('li', '<iframe name="subsection-' . $this->get('element_name') . '" src="' . $create_new . '"  frameborder="0"></iframe>', array('class' => 'drawer template'));
 			$selected->appendChild($item);
 

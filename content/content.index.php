@@ -14,7 +14,7 @@
 
 		public function __viewIndex() {
 			$subsection = new SubsectionManager($this->_Parent);
-			$content = $subsection->generate(null, $_GET['id'], $_GET['section'], true);
+			$content = $subsection->generate(null, intval($_GET['id']), intval($_GET['section']), (intval($_GET['entry']) ? intval($_GET['entry']) : NULL), true);
 			echo $content['html'];
 			exit;
 		}
