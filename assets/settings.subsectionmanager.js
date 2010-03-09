@@ -1,69 +1,74 @@
 /*
- * SUBSECTION MANAGER for Symphony CMS
+ * SUBSECTIONMANAGER for Symphony
  *
  * @author: Nils Hörrmann, post@nilshoerrmann.de
  * @source: http://github.com/nilshoerrmann/mediathek
  */
+	
 
-(function($) {
+/*-----------------------------------------------------------------------------
+	Settings
+-----------------------------------------------------------------------------*/
 
-	// on page load
-	$(function() {
-		$('select.mediathek').each(function() {
-			fieldToggle(this);
-		});		
-		$('select.mediathek').live('change', function() {
-			fieldToggle(this);
+	jQuery(document).ready(function() {
+	
+		// Subsection setup on change
+		jQuery('select.subsectionmanager').live('change', function(event) {
+		
+			var select = jQuery(event.target);
+			var id = select.val();
+			var subsectionmanager = select.parents('li').filter('li');
+			var groups = subsectionmanager.find('select.datasource optgroup');
+			var filter = subsectionmanager.find('ul.negation.section' + id);
+	
+			// Reset subsectionmanager height
+			subsectionmanager.css('height', 'auto');
+	
+			// Show and hide filter and filter suggestions
+			if(filter.length > 0) {
+				subsectionmanager.find('label.filter').show();
+				subsectionmanager.find('ul.negation').hide();
+				filter.show();
+			}
+			else {
+				subsectionmanager.find('label.filter').hide();
+				subsectionmanager.find('ul.negation').hide();
+			}
+	
+			// Show and hide caption suggestions
+			subsectionmanager.find('ul.inline').hide().filter('.section' + id).show();
+	
+			// Show and hide data source sections
+			if(groups.length > 0) {
+				groups.each(function() {
+					subsectionmanager.data(this.label, jQuery(this).children());
+				});
+				groups.remove();
+			}
+			subsectionmanager.find('select.datasource option').remove();
+			if(subsectionmanager.data(id)) {
+				subsectionmanager.find('select.datasource').length = subsectionmanager.data(id).length;
+				subsectionmanager.data(id).appendTo(subsectionmanager.find('select.datasource'));
+			}
 		});
-		$('div.controls a').click(function() {
-			fieldToggle($('select.mediathek:last'));
+		
+		// Subsection setup on start up
+		jQuery('select.subsectionmanager').each(function() {
+			jQuery(this).trigger('change');
+		});	
+
+		// Subsection setup on click			
+		jQuery('div.controls a').click(function() {
+			jQuery('select.subsectionmanager:last').trigger('change');
 		});
+		
 	});
 
-	// show and hide suggestion lists
-	function fieldToggle(select) {
-		var $select = $(select),
-			id = $select.val(),
-			mediathek = $select.parents('li').filter('li'),
-			groups = mediathek.find('select.datasource optgroup'),
-			filter = mediathek.find('ul.negation.section' + id);
-
-		// reset mediathek height
-		mediathek.css('height', 'auto');
-
-		// show and hide filter and filter suggestions
-		if(filter.length > 0) {
-			mediathek.find('label.filter').show();
-			mediathek.find('ul.negation').hide();
-			filter.show();
-		}
-		else {
-			mediathek.find('label.filter').hide();
-			mediathek.find('ul.negation').hide();
-		}
-
-		// show and hide caption suggestions
-		mediathek.find('ul.inline').hide().filter('.section' + id).show();
-
-		// show and hide data source sections
-		if(groups.length > 0) {
-			groups.each(function() {
-				mediathek.data(this.label, $(this).children());
-			});
-			groups.remove();
-		}
-		mediathek.find('select.datasource option').remove();
-		if(mediathek.data(id)) {
-			mediathek.find('select.datasource').length = mediathek.data(id).length;
-			mediathek.data(id).appendTo(mediathek.find('select.datasource'));
-		}
-	}
-
-	// add negation signs for all suggestions while alt key is pressed
-    $(window).keydown(function(event) {
+	// Add negation signs for all suggestions while alt key is pressed
+    jQuery(window).keydown(function(event) {
 		if(event.altKey) {
-			$('ul.mediathek.negation li').each(function() {
-				var tag = $(this);
+			jQuery('ul.subsectionmanager.negation li').each(function() {
+				var tag = jQuery(this);
 				if(tag.text().substr(0, 1) != '-') {
 					tag.html('-' + tag.text());
 				}
@@ -71,14 +76,12 @@
 		}
     });
 
-	// remove negation signs for all suggestions on keyup
-	$(window).keyup(function(event) {
-		$('ul.mediathek li').each(function() {
-			var tag = $(this);
+	// Remove negation signs for all suggestions on keyup
+	jQuery(window).keyup(function(event) {
+		jQuery('ul.subsectionmanager li').each(function() {
+			var tag = jQuery(this);
 			if(tag.text().substr(0, 1) == '-') {
 				tag.html(tag.text().substr(1));
 			}
 		});
 	});
-
-})(jQuery.noConflict());
