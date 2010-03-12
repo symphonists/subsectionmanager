@@ -12,7 +12,7 @@ div.field-subsectionmanager select {
 
 div.stage.preview li {
 	height: 52px;
-	padding: 0 0 0 52px;
+	padding-left: 52px;
 }
 
 div.queue li.message, div.stage li.empty {
@@ -48,16 +48,6 @@ div.stage div.queue li.selected img {
 
 div.stage ul.selection span {
 	cursor: pointer;
-}
-
-div.stage li.active {
-	background: #d3d3d3;
-	border-bottom: 1px solid #deddd9;
-	border-left: 1px solid #b5b4af;
-	border-right: 1px solid #b5b4af;
-	border-top: 1px solid #c2c2c2;
-	-moz-box-shadow: 0 0 4px rgba(46, 45, 40, 0.3);
-	-webkit-box-shadow: 0 0 4px rgba(46, 45, 40, 0.3);
 }
 
 div.stage ul li.drawer {

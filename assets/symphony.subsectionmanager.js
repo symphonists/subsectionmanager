@@ -264,11 +264,8 @@
 					// Attach events
 					object.subsection.open();
 					object.find('.create').click(create);
-					object.find('div.stage').bind('orderstop', function(event) {
-						event.preventDefault();
-						event.stopPropagation();
-						object.subsection.getSortOrder();
-					});
+					object.find('div.stage').bind('orderstop', object.subsection.getSortOrder);
+					object.find('div.stage').bind('orderstart', object.subsection.close);
 					
 					// Autoattach events for new items
 					object.find('div.stage').bind('constructEnd', object.subsection.open);		
@@ -283,6 +280,24 @@
 						edit(item);
 					});
 				
+				},
+				
+				close: function() {
+								
+					// Handle drawers
+					var active = object.find('ul.selection li.active');
+					if(active.size() > 0) {	
+								
+						// Remove active state
+						active.removeClass('active');
+						
+						// Close all drawers
+						object.find('li.drawer:not(.template)').slideUp(settings.speed, function() {
+							jQuery(this).remove();
+						});
+						
+					}
+					
 				},
 				
 				getSortOrder: function() {
