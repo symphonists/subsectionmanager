@@ -242,12 +242,15 @@
 					var meta = object.find('input[name*=subsection_id]');
 					var id = meta.attr('name').match(/\[subsection_id\]\[(.*)\]/)[1];
 					var section = meta.val();
+					
+					// Set sortorder
+					object.subsection.setSortOrder();
 				
 					// Initialize stage for subsections
 					jQuery(document).ready(function() {
 						object.find('div.stage').symphonyStage({
 							source: object.find('select'),
-							orderable: false,
+							orderable: true,
 							queue_ajax: {
 								url: Symphony.WEBSITE + '/symphony/extension/subsectionmanager',
 								data: { 
@@ -261,6 +264,11 @@
 					// Attach events
 					object.subsection.open();
 					object.find('.create').click(create);
+					object.find('div.stage').bind('orderstop', function(event) {
+						event.preventDefault();
+						event.stopPropagation();
+						object.subsection.getSortOrder();
+					});
 					
 					// Autoattach events for new items
 					object.find('div.stage').bind('constructEnd', object.subsection.open);		
@@ -275,6 +283,35 @@
 						edit(item);
 					});
 				
+				},
+				
+				getSortOrder: function() {
+								
+					// Get new item order
+					var sorting = '';
+					object.find(settings.items).each(function(index, item) {
+						value = jQuery(item).attr('value');
+						if(value == undefined) continue;
+						
+						if(index != 0) sorting += ',';
+						sorting += value;
+					});
+					
+					// Save sortorder				
+					object.find('input[name*=sort_order]').val(sorting);
+
+				},
+				
+				setSortOrder: function() {
+					var sorting = object.find('input[name*=sort_order]').val().split(',').reverse();
+					var items = object.find(settings.items);
+					var selection = object.find('ul.selection');
+
+					// Sort
+					jQuery.each(sorting, function(index, value) {
+						items.filter('[value=' + value + ']').prependTo(selection);
+					});
+					
 				}
 				
 			}
