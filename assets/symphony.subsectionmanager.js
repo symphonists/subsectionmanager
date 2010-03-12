@@ -275,7 +275,7 @@
 				open: function() {
 
 					// Attach edit event
-					object.find(settings.items).find('span').click(function(event) {
+					object.find(settings.items).find('span:not(.handle)').click(function(event) {
 						var item = jQuery(event.target).parent('li');
 						edit(item);
 					});
