@@ -46,7 +46,7 @@ div.stage div.queue li.selected img {
 	border-color: #335e9e;
 }
 
-div.stage ul.selection span {
+div.stage ul.selection {
 	cursor: pointer;
 }
 

@@ -250,7 +250,10 @@
 					jQuery(document).ready(function() {
 						object.find('div.stage').symphonyStage({
 							source: object.find('select'),
-							orderable: true,
+							draggable: true,
+							dragclick: function(item) {
+								edit(item);
+							},
 							queue_ajax: {
 								url: Symphony.WEBSITE + '/symphony/extension/subsectionmanager',
 								data: { 
@@ -262,25 +265,12 @@
 					});
 
 					// Attach events
-					object.subsection.open();
 					object.find('.create').click(create);
-					object.find('div.stage').bind('orderstop', object.subsection.getSortOrder);
-					object.find('div.stage').bind('orderstart', object.subsection.close);
-					
-					// Autoattach events for new items
-					object.find('div.stage').bind('constructEnd', object.subsection.open);		
+					object.find('div.stage').bind('dragstop', object.subsection.getSortOrder);
+					object.find('div.stage').bind('dragstart', object.subsection.close);
 
 				},
-				
-				open: function() {
 
-					// Attach edit event
-					object.find(settings.items).find('span:not(.handle)').click(function(event) {
-						var item = jQuery(event.target).parent('li');
-						edit(item);
-					});
-				
-				},
 				
 				close: function() {
 								
@@ -306,10 +296,10 @@
 					var sorting = '';
 					object.find(settings.items).each(function(index, item) {
 						value = jQuery(item).attr('value');
-						if(value == undefined) continue;
-						
-						if(index != 0) sorting += ',';
-						sorting += value;
+						if(value != undefined) {
+							if(index != 0) sorting += ',';
+							sorting += value;
+						}
 					});
 					
 					// Save sortorder				

@@ -267,6 +267,7 @@
 
 		function displayPublishPanel(&$wrapper, $data=NULL, $flagWithError=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL) {
 
+			$this->_engine->Page->addScriptToHead(URL . '/extensions/subsectionmanager/lib/draggable/symphony.draggable.js', 101, false);
 			$this->_engine->Page->addScriptToHead(URL . '/extensions/subsectionmanager/lib/stage/symphony.stage.js', 101, false);
 			$this->_engine->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/lib/stage/symphony.stage.css', 'screen', 103, false);
 			$this->_engine->Page->addScriptToHead(URL . '/extensions/subsectionmanager/assets/symphony.subsectionmanager.js', 102, false);
