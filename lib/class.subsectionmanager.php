@@ -111,9 +111,9 @@
 		
 			// Templates
 			$templates = array(
-				'text' => '<li value="{$value}"><span class="handle"></span><span>{$caption}</span></li>',
-				'image' => '<li value="{$value}" class="image preview"><span class="handle"></span><img class="handle" src="' . URL . '/image/2/40/40/5{$preview}" width="40" height="40" /><span>{$caption}</span></li>',
-				'file' => '<li value="{$value}" class="file preview"><span class="handle"></span><strong>{$type}</strong><span>{$caption}</span></li>'
+				'text' => '<li value="{$value}"><span>{$caption}</span></li>',
+				'image' => '<li value="{$value}" class="image preview"><img src="' . URL . '/image/2/40/40/5{$preview}" width="40" height="40" /><span>{$caption}</span></li>',
+				'file' => '<li value="{$value}" class="file preview"><strong>{$type}</strong><span>{$caption}</span></li>'
 			);
 			
 			if(is_array($entries)) {
