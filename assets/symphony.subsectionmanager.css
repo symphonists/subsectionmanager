@@ -10,7 +10,11 @@ div.field-subsectionmanager select {
 	display: none;
 }
 
-div.stage.preview li, div.draghelper, div.stage.preview ul.dragging li:hover {
+div.stage li, div.draghelper {
+	padding-left: 0;
+}
+
+div.stage li.preview, div.draghelper.preview, div.stage ul.dragging li.preview:hover {
 	height: 52px;
 	padding-left: 52px;
 }
@@ -29,6 +33,21 @@ div.stage.preview img, div.draghelper img {
 	-moz-border-radius: 2px;
 }
 
+div.stage.preview strong.file, div.draghelper strong.file {
+	position: absolute;
+	border: 1px solid #ccc;
+	top: 5px;
+	left: 12px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	width: 40px;
+	height: 40px;
+	background: #fff url(images/file.png) 0 0 no-repeat;
+	text-transform: uppercase;
+	color: #ccc;
+	text-align: center;
+}
+
 div.stage li.drawer iframe {
 	width: 100%;
 }
@@ -42,7 +61,7 @@ div.stage div.queue li.selected em {
 	color: #aabbee;
 }
 
-div.stage div.queue li.selected img {
+div.stage div.queue li.selected img, div.stage div.queue li.selected strong.file {
 	border-color: #335e9e;
 }
 
