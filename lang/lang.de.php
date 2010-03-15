@@ -81,5 +81,8 @@
 		
 		'Click here to create a new item.' => 
 		'Klicken Sie hier um einen neuen Eintrag zu erstellen.',
+		
+		'%s Preview images and files' =>
+		'%s Vorschau für Bilder und Dateien einblenden'
 
 	);
