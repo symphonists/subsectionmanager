@@ -276,7 +276,7 @@
 				
 				// Caption markup
 				if($text != '' && $file != '') {
-					$fields['caption'] = $text . '<br /><em>' . $file . '</em>';
+					$fields['caption'] = $text . '<br /> <em>' . $file . '</em>';
 				}
 				else {
 					$fields['caption'] = $text . $file;
