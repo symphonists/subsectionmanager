@@ -268,6 +268,11 @@
 					object.find('.create').click(create);
 					object.find('div.stage').bind('dragstop', object.subsection.getSortOrder);
 					object.find('div.stage').bind('dragstart', object.subsection.close);
+					object.find('.destructor').bind('click', function(event) {
+						jQuery('ul.selection li.drawer:not(.template)').slideUp(settings.speed, function() {
+							jQuery(this).remove();
+						});
+					})
 
 				},
 
