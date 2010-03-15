@@ -15,7 +15,7 @@ div.stage li, div.draghelper {
 }
 
 div.stage li.preview, div.draghelper.preview, div.stage ul.dragging li.preview:hover {
-	height: 52px;
+/*	height: 52px;*/
 	padding-left: 52px;
 }
 
@@ -52,9 +52,19 @@ div.stage li.drawer iframe {
 	width: 100%;
 }
 
-div.stage li em, div.draghelper em {
+div.stage li em, div.draghelper em, div.stage li em, div.stage li em:hover, div.draghelper em:hover, div.stage li em:hover {
 	font-style: normal;
 	color: #908e88;
+	cursor: auto;
+	float: none;
+	font-style: inherit;
+	margin-right: 0;
+	text-decoration: none;
+	width: auto;	
+}
+
+div.stage li.preview a.file, div.stage li.preview span, div.draghelper a.file, div.draghelper span {
+	min-height: 39px;
 }
 
 div.stage div.queue li.selected em {

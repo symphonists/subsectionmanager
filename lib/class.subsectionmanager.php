@@ -22,11 +22,19 @@
 		
 			// Fetch subsection meta data
 			$meta = Administration::instance()->Database->fetch(
-				"SELECT filter_tags, caption
+				"SELECT filter_tags, caption, show_preview
 				FROM tbl_fields_subsectionmanager
 				WHERE field_id = '$subsection_field'
 				LIMIT 1"
 			);
+			
+			// Get display mode
+			if($meta[0]['show_preview'] == 'yes') {
+				$mode = 'preview';
+			}
+			else {
+				$mode = 'plain';			
+			}
 		
 			// Fetch entry data
 			$sectionManager = new SectionManager($this->_Parent);
@@ -34,8 +42,24 @@
 		  	$fields = $subsection->fetchFields();
 		  	$entries = $this->__filterEntries($subsection_id, $fields, $meta[0]['filter_tags'], $entry_id);
 		  	
+		  	// Check caption
+		  	$caption = $meta[0]['caption'];
+		  	if($caption == '') {
+		  		
+		  		// Fetch name of primary field in subsection
+				$primary = Administration::instance()->Database->fetch(
+					"SELECT element_name
+					FROM tbl_fields
+					WHERE parent_section = '$subsection_id'
+					AND sortorder = '0'
+					LIMIT 1"
+				);
+				$caption = '{$' . $primary[0]['element_name'] . '}';
+			  		
+		  	}
+		  	
 		  	// Layout subsection data
-		  	$data = $this->__layoutSubsection($entries, $fields, $meta[0]['caption'], $full);
+		  	$data = $this->__layoutSubsection($entries, $fields, $caption, $mode, $full);
 		  	return $data;
 		  	
 		}
@@ -107,13 +131,20 @@
 			return $entry_data;
 		}
 		
-		function __layoutSubsection($entries, $fields, $caption_template, $full) {
-		
+		function __layoutSubsection($entries, $fields, $caption_template, $mode, $full) {
+
 			// Templates
 			$templates = array(
-				'text' => '<li value="{$value}"><span>{$caption}</span></li>',
-				'image' => '<li value="{$value}" class="image preview"><img src="' . URL . '/image/2/40/40/5{$preview}" width="40" height="40" /><span>{$caption}</span></li>',
-				'file' => '<li value="{$value}" class="file preview"><strong>{$type}</strong><span>{$caption}</span></li>'
+				'plain' => array(
+					'text' => '<li value="{$value}"><span>{$caption}</span></li>',
+					'image' => '<li value="{$value}"><a href="{$href}" class="image file">{$caption}</a></li>',
+					'file' => '<li value="{$value}"><a href="{$href}" class="file">{$caption}</a></li>'
+				),
+				'preview' => array(
+					'text' => '<li value="{$value}"><span>{$caption}</span></li>',
+					'image' => '<li value="{$value}" class="preview"><img src="' . URL . '/image/2/40/40/5{$preview}" width="40" height="40" /><a href="{$href}" class="image file">{$caption}</a></li>',
+					'file' => '<li value="{$value}" class="preview"><strong class="file">{$type}</strong><a href="{$href}" class="file">{$caption}</a></li>'
+				)
 			);
 			
 			if(is_array($entries)) {
@@ -166,13 +197,14 @@
 								// Image
 								if(strpos($entry['data'][$field->get('id')]['mimetype'], 'image') !== false) {
 									$type = 'image';
-									$preview = $entry['data'][$field->get('id')]['file'];
+									$href = $preview = $entry['data'][$field->get('id')]['file'];
 								}
 								
 								// File
 								else {
 									$type = 'file';
 									$preview = pathinfo($entry['data'][$field->get('id')]['file'], PATHINFO_EXTENSION);
+									$href = $entry['data'][$field->get('id')]['file'];
 								}
 								
 							}
@@ -180,17 +212,20 @@
 						
 						// Apply template
 						if($type == 'image') {
-							$template = str_replace('{$preview}', $preview, $templates['image']);
+							$template = str_replace('{$preview}', $preview, $templates[$mode]['image']);
+							$template = str_replace('{$href}', $href, $template);
 							$template = str_replace('{$value}', $entry['id'], $template);
 							$html .= str_replace('{$caption}', $caption, $template);
 						}
 						elseif($type == 'file') {
-							$template = str_replace('{$type}', $preview, $templates['file']);
+							$template = str_replace('{$type}', $preview, $templates[$mode]['file']);
+							$template = str_replace('{$href}', $href, $template);
 							$template = str_replace('{$value}', $entry['id'], $template);
 							$html .= str_replace('{$caption}', $caption, $template);
 						}
 						else {
-							$template = str_replace('{$preview}', $entry['id'], $templates['text']);
+							$template = str_replace('{$preview}', $entry['id'], $templates[$mode]['text']);
+							$template = str_replace('{$value}', $entry['id'], $template);
 							$html .= str_replace('{$caption}', $caption, $template);
 						}
 						

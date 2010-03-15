@@ -48,14 +48,14 @@
 
 		function displaySettingsPanel(&$wrapper, $errors=NULL) {
 
-			// initialize field settings based on class defaults (name, placement)
+			// Initialize field settings based on class defaults (name, placement)
 			parent::displaySettingsPanel($wrapper, $errors);
 			$this->appendShowColumnCheckbox($wrapper);
 
-			// get current section id
+			// Get current section id
 			$section_id = Administration::instance()->Page->_context[1];
 
-			// related section
+			// Related section
 			$label = Widget::Label(__('Related section'));
 			$sectionManager = new SectionManager($this->_engine);
 		  	$sections = $sectionManager->fetch(NULL, 'ASC', 'name');
@@ -77,7 +77,7 @@
 				$wrapper->appendChild($label);
 			}
 
-			// multiple options
+			// Multiple options
 			$label = Widget::Label();
 			$input = Widget::Input('fields['.$this->get('sortorder').'][allow_multiple_selection]', 'yes', 'checkbox');
 			if($this->get('allow_multiple_selection') != 'no') {
@@ -85,13 +85,22 @@
 			}
 			$label->setValue(__('%s Allow selection of multiple options', array($input->generate())));
 			$wrapper->appendChild($label);
+			
+			// Preview options
+			$label = Widget::Label();
+			$input = Widget::Input('fields['.$this->get('sortorder').'][show_preview]', 'yes', 'checkbox');
+			if($this->get('show_preview') != 'no') {
+				$input->setAttribute('checked', 'checked');
+			}
+			$label->setValue(__('%s Preview images and files', array($input->generate())));
+			$wrapper->appendChild($label);
 
-			// filter input
+			// Filter input
 			$label = new XMLElement('label', __('Filter items by tags or categories') . '<i>' . __('Comma separated, click alt for negation') . '</i>', array('class' => 'filter', 'style' => 'display: none;'));
 			$label->appendChild(Widget::Input('fields['.$this->get('sortorder').'][filter_tags]', $this->get('filter_tags')));
 			$wrapper->appendChild($label);
 
-			// filter suggestions
+			// Filter suggestions
 			if(is_array($sections) && !empty($sections)) {
 				foreach($sections as $section) {
 					$values = array();
@@ -126,7 +135,7 @@
 				}
 			}
 
-			// caption input
+			// Caption input
 			$label = new XMLElement('label', __('Custom item caption') . '<i>' . __('Use <code>{$param}</code> syntax, inline HTML elements allowed') . '</i>');
 			$label->appendChild(Widget::Input('fields['.$this->get('sortorder').'][caption]', htmlspecialchars($this->get('caption'))));
 			if(isset($errors['caption'])) {
@@ -136,7 +145,7 @@
 				$wrapper->appendChild($label);
 			}
 
-			// caption suggestions
+			// Caption suggestions
 			if(is_array($sections) && !empty($sections)) {
 				foreach($sections as $section) {
 					$values = array();
@@ -158,7 +167,7 @@
 				}
 			}
 
-			// data source filter for related section
+			// Data source filter for related section
 			$label = new XMLElement('label', __('Included elements') . '<i>' . __('Will be used for data source output') . '</i>');
 			$field_groups = array();
 			if(is_array($sections) && !empty($sections)) {
@@ -228,6 +237,7 @@
 			$fields['field_id'] = $id;
 			$fields['subsection_id'] = $this->get('subsection_id');
 			$fields['allow_multiple_selection'] = ($this->get('allow_multiple_selection') ? $this->get('allow_multiple_selection') : 'no');
+			$fields['show_preview'] = ($this->get('show_preview') ? $this->get('show_preview') : 'no');
 
 			// clean up filter values
 			if($this->get('filter_tags') != '') {
@@ -241,6 +251,38 @@
 
 			// item caption
 			$fields['caption'] = $this->get('caption');
+			if($this->get('caption') == '') {
+			
+		  		// Fetch fields in subsection
+				$subsection_fields = Administration::instance()->Database->fetch(
+					"SELECT element_name, type
+					FROM tbl_fields
+					WHERE parent_section = '" . $this->get('subsection_id') . "'
+					ORDER BY sortorder ASC
+					LIMIT 10"
+				);
+				
+				// Generate default caption
+				$text = $file = '';
+				foreach($subsection_fields as $subfield) {
+					if($text != '' && $file != '') break;
+					if(strpos($subfield['type'], 'upload') === false) {
+						if($text == '') $text = '{$' . $subfield['element_name'] . '}';
+					}
+					else {
+						if($file == '') $file = '{$' . $subfield['element_name'] . '}';				
+					}
+				}
+				
+				// Caption markup
+				if($text != '' && $file != '') {
+					$fields['caption'] = $text . '<br /><em>' . $file . '</em>';
+				}
+				else {
+					$fields['caption'] = $text . $file;
+				}
+								
+			}
 
 			// data source fields
 			$fields['included_fields'] = (is_null($this->get('included_fields')) ? NULL : implode(',', $this->get('included_fields')));
@@ -323,7 +365,7 @@
 			
 			// Append item template
 			$thumb = '<img src="' . URL . '/extensions/subsectionmanager/assets/images/new.gif" width="40" height="40" class="thumb" />';
-			$item = new XMLElement('li', $thumb . '<span>' . __('New item') . '<br /><em>' . __('Please fill out the form below.') . '</em></span><a class="destructor">' . __('Remove Item') . '</a>', array('class' => 'item template'));
+			$item = new XMLElement('li', $thumb . '<span>' . __('New item') . '<br /><em>' . __('Please fill out the form below.') . '</em></span><a class="destructor">' . __('Remove Item') . '</a>', array('class' => 'item template preview'));
 			$selected->appendChild($item);
 			
 			// Append drawer template
