@@ -112,7 +112,8 @@
 					// Automatically hide drawer later
 					if(!create) {
 						jQuery('body').bind('click', function(event) {
-							if(jQuery(event.target).parents().filter('div.stage li.active, div.stage li.drawer').size() == 0) {
+
+							if(jQuery(event.target).parents().filter('li.active, li.drawer, li.new').size() == 0) {
 								object.find('div.stage li.active').removeClass('active');
 								object.find('div.stage li.drawer:not(.template):not(.create)').slideUp('normal', function(element) {
 									jQuery(this).remove();
@@ -213,8 +214,8 @@
 				event.stopPropagation();
 				
 				var stage = object.find('div.stage ul.selection');
-				var item = object.find(settings.template).clone().removeClass('template').appendTo(stage).slideDown(settings.speed);
-				
+				var item = object.find(settings.template).clone().removeClass('template').addClass('new').appendTo(stage).slideDown(settings.speed);
+								
 				// Enable destructor
 				item.find('.destructor').click(function(event) {
 					item.next('li').andSelf().slideUp(settings.speed, function() {
@@ -278,9 +279,9 @@
 
 				
 				close: function() {
-								
+											
 					// Handle drawers
-					var active = object.find('ul.selection li.active');
+					var active = object.find('ul.selection li.active:not(.new)');
 					if(active.size() > 0) {	
 								
 						// Remove active state
