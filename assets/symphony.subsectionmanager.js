@@ -253,7 +253,9 @@
 							source: object.find('select'),
 							draggable: true,
 							dragclick: function(item) {
-								edit(item);
+								if(!item.hasClass('message')) {
+									edit(item);
+								}
 							},
 							queue_ajax: {
 								url: Symphony.WEBSITE + '/symphony/extension/subsectionmanager',
