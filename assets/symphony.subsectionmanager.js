@@ -99,7 +99,7 @@
 						if(iframe.contents().find('#notice.success').size() > 0) {
 							update(item.attr('value'), item, iframe, create);
 						}
-						
+											
 						// Delete item
 						var remove = iframe.contents().find('button.confirm');
 						remove.die('click').unbind();
@@ -154,11 +154,20 @@
 					success: function(result) {
 					
 						// Find destructor
-						var destructor = item.find('.destructor').clone();
+						var destructor = item.find('.destructor').clone().click(function(event) {
+							var item = jQuery(event.target).parent('li');
+							object.destruct(item);
+						});
+
 						result = jQuery(result).append(destructor);
 					
 						// Remove old data and replace it
 						item.replaceWith(result).fadeIn('fast');
+
+						// Prevent clicks on layout anchors
+						object.find('a.file, a.image').click(function(event) {
+							event.preventDefault();
+						});
 						
 						// Store new item
 						if(create) {
@@ -195,6 +204,13 @@
 						jQuery(this).remove();
 					});
 					object.find('select option[value=' + id + ']').removeAttr('selected');
+					
+					// Add empty selection message
+					var selection = object.find('ul.selection').find(settings.items);
+					if(selection.filter(':not(.new)').size() <= 1) {
+						object.find('ul.selection li.empty').slideDown(settings.speed);
+					}
+					
 					return true;
 				}
 				else {
@@ -220,8 +236,16 @@
 				item.find('.destructor').click(function(event) {
 					item.next('li').andSelf().slideUp(settings.speed, function() {
 						jQuery(this).remove();
-					})
-				});				
+					});
+					// Add empty selection message
+					var selection = object.find('ul.selection').find(settings.items);
+					if(selection.filter(':not(.new)').size() <= 1) {
+						object.find('ul.selection li.empty').slideDown(settings.speed);
+					}
+				});
+				
+				// Hide messages
+				stage.find('li.empty:visible').slideUp(settings.speed);		
 				
 				// Open editor
 				edit(item, true);
