@@ -191,7 +191,7 @@
 				event.stopPropagation();
 				
 				if(confirm(Symphony.Language.get('Are you sure you want to delete this item? It will be remove from all entries. This step cannot be undone.'))) {
-					object.find('li[value=' + id + '], li.drawer').slideUp(settings.speed, function() {
+					object.find('li[value=' + id + '], li.drawer:not(.template)').slideUp(settings.speed, function() {
 						jQuery(this).remove();
 					});
 					object.find('select option[value=' + id + ']').removeAttr('selected');
