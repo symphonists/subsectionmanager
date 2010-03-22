@@ -14,6 +14,10 @@ div.stage li, div.draghelper {
 	padding-left: 0;
 }
 
+div.draghelper a.destructor {
+	display: none;
+}
+
 div.stage li.preview, div.draghelper.preview, div.stage ul.dragging li.preview:hover {
 	padding-left: 52px;
 }
