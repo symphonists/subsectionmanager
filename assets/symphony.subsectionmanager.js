@@ -54,7 +54,7 @@
 							
 				var template = object.find(settings.drawer).clone().removeClass('template');
 				var iframe = template.find('iframe').css('opacity', '0.01');
-				var source = iframe.attr('src');
+				var source = iframe.attr('src') + '/{$action}/{$id}' ;
 				var id = item.attr('value');
 				
 				if(!item.next('li').hasClass('drawer')) {

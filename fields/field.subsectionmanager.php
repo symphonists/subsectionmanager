@@ -9,7 +9,6 @@
 		/**
 		 * Initialize Subsection Manager as unrequired field
 		 */
-
 		function __construct(&$parent) {
 			parent::__construct($parent);
 			$this->_name = __('Subsection Manager');
@@ -19,7 +18,6 @@
 		/**
 		 * Allow data source filtering
 		 */
-
 		function canFilter(){
 			return true;
 		}
@@ -27,7 +25,6 @@
 		/**
 		 * Allow data source parameter output
 		 */
-
 		function allowDatasourceParamOutput(){
 			return true;
 		}
@@ -45,7 +42,6 @@
 		 * @param XMLElement $wrapper - parent element wrapping the field
 		 * @param array $errors - array with field errors, $errors['name-of-field-element']
 		 */
-
 		function displaySettingsPanel(&$wrapper, $errors=NULL) {
 
 			// Initialize field settings based on class defaults (name, placement)
@@ -199,7 +195,6 @@
 		 * @param array $errors
 		 * @param boolean $checkForDuplicates
 		 */
-
 		function checkFields(&$errors, $checkForDuplicates=true) {
 
 			if(!is_array($errors)) $errors = array();
@@ -224,7 +219,6 @@
 		/**
 		 * Save fields settings in section editor.
 		 */
-
 		function commit() {
 
 			// prepare commit
@@ -306,7 +300,6 @@
 		 * @param $fieldnamePrefix
 		 * @param $fieldnamePostfix
 		 */
-
 		function displayPublishPanel(&$wrapper, $data=NULL, $flagWithError=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL) {
 
 			$this->_engine->Page->addScriptToHead(URL . '/extensions/subsectionmanager/lib/draggable/symphony.draggable.js', 101, false);
@@ -375,7 +368,7 @@
 				WHERE `id` = '" . $this->get('subsection_id') . "'
 				LIMIT 1"
 			);
-			$create_new = URL . '/symphony/publish/' . $subsection_handle . '/{$action}/{$id}';
+			$create_new = URL . '/symphony/publish/' . $subsection_handle;
 			$item = new XMLElement('li', '<iframe name="subsection-' . $this->get('element_name') . '" src="' . $create_new . '"  frameborder="0"></iframe>', array('class' => 'drawer template'));
 			$selected->appendChild($item);
 
@@ -392,7 +385,6 @@
  		/**
 		 * Prepares field values for database.
 		 */
-
 		function processRawFieldData($data, &$status, $simulate=false, $entry_id=NULL){
 			$status = self::__OK__;
 			if(!is_array($data) && !is_null($data)) return array('relation_id' => $data);
@@ -410,7 +402,6 @@
  		/**
 		 * Creates database field table.
 		 */
-
 		function createTable(){
 
 			return Administration::instance()->Database->query(
@@ -432,7 +423,6 @@
 		 * @param array $data
 		 * @param XMLElement $link
 		 */
-
 		function prepareTableValue($data, XMLElement $link=NULL){
 			if(empty($data['relation_id'])) return NULL;
 			$count = count($data['relation_id']);
@@ -448,7 +438,6 @@
 		 * @param boolean $encode
 		 * @param string $mode
 		 */
-
 		public function appendFormattedElement(&$wrapper, $data, $encode = false) {
 
 			// unify data
@@ -525,7 +514,6 @@
 		 *
 		 * @param array $data
 		 */
-
 		public function getParameterPoolValue($data) {
 
 			if(is_array($data['relation_id'])) return implode(", ", $data['relation_id']);
@@ -542,7 +530,6 @@
 		 * @param $fieldnamePrefix
 		 * @param $fieldnamePostfix
 		 */
-
 		function displayDatasourceFilterPanel(&$wrapper, $data=NULL, $errors=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL) {
 
 			parent::displayDatasourceFilterPanel($wrapper, $data, $errors, $fieldnamePrefix, $fieldnamePostfix);
@@ -554,10 +541,31 @@
  		/**
 		 * Returns sample markup for the event editor.
 		 */
-
 		public function getExampleFormMarkup(){
 			// nothing to show here yet
 			return Widget::Select('fields['.$this->get('element_name').']', array(array('...')));
 		}
+
+ 		/**
+		 * Returns array of includable elements used in data source manager
+		 */
+/*		public function fetchIncludableElements() {
+
+			$sectionManager = new SectionManager($this->_Parent);
+		  	$section = $sectionManager->fetch($this->get('subsection_id'));
+		  	$fields = $section->fetchFields();
+		  	$elements = array();
+		  	
+		  	// Fetch fields from subsection
+		  	foreach($fields as $field) {
+		  		foreach($field->fetchIncludableElements() as $element) {
+		  			$elements[] = $this->get('element_name') . ': ' . $element;
+		  		}
+		  	}
+			
+			return $elements;
+			
+		}*/
+
 
 	}
