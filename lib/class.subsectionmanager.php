@@ -197,7 +197,8 @@
 								// Image
 								if(strpos($entry['data'][$field->get('id')]['mimetype'], 'image') !== false) {
 									$type = 'image';
-									$href = $preview = $entry['data'][$field->get('id')]['file'];
+									$preview = $entry['data'][$field->get('id')]['file'];
+									$href = URL . '/workspace' . $preview;
 								}
 								
 								// File
