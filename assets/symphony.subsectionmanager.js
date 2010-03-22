@@ -272,8 +272,6 @@
 
 			var drop = function(event, helper) {
 			
-				console.log(event, helper);
-			
 				var target = jQuery(event.target);
 				var item = jQuery(helper);
 				var text;
@@ -308,8 +306,6 @@
 				else {
 					text = item.text();
 				}
-				
-				console.log(text);
 				
 				// Replace text
 				var start = target[0].selectionStart || 0;
@@ -371,7 +367,6 @@
 					// Handle drop events
 					if(settings.draggable) {
 						jQuery(settings.dragitems).unbind('drop').bind('drop', function(event, item) {
-							console.log('DROPPED', this);
 							drop(event, item);
 						});
 					}
