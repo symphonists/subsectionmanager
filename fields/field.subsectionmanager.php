@@ -468,7 +468,7 @@
 			);
 			$sorted_ids = explode(',', $order);
 			$sorted_entries = array();
-			if(!empty($sorted_ids) && $sorted_ids[0] != 0) {
+			if(!empty($sorted_ids) && $sorted_ids[0] != 0 && !empty($sorted_ids[0])) {
 				foreach($sorted_ids as $id) {
 					foreach($entries as $entry) {
 						if($entry->get('id') == $id) {
