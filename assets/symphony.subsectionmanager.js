@@ -275,8 +275,6 @@
 				var target = jQuery(event.target);
 				var item = jQuery(helper);
 				var text;
-				
-				target.unbind('drop');
 
 				// Remove dropper
 				jQuery('.dropper').mouseout();
