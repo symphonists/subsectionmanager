@@ -15,13 +15,11 @@ div.stage li, div.draghelper {
 }
 
 div.stage li.preview, div.draghelper.preview, div.stage ul.dragging li.preview:hover {
-/*	height: 52px;*/
 	padding-left: 52px;
 }
 
 div.queue li.message, div.stage li.empty {
 	padding: 0 !important;
-	height: 32px;
 }
 
 div.stage.preview img, div.draghelper img {
