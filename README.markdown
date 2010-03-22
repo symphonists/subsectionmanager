@@ -5,7 +5,7 @@ A subsection management for Symphony.
 
 - Version: 1.0dev
 - Date: **unreleased**
-- Requirements: Symphony CMS 2.0.7 or newer, <http://github.com/symphony/symphony-2>
+- Requirements: Symphony CMS 2.0.8 or newer, <http://github.com/symphony/symphony-2>
 - Optional Requirement: JIT Image Manipulation (for image previews), <http://github.com/pointybeard/jit_image_manipulation>
 - Author: Nils Hörrmann, post@nilshoerrmann.de
 - Constributors: [A list of contributors can be found in the commit history](http://github.com/nilshoerrmann/subsectionmanager/commits/master)
