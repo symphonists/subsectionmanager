@@ -33,6 +33,22 @@
 			template:			'li.item.template',
 			autodiscover:		false,
 			speed:				'fast',
+			draggable:			true,
+			dragitems:			'textarea',
+			formatter: {
+				markdown: {
+					image: '![{@text}]({@path})',
+					file: '[{@text}]({@path})'
+				},
+				textile: {
+					image: '!{@path}({@text})!',
+					file: '"{@text}":({@path})'
+				},
+				html: {
+					image: '<img src="{@path}" alt="{@text}" />',
+					file: '<a href="{@path}">{@text}</a>'
+				}
+			},
 			delay_initialize:	false
 		};
 		jQuery.extend(settings, custom_settings);
@@ -54,7 +70,7 @@
 							
 				var template = object.find(settings.drawer).clone().removeClass('template');
 				var iframe = template.find('iframe').css('opacity', '0.01');
-				var source = iframe.attr('src') + '/{$action}/{$id}' ;
+				var source = iframe.attr('target') + '/{$action}/{$id}' ;
 				var id = item.attr('value');
 				
 				if(!item.next('li').hasClass('drawer')) {
@@ -254,6 +270,57 @@
 			
 			};
 
+			var drop = function(event, helper) {
+			
+				console.log(event, helper);
+			
+				var target = jQuery(event.target);
+				var item = jQuery(helper);
+				var text;
+				
+				target.unbind('drop');
+
+				// Remove dropper
+				jQuery('.dropper').mouseout();
+				
+				// Formatter
+				formatter = target.attr('class').match(/(?:markdown)|(?:textile)/) || ['html'];
+				
+				// Image or file
+				if(item.find('.file').size() != 0) {
+								
+					var file = item.find('a.file');
+					var matches = {
+						text: file.text(),
+						path: file.attr('href')
+					}
+
+					// Get type
+					var type = 'file';
+					if(file.hasClass('image')) type = 'image';
+					
+					// Prepare text
+					text = object.subsection.substitute(settings.formatter[formatter.join()][type], matches);
+				
+				}
+				
+				// Text 
+				else {
+					text = item.text();
+				}
+				
+				console.log(text);
+				
+				// Replace text
+				var start = target[0].selectionStart || 0;
+				var end = target[0].selectionEnd || 0;
+				var original = target.val();
+				target.val(original.substring(0, start) + text + original.substring(end, original.length));
+				target[0].selectionStart = start + text.length;
+				target[0].selectionEnd = start + text.length;
+
+			}
+
 		/*-------------------------------------------------------------------*/
 			
 			if (object instanceof jQuery === false) {
@@ -300,6 +367,14 @@
 							jQuery(this).remove();
 						});
 					})
+					
+					// Handle drop events
+					if(settings.draggable) {
+						jQuery(settings.dragitems).unbind('drop').bind('drop', function(event, item) {
+							console.log('DROPPED', this);
+							drop(event, item);
+						});
+					}
 
 				},
 
@@ -349,8 +424,16 @@
 						items.filter('[value=' + value + ']').prependTo(selection);
 					});
 					
-				}
+				},
 				
+				substitute: function(template, matches) {
+					var match;
+					for(match in matches) {
+						template = template.replace('{@' + match + '}', matches[match]);
+					}
+					return template;
+				}
+							
 			}
 			
 			if (settings.delay_initialize !== true) {

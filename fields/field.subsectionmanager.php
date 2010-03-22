@@ -369,7 +369,7 @@
 				LIMIT 1"
 			);
 			$create_new = URL . '/symphony/publish/' . $subsection_handle;
-			$item = new XMLElement('li', '<iframe name="subsection-' . $this->get('element_name') . '" src="' . $create_new . '"  frameborder="0"></iframe>', array('class' => 'drawer template'));
+			$item = new XMLElement('li', '<iframe name="subsection-' . $this->get('element_name') . '" src="about:blank" target="' . $create_new . '"  frameborder="0"></iframe>', array('class' => 'drawer template'));
 			$selected->appendChild($item);
 
 			// Error handling
