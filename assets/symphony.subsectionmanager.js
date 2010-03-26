@@ -172,22 +172,23 @@
 					dataType: 'html',
 					success: function(result) {
 					
+						result = jQuery(result);
+					
 						// Find destructor
 						var destructor = item.find('.destructor').clone().click(function(event) {
 							var item = jQuery(event.target).parent('li');
-							object.destruct(item);
+							object.find('div.stage').trigger('destruct', [item]);
 						});
 
-						result = jQuery(result).append(destructor);
-					
 						// Remove old data and replace it
-						item.replaceWith(result).fadeIn('fast');
-
+						result.clone().append(destructor).insertAfter(item).fadeIn('fast');
+						item.remove();
+						
 						// Prevent clicks on layout anchors
 						object.find('a.file, a.image').click(function(event) {
 							event.preventDefault();
 						});
-						
+											
 						// Store new item
 						if(create) {
 							
@@ -196,6 +197,7 @@
 							object.find('select').append(option);
 							
 							// Queue
+							result.addClass('selected');
 							object.find('div.queue ul').append(result);
 							
 							// Close editor
@@ -249,7 +251,8 @@
 				event.stopPropagation();
 				
 				var stage = object.find('div.stage ul.selection');
-				var item = object.find(settings.template).clone().removeClass('template').addClass('new').appendTo(stage).slideDown(settings.speed);
+				var template = stage.find('li.template:first');
+				var item = object.find(settings.template).clone().removeClass('template').addClass('new').insertBefore(template).slideDown(settings.speed);
 								
 				// Enable destructor
 				item.find('.destructor').click(function(event) {
