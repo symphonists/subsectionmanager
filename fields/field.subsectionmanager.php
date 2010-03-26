@@ -494,6 +494,8 @@
 				foreach ($entry_data as $field_id => $values) {
 					// only append if field is listed or if list empty
 					if(in_array($field_id, $included_fields) || empty($included_fields[0])) {
+						$item_id = $entry->get('id');
+						$item->setAttribute('id', $item_id);
 						$field =& $entryManager->fieldManager->fetch($field_id);
 						$field->appendFormattedElement($item, $values, false);
 					}
