@@ -205,6 +205,8 @@
 								jQuery(this).remove();
 							})
 							
+							object.trigger('createstop');
+							
 						}
 						
 					}
@@ -251,8 +253,8 @@
 				event.stopPropagation();
 				
 				var stage = object.find('div.stage ul.selection');
-				var template = stage.find('li.template:first');
-				var item = object.find(settings.template).clone().removeClass('template').addClass('new').insertBefore(template).slideDown(settings.speed);
+				var empty = stage.find('li.empty');
+				var item = object.find(settings.template).clone().removeClass('template').addClass('new').insertBefore(empty).slideDown(settings.speed);
 								
 				// Enable destructor
 				item.find('.destructor').click(function(event) {
@@ -271,9 +273,7 @@
 				
 				// Open editor
 				edit(item, true);
-				
-				object.trigger('createstop');
-			
+							
 			};
 
 			var drop = function(event, helper) {
@@ -361,6 +361,8 @@
 					// Attach events
 					object.find('.create').click(create);
 					object.find('div.stage').bind('dragstop', object.subsection.getSortOrder);
+					object.find('div.stage').bind('constructstop', object.subsection.getSortOrder);
+					object.bind('createstop', object.subsection.getSortOrder);
 					object.find('div.stage').bind('dragstart', object.subsection.close);
 					object.find('.destructor').bind('click', function(event) {
 						jQuery('ul.selection li.drawer:not(.template)').slideUp(settings.speed, function() {
@@ -400,9 +402,9 @@
 								
 					// Get new item order
 					var sorting = '';
-					object.find(settings.items).each(function(index, item) {
+					object.find('div.stage ul.selection').find(settings.items).each(function(index, item) {
 						value = jQuery(item).attr('value');
-						if(value != undefined) {
+						if(value != undefined && value != -1) {
 							if(index != 0) sorting += ',';
 							sorting += value;
 						}
