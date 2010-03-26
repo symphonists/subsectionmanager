@@ -23,6 +23,9 @@
 			jQuery('#usr').remove();
 			jQuery('#notice:not(.error):not(.success)').remove();
 			jQuery('#notice a').remove();
+			
+			// Focus first input field
+			jQuery('input:first').focus();
 						
 		}
 		

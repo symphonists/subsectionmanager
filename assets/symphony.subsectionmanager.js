@@ -66,7 +66,7 @@
 			// Edit an item
 			var edit = function(item, create) {
 		
-				object.trigger('editStart');
+				object.trigger('editstart');
 							
 				var template = object.find(settings.drawer).clone().removeClass('template');
 				var iframe = template.find('iframe').css('opacity', '0.01');
@@ -123,6 +123,9 @@
 							erase(event, id);
 						});
 						
+						// Focus first input
+						iframe.contents().find('fieldset input:first').focus();
+						
 					});
 				
 					// Automatically hide drawer later
@@ -141,14 +144,14 @@
 
 				}
 		
-				object.trigger('editEnd');
+				object.trigger('editstop');
 				
 			};
 			
 			// Update item
 			var update = function(id, item, iframe, create) {
 			
-				object.trigger('updateStart');
+				object.trigger('updatestart');
 				
 				var meta = object.find('input[name*=subsection_id]');
 				var field = meta.attr('name').match(/\[subsection_id\]\[(.*)\]/)[1];
@@ -205,14 +208,14 @@
 					}
 				});
 
-				object.trigger('updateEnd');
+				object.trigger('updatestop');
 						
 			};
 			
 			// Remove item
 			var erase = function(event, id) {
 
-				object.trigger('removeStart');
+				object.trigger('removestart');
 				event.stopPropagation();
 				
 				if(confirm(Symphony.Language.get('Are you sure you want to delete this item? It will be remove from all entries. This step cannot be undone.'))) {
@@ -234,14 +237,14 @@
 					return false;
 				}
 				
-				object.trigger('removeEnd');
+				object.trigger('removestop');
 			
 			};
 			
 			// Create item
 			var create = function(event) {
 
-				object.trigger('createStart');
+				object.trigger('createstart');
 				event.preventDefault();
 				event.stopPropagation();
 				
@@ -266,7 +269,7 @@
 				// Open editor
 				edit(item, true);
 				
-				object.trigger('createEnd');
+				object.trigger('createstop');
 			
 			};
 
