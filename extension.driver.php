@@ -60,7 +60,10 @@
 		 */
 
 		public function __appendAssets($context) {
-			$callback = Administration::instance()->getPageCallback();
+
+			// Do not use Administration::instance() in this context, see:
+			// http://github.com/nilshoerrmann/subsectionmanager/issues#issue/27
+			$callback = $this->_Parent->getPageCallback();
 
 			// Append javascript for field settings pane
 			if ($callback['driver'] == 'blueprintssections' && is_array($callback['context'])){
