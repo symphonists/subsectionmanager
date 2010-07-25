@@ -5,7 +5,6 @@
 		/**
 		 * Extension information
 		 */
-
 		public function about() {
 			return array(
 				'name' => 'Subsection Manager',
@@ -14,12 +13,13 @@
 				'release-date' => false,
 				'author' => array(
 					'name' => 'Nils Hörrmann',
-					'website' => 'http://www.nilshoerrmann.de',
+					'website' => 'http://nilshoerrmann.de',
 					'email' => 'post@nilshoerrmann.de'
 				),
-				'description' => 'A subsection management for Symphony.',
+				'description' => 'Subsection Management for Symphony.',
 				'compatibility' => array(
-					'2.0.7' => true
+					'2.0' => false,
+					'2.1.0' => true
 				)
 			);
 		}
@@ -27,7 +27,6 @@
 		/**
 		 * Add callback functions to backend delegates
 		 */
-
 		public function getSubscribedDelegates(){
 			return array(
 				array(
@@ -49,6 +48,11 @@
 					'page' => '/publish/',
 					'delegate' => 'Delete',
 					'callback' => '__deleteSortOrder'
+				),
+				array(
+					'page' => '/backend/',
+					'delegate' => 'AppendPageAlert', 
+					'callback' => '__upgradeMediathek'
 				)
 			);
 		}
@@ -57,21 +61,20 @@
 		 * Append assets to the page head
 		 *
 		 * @param object $context
-		 */
-
-		public function __appendAssets($context) {
+ 		 */
+ 		public function __appendAssets($context) {
 
 			// Do not use Administration::instance() in this context, see:
 			// http://github.com/nilshoerrmann/subsectionmanager/issues#issue/27
 			$callback = $this->_Parent->getPageCallback();
 
 			// Append javascript for field settings pane
-			if ($callback['driver'] == 'blueprintssections' && is_array($callback['context'])){
+			if($callback['driver'] == 'blueprintssections' && is_array($callback['context'])) {
 				Administration::instance()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/assets/settings.subsectionmanager.js', 100, false);
 			}
 
 			// Append styles and javascript for mediasection display
-			if ($callback['driver'] == 'publish' && ($callback['context']['page'] == 'edit' || $callback['context']['page'] == 'new')){
+			if($callback['driver'] == 'publish' && ($callback['context']['page'] == 'edit' || $callback['context']['page'] == 'new')) {
 					Administration::instance()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/assets/symphony.subsection.js', 100, false);
 					Administration::instance()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/assets/symphony.subsection.css', 'screen', 101, false);
 			}
@@ -82,7 +85,6 @@
 		 *
 		 * @param object $context
 		 */
-
 		public function __saveSortOrder($context) {
 			if(!is_null($context['fields']['sort_order'])) {
 				// delete current sort order
@@ -109,16 +111,44 @@
 		 *
 		 * @param object $context
 		 */
-
 		public function __deleteSortOrder($context) {
 			// DELEGATE NOT WORKING:
 			// http://github.com/symphony/symphony-2/issues#issue/108
+		}
+		
+		/**
+		 * Upgrade Mediathek fields to make use of this extension
+		 */
+		public function __upgradeMediathek() {
+
+			// Do not use Administration::instance() in this context, see:
+			// http://github.com/nilshoerrmann/subsectionmanager/issues#issue/27
+			$callback = $this->_Parent->getPageCallback();
+
+			// Append upgrade notice
+			if($callback['driver'] == 'systemextensions') {
+			
+				require_once(TOOLKIT . '/class.extensionmanager.php');
+				$ExtensionManager = new ExtensionManager(Administration::instance());
+
+				// Check if Mediathek field is installed
+				$mediathek = $ExtensionManager->fetchStatus('mediathek');
+				if($mediathek == EXTENSION_ENABLED) {
+				
+					// Append upgrade notice to page
+					Administration::instance()->Page->Alert = new Alert(
+						__('You are using Mediathek and Subsection Manager simultaneously.') . ' <a href="http://' . DOMAIN . '/symphony/extension/subsectionmanager/">' . __('Upgrade') . '?</a> <a href="http://' . DOMAIN . '/symphony/extension/subsectionmanager/deactivate/mediathek">' . __('%s Mediathek', array('Disable')) . '</a> <a href="http://' . DOMAIN . '/symphony/extension/subsectionmanager/deactivate/subsectionmanager">' . __('%s Subsection Manager', array('Disable')) . '</a>', 
+						Alert::ERROR
+					);
+					
+				}
+				
+			}
 		}
 
 		/**
 		 * Function to be executed on uninstallation
 		 */
-
 		public function uninstall() {
 			// drop database table
 			Administration::instance()->Database->query("DROP TABLE `tbl_fields_subsectionmanager`");
@@ -131,9 +161,8 @@
 		 * @param string $previousVersion - version number of the currently installed extension build
 		 * @return boolean - true on success, false otherwise
 		 */
-
 		public function update($previousVersion) {
-			// To do: Mediathek import
+			// Nothing to do yet
 			return true;
 		}
 
@@ -142,7 +171,6 @@
 		 *
 		 * @return boolean - true on success, false otherwise
 		 */
-
 		public function install() {
 			// Create database table and fields.
 			$fields = Administration::instance()->Database->query(
