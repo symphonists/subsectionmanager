@@ -167,7 +167,7 @@
 					}
 					
 					// Populate select options
-					$options[] = array($entry['id'], in_array($entry['id'], $this->_Items), $field_value);
+					$options[] = array($entry['id'], in_array($entry['id'], $this->_Items), General::sanitize($field_value));
 					
 					// Generate subsection values
 					$caption = $caption_template;
