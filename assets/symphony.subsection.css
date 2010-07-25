@@ -70,4 +70,6 @@ body.subsection #notice {
 
 body.subsection form input[type="file"] {
 	color: #fff;
+	background: #504F49;
+	border: 1px solid #504F49 !important;
 }
