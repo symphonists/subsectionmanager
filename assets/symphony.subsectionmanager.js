@@ -163,7 +163,7 @@
 				// Load item data
 				jQuery.ajax({
 					type: 'GET',
-					url: Symphony.WEBSITE + '/symphony/extension/subsectionmanager',
+					url: Symphony.WEBSITE + '/symphony/extension/subsectionmanager/get/',
 					data: { 
 						id: field, 
 						section: section,
@@ -349,7 +349,7 @@
 								}
 							},
 							queue_ajax: {
-								url: Symphony.WEBSITE + '/symphony/extension/subsectionmanager',
+								url: Symphony.WEBSITE + '/symphony/extension/subsectionmanager/get/',
 								data: { 
 									id: id, 
 									section: section 
