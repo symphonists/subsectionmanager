@@ -225,15 +225,15 @@
 				if(confirm(Symphony.Language.get('Are you sure you want to delete this item? It will be remove from all entries. This step cannot be undone.'))) {
 					object.find('li[value=' + id + '], li.drawer:not(.template)').slideUp(settings.speed, function() {
 						jQuery(this).remove();
+
+						// Add empty selection message
+						var selection = object.find('ul.selection').find(settings.items);
+						if(selection.filter(':not(.new)').size() <= 1) {
+							object.find('ul.selection li.empty').slideDown(settings.speed);
+						}
+
 					});
 					object.find('select option[value=' + id + ']').removeAttr('selected');
-					
-					// Add empty selection message
-					var selection = object.find('ul.selection').find(settings.items);
-					if(selection.filter(':not(.new)').size() <= 1) {
-						object.find('ul.selection li.empty').slideDown(settings.speed);
-					}
-					
 					return true;
 				}
 				else {
