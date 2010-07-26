@@ -247,32 +247,38 @@
 			
 			// Create item
 			var create = function(event) {
-
-				object.trigger('createstart');
+	
 				event.preventDefault();
 				event.stopPropagation();
-				
-				var stage = object.find('div.stage ul.selection');
-				var empty = stage.find('li.empty');
-				var item = object.find(settings.template).clone().removeClass('template').addClass('new').insertBefore(empty).slideDown(settings.speed);
-								
-				// Enable destructor
-				item.find('.destructor').click(function(event) {
-					item.next('li').andSelf().slideUp(settings.speed, function() {
-						jQuery(this).remove();
+
+				// Do only create one item at once
+				if(object.find('div.stage ul.selection li.new').size() == 0) {
+
+					object.trigger('createstart');
+					
+					var stage = object.find('div.stage ul.selection');
+					var empty = stage.find('li.empty');
+					var item = object.find(settings.template).clone().removeClass('template').addClass('new').insertBefore(empty).slideDown(settings.speed);
+									
+					// Enable destructor
+					item.find('.destructor').click(function(event) {
+						item.next('li').andSelf().slideUp(settings.speed, function() {
+							jQuery(this).remove();
+						});
+						// Add empty selection message
+						var selection = object.find('ul.selection').find(settings.items);
+						if(selection.filter(':not(.new)').size() <= 1) {
+							object.find('ul.selection li.empty').slideDown(settings.speed);
+						}
 					});
-					// Add empty selection message
-					var selection = object.find('ul.selection').find(settings.items);
-					if(selection.filter(':not(.new)').size() <= 1) {
-						object.find('ul.selection li.empty').slideDown(settings.speed);
-					}
-				});
-				
-				// Hide messages
-				stage.find('li.empty:visible').slideUp(settings.speed);		
-				
-				// Open editor
-				edit(item, true);
+					
+					// Hide messages
+					stage.find('li.empty:visible').slideUp(settings.speed);		
+					
+					// Open editor
+					edit(item, true);
+					
+				}
 							
 			};
 
