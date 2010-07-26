@@ -134,7 +134,7 @@
 
 							if(jQuery(event.target).parents().filter('li.active, li.drawer, li.new').size() == 0) {
 								object.find('div.stage li.active').removeClass('active');
-								object.find('div.stage li.drawer:not(.template):not(.create)').slideUp('normal', function(element) {
+								object.find('div.stage li.drawer:not(.create):not(.template)').slideUp('normal', function(element) {
 									jQuery(this).remove();
 								});
 								jQuery('body').unbind('click');
