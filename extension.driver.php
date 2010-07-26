@@ -137,7 +137,7 @@
 				
 					// Append upgrade notice to page
 					Administration::instance()->Page->Alert = new Alert(
-						__('You are using Mediathek and Subsection Manager simultaneously.') . ' <a href="http://' . DOMAIN . '/symphony/extension/subsectionmanager/">' . __('Upgrade') . '?</a> <a href="http://' . DOMAIN . '/symphony/extension/subsectionmanager/deactivate/mediathek">' . __('%s Mediathek', array('Disable')) . '</a> <a href="http://' . DOMAIN . '/symphony/extension/subsectionmanager/deactivate/subsectionmanager">' . __('%s Subsection Manager', array('Disable')) . '</a>', 
+						__('You are using Mediathek and Subsection Manager simultaneously.') . ' <a href="http://' . DOMAIN . '/symphony/extension/subsectionmanager/">' . __('Upgrade') . '?</a> <a href="http://' . DOMAIN . '/symphony/extension/subsectionmanager/deactivate/mediathek">' . __('Disable Mediathek') . '</a> <a href="http://' . DOMAIN . '/symphony/extension/subsectionmanager/deactivate/subsectionmanager">' . __('Disable Subsection Manager') . '</a>', 
 						Alert::ERROR
 					);
 					
