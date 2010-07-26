@@ -73,3 +73,7 @@ body.subsection form input[type="file"] {
 	background: #504F49;
 	border: 1px solid #504F49 !important;
 }
+
+body.subsection #version {
+	display: none;
+}
