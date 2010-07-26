@@ -46,7 +46,7 @@ body.subsection form a {
 	color: #8fafd9;
 }
 
-body.subsection form label span {
+body.subsection form label > span {
 	border: 1px solid #616057;
 	background: #504f49;
 }
@@ -77,3 +77,4 @@ body.subsection form input[type="file"] {
 body.subsection #version {
 	display: none;
 }
+body.subsection form label span
