@@ -34,7 +34,7 @@
 			autodiscover:		false,
 			speed:				'fast',
 			draggable:			true,
-			dragitems:			'textarea',
+			dragtarget:			'textarea',
 			formatter: {
 				markdown: {
 					image: '![{@text}]({@path})',
@@ -170,7 +170,7 @@
 						entry: id
 					},
 					dataType: 'html',
-					success: function(result) {
+					success: function(result, a, b, c) {
 					
 						result = jQuery(result);
 					
@@ -192,9 +192,9 @@
 						// Store new item
 						if(create) {
 							
-							// Selectbox
-							var option = jQuery('<option value="' + id + '" selected="selected">New item</option>');
-							object.find('select').append(option);
+							// Synchronize Stage
+							item = object.find('li[value=' + result.attr('value') + ']');
+							object.find('div.stage').trigger('sync', [item]);
 							
 							// Queue
 							result.addClass('selected');
@@ -228,7 +228,7 @@
 
 						// Add empty selection message
 						var selection = object.find('ul.selection').find(settings.items);
-						if(selection.filter(':not(.new)').size() <= 1) {
+						if(selection.filter(':not(.new)').size() < 1) {
 							object.find('ul.selection li.empty').slideDown(settings.speed);
 						}
 
@@ -378,7 +378,7 @@
 					
 					// Handle drop events
 					if(settings.draggable) {
-						jQuery(settings.dragitems).unbind('drop').bind('drop', function(event, item) {
+						jQuery(settings.dragtarget).unbind('drop').bind('drop', function(event, item) {
 							drop(event, item);
 						});
 					}
