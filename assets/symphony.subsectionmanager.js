@@ -94,9 +94,23 @@
 					
 					// Handle iframe
 					iframe.load(function(event) {
-					
+						
+						var $this = jQuery(this);
+						
+						// Remove unneeded elements
+						$this.contents().find('body').addClass('subsection');
+						$this.contents().find('h1').remove();
+						$this.contents().find('h2').remove();
+						$this.contents().find('#nav').remove();
+						$this.contents().find('#usr').remove();
+						$this.contents().find('#notice:not(.error):not(.success)').remove();
+						$this.contents().find('#notice a').remove();
+						
+						// Focus first input field
+						$this.contents().find('input:first').focus();
+						
 						// Set frame and drawer height
-						var height = jQuery(this.contentDocument.body).find('form').outerHeight();
+						var height = $this.contents().find('form').outerHeight();
 						iframe.height(height).animate({
 							opacity: 1
 						}, 'fast');

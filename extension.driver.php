@@ -76,7 +76,6 @@
 
 			// Append styles and javascript for mediasection display
 			if($callback['driver'] == 'publish' && ($callback['context']['page'] == 'edit' || $callback['context']['page'] == 'new')) {
-					Administration::instance()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/assets/symphony.subsection.js', 100, false);
 					Administration::instance()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/assets/symphony.subsection.css', 'screen', 101, false);
 			}
 		}
