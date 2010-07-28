@@ -1,0 +1,93 @@
+/*
+ * SUBSECTION MANAGER for Symphony
+ *
+ * @author: Nils Hörrmann, post@nilshoerrmann.de
+ * @source: http://github.com/nilshoerrmann/stage
+ */
+ 
+.content fieldset.settings {
+	margin: 2.5em -1.75em 0;
+	border-top: 1px solid #eed;
+	border-bottom: none;
+	padding: 2em 1.75em 0;
+	clear: both;
+}
+
+.content fieldset.settings.wide {
+	padding: 2em 0 0;
+}
+
+.content fieldset.settings legend {
+	color: #665;
+	float: none;
+	font-weight: normal;
+	line-height: 1;
+	text-indent: 0;
+	background: #DDC;
+	padding: 0 0.75em 0 0.5em;
+	margin: 0 0 0 -0.5em;
+	width: auto;
+}
+
+.content fieldset.settings.wide legend {
+	margin: 0 0 0 1.25em;
+}
+
+.content fieldset.settings.caption label {
+	width: 48.5%;
+	display: block;
+}
+
+.content fieldset.settings.caption label.thumbnails {
+	position: absolute;
+	top: 3em;
+	left: 50%;
+	width: auto;
+}
+ 
+.content ul.settings {
+	margin: -1.75em 0 0;
+	padding: 0;
+	list-style: none;
+	width: 100%;
+}
+
+.content ul.settings li {
+	position: relative;
+	float: left;
+	width: 50%;
+	min-width: 350px;
+	margin-top: 1.75em;
+}
+
+.content ul.settings li input {
+	margin-left: 1.75em;
+}
+
+.content ul.settings li i {
+	color: #887;
+	display: block;
+	position: relative;
+	right: auto;
+	padding-left: 3.35em;
+}
+
+.content i code {
+	font-size: 1em;
+}
+
+.content fieldset.settings label.thumbnails {
+	padding: 1.95em 0 0 1.75em;
+	width: 200px;
+}
+
+.content hr {
+	background: #eed;
+	border: none;
+	height: 1px;
+	margin: 0 -1.75em 1.75em;
+}
+
+.content ul.tags {
+	margin-bottom: 2.75em;
+}

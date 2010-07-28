@@ -1,5 +1,5 @@
 /*
- * SUBSECTIONMANAGER for Symphony
+ * SUBSECTION MANAGER for Symphony
  *
  * @author: Nils Hörrmann, post@nilshoerrmann.de
  * @source: http://github.com/nilshoerrmann/mediathek
@@ -36,7 +36,7 @@
 			}
 	
 			// Show and hide caption suggestions
-			subsectionmanager.find('ul.inline').hide().filter('.section' + id).show();
+			subsectionmanager.find('ul.inline li').hide().filter('*[rel=section' + id + ']').show();
 	
 			// Show and hide data source sections
 			if(groups.length > 0) {

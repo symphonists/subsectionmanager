@@ -71,6 +71,7 @@
 			// Append javascript for field settings pane
 			if($callback['driver'] == 'blueprintssections' && is_array($callback['context'])) {
 				Administration::instance()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/assets/settings.subsectionmanager.js', 100, false);
+				Administration::instance()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/assets/settings.subsectionmanager.css', 'screen', 101, false);
 			}
 
 			// Append styles and javascript for mediasection display

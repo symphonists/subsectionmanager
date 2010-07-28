@@ -46,13 +46,12 @@
 
 			// Initialize field settings based on class defaults (name, placement)
 			parent::displaySettingsPanel($wrapper, $errors);
-			$this->appendShowColumnCheckbox($wrapper);
 
 			// Get current section id
 			$section_id = Administration::instance()->Page->_context[1];
 
 			// Related section
-			$label = Widget::Label(__('Related section'));
+			$label = new XMLElement('label', __('Subsection'));
 			$sectionManager = new SectionManager($this->_engine);
 		  	$sections = $sectionManager->fetch(NULL, 'ASC', 'name');
 			$options = array(
@@ -72,27 +71,10 @@
 			else {
 				$wrapper->appendChild($label);
 			}
-
-			// Multiple options
-			$label = Widget::Label();
-			$input = Widget::Input('fields['.$this->get('sortorder').'][allow_multiple_selection]', 'yes', 'checkbox');
-			if($this->get('allow_multiple_selection') != 'no') {
-				$input->setAttribute('checked', 'checked');
-			}
-			$label->setValue(__('%s Allow selection of multiple options', array($input->generate())));
-			$wrapper->appendChild($label);
 			
-			// Preview options
-			$label = Widget::Label();
-			$input = Widget::Input('fields['.$this->get('sortorder').'][show_preview]', 'yes', 'checkbox');
-			if($this->get('show_preview') != 'no') {
-				$input->setAttribute('checked', 'checked');
-			}
-			$label->setValue(__('%s Preview images and files', array($input->generate())));
-			$wrapper->appendChild($label);
-
+			
 			// Filter input
-			$label = new XMLElement('label', __('Filter items by tags or categories') . '<i>' . __('Comma separated, click alt for negation') . '</i>', array('class' => 'filter', 'style' => 'display: none;'));
+			$label = new XMLElement('label', __('Filter items by tags or categories') . '<i>' . __('Comma separated, alt+click for negation') . '</i>', array('class' => 'filter', 'style' => 'display: none;'));
 			$label->appendChild(Widget::Input('fields['.$this->get('sortorder').'][filter_tags]', $this->get('filter_tags')));
 			$wrapper->appendChild($label);
 
@@ -129,42 +111,102 @@
 						$wrapper->appendChild($filter);
 					}
 				}
-			}
-
+			}			
+			
+			
+			// BEHAVIOUR
+			$behaviour = new XMLElement('fieldset', '<legend>' . __('Behaviour') . '</legend>', array('class' => 'settings wide'));
+			$list = new XMLElement('ul', NULL, array('class' => 'settings'));
+			
+			// Setting: constructable
+			$setting = new XMLElement('li', '<input name="fields['.$this->get('sortorder').'][stage][constructable]" type="checkbox" value="yes" checked="checked" /> ' . __('Allow creation of new items') . ' <i>' . __('This will add a <code>Create New</code> button to the interface') . '</i>');
+			$list->appendChild($setting);
+			
+			// Setting: destructable
+			$setting = new XMLElement('li', '<input name="fields['.$this->get('sortorder').'][stage][destructable]" type="checkbox" value="yes" checked="checked" /> ' . __('Allow deselection of items') . ' <i>' . __('This will add a <code>Remove</code> button to the interface') . '</i>');
+			$list->appendChild($setting);
+			
+			// Setting: searchable
+			$setting = new XMLElement('li', '<input name="fields['.$this->get('sortorder').'][stage][searchable]" type="checkbox" value="yes" checked="checked" /> ' . __('Allow selection of items from a list of existing items') . ' <i>' . __('This will add a search field to the interface') . '</i>');
+			$list->appendChild($setting);
+			
+			// Setting: droppable
+			$setting = new XMLElement('li', '<input name="fields['.$this->get('sortorder').'][stage][droppable]" type="checkbox" value="yes" checked="checked" /> ' . __('Allow dropping of items') . ' <i>' . __('This will enable item dropping on textareas') . '</i>');
+			$list->appendChild($setting);
+			
+			// Setting: allow multiple
+			$setting = new XMLElement('li', '<input name="fields[' . $this->get('sortorder') . '][allow_multiple_selection]" type="checkbox" value="yes" checked="checked" /> ' . __('Allow selection of multiple items') . ' <i>' . __('This will switch between single and multiple item lists') . '</i>');
+			$list->appendChild($setting);
+			
+			// Setting: draggable
+			$setting = new XMLElement('li', '<input name="fields['.$this->get('sortorder').'][stage][draggable]" type="checkbox" value="yes" checked="checked" /> ' . __('Allow sorting of items') . ' <i>' . __('This will enable item dragging and reordering') . '</i>');
+			$list->appendChild($setting);
+			
+			// Append behaviour settings
+			$behaviour->appendChild($list);
+			$wrapper->appendChild($behaviour);
+			
+			
+			// DISPLAY
+			$fieldset = new XMLElement('fieldset', '<legend>' . __('Display') . '</legend>', array('class' => 'settings caption'));
+			
 			// Caption input
-			$label = new XMLElement('label', __('Custom item caption') . '<i>' . __('Use <code>{$param}</code> syntax, inline HTML elements allowed') . '</i>');
+			$label = new XMLElement('label', __('Caption'));
 			$label->appendChild(Widget::Input('fields['.$this->get('sortorder').'][caption]', htmlspecialchars($this->get('caption'))));
+			
+			// Append Caption
 			if(isset($errors['caption'])) {
-				$wrapper->appendChild(Widget::wrapFormElementWithError($label, $errors['caption']));
+				$fieldset->appendChild(Widget::wrapFormElementWithError($label, $errors['caption']));
 			}
 			else {
-				$wrapper->appendChild($label);
+				$fieldset->appendChild($label);
 			}
-
-			// Caption suggestions
+			
+			// Caption suggestions		
 			if(is_array($sections) && !empty($sections)) {
+				
+				// Get values
+				$values = array();
 				foreach($sections as $section) {
-					$values = array();
-					$fields = $section->fetchFields();
-					if(is_array($fields)) {
-						foreach($fields as $field) {
-							$values[] = '{$' . $field->get('element_name') . '}';
-						}
-					}
-					if(!empty($values)) {
-						$filter = new XMLElement('ul', NULL, array('class' => 'tags subsectionmanager inline section' . $section->get('id'), 'style' => 'display: none;'));
-						foreach($values as $value) {
-							if(!empty($value)) {
-								$filter->appendChild(new XMLElement('li', trim($value)));
+				
+					// Don't include the current section
+					if($section->get('id') != $section_id) {
+						$fields = $section->fetchFields();
+						
+						// Continue if fields exist
+						if(is_array($fields)) {
+							foreach($fields as $field) {
+								$values[$field->get('element_name')][] = 'section' . $section->get('id');
 							}
 						}
-						$wrapper->appendChild($filter);
+						
 					}
 				}
-			}
+				
+				// Generate list
+				$filter = new XMLElement('ul', NULL, array('class' => 'tags inline'));
+				foreach($values as $handle => $fields) {
+					$filter->appendChild(new XMLElement('li', '{$' . $handle . '}', array('rel' => implode(' ', $fields))));
+				}
+				$fieldset->appendChild($filter);
+				
+			}		
 
-			// Data source filter for related section
-			$label = new XMLElement('label', __('Included elements') . '<i>' . __('Will be used for data source output') . '</i>');
+			// Preview options
+			$label = new XMLElement('label', NULL, array('class' => 'thumbnails'));
+			$input = Widget::Input('fields['.$this->get('sortorder').'][show_preview]', 'yes', 'checkbox');
+			if($this->get('show_preview') != 'no') {
+				$input->setAttribute('checked', 'checked');
+			}
+			$label->setValue(__('%s Show thumbnail images', array($input->generate())));
+			$fieldset->appendChild($label);			
+			$wrapper->appendChild($fieldset);
+		
+			
+			// DATA SOURCE
+			$fieldset = new XMLElement('fieldset', '<legend>' . __('Data Source XML') . '</legend>', array('class' => 'settings'));
+
+			$label = new XMLElement('label', __('Included elements') . '<i>' . __('Don\'t forget to include the Subsection Manager field in your Data Source') . '</i>');
 			$field_groups = array();
 			if(is_array($sections) && !empty($sections)) {
 				foreach($sections as $section) {
@@ -185,7 +227,15 @@
 				}
 			}
 			$label->appendChild(Widget::Select('fields['.$this->get('sortorder').'][included_fields][]', $options, array('multiple' => 'multiple', 'class' => 'datasource')));
-			$wrapper->appendChild($label);
+			$fieldset->appendChild($label);
+			
+			$wrapper->appendChild($fieldset);
+
+
+			// Show column
+			$line = new XMLElement('hr');
+			$wrapper->appendChild($line);
+			$this->appendShowColumnCheckbox($wrapper);
 
 		}
 
@@ -199,12 +249,12 @@
 
 			if(!is_array($errors)) $errors = array();
 
-			// check if a related section has been selected
+			// Check if a related section has been selected
 			if($this->get('subsection_id') == '') {
 				$errors['subsection_id'] = __('This is a required field.');
 			}
 
-			// check if caption content is well formed
+			// Check if caption content is well formed
 			if($this->get('caption')) {
 				$validate = simplexml_load_string('<li>' . $this->get('caption') . '</li>');
 				if(!$validate) {
@@ -221,19 +271,19 @@
 		 */
 		function commit() {
 
-			// prepare commit
+			// Prepare commit
 			if(!parent::commit()) return false;
 			$id = $this->get('id');
 			if($id === false) return false;
 
-			// set up fields
+			// Set up fields
 			$fields = array();
 			$fields['field_id'] = $id;
 			$fields['subsection_id'] = $this->get('subsection_id');
 			$fields['allow_multiple_selection'] = ($this->get('allow_multiple_selection') ? $this->get('allow_multiple_selection') : 'no');
 			$fields['show_preview'] = ($this->get('show_preview') ? $this->get('show_preview') : 'no');
 
-			// clean up filter values
+			// Clean up filter values
 			if($this->get('filter_tags') != '') {
 				$tags = explode(",", $this->get('filter_tags'));
 				foreach($tags as &$tag) {
@@ -243,7 +293,7 @@
 				$fields['filter_tags'] = implode(', ', $list);
 			}
 
-			// item caption
+			// Item caption
 			$fields['caption'] = $this->get('caption');
 			if($this->get('caption') == '') {
 			
@@ -278,15 +328,15 @@
 								
 			}
 
-			// data source fields
+			// Data source fields
 			$fields['included_fields'] = (is_null($this->get('included_fields')) ? NULL : implode(',', $this->get('included_fields')));
 
-			// delete old field settings
+			// Delete old field settings
 			Administration::instance()->Database->query(
 				"DELETE FROM `tbl_fields_".$this->handle()."` WHERE `field_id` = '$id' LIMIT 1"
 			);
 
-			// save new field setting
+			// Save new field setting
 			return Administration::instance()->Database->insert($fields, 'tbl_fields_' . $this->handle());
 
 		}
@@ -385,7 +435,8 @@
  		/**
 		 * Prepares field values for database.
 		 */
-		function processRawFieldData($data, &$status, $simulate=false, $entry_id=NULL){
+		function processRawFieldData($data, &$status, $simulate=false, $entry_id=NULL) {
+		
 			$status = self::__OK__;
 			if(!is_array($data) && !is_null($data)) return array('relation_id' => $data);
 			if(empty($data)) return NULL;
@@ -423,7 +474,8 @@
 		 * @param array $data
 		 * @param XMLElement $link
 		 */
-		function prepareTableValue($data, XMLElement $link=NULL){
+		function prepareTableValue($data, XMLElement $link=NULL) {
+		
 			if(empty($data['relation_id'])) return NULL;
 			$count = count($data['relation_id']);
 			return parent::prepareTableValue(array('value' => ($count > 1) ? $count . ' ' . __('items') : $count . ' ' . __('item')), $link);
@@ -440,13 +492,13 @@
 		 */
 		public function appendFormattedElement(&$wrapper, $data, $encode = false) {
 
-			// unify data
+			// Unify data
 			if(!is_array($data['relation_id'])) $data['relation_id'] = array($data['relation_id']);
 
-			// create Subsection Manager element
+			// Create Subsection Manager element
 			$subsectionmanager = new XMLElement($this->get('element_name'));
 
-			// check for included fields
+			// Check for included fields
 			if($this->get('included_fields') == '') {
 				$error = new XMLElement('error', 'No fields for output defined.');
 				$subsectionmanager->appendChild($error);
@@ -454,11 +506,11 @@
 				return;
 			}
 
-			// fetch field data
+			// Fetch field data
 			$entryManager = new EntryManager($this->_engine);
 			$entries = $entryManager->fetch($data['relation_id'], $this->get('subsection_id'));
 
-			// sort entries
+			// Sort entries
 			$order = $this->_Parent->_Parent->Database->fetchVar('order', 0,
 				"SELECT `order`
 				FROM `tbl_fields_subsectionmanager_sorting`
@@ -481,18 +533,21 @@
 				$sorted_entries = $entries;
 			}
 
-			// build XML
+			// Build XML
 			$count = 1;
 			foreach($sorted_entries as $entry) {
-				// fetch entry data
+			
+				// Fetch entry data
 				$entry_data = $entry->getData();
 
-				// create entry element
+				// Create entry element
 				$item = new XMLElement('item');
-				// populate entry element
+				
+				// Populate entry element
 				$included_fields = explode(',', $this->get('included_fields'));
 				foreach ($entry_data as $field_id => $values) {
-					// only append if field is listed or if list empty
+				
+					// Only append if field is listed or if list empty
 					if(in_array($field_id, $included_fields) || empty($included_fields[0])) {
 						$item_id = $entry->get('id');
 						$item->setAttribute('id', $item_id);
@@ -500,13 +555,14 @@
 						$field->appendFormattedElement($item, $values, false);
 					}
 				}
-				// append entry element
+				
+				// Append entry element
 				$subsectionmanager->appendChild($item);
 				$subsectionmanager->setAttribute('items', $count);
 				$count++;
 			}
 
-			// append Subsection Manager to data source
+			// Append Subsection Manager to data source
 			$wrapper->appendChild($subsectionmanager);
 
 		}
@@ -543,9 +599,11 @@
  		/**
 		 * Returns sample markup for the event editor.
 		 */
-		public function getExampleFormMarkup(){
-			// nothing to show here yet
+		public function getExampleFormMarkup() {
+		
+			// Nothing to show here yet
 			return Widget::Select('fields['.$this->get('element_name').']', array(array('...')));
+			
 		}
 
  		/**
