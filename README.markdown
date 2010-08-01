@@ -3,7 +3,7 @@
 A subsection management for Symphony.  
 **USE FOR TESTING PURPOSE ONLY! DO NOT USE IN LIVE ENVIRONMENTS!**
 
-- Version: 1.0dev
+- Version: 1.0RC1
 - Date: **unreleased**
 - Requirements: Symphony CMS 2.1 or newer, <http://github.com/symphony/symphony-2>
 - Optional Requirement: JIT Image Manipulation (for image previews), <http://github.com/pointybeard/jit_image_manipulation>

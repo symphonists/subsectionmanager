@@ -9,7 +9,7 @@
 			return array(
 				'name' => 'Subsection Manager',
 				'type' => 'Field, Interface',
-				'version' => '1.0dev',
+				'version' => '1.0RC1',
 				'release-date' => false,
 				'author' => array(
 					'name' => 'Nils Hörrmann',
