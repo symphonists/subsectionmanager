@@ -145,8 +145,7 @@
 					// Automatically hide drawer later
 					if(!create) {
 						jQuery('body').bind('click', function(event) {
-
-							if(jQuery(event.target).parents().filter('li.active, li.drawer, li.new').size() == 0) {
+							if(jQuery(event.target).parents().filter('li.active, li.drawer, li.new, ul.selection').size() == 0) {						
 								object.find('div.stage li.active').removeClass('active');
 								object.find('div.stage li.drawer:not(.create):not(.template)').slideUp('normal', function(element) {
 									jQuery(this).remove();
