@@ -167,7 +167,7 @@
 			}
 			
 			// Caption suggestions		
-			if(is_array($sections) && !empty($sections)) {
+			if(is_array($sections) && !empty($sections) && !isset($errors['caption'])) {
 				
 				// Get values
 				$values = array();
@@ -262,7 +262,7 @@
 
 			// Check if caption content is well formed
 			if($this->get('caption')) {
-				$validate = simplexml_load_string('<li>' . $this->get('caption') . '</li>');
+				$validate = @simplexml_load_string('<li>' . $this->get('caption') . '</li>');
 				if(!$validate) {
 					$errors['caption'] = __('Caption has to be well-formed. Please check opening and closing tags.');
 				}
