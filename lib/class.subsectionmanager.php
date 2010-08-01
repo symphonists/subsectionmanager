@@ -29,7 +29,7 @@
 			);
 			
 			// Get display mode
-			if($meta[0]['show_preview'] == 'yes') {
+			if($meta[0]['show_preview'] == 1) {
 				$mode = 'preview';
 			}
 			else {

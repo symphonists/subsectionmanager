@@ -359,9 +359,14 @@
 				
 					// Initialize stage for subsections
 					jQuery(document).ready(function() {
-						object.find('div.stage').symphonyStage({
+						var stage = object.find('div.stage');
+						stage.symphonyStage({
 							source: object.find('select'),
-							draggable: true,
+							draggable: stage.hasClass('draggable'),
+							droppable: stage.hasClass('droppable'),
+							constructable: stage.hasClass('constructable'),
+							destructable: stage.hasClass('destructable'),
+							searchable: stage.hasClass('searchable'),
 							dragclick: function(item) {
 								if(!item.hasClass('message')) {
 									edit(item);
@@ -373,7 +378,7 @@
 									id: id, 
 									section: section 
 								}
-							}
+							}						
 						});
 					});
 
