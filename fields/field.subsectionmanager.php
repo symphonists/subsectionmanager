@@ -117,28 +117,33 @@
 			// BEHAVIOUR
 			$fieldset = new XMLElement('fieldset', '<legend>' . __('Behaviour') . '</legend>', array('class' => 'settings group compact'));
 			
+			// Get stage settings
+			$stage = Administration::instance()->Database->fetchRow(0, 
+				"SELECT * FROM tbl_fields_stage WHERE field_id = '" . $this->get('id') . "' LIMIT 1"
+			);
+			
 			// Setting: constructable
-			$setting = new XMLElement('label', '<input name="fields['.$this->get('sortorder').'][stage][constructable]" type="checkbox" value="yes" checked="checked" /> ' . __('Allow creation of new items') . ' <i>' . __('This will add a <code>Create New</code> button to the interface') . '</i>');
+			$setting = new XMLElement('label', '<input name="fields['.$this->get('sortorder').'][stage][constructable]" type="checkbox"' . ($stage['constructable'] == 0 ? '': ' checked="checked"') . '/> ' . __('Allow creation of new items') . ' <i>' . __('This will add a <code>Create New</code> button to the interface') . '</i>');
 			$fieldset->appendChild($setting);
 			
 			// Setting: destructable
-			$setting = new XMLElement('label', '<input name="fields['.$this->get('sortorder').'][stage][destructable]" type="checkbox" value="yes" checked="checked" /> ' . __('Allow deselection of items') . ' <i>' . __('This will add a <code>Remove</code> button to the interface') . '</i>');
+			$setting = new XMLElement('label', '<input name="fields['.$this->get('sortorder').'][stage][destructable]" type="checkbox"' . ($stage['destructable'] == 0 ? '': ' checked="checked"') . '/> ' . __('Allow deselection of items') . ' <i>' . __('This will add a <code>Remove</code> button to the interface') . '</i>');
 			$fieldset->appendChild($setting);
 			
 			// Setting: searchable
-			$setting = new XMLElement('label', '<input name="fields['.$this->get('sortorder').'][stage][searchable]" type="checkbox" value="yes" checked="checked" /> ' . __('Allow selection of items from a list of existing items') . ' <i>' . __('This will add a search field to the interface') . '</i>');
+			$setting = new XMLElement('label', '<input name="fields['.$this->get('sortorder').'][stage][searchable]" type="checkbox"' . ($stage['searchable'] == 0 ? '': ' checked="checked"') . '/> ' . __('Allow selection of items from a list of existing items') . ' <i>' . __('This will add a search field to the interface') . '</i>');
 			$fieldset->appendChild($setting);
 			
 			// Setting: droppable
-			$setting = new XMLElement('label', '<input name="fields['.$this->get('sortorder').'][stage][droppable]" type="checkbox" value="yes" checked="checked" /> ' . __('Allow dropping of items') . ' <i>' . __('This will enable item dropping on textareas') . '</i>');
+			$setting = new XMLElement('label', '<input name="fields['.$this->get('sortorder').'][stage][droppable]" type="checkbox"' . ($stage['droppable'] == 0 ? '': ' checked="checked"') . '/> ' . __('Allow dropping of items') . ' <i>' . __('This will enable item dropping on textareas') . '</i>');
 			$fieldset->appendChild($setting);
 			
 			// Setting: allow multiple
-			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][allow_multiple_selection]" type="checkbox" value="yes" checked="checked" /> ' . __('Allow selection of multiple items') . ' <i>' . __('This will switch between single and multiple item lists') . '</i>');
+			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][allow_multiple_selection]" type="checkbox"' . ($this->get('allow_multiple') == 'yes' ? '': ' checked="checked"') . '/> ' . __('Allow selection of multiple items') . ' <i>' . __('This will switch between single and multiple item lists') . '</i>');
 			$fieldset->appendChild($setting);
 			
 			// Setting: draggable
-			$setting = new XMLElement('label', '<input name="fields['.$this->get('sortorder').'][stage][draggable]" type="checkbox" value="yes" checked="checked" /> ' . __('Allow sorting of items') . ' <i>' . __('This will enable item dragging and reordering') . '</i>');
+			$setting = new XMLElement('label', '<input name="fields['.$this->get('sortorder').'][stage][draggable]" type="checkbox"' . ($stage['draggable'] == 0 ? '': ' checked="checked"') . '/> ' . __('Allow sorting of items') . ' <i>' . __('This will enable item dragging and reordering') . '</i>');
 			$fieldset->appendChild($setting);
 			
 			// Append behaviour settings
