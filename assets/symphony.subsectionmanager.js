@@ -73,7 +73,7 @@
 				var source = iframe.attr('target') + '/{$action}/{$id}' ;
 				var id = item.attr('value');
 				
-				if(!item.next('li').hasClass('drawer')) {
+				if(!item.next('li:not(.template)').hasClass('drawer')) {
 						
 					// Setup source
 					if(create) {
@@ -95,22 +95,22 @@
 					// Handle iframe
 					iframe.load(function(event) {
 						
-						var $this = jQuery(this);
+						var contents = iframe.contents();
 						
 						// Remove unneeded elements
-						$this.contents().find('body').addClass('subsection');
-						$this.contents().find('h1').remove();
-						$this.contents().find('h2').remove();
-						$this.contents().find('#nav').remove();
-						$this.contents().find('#usr').remove();
-						$this.contents().find('#notice:not(.error):not(.success)').remove();
-						$this.contents().find('#notice a').remove();
+						contents.find('body').addClass('subsection');
+						contents.find('h1').remove();
+						contents.find('h2').remove();
+						contents.find('#nav').remove();
+						contents.find('#usr').remove();
+						contents.find('#notice:not(.error):not(.success)').remove();
+						contents.find('#notice a').remove();
 						
 						// Focus first input field
-						$this.contents().find('input:first').focus();
+						contents.find('input:first').focus();
 						
 						// Set frame and drawer height
-						var height = $this.contents().find('form').outerHeight();
+						var height = contents.find('form').outerHeight();
 						iframe.height(height).animate({
 							opacity: 1
 						}, 'fast');
@@ -119,26 +119,26 @@
 						}, settings.speed);
 						
 						// Fetch saving
-						iframe.contents().find('div.actions input').click(function() {
+						contents.find('div.actions input').click(function() {
 							iframe.animate({
 								opacity: 0.01
 							}, 'fast');
 						})
 						
 						// Update item 
-						if(iframe.contents().find('#notice.success').size() > 0) {
+						if(contents.find('#notice.success').size() > 0) {
 							update(item.attr('value'), item, iframe, create);
 						}
 											
 						// Delete item
-						var remove = iframe.contents().find('button.confirm');
+						var remove = contents.find('button.confirm');
 						remove.die('click').unbind();
 						remove.click(function(event) {
 							erase(event, id);
 						});
 						
 						// Focus first input
-						iframe.contents().find('fieldset input:first').focus();
+						contents.find('fieldset input:first').focus();
 						
 					});
 				
