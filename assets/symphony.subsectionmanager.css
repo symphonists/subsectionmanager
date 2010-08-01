@@ -98,3 +98,14 @@ div.stage ul li.drawer {
 div.dropper {
 	background: rgba(0, 0, 0, 0.8) url(images/drop.png) center no-repeat;
 }
+
+/* System error messages */
+
+div.field-subsectionmanager div.invalid {
+	margin: -1.75em 0 1.75em;
+}
+
+div.field-subsectionmanager div.invalid div.stage {
+	margin: 0 0px 1.75em;
+	border: 1px solid #B21;
+}

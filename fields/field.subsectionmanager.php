@@ -12,7 +12,7 @@
 		function __construct(&$parent) {
 			parent::__construct($parent);
 			$this->_name = __('Subsection Manager');
-			$this->_required = false;
+			$this->_required = true;
 		}
 
 		/**
