@@ -115,40 +115,39 @@
 			
 			
 			// BEHAVIOUR
-			$behaviour = new XMLElement('fieldset', '<legend>' . __('Behaviour') . '</legend>', array('class' => 'settings wide'));
-			$list = new XMLElement('ul', NULL, array('class' => 'settings'));
+			$fieldset = new XMLElement('fieldset', '<legend>' . __('Behaviour') . '</legend>', array('class' => 'settings group compact'));
 			
 			// Setting: constructable
-			$setting = new XMLElement('li', '<input name="fields['.$this->get('sortorder').'][stage][constructable]" type="checkbox" value="yes" checked="checked" /> ' . __('Allow creation of new items') . ' <i>' . __('This will add a <code>Create New</code> button to the interface') . '</i>');
-			$list->appendChild($setting);
+			$setting = new XMLElement('label', '<input name="fields['.$this->get('sortorder').'][stage][constructable]" type="checkbox" value="yes" checked="checked" /> ' . __('Allow creation of new items') . ' <i>' . __('This will add a <code>Create New</code> button to the interface') . '</i>');
+			$fieldset->appendChild($setting);
 			
 			// Setting: destructable
-			$setting = new XMLElement('li', '<input name="fields['.$this->get('sortorder').'][stage][destructable]" type="checkbox" value="yes" checked="checked" /> ' . __('Allow deselection of items') . ' <i>' . __('This will add a <code>Remove</code> button to the interface') . '</i>');
-			$list->appendChild($setting);
+			$setting = new XMLElement('label', '<input name="fields['.$this->get('sortorder').'][stage][destructable]" type="checkbox" value="yes" checked="checked" /> ' . __('Allow deselection of items') . ' <i>' . __('This will add a <code>Remove</code> button to the interface') . '</i>');
+			$fieldset->appendChild($setting);
 			
 			// Setting: searchable
-			$setting = new XMLElement('li', '<input name="fields['.$this->get('sortorder').'][stage][searchable]" type="checkbox" value="yes" checked="checked" /> ' . __('Allow selection of items from a list of existing items') . ' <i>' . __('This will add a search field to the interface') . '</i>');
-			$list->appendChild($setting);
+			$setting = new XMLElement('label', '<input name="fields['.$this->get('sortorder').'][stage][searchable]" type="checkbox" value="yes" checked="checked" /> ' . __('Allow selection of items from a list of existing items') . ' <i>' . __('This will add a search field to the interface') . '</i>');
+			$fieldset->appendChild($setting);
 			
 			// Setting: droppable
-			$setting = new XMLElement('li', '<input name="fields['.$this->get('sortorder').'][stage][droppable]" type="checkbox" value="yes" checked="checked" /> ' . __('Allow dropping of items') . ' <i>' . __('This will enable item dropping on textareas') . '</i>');
-			$list->appendChild($setting);
+			$setting = new XMLElement('label', '<input name="fields['.$this->get('sortorder').'][stage][droppable]" type="checkbox" value="yes" checked="checked" /> ' . __('Allow dropping of items') . ' <i>' . __('This will enable item dropping on textareas') . '</i>');
+			$fieldset->appendChild($setting);
 			
 			// Setting: allow multiple
-			$setting = new XMLElement('li', '<input name="fields[' . $this->get('sortorder') . '][allow_multiple_selection]" type="checkbox" value="yes" checked="checked" /> ' . __('Allow selection of multiple items') . ' <i>' . __('This will switch between single and multiple item lists') . '</i>');
-			$list->appendChild($setting);
+			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][allow_multiple_selection]" type="checkbox" value="yes" checked="checked" /> ' . __('Allow selection of multiple items') . ' <i>' . __('This will switch between single and multiple item lists') . '</i>');
+			$fieldset->appendChild($setting);
 			
 			// Setting: draggable
-			$setting = new XMLElement('li', '<input name="fields['.$this->get('sortorder').'][stage][draggable]" type="checkbox" value="yes" checked="checked" /> ' . __('Allow sorting of items') . ' <i>' . __('This will enable item dragging and reordering') . '</i>');
-			$list->appendChild($setting);
+			$setting = new XMLElement('label', '<input name="fields['.$this->get('sortorder').'][stage][draggable]" type="checkbox" value="yes" checked="checked" /> ' . __('Allow sorting of items') . ' <i>' . __('This will enable item dragging and reordering') . '</i>');
+			$fieldset->appendChild($setting);
 			
 			// Append behaviour settings
-			$behaviour->appendChild($list);
-			$wrapper->appendChild($behaviour);
+			$wrapper->appendChild($fieldset);
 			
 			
 			// DISPLAY
-			$fieldset = new XMLElement('fieldset', '<legend>' . __('Display') . '</legend>', array('class' => 'settings caption'));
+			$fieldset = new XMLElement('fieldset', '<legend>' . __('Display') . '</legend>', array('class' => 'settings group'));
+			$container = new XMLElement('div');
 			
 			// Caption input
 			$label = new XMLElement('label', __('Caption'));
@@ -156,10 +155,10 @@
 			
 			// Append Caption
 			if(isset($errors['caption'])) {
-				$fieldset->appendChild(Widget::wrapFormElementWithError($label, $errors['caption']));
+				$container->appendChild(Widget::wrapFormElementWithError($label, $errors['caption']));
 			}
 			else {
-				$fieldset->appendChild($label);
+				$container->appendChild($label);
 			}
 			
 			// Caption suggestions		
@@ -188,9 +187,10 @@
 				foreach($values as $handle => $fields) {
 					$filter->appendChild(new XMLElement('li', '{$' . $handle . '}', array('rel' => implode(' ', $fields))));
 				}
-				$fieldset->appendChild($filter);
+				$container->appendChild($filter);
 				
-			}		
+			}
+			$fieldset->appendChild($container);
 
 			// Preview options
 			$label = new XMLElement('label', NULL, array('class' => 'thumbnails'));
@@ -232,10 +232,11 @@
 			$wrapper->appendChild($fieldset);
 
 
-			// Show column
-			$line = new XMLElement('hr');
-			$wrapper->appendChild($line);
-			$this->appendShowColumnCheckbox($wrapper);
+			// GENERAL
+			$fieldset = new XMLElement('fieldset', NULL, array('class' => 'settings group'));
+			$this->appendShowColumnCheckbox($fieldset);
+			$this->appendRequiredCheckbox($fieldset);
+			$wrapper->appendChild($fieldset);
 
 		}
 
