@@ -52,6 +52,7 @@ div.stage.preview strong.file, div.draghelper strong.file {
 
 div.stage li.drawer iframe {
 	width: 100%;
+	display: block;
 }
 
 div.stage li em, div.draghelper em, div.stage li em, div.stage li em:hover, div.draghelper em:hover, div.stage li em:hover {
