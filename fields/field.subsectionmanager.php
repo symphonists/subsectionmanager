@@ -64,7 +64,7 @@
 					}
 				}
 			}
-			$label->appendChild(Widget::Select('fields['.$this->get('sortorder').'][subsection_id]', $options, array('class' => 'subsectionmanager')));
+			$label->appendChild(Widget::Select('fields[' . $this->get('sortorder') . '][subsection_id]', $options, array('class' => 'subsectionmanager')));
 			if(isset($errors['subsection_id'])) {
 				$wrapper->appendChild(Widget::wrapFormElementWithError($label, $errors['subsection_id']));
 			}
@@ -75,7 +75,7 @@
 			
 			// Filter input
 			$label = new XMLElement('label', __('Filter items by tags or categories') . '<i>' . __('Comma separated, alt+click for negation') . '</i>', array('class' => 'filter', 'style' => 'display: none;'));
-			$label->appendChild(Widget::Input('fields['.$this->get('sortorder').'][filter_tags]', $this->get('filter_tags')));
+			$label->appendChild(Widget::Input('fields[' . $this->get('sortorder') . '][filter_tags]', $this->get('filter_tags')));
 			$wrapper->appendChild($label);
 
 			// Filter suggestions
@@ -123,27 +123,27 @@
 			);
 			
 			// Setting: constructable
-			$setting = new XMLElement('label', '<input name="fields['.$this->get('sortorder').'][stage][constructable]" type="checkbox"' . ($stage['constructable'] == 0 ? '': ' checked="checked"') . '/> ' . __('Allow creation of new items') . ' <i>' . __('This will add a <code>Create New</code> button to the interface') . '</i>');
+			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][stage][constructable]" value="1" type="checkbox"' . ($stage['constructable'] == 0 ? '' : ' checked="checked"') . '/> ' . __('Allow creation of new items') . ' <i>' . __('This will add a <code>Create New</code> button to the interface') . '</i>');
 			$fieldset->appendChild($setting);
 			
 			// Setting: destructable
-			$setting = new XMLElement('label', '<input name="fields['.$this->get('sortorder').'][stage][destructable]" type="checkbox"' . ($stage['destructable'] == 0 ? '': ' checked="checked"') . '/> ' . __('Allow deselection of items') . ' <i>' . __('This will add a <code>Remove</code> button to the interface') . '</i>');
+			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][stage][destructable]" value="1" type="checkbox"' . ($stage['destructable'] == 0 ? '' : ' checked="checked"') . '/> ' . __('Allow deselection of items') . ' <i>' . __('This will add a <code>Remove</code> button to the interface') . '</i>');
 			$fieldset->appendChild($setting);
 			
 			// Setting: searchable
-			$setting = new XMLElement('label', '<input name="fields['.$this->get('sortorder').'][stage][searchable]" type="checkbox"' . ($stage['searchable'] == 0 ? '': ' checked="checked"') . '/> ' . __('Allow selection of items from a list of existing items') . ' <i>' . __('This will add a search field to the interface') . '</i>');
+			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][stage][searchable]" value="1" type="checkbox"' . ($stage['searchable'] == 0 ? '' : ' checked="checked"') . '/> ' . __('Allow selection of items from a list of existing items') . ' <i>' . __('This will add a search field to the interface') . '</i>');
 			$fieldset->appendChild($setting);
 			
 			// Setting: droppable
-			$setting = new XMLElement('label', '<input name="fields['.$this->get('sortorder').'][stage][droppable]" type="checkbox"' . ($stage['droppable'] == 0 ? '': ' checked="checked"') . '/> ' . __('Allow dropping of items') . ' <i>' . __('This will enable item dropping on textareas') . '</i>');
+			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][stage][droppable]" value="1" type="checkbox"' . ($stage['droppable'] == 0 ? '' : ' checked="checked"') . '/> ' . __('Allow dropping of items') . ' <i>' . __('This will enable item dropping on textareas') . '</i>');
 			$fieldset->appendChild($setting);
 			
 			// Setting: allow multiple
-			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][allow_multiple_selection]" type="checkbox"' . ($this->get('allow_multiple') == 'yes' ? '': ' checked="checked"') . '/> ' . __('Allow selection of multiple items') . ' <i>' . __('This will switch between single and multiple item lists') . '</i>');
+			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][allow_multiple]" value="1" type="checkbox"' . ($this->get('allow_multiple') == 0 ? '' : ' checked="checked"') . '/> ' . __('Allow selection of multiple items') . ' <i>' . __('This will switch between single and multiple item lists') . '</i>');
 			$fieldset->appendChild($setting);
 			
 			// Setting: draggable
-			$setting = new XMLElement('label', '<input name="fields['.$this->get('sortorder').'][stage][draggable]" type="checkbox"' . ($stage['draggable'] == 0 ? '': ' checked="checked"') . '/> ' . __('Allow sorting of items') . ' <i>' . __('This will enable item dragging and reordering') . '</i>');
+			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][stage][draggable]" value="1" type="checkbox"' . ($stage['draggable'] == 0 ? '' : ' checked="checked"') . '/> ' . __('Allow sorting of items') . ' <i>' . __('This will enable item dragging and reordering') . '</i>');
 			$fieldset->appendChild($setting);
 			
 			// Append behaviour settings
@@ -156,7 +156,7 @@
 			
 			// Caption input
 			$label = new XMLElement('label', __('Caption'));
-			$label->appendChild(Widget::Input('fields['.$this->get('sortorder').'][caption]', htmlspecialchars($this->get('caption'))));
+			$label->appendChild(Widget::Input('fields[' . $this->get('sortorder') . '][caption]', htmlspecialchars($this->get('caption'))));
 			
 			// Append Caption
 			if(isset($errors['caption'])) {
@@ -199,8 +199,8 @@
 
 			// Preview options
 			$label = new XMLElement('label', NULL, array('class' => 'thumbnails'));
-			$input = Widget::Input('fields['.$this->get('sortorder').'][show_preview]', 'yes', 'checkbox');
-			if($this->get('show_preview') != 'no') {
+			$input = Widget::Input('fields[' . $this->get('sortorder') . '][show_preview]', 1, 'checkbox');
+			if($this->get('show_preview') != 0) {
 				$input->setAttribute('checked', 'checked');
 			}
 			$label->setValue(__('%s Show thumbnail images', array($input->generate())));
@@ -231,7 +231,7 @@
 					$options[] = array('label' => $group['section']->get('id'), 'options' => $fields);
 				}
 			}
-			$label->appendChild(Widget::Select('fields['.$this->get('sortorder').'][included_fields][]', $options, array('multiple' => 'multiple', 'class' => 'datasource')));
+			$label->appendChild(Widget::Select('fields[' . $this->get('sortorder') . '][included_fields][]', $options, array('multiple' => 'multiple', 'class' => 'datasource')));
 			$fieldset->appendChild($label);
 			
 			$wrapper->appendChild($fieldset);
@@ -286,8 +286,28 @@
 			$fields = array();
 			$fields['field_id'] = $id;
 			$fields['subsection_id'] = $this->get('subsection_id');
-			$fields['allow_multiple_selection'] = ($this->get('allow_multiple_selection') ? $this->get('allow_multiple_selection') : 'no');
-			$fields['show_preview'] = ($this->get('show_preview') ? $this->get('show_preview') : 'no');
+			$fields['allow_multiple'] = ($this->get('allow_multiple') ? 1 : 0);
+			$fields['show_preview'] = ($this->get('show_preview') ? 1 : 0);
+			
+			// Initialize stage
+			$this->createStage();
+			
+			// Delete old stage settings
+			Administration::instance()->Database->query(
+				"DELETE FROM `tbl_fields_stage` WHERE `field_id` = '$id' LIMIT 1"
+			);
+					
+			// Save new stage settings
+			if(is_array($this->get('stage'))) {
+				Administration::instance()->Database->query(
+					"INSERT INTO `tbl_fields_stage` (`field_id`, " . implode(', ', array_keys($this->get('stage'))) . ") VALUES ($id, " . implode(', ', $this->get('stage')) . ")"
+				);
+			}
+			else {
+				Administration::instance()->Database->query(
+					"INSERT INTO `tbl_fields_stage` SET `field_id` = '$id'"
+				);
+			}
 
 			// Clean up filter values
 			if($this->get('filter_tags') != '') {
@@ -348,7 +368,7 @@
 		}
 
 		/**
-		 * Displays publish panel in content area.
+		 * Display publish panel in content area.
 		 *
 		 * @param XMLElement $wrapper
 		 * @param $data
@@ -370,7 +390,8 @@
 
 			// Prepare select options
 			$options = $content['options'];
-			if($this->get('allow_multiple_selection') == 'no') {
+			
+			if($this->get('allow_multiple') == 0) {
 				$options[] = array(-1, false, __('None Selected'));
 			}
 			if(!is_array($data['relation_id'])) {
@@ -382,7 +403,7 @@
 
 			// Setup select
 			$label = Widget::Label($this->get('label'), $links);
-			$select = Widget::Select($fieldname, $options, ($this->get('allow_multiple_selection') == 'yes' ? array('multiple' => 'multiple') : NULL));
+			$select = Widget::Select($fieldname, $options, ($this->get('allow_multiple') == 1 ? array('multiple' => 'multiple') : NULL));
 			$label->appendChild($select);
 
 			// Setup sorting
@@ -439,7 +460,7 @@
 		}
 
  		/**
-		 * Prepares field values for database.
+		 * Prepare field values for database.
 		 */
 		function processRawFieldData($data, &$status, $simulate=false, $entry_id=NULL) {
 		
@@ -457,18 +478,38 @@
 		}
 
  		/**
-		 * Creates database field table.
+		 * Create database field table.
 		 */
 		function createTable(){
 
 			return Administration::instance()->Database->query(
 				"CREATE TABLE IF NOT EXISTS `tbl_entries_data_" . $this->get('id') . "` (
-				`id` int(11) unsigned NOT NULL auto_increment,
-				`entry_id` int(11) unsigned NOT NULL,
-				`relation_id` int(11) unsigned DEFAULT NULL,
-				PRIMARY KEY (`id`),
-				KEY `entry_id` (`entry_id`),
-				KEY `relation_id` (`relation_id`)
+				  `id` int(11) unsigned NOT NULL auto_increment,
+				  `entry_id` int(11) unsigned NOT NULL,
+				  `relation_id` int(11) unsigned DEFAULT NULL,
+				  PRIMARY KEY (`id`),
+				  KEY `entry_id` (`entry_id`),
+				  KEY `relation_id` (`relation_id`)
+				) TYPE=MyISAM;"
+			);
+
+		}
+		
+		/**
+		 *	Create database stage table.
+		 */
+		function createStage(){
+
+			return Administration::instance()->Database->query(
+				"CREATE TABLE IF NOT EXISTS `tbl_fields_stage` (
+				  `id` int(11) unsigned NOT NULL auto_increment,
+				  `field_id` int(11) unsigned NOT NULL default '0',
+				  `constructable` smallint(1) default '0',
+				  `destructable` smallint(1) default '0',
+				  `draggable` smallint(1) default '0',
+				  `droppable` smallint(1) default '0',
+				  `searchable` smallint(1) default '0',
+				  PRIMARY KEY  (`id`)
 				) TYPE=MyISAM;"
 			);
 
@@ -603,7 +644,7 @@
 		}
 
  		/**
-		 * Returns sample markup for the event editor.
+		 * Return sample markup for the event editor.
 		 */
 		public function getExampleFormMarkup() {
 		
@@ -613,7 +654,7 @@
 		}
 
  		/**
-		 * Returns array of includable elements used in data source manager
+		 * Return array of includable elements used in data source manager
 		 */
 /*		public function fetchIncludableElements() {
 

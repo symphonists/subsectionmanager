@@ -181,8 +181,8 @@
 					`filter_tags` text,
 					`caption` text,
 					`included_fields` text,
-					`allow_multiple_selection` enum('yes','no') NOT NULL default 'yes',
-					`show_preview` enum('yes','no') NOT NULL default 'yes',
+					`allow_multiple` tinyint(1) default '0',
+					`show_preview` tinyint(1) default '0',
 			  		PRIMARY KEY  (`id`),
 			  		KEY `field_id` (`field_id`)
 				)"
