@@ -33,6 +33,7 @@ div.stage.preview img, div.draghelper img {
 	left: 12px;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
+	cursor: pointer;
 }
 
 div.stage.preview strong.file, div.draghelper strong.file {
@@ -80,6 +81,10 @@ div.stage div.queue li.selected img, div.stage div.queue li.selected strong.file
 
 div.stage ul.selection {
 	cursor: pointer;
+}
+
+div.stage ul.selection.draggable {
+	cursor: move;
 }
 
 div.stage ul li.drawer {
