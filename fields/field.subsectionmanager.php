@@ -273,7 +273,7 @@
 		}
 
 		/**
-		 * Save fields settings in section editor.
+		 * Save field settings in section editor.
 		 */
 		function commit() {
 
@@ -292,12 +292,12 @@
 			// Initialize stage
 			$this->createStage();
 			
-			// Delete old stage settings
+			// Delete old stage settings for this field
 			Administration::instance()->Database->query(
 				"DELETE FROM `tbl_fields_stage` WHERE `field_id` = '$id' LIMIT 1"
 			);
 					
-			// Save new stage settings
+			// Save new stage settings for this field
 			if(is_array($this->get('stage'))) {
 				Administration::instance()->Database->query(
 					"INSERT INTO `tbl_fields_stage` (`field_id`, " . implode(', ', array_keys($this->get('stage'))) . ") VALUES ($id, " . implode(', ', $this->get('stage')) . ")"
@@ -427,8 +427,17 @@
 			$label->appendChild($input);
 			$wrapper->appendChild($label);
 
+			// Get stage settings
+			$settings = Administration::instance()->Database->fetchRow(0,
+				"SELECT `constructable`, `destructable`, `draggable`, `droppable`, `searchable` FROM `tbl_fields_stage` WHERE `field_id` = '" . $this->get('id') . "' LIMIT 1"
+			);
+			foreach($settings as $key => $value) {
+				if($value == 0) unset($settings[$key]);
+			}
+			$settings = ' ' . implode(' ', array_keys($settings));
+			
 			// Create stage
-			$stage = new XMLElement('div', NULL, array('class' => 'stage preview'));
+			$stage = new XMLElement('div', NULL, array('class' => 'stage' . $settings . ($this->get('show_preview') == 1 ? ' preview' : '')));
 			$content['empty'] = '<li class="empty message"><span>' . __('There are no selected items') . '</span></li>';
 			$selected = new XMLElement('ul', $content['empty'] . $content['html'], array('class' => 'selection'));
 			$stage->appendChild($selected);
