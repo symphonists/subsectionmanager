@@ -158,11 +158,12 @@
 		 */
 		public function uninstall() {
 		
-			// TODO: Drop related entries from stage table and delete this table if it's empty
+			// Drop related entries from stage table
+			Administration::instance()->Database->query("DELETE FROM `tbl_fields_stage` WHERE `context` = 'subsectionmanager'");
 		
 			// Drop database table
-			Administration::instance()->Database->query("DROP TABLE `tbl_fields_subsectionmanager`");
-			Administration::instance()->Database->query("DROP TABLE `tbl_fields_subsectionmanager_sorting`");
+			Administration::instance()->Database->query("DROP TABLE IF EXISTS `tbl_fields_subsectionmanager`");
+			Administration::instance()->Database->query("DROP TABLE IF EXISTS `tbl_fields_subsectionmanager_sorting`");
 			
 		}
 
@@ -176,7 +177,15 @@
 		
 			// Update beta installs
 			if(version_compare($previousVersion, '1.0.0', '<')) {
-				return $this->install();
+				
+				// Install missing tables
+				$this->install();
+				
+				// Add context row and return status
+				return Administration::instance()->Database->query(
+					"ALTER TABLE `tbl_fields_stage` ADD `context` varchar(255) default NULL"
+				);
+				
 			}
 			
 		}
@@ -225,6 +234,7 @@
 				  `draggable` smallint(1) default '0',
 				  `droppable` smallint(1) default '0',
 				  `searchable` smallint(1) default '0',
+				  `context` varchar(255) default NULL,
 				  PRIMARY KEY  (`id`)
 				) TYPE=MyISAM;"
 			);
