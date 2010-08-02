@@ -196,7 +196,19 @@
 					PRIMARY KEY (`id`)
 				)"
 			);
-			if($fields && $sorting) return true;
+			$stage = Administration::instance()->Database->query(
+				"CREATE TABLE IF NOT EXISTS `tbl_fields_stage` (
+				  `id` int(11) unsigned NOT NULL auto_increment,
+				  `field_id` int(11) unsigned NOT NULL default '0',
+				  `constructable` smallint(1) default '0',
+				  `destructable` smallint(1) default '0',
+				  `draggable` smallint(1) default '0',
+				  `droppable` smallint(1) default '0',
+				  `searchable` smallint(1) default '0',
+				  PRIMARY KEY  (`id`)
+				) TYPE=MyISAM;"
+			);
+			if($fields && $sorting && $stage) return true;
 			else return false;
 		}
 

@@ -290,7 +290,7 @@
 			$fields['show_preview'] = ($this->get('show_preview') ? 1 : 0);
 			
 			// Initialize stage
-			$this->createStage();
+			//$this->createStage();
 			
 			// Delete old stage settings for this field
 			Administration::instance()->Database->query(
@@ -507,7 +507,7 @@
 		/**
 		 *	Create database stage table.
 		 */
-		function createStage(){
+/*		function createStage(){
 
 			return Administration::instance()->Database->query(
 				"CREATE TABLE IF NOT EXISTS `tbl_fields_stage` (
@@ -522,7 +522,7 @@
 				) TYPE=MyISAM;"
 			);
 
-		}
+		}*/
 
  		/**
 		 * Prepare value for the content overview table.
