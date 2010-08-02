@@ -171,7 +171,10 @@
 				var section = meta.val();
 				
 				// Get id of newly created items
-				if(create) id = iframe.contents().find('form').attr('action').match(/\d+/g)[0];
+				if(create) id = iframe.contents().find('form').attr('action').match(/\d+/g);
+				if(jQuery.isArray(id)) {
+					id = id[id.length - 1];
+				}
 
 				// Load item data
 				jQuery.ajax({
@@ -183,7 +186,7 @@
 						entry: id
 					},
 					dataType: 'html',
-					success: function(result, a, b, c) {
+					success: function(result) {
 					
 						result = jQuery(result);
 					
