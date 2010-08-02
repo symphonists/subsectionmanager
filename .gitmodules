@@ -1,3 +1,6 @@
 [submodule "lib/draggable"]
 	path = lib/draggable
 	url = git://github.com/nilshoerrmann/draggable.git
+[submodule "lib/stage"]
+	path = lib/stage
+	url = git://github.com/nilshoerrmann/stage.git
