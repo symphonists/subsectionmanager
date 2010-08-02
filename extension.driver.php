@@ -162,8 +162,12 @@
 		 * @return boolean - true on success, false otherwise
 		 */
 		public function update($previousVersion) {
-			// Nothing to do yet
-			return true;
+		
+			// Update beta installs
+			if(version_compare($previousVersion, '1.0.0', '<')) {
+				return $this->install();
+			}
+			
 		}
 
 		/**
@@ -172,9 +176,10 @@
 		 * @return boolean - true on success, false otherwise
 		 */
 		public function install() {
-			// Create database table and fields.
+		
+			// Create database field table
 			$fields = Administration::instance()->Database->query(
-				"CREATE TABLE `tbl_fields_subsectionmanager` (
+				"CREATE TABLE IF NOT EXISTS `tbl_fields_subsectionmanager` (
 					`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 					`field_id` int(11) unsigned NOT NULL,
 					`subsection_id` VARCHAR(255) NOT NULL,
@@ -187,8 +192,10 @@
 			  		KEY `field_id` (`field_id`)
 				)"
 			);
+			
+			// Create database sorting table
 			$sorting = Administration::instance()->Database->query(
-				"CREATE TABLE `tbl_fields_subsectionmanager_sorting` (
+				"CREATE TABLE IF NOT EXISTS `tbl_fields_subsectionmanager_sorting` (
 					`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 					`entry_id` int(11) NOT NULL,
 					`field_id` int(11) NOT NULL,
@@ -196,6 +203,8 @@
 					PRIMARY KEY (`id`)
 				)"
 			);
+			
+			// Create database stage table
 			$stage = Administration::instance()->Database->query(
 				"CREATE TABLE IF NOT EXISTS `tbl_fields_stage` (
 				  `id` int(11) unsigned NOT NULL auto_increment,
@@ -208,8 +217,15 @@
 				  PRIMARY KEY  (`id`)
 				) TYPE=MyISAM;"
 			);
-			if($fields && $sorting && $stage) return true;
-			else return false;
+			
+			// Return status
+			if($fields && $sorting && $stage) {
+				return true;
+			}
+			else {
+				return false;
+			}
+			
 		}
 
 	}
