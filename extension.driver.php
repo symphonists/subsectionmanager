@@ -78,6 +78,7 @@
 			if($callback['driver'] == 'publish' && ($callback['context']['page'] == 'edit' || $callback['context']['page'] == 'new')) {
 					Administration::instance()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/assets/symphony.subsection.css', 'screen', 101, false);
 			}
+			
 		}
 
 		/**
@@ -86,13 +87,16 @@
 		 * @param object $context
 		 */
 		public function __saveSortOrder($context) {
+		
 			if(!is_null($context['fields']['sort_order'])) {
-				// delete current sort order
+			
+				// Delete current sort order
 				$entry_id = $context['entry']->_fields['id'];
 				Administration::instance()->Database->query(
 					"DELETE FROM `tbl_fields_subsectionmanager_sorting` WHERE `entry_id` = '$entry_id'"
 				);
-				// add new sort order
+				
+				// Add new sort order
 				foreach($context['fields']['sort_order'] as $field_id => $value) {
 					$entries = explode(',', $value);
 					$order = array();
@@ -103,7 +107,9 @@
 						"INSERT INTO `tbl_fields_subsectionmanager_sorting` (`entry_id`, `field_id`, `order`) VALUES ('$entry_id', '$field_id', '" . implode(',', $order) . "')"
 					);
 				}
+				
 			}
+			
 		}
 
 		/**
@@ -144,15 +150,20 @@
 				}
 				
 			}
+			
 		}
 
 		/**
 		 * Function to be executed on uninstallation
 		 */
 		public function uninstall() {
-			// drop database table
+		
+			// TODO: Drop related entries from stage table and delete this table if it's empty
+		
+			// Drop database table
 			Administration::instance()->Database->query("DROP TABLE `tbl_fields_subsectionmanager`");
 			Administration::instance()->Database->query("DROP TABLE `tbl_fields_subsectionmanager_sorting`");
+			
 		}
 
 		/**
