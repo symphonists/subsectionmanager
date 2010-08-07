@@ -109,3 +109,7 @@ div.field-subsectionmanager div.invalid div.stage {
 	margin: 0 0px 1.75em;
 	border: 1px solid #B21;
 }
+
+div.field-subsectionmanager div.invalid code {
+	font-size: 1em;
+}

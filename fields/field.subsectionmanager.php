@@ -431,6 +431,31 @@
 			$input = Widget::Input('fields[subsection_id][' . $this->get('id') . ']', $this->get('subsection_id'), 'hidden');
 			$label->appendChild($input);
 			$wrapper->appendChild($label);
+			
+			// Check if all needed components are available
+			$flagAsMissing['draggable'] = !file_exists(EXTENSIONS. '/subsectionmanager/lib/draggable/symphony.draggable.js');
+			$flagAsMissing['stage'] = !file_exists(EXTENSIONS. '/subsectionmanager/lib/stage/symphony.stage.js');
+			
+			if($flagAsMissing['draggable'] || $flagAsMissing['stage']) {
+				$error = new XMLElement('ul');
+				
+				// Draggable missing
+				if($flagAsMissing['draggable']) {
+					$message = new XMLElement('li', __('Submodule <code>Draggable</code> is missing.'));
+					$error->appendChild($message);
+				}
+				
+				// Stage missing
+				if($flagAsMissing['stage']) {
+					$message = new XMLElement('li', __('Submodule <code>Stage</code> is missing.'));
+					$error->appendChild($message);
+				}
+				
+				// Display error
+				$wrapper->appendChild(Widget::wrapFormElementWithError($error, __('Please add the missing submodules to %s. For further assistence have a look at the documentation available on %s.', array('<code>' . URL . '/extensions/subsectionmanager/lib/</code>', '<a href="http://github.com/nilshoerrmann/subsectionmanager/">GitHub</a>'))));
+				
+				return;
+			}
 
 			// Get stage settings
 			$settings = Administration::instance()->Database->fetchRow(0,
