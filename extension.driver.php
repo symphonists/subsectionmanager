@@ -176,15 +176,17 @@
 		public function update($previousVersion) {
 		
 			// Update beta installs
-			if(version_compare($previousVersion, '1.0.0', '<')) {
+			if(version_compare($previousVersion, '1.0.0RC2', '<')) {
 				
 				// Install missing tables
 				$this->install();
 				
 				// Add context row and return status
-				return Administration::instance()->Database->query(
+				Administration::instance()->Database->query(
 					"ALTER TABLE `tbl_fields_stage` ADD `context` varchar(255) default NULL"
 				);
+				
+				return true;
 				
 			}
 			
