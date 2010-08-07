@@ -377,12 +377,17 @@
 		 * @param $fieldnamePostfix
 		 */
 		function displayPublishPanel(&$wrapper, $data=NULL, $flagWithError=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL) {
+		
+			// Get version number
+			$about = Administration::instance()->ExtensionManager->about('subsectionmanager');
+			$version = strtolower($about['version']);	
 
-			$this->_engine->Page->addScriptToHead(URL . '/extensions/subsectionmanager/lib/draggable/symphony.draggable.js', 101, false);
-			$this->_engine->Page->addScriptToHead(URL . '/extensions/subsectionmanager/lib/stage/symphony.stage.js', 101, false);
-			$this->_engine->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/lib/stage/symphony.stage.css', 'screen', 103, false);
-			$this->_engine->Page->addScriptToHead(URL . '/extensions/subsectionmanager/assets/symphony.subsectionmanager.js', 102, false);
-			$this->_engine->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/assets/symphony.subsectionmanager.css', 'screen', 104, false);
+			// Append assets
+			$this->_engine->Page->addScriptToHead(URL . '/extensions/subsectionmanager/lib/draggable/symphony.draggable.js?v=' . $version, 101, false);
+			$this->_engine->Page->addScriptToHead(URL . '/extensions/subsectionmanager/lib/stage/symphony.stage.js?v=' . $version, 101, false);
+			$this->_engine->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/lib/stage/symphony.stage.css?v=' . $version, 'screen', 103, false);
+			$this->_engine->Page->addScriptToHead(URL . '/extensions/subsectionmanager/assets/symphony.subsectionmanager.js?v=' . $version, 102, false);
+			$this->_engine->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/assets/symphony.subsectionmanager.css?v=' . $version, 'screen', 104, false);
 
 			// Get Subsection
 			$subsection = new SubsectionManager($this->_Parent);
