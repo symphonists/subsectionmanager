@@ -37,11 +37,11 @@
 		'Data Source XML' => 
 		'Datenquellen-XML',
 
-		'Disable Mediathek' => 
-		'Mediathek deaktivieren',
+		'Uninstall Mediathek' => 
+		'Mediathek deinstallieren',
 
-		'Disable Subsection Manager' => 
-		'Subsection Manager deaktivieren',
+		'Uninstall Subsection Manager' => 
+		'Subsection Manager deinstallieren',
 
 		'Display' => 
 		'Darstellung',
@@ -83,7 +83,7 @@
 		'Verwenden Sie kommagetrennte Eintrags-IDs, um die Ausgabe zu filtern.',
 
 		'You are using Mediathek and Subsection Manager simultaneously.' => 
-		'Sie verwenden die Mediathek un den Subsection Manager gleichzeitig.',
+		'Sie verwenden die Mediathek und den Subsection Manager gleichzeitig.',
 
 		'item' => 
 		'Eintrag',

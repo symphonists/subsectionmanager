@@ -139,11 +139,11 @@
 
 				// Check if Mediathek field is installed
 				$mediathek = $ExtensionManager->fetchStatus('mediathek');
-				if($mediathek == EXTENSION_ENABLED) {
+				if($mediathek == EXTENSION_ENABLED || $mediathek == EXTENSION_DISABLED) {
 				
 					// Append upgrade notice to page
 					Administration::instance()->Page->Alert = new Alert(
-						__('You are using Mediathek and Subsection Manager simultaneously.') . ' <a href="http://' . DOMAIN . '/symphony/extension/subsectionmanager/">' . __('Upgrade') . '?</a> <a href="http://' . DOMAIN . '/symphony/extension/subsectionmanager/deactivate/mediathek">' . __('Disable Mediathek') . '</a> <a href="http://' . DOMAIN . '/symphony/extension/subsectionmanager/deactivate/subsectionmanager">' . __('Disable Subsection Manager') . '</a>', 
+						__('You are using Mediathek and Subsection Manager simultaneously.') . ' <a href="http://' . DOMAIN . '/symphony/extension/subsectionmanager/">' . __('Upgrade') . '?</a> <a href="http://' . DOMAIN . '/symphony/extension/subsectionmanager/uninstall/mediathek">' . __('Uninstall Mediathek') . '</a> <a href="http://' . DOMAIN . '/symphony/extension/subsectionmanager/uninstall/subsectionmanager">' . __('Uninstall Subsection Manager') . '</a>', 
 						Alert::ERROR
 					);
 					
