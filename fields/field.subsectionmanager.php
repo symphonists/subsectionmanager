@@ -300,12 +300,12 @@
 			// Save new stage settings for this field
 			if(is_array($this->get('stage'))) {
 				Administration::instance()->Database->query(
-					"INSERT INTO `tbl_fields_stage` (`field_id`, " . implode(', ', array_keys($this->get('stage'))) . ") VALUES ($id, " . implode(', ', $this->get('stage')) . ")"
+					"INSERT INTO `tbl_fields_stage` (`field_id`, " . implode(', ', array_keys($this->get('stage'))) . ", `context`) VALUES ($id, " . implode(', ', $this->get('stage')) . ", 'subsectionmanager')"
 				);
 			}
 			else {
 				Administration::instance()->Database->query(
-					"INSERT INTO `tbl_fields_stage` SET `field_id` = '$id'"
+					"INSERT INTO `tbl_fields_stage` (`field_id`, `context`) VALUES ($id, 'subsectionmanager')"
 				);
 			}
 
