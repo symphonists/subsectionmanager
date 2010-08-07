@@ -441,18 +441,24 @@
 				
 				// Draggable missing
 				if($flagAsMissing['draggable']) {
-					$message = new XMLElement('li', __('Submodule <code>Draggable</code> is missing.'));
+					$message = new XMLElement('li', __('Submodule %s is missing.', array('<code>Draggable</code>')));
 					$error->appendChild($message);
 				}
 				
 				// Stage missing
 				if($flagAsMissing['stage']) {
-					$message = new XMLElement('li', __('Submodule <code>Stage</code> is missing.'));
+					$message = new XMLElement('li', __('Submodule %s is missing.', array('<code>Stage</code>')));
 					$error->appendChild($message);
 				}
 				
 				// Display error
-				$wrapper->appendChild(Widget::wrapFormElementWithError($error, __('Please add the missing submodules to %s. For further assistence have a look at the documentation available on %s.', array('<code>' . URL . '/extensions/subsectionmanager/lib/</code>', '<a href="http://github.com/nilshoerrmann/subsectionmanager/">GitHub</a>'))));
+				if($flagAsMissing['draggable'] && $flagAsMissing['stage']) {
+					$addition = __('Please add the missing submodules to %s. ', array('<code>' . URL . '/extensions/subsectionmanager/lib/</code>'));
+				}
+				else {
+					$addition = __('Please add the missing submodule to %s. ', array('<code>' . URL . '/extensions/subsectionmanager/lib/</code>'));
+				}
+				$wrapper->appendChild(Widget::wrapFormElementWithError($error, $addition . __('For further assistence have a look at the documentation available on %s.', array('<a href="http://github.com/nilshoerrmann/subsectionmanager/">GitHub</a>'))));
 				
 				return;
 			}
