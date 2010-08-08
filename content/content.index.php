@@ -11,6 +11,7 @@
 		function view() {
 			$this->setPageType('form');
 			$this->setTitle(__('%1$s &ndash; %2$s', array(__('Symphony'), __('Subsection Manager Upgrade'))));
+			$this->addScriptToHead(URL . '/extensions/subsectionmanager/assets/upgrade.mediathek.js', 100, false);
 			$this->appendSubheading(__('Subsection Manager Upgrade'));
 			$this->Form->setAttribute('action', $this->_Parent->getCurrentPageURL() . 'upgrade/');
 			
@@ -47,7 +48,7 @@
 			$this->Form->appendChild($upgrade);
 			
 			// Actions
-			$actions = new XMLElement('div', '<input type="submit" value="' . __('Upgrade all Mediathek fields') . '" />', array('class' => 'actions'));
+			$actions = new XMLElement('div', '<input class="upgrade" type="submit" value="' . __('Upgrade all Mediathek fields') . '" />', array('class' => 'actions'));
 			$this->Form->appendChild($actions);
 			
 		}	

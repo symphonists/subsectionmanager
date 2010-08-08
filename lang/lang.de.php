@@ -179,7 +179,7 @@
 		'Bevor Sie fortfahren',
 
 		'Please make sure that you have an up-to-date backup of your site, containing all files and folders, and a copy of your database.' => 
-		'Stellen Sie sicher, dass Sie ein aktuelles Backup Ihrer Seite, das alle Datein und Ordner beinhaltet, sowie eine Kopie Ihrer Datenbank haben.',
+		'Stellen Sie sicher, dass Sie eine aktuelle Sicherungskopie Ihrer Seite, die alle Dateien und Ordner beinhaltet, sowie eine Kopie Ihrer Datenbank haben.',
 
 		'If you don&#8217;t have a backup, create one now!' => 
 		'Wenn Sie kein Backup habe, erstellen Sie jetzt eines!',
@@ -206,6 +206,9 @@
 		'Der Mediathek-Ordner wird in Ihrem Erweiterungsordner bestehen bleiben. Sie müssen ihn von Hand löschen.',
 
 		'Upgrade all Mediathek fields' => 
-		'Alle Mediathek-Felder aktualisieren'
+		'Alle Mediathek-Felder aktualisieren',
+		
+		'I have a working backup of my site including files and database and like to upgrade all my Mediathek fields to Subsection Manager fields.' =>
+		'Ich habe eine funktionsfähige Sicherungskopie meiner Installation inklusive aller Dateien und der Datenbank und möchte alle meine Mediathek-Felder auf den Subsection Manager aktualisieren.'
 
 	);
