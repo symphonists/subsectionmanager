@@ -115,11 +115,24 @@
 				"SELECT * FROM tbl_fields_stage WHERE field_id = '" . $this->get('id') . "' LIMIT 1"
 			);
 			
+			// Handle missing stage settings
+			if(empty($stage)) {
+				$stage = array(
+					'constructable' => 1,
+					'destructable' => 1,
+					'searchable' => 1,
+					'droppable' => 0,
+					'draggable' => 1
+				);
+				$this->set('allow_multiple', 1);
+				$this->set('show_preview', 1);
+			}
+			
 			// Setting: constructable
 			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][stage][constructable]" value="1" type="checkbox"' . ($stage['constructable'] == 0 ? '' : ' checked="checked"') . '/> ' . __('Allow creation of new items') . ' <i>' . __('This will add a <code>Create New</code> button to the interface') . '</i>');
 			$fieldset->appendChild($setting);
 			
-			// Setting: destructable
+			// Setting: destructable		
 			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][stage][destructable]" value="1" type="checkbox"' . ($stage['destructable'] == 0 ? '' : ' checked="checked"') . '/> ' . __('Allow deselection of items') . ' <i>' . __('This will add a <code>Remove</code> button to the interface') . '</i>');
 			$fieldset->appendChild($setting);
 			
