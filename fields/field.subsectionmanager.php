@@ -30,14 +30,7 @@
 		}
 
 		/**
-		 * Displays setting panel in section editor. Possible settings:
-		 *   name: the name of the created field
-		 *   placement: position of the field (main content or sidebar)
-		 *   related section: list of all sections besides the current one
-		 *   filter: list of tags or categories to filter backend output with (supports inclusion and exclusion syntax)
-		 *   caption: allows custom titles for Subsection Manager items
-		 *   included_fields: allows field selection for data source output
-		 *   multiple options: allow selection of multiple options
+		 * Displays setting panel in section editor.
 		 *
 		 * @param XMLElement $wrapper - parent element wrapping the field
 		 * @param array $errors - array with field errors, $errors['name-of-field-element']
@@ -246,7 +239,7 @@
 		}
 
 		/**
-		 * Checks fields for errors in section editor.
+		 * Check fields for errors in section editor.
 		 *
 		 * @param array $errors
 		 * @param boolean $checkForDuplicates
@@ -288,9 +281,6 @@
 			$fields['subsection_id'] = $this->get('subsection_id');
 			$fields['allow_multiple'] = ($this->get('allow_multiple') ? 1 : 0);
 			$fields['show_preview'] = ($this->get('show_preview') ? 1 : 0);
-			
-			// Initialize stage
-			//$this->createStage();
 			
 			// Delete old stage settings for this field
 			Administration::instance()->Database->query(
@@ -539,26 +529,6 @@
 			);
 
 		}
-		
-		/**
-		 *	Create database stage table.
-		 */
-/*		function createStage(){
-
-			return Administration::instance()->Database->query(
-				"CREATE TABLE IF NOT EXISTS `tbl_fields_stage` (
-				  `id` int(11) unsigned NOT NULL auto_increment,
-				  `field_id` int(11) unsigned NOT NULL default '0',
-				  `constructable` smallint(1) default '0',
-				  `destructable` smallint(1) default '0',
-				  `draggable` smallint(1) default '0',
-				  `droppable` smallint(1) default '0',
-				  `searchable` smallint(1) default '0',
-				  PRIMARY KEY  (`id`)
-				) TYPE=MyISAM;"
-			);
-
-		}*/
 
  		/**
 		 * Prepare value for the content overview table.
@@ -697,27 +667,5 @@
 			return Widget::Select('fields['.$this->get('element_name').']', array(array('...')));
 			
 		}
-
- 		/**
-		 * Return array of includable elements used in data source manager
-		 */
-/*		public function fetchIncludableElements() {
-
-			$sectionManager = new SectionManager($this->_Parent);
-		  	$section = $sectionManager->fetch($this->get('subsection_id'));
-		  	$fields = $section->fetchFields();
-		  	$elements = array();
-		  	
-		  	// Fetch fields from subsection
-		  	foreach($fields as $field) {
-		  		foreach($field->fetchIncludableElements() as $element) {
-		  			$elements[] = $this->get('element_name') . ': ' . $element;
-		  		}
-		  	}
-			
-			return $elements;
-			
-		}*/
-
 
 	}

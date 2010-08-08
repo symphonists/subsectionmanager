@@ -1,9 +1,9 @@
-/*
+/**
  * SUBSECTION MANAGER
  * for Symphony
  *
- * @author: Nils Hörrmann, post@nilshoerrmann.de
- * @source: http://github.com/nilshoerrmann/subsection
+ * @author: Nils Hörrmann, http://nilshoerrmann.de
+ * @source: http://github.com/nilshoerrmann/subsectionmanager
  */
 
 

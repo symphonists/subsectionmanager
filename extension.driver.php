@@ -82,7 +82,7 @@
 		}
 
 		/**
-		 * Saves sort order of the field
+		 * Save sort order
 		 *
 		 * @param object $context
 		 */

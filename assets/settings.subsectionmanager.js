@@ -1,8 +1,9 @@
-/*
- * SUBSECTION MANAGER for Symphony
+/**
+ * SUBSECTION MANAGER
+ * for Symphony
  *
- * @author: Nils Hörrmann, post@nilshoerrmann.de
- * @source: http://github.com/nilshoerrmann/mediathek
+ * @author: Nils Hörrmann, http://nilshoerrmann.de
+ * @source: http://github.com/nilshoerrmann/subsectionmanager
  */
 	
 

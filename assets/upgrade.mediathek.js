@@ -1,8 +1,8 @@
-/*
- * SUBSECTION MANAGER UPGRADER
+/**
+ * SUBSECTION MANAGER
  * for Symphony
  *
- * @author: Nils Hörrmann, post@nilshoerrmann.de
+ * @author: Nils Hörrmann, http://nilshoerrmann.de
  * @source: http://github.com/nilshoerrmann/subsectionmanager
  */
 

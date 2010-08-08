@@ -1,9 +1,11 @@
-/*
- * SUBSECTION for Symphony CMS
+/**
+ * SUBSECTION MANAGER
+ * for Symphony
  *
- * @author: Nils Hörrmann, post@nilshoerrmann.de
- * @source: http://github.com/nilshoerrmann/mediathek
+ * @author: Nils Hörrmann, http://nilshoerrmann.de
+ * @source: http://github.com/nilshoerrmann/subsectionmanager
  */
+
  
 body.subsection {
 	background: #353533;
@@ -77,4 +79,3 @@ body.subsection form input[type="file"] {
 body.subsection #version {
 	display: none;
 }
-body.subsection form label span
