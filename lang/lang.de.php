@@ -7,7 +7,7 @@
 			'email' => 'post@nilshoerrmann.de',
 			'website' => 'http://nilshoerrmann.de'
 		),
-		'release-date' => '2010-08-07',
+		'release-date' => '2010-08-08',
 	);
 
 
@@ -40,14 +40,23 @@
 		'Are you sure you want to delete this item? It will be remove from all entries. This step cannot be undone.' => 
 		'Sind Sie sicher, dass Sie diesen Eintrag löschen wollen? Er wird von allen verknüpften Einträgen entfernt. Dieser Vorgang kann nicht rückgängig gemacht werden.',
 
+		'Before you proceed' => 
+		'Bevor Sie fortfahren',
+
 		'Behaviour' => 
 		'Verhalten',
+
+		'Browse' => 
+		'Durchsuchen',
 
 		'Caption' => 
 		'Bezeichnung',
 
 		'Caption has to be well-formed. Please check opening and closing tags.' => 
 		'Der Eintragstitel muss wohlgeformt sein. Bitte überprüfen Sie öffnende und schließende Tags.',
+
+		'Click here to create a new item.' => 
+		'Klicken Sie hier, um einen neuen Eintrag zu erstellen.',
 
 		'Comma separated, alt+click for negation' => 
 		'kommagetrennt, für Verneinung alt+Klick',
@@ -58,6 +67,9 @@
 		'Display' => 
 		'Darstellung',
 
+		'Don&#8217;t forget to include the Subsection Manager field in your Data Source' => 
+		'Vergessen Sie nicht das Subsection-Manager-Feld Ihrer Datenquelle hinzuzufügen',
+
 		'Filter items by tags or categories' => 
 		'Einträge nach Tags oder Kategorien filtern',
 
@@ -67,11 +79,26 @@
 		'Go back to the extension overview.' => 
 		'Zurück zur Übersicht der Erweiterungen.',
 
+		'I have a working backup of my site including files and database and like to upgrade all my Mediathek fields to Subsection Manager fields.' => 
+		'Ich habe eine funktionsfähige Sicherungskopie meiner Installation inklusive aller Dateien und der Datenbank und möchte alle meine Mediathek-Felder auf den Subsection Manager aktualisieren.',
+
+		'If you don&#8217;t have a backup, create one now!' => 
+		'Wenn Sie kein Backup habe, erstellen Sie jetzt eines!',
+
 		'Included elements' => 
 		'Eingebundene Elemente',
 
+		'Introduction' => 
+		'Einführung',
+
+		'Load items' => 
+		'Einträge laden',
+
 		'New item' => 
 		'Neuer Eintrag',
+
+		'No items found.' => 
+		'Keine Einträge gefunden',
 
 		'None Selected' => 
 		'Keiner',
@@ -88,8 +115,14 @@
 		'Please fill out the form below.' => 
 		'Bitte ergänzen Sie nachfolgende Angaben.',
 
+		'Please make sure that you have an up-to-date backup of your site, containing all files and folders, and a copy of your database.' => 
+		'Stellen Sie sicher, dass Sie eine aktuelle Sicherungskopie Ihrer Seite, die alle Dateien und Ordner beinhaltet, sowie eine Kopie Ihrer Datenbank haben.',
+
 		'Remove Item' => 
 		'Eintrag entfernen',
+
+		'Replace all Mediathek fields with the Subsection Manager, copying all attached information to the new fields.' => 
+		'Alle Mediathek-Felder werden durch Subsection-Manager-Felder ersetzt und alle verknüpften Daten in das neue Feld kopiert.',
 
 		'Submodule %s is missing.' => 
 		'Das Untermodul %s fehlt.',
@@ -103,8 +136,23 @@
 		'Subsection Manager Upgrade' => 
 		'Subsection-Manager-Aktualisierung',
 
+		'Subsection Manager is a replacement of the Mediathek field, introducing a new interface and an improved feature set. Subsection Manager requires Symphony 2.1 and should not be used side-by-side with Mediathek. This page will help you upgrading your fields from Mediathek to Subsection Manager.' => 
+		'Der Subsection Manager führt ein neue, erweiterte Benutzeroberfläche ein und ersetzt das Mediathek-Feld. Der Subsection Manager setzt Symphony 2.1 voraus und sollte nicht parallel zur Mediathek eingesetzt werden. Diese Seite wird Ihnen bei der Aktualisierung von der Mediathek zum Subsection Manager helfen.',
+
+		'The Mediathek folder will stay intact in your extension folder. You will have to delete it manually.' => 
+		'Der Mediathek-Ordner wird in Ihrem Erweiterungsordner bestehen bleiben. Sie müssen ihn von Hand löschen.',
+
+		'The Subsection Manager Upgrade will automatically perform the following actions:' => 
+		'Die Subsection-Manager-Aktualisierung wird automatisch folgende Schritte ausführen:',
+
+		'There are currently no items available. Perhaps you want create one first?' => 
+		'Zur Zeit sind keine Einträge verfügbar. Möchten Sie zunächst einen erstellen?',
+
 		'There are no selected items' => 
 		'Keine ausgewählten Einträge vorhanden',
+
+		'This process cannot be undone!' => 
+		'Dieser Vorgang kann nicht rückgängig gemacht werden!',
 
 		'This will add a <code>Create New</code> button to the interface' => 
 		'Dies fügt einen <code>Neu-erstellen</code>-Knopf hinzu',
@@ -130,11 +178,23 @@
 		'Uninstall Subsection Manager' => 
 		'Subsection Manager deinstallieren',
 
+		'Uninstall the Mediathek extension removing all references in the database.' => 
+		'Die Mediathek-Erweiterung wird deinstalliert und alle Verweise in der Datenbank damit entfernt.',
+
 		'Upgrade' => 
 		'Mediathek aktualisieren',
 
+		'Upgrade all Mediathek fields' => 
+		'Alle Mediathek-Felder aktualisieren',
+
 		'Upgrade successful' => 
 		'Aktualisierung erfolgreich',
+
+		'Upgrading your Mediathek' => 
+		'Die Mediathek aktualisieren',
+
+		'Upgrading your Mediathek fields to Subsection Manager will alter your database.' => 
+		'Die Aktualisierung der Mediathek-Felder auf den Subsection Manager wird Ihre Datenbank verändern.',
 
 		'Use comma separated entry ids for filtering.' => 
 		'Verwenden Sie kommagetrennte Eintrags-IDs, um die Ausgabe zu filtern.',
@@ -150,65 +210,5 @@
 
 		'items' => 
 		'Einträge',
-
-		'Browse' => 
-		'Durchsuchen',
-
-		'Click here to create a new item.' => 
-		'Klicken Sie hier, um einen neuen Eintrag zu erstellen.',
-
-		'Don\'t forget to include the Subsection Manager field in your Data Source' => 
-		'Vergessen Sie nicht das Subsection-Manager-Feld Ihrer Datenquelle hinzuzufügen',
-
-		'There are currently no items available. Perhaps you want create one first?' => 
-		'Zur Zeit sind keine Einträge verfügbar. Möchten Sie zunächst einen erstellen?',
-
-		'This is a required field.' => 
-		'Dies ist ein Pflichtfeld',
-
-		'Untitled' => 
-		'Ohne Titel',
-
-		'Introduction' => 
-		'Einführung',
-
-		'Subsection Manager is a replacement of the Mediathek field, introducing a new interface and an improved feature set. Subsection Manager requires Symphony 2.1 and should not be used side-by-side with Mediathek. This page will help you upgrading your fields from Mediathek to Subsection Manager.' => 
-		'Der Subsection Manager führt ein neue, erweiterte Benutzeroberfläche ein und ersetzt das Mediathek-Feld. Der Subsection Manager setzt Symphony 2.1 voraus und sollte nicht parallel zur Mediathek eingesetzt werden. Diese Seite wird Ihnen bei der Aktualisierung von der Mediathek zum Subsection Manager helfen.',
-
-		'Before you proceed' => 
-		'Bevor Sie fortfahren',
-
-		'Please make sure that you have an up-to-date backup of your site, containing all files and folders, and a copy of your database.' => 
-		'Stellen Sie sicher, dass Sie eine aktuelle Sicherungskopie Ihrer Seite, die alle Dateien und Ordner beinhaltet, sowie eine Kopie Ihrer Datenbank haben.',
-
-		'If you don&#8217;t have a backup, create one now!' => 
-		'Wenn Sie kein Backup habe, erstellen Sie jetzt eines!',
-
-		'Upgrading your Mediathek fields to Subsection Manager will alter your database.' => 
-		'Die Aktualisierung der Mediathek-Felder auf den Subsection Manager wird Ihre Datenbank verändern.',
-
-		'This process cannot be undone!' => 
-		'Dieser Vorgang kann nicht rückgängig gemacht werden!',
-
-		'Upgrading your Mediathek' => 
-		'Die Mediathek aktualisieren',
-
-		'The Subsection Manager Upgrade will automatically perform the following actions:' => 
-		'Die Subsection-Manager-Aktualisierung wird automatisch folgende Schritte ausführen:',
-
-		'Replace all Mediathek fields with the Subsection Manager, copying all attached information to the new fields.' => 
-		'Alle Mediathek-Felder werden durch Subsection-Manager-Felder ersetzt und alle verknüpften Daten in das neue Feld kopiert.',
-
-		'Uninstall the Mediathek extension removing all references in the database.' => 
-		'Die Mediathek-Erweiterung wird deinstalliert und alle Verweise in der Datenbank damit entfernt.',
-
-		'The Mediathek folder will stay intact in your extension folder. You will have to delete it manually.' => 
-		'Der Mediathek-Ordner wird in Ihrem Erweiterungsordner bestehen bleiben. Sie müssen ihn von Hand löschen.',
-
-		'Upgrade all Mediathek fields' => 
-		'Alle Mediathek-Felder aktualisieren',
-		
-		'I have a working backup of my site including files and database and like to upgrade all my Mediathek fields to Subsection Manager fields.' =>
-		'Ich habe eine funktionsfähige Sicherungskopie meiner Installation inklusive aller Dateien und der Datenbank und möchte alle meine Mediathek-Felder auf den Subsection Manager aktualisieren.'
 
 	);
