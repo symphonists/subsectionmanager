@@ -204,7 +204,7 @@
 			// DATA SOURCE
 			$fieldset = new XMLElement('fieldset', '<legend>' . __('Data Source XML') . '</legend>', array('class' => 'settings'));
 
-			$label = new XMLElement('label', __('Included elements') . '<i>' . __('Don\'t forget to include the Subsection Manager field in your Data Source') . '</i>');
+			$label = new XMLElement('label', __('Included elements') . '<i>' . __('Don&#8217;t forget to include the Subsection Manager field in your Data Source') . '</i>');
 			$field_groups = array();
 			if(is_array($sections) && !empty($sections)) {
 				foreach($sections as $section) {
