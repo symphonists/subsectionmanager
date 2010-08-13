@@ -40,7 +40,7 @@ body.subsection form input.button {
 	width: auto;
 }
 
-body.subsection form label {
+body.subsection form label, body.subsection form p {
 	color: #fff;
 }
 
