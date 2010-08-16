@@ -37,7 +37,7 @@
 			}
 	
 			// Show and hide caption suggestions
-			subsectionmanager.find('ul.inline li').hide().filter('*[rel=section' + id + ']').show();
+			subsectionmanager.find('ul.inline li').hide().filter('[rel~=section' + id + ']').show();
 	
 			// Show and hide data source sections
 			if(groups.length > 0) {
