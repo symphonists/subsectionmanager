@@ -307,6 +307,9 @@
 				// Remove dropper
 				jQuery('.dropper').mouseout();
 				
+				// Remove destructor
+				item.find('a.destructor').remove();
+		
 				// Formatter
 				formatter = target.attr('class').match(/(?:markdown)|(?:textile)/) || ['html'];
 				
