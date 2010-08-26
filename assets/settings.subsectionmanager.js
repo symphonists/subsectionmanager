@@ -20,7 +20,7 @@
 			var id = select.val();
 			var subsectionmanager = select.parents('li').filter('li');
 			var groups = subsectionmanager.find('select.datasource optgroup');
-			var filter = subsectionmanager.find('ul.negation.section' + id);
+			var filter = subsectionmanager.find('ul.negation li[rel~=section' + id + ']');
 	
 			// Reset subsectionmanager height
 			subsectionmanager.css('height', 'auto');
@@ -28,12 +28,12 @@
 			// Show and hide filter and filter suggestions
 			if(filter.length > 0) {
 				subsectionmanager.find('label.filter').show();
-				subsectionmanager.find('ul.negation').hide();
+				subsectionmanager.find('ul.negation li').hide();
 				filter.show();
 			}
 			else {
 				subsectionmanager.find('label.filter').hide();
-				subsectionmanager.find('ul.negation').hide();
+				subsectionmanager.find('ul.negation li').hide();
 			}
 	
 			// Show and hide caption suggestions

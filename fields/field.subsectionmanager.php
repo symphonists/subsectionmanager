@@ -73,38 +73,59 @@
 
 			// Filter suggestions
 			if(is_array($sections) && !empty($sections)) {
+				
+				// Get values
+				$values = array();
 				foreach($sections as $section) {
-					$values = array();
-					$fields = $section->fetchFields();
-					if(is_array($fields)) {
-						foreach($fields as $field) {
-							if($field->get('type') == 'taglist' || $field->get('type') == 'select' ) {
-								// fetch dynamic filter values
-								$entries = $this->Database->fetch(
-									"SELECT DISTINCT `value` FROM `tbl_entries_data_" . $field->get('id') . "` LIMIT 100"
-								);
-								foreach($entries as $entry) {
-									$values[] = $entry['value'];
+				
+					// Don't include the current section
+					if($section->get('id') != $section_id) {
+						$fields = $section->fetchFields();
+						
+						// Continue if fields exist
+						if(is_array($fields)) {
+							foreach($fields as $field) {
+								
+								// Fetch only taglist or select boxes
+								if($field->get('type') == 'taglist' || $field->get('type') == 'select' ) {
+									
+									// Fetch dynamic filter values
+									$dynamic = $this->Database->fetchCol(
+										'value',
+										"SELECT DISTINCT `value` FROM `tbl_entries_data_" . $field->get('id') . "` LIMIT 100"
+									);						
+									
+									// Fetch static filter values
+									$static = explode(', ', $field->get('static_options'));
+
+									// Merge dynamic and static values
+									$filters = array_unique(array_merge($dynamic, $static));
+									
+									$section = 'section' . $section->get('id');
+									foreach($filters as $value) {
+										if(!empty($value)) {
+											$values[$value][] = $section;
+										}
+									}				
+
 								}
-								// get static values
-								$static = explode(', ', $field->get('static_options'));
-								// combine dynamic and static values
-								$values = array_unique(array_merge($values, $static));
-								natcasesort($values);
 							}
+							
 						}
-					}
-					if(!empty($values)) {
-						$filter = new XMLElement('ul', NULL, array('class' => 'tags subsectionmanager negation section' . $section->get('id'), 'style' => 'display: none;'));
-						foreach($values as $value) {
-							if(!empty($value)) {
-								$filter->appendChild(new XMLElement('li', trim($value)));
-							}
-						}
-						$wrapper->appendChild($filter);
+						
 					}
 				}
-			}			
+				
+				// Generate list
+				if(!empty($values)) {
+					$filter = new XMLElement('ul', NULL, array('class' => 'tags negation subsectionmanager'));
+					foreach($values as $handle => $fields) {
+						$filter->appendChild(new XMLElement('li', $handle, array('rel' => implode(' ', $fields))));
+					}
+					$wrapper->appendChild($filter);
+				}
+					
+			}
 			
 			
 			// BEHAVIOUR
@@ -194,11 +215,13 @@
 				}
 				
 				// Generate list
-				$filter = new XMLElement('ul', NULL, array('class' => 'tags inline'));
-				foreach($values as $handle => $fields) {
-					$filter->appendChild(new XMLElement('li', '{$' . $handle . '}', array('rel' => implode(' ', $fields))));
+				if(is_array($values)) {
+					$filter = new XMLElement('ul', NULL, array('class' => 'tags inline'));
+					foreach($values as $handle => $fields) {
+						$filter->appendChild(new XMLElement('li', '{$' . $handle . '}', array('rel' => implode(' ', $fields))));
+					}
+					$container->appendChild($filter);
 				}
-				$container->appendChild($filter);
 				
 			}
 			$fieldset->appendChild($container);
