@@ -76,6 +76,10 @@ body.subsection form input[type="file"] {
 	border: 1px solid #504F49 !important;
 }
 
+body.subsection form input[type="checkbox"] {
+	width: auto;
+}
+
 body.subsection #version {
 	display: none;
 }
