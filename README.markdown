@@ -35,11 +35,12 @@ If you have Mediathek and Subsection Manager installed simultaneously, the inter
 
 Be aware that this upgrade process will alter your database and will uninstall your Mediathek extension. Make sure that you have an up-to-date backup of your site, containing all files and folders, and a copy of your database before you proceed with the upgrade. The upgrade cannot be undone.
 
-## Change Log
+## Release Notes
 
 **Version 1.0** 
 
 - Initial release.
+- The drag and drop feature is considered experimental. You may run into bugs.
 
 ## Acknowledgement
 
