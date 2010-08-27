@@ -22,7 +22,6 @@
 
 	jQuery(document).ready(function() {
 		jQuery('input.upgrade').click(function(event) {
-			event.preventDefault();
 			return confirm(Symphony.Language.get('I have a working backup of my site including files and database and like to upgrade all my Mediathek fields to Subsection Manager fields.'));
 		});
 	});

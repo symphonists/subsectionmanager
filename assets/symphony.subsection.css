@@ -40,7 +40,7 @@ body.subsection form input.button {
 	width: auto;
 }
 
-body.subsection form label {
+body.subsection form label, body.subsection form p {
 	color: #fff;
 }
 
@@ -74,6 +74,10 @@ body.subsection form input[type="file"] {
 	color: #fff;
 	background: #504F49;
 	border: 1px solid #504F49 !important;
+}
+
+body.subsection form input[type="checkbox"] {
+	width: auto;
 }
 
 body.subsection #version {

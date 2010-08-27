@@ -307,6 +307,9 @@
 				// Remove dropper
 				jQuery('.dropper').mouseout();
 				
+				// Remove destructor
+				item.find('a.destructor').remove();
+		
 				// Formatter
 				formatter = target.attr('class').match(/(?:markdown)|(?:textile)/) || ['html'];
 				
@@ -386,7 +389,7 @@
 					});
 
 					// Attach events
-					object.find('.create').click(create);
+					object.find('.create').live('click', create);
 					object.find('div.stage').bind('dragstop', object.subsection.getSortOrder);
 					object.find('div.stage').bind('constructstop', object.subsection.getSortOrder);
 					object.bind('createstop', object.subsection.getSortOrder);
