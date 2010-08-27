@@ -2,8 +2,8 @@
 
 Subsection management for Symphony.  
 
-- Version: 1.0 Release Candidate 2
-- Date: 8th August 2010
+- Version: 1.0
+- Date: 27th August 2010
 - Requirements: Symphony 2.1 or newer, <http://github.com/symphonycms/symphony-2/>
 - Optional Requirement: JIT Image Manipulation (for image previews), <http://github.com/symphonycms/jit_image_manipulation/>
 - Author: Nils Hörrmann, post@nilshoerrmann.de
