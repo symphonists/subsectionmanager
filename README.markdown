@@ -9,7 +9,7 @@ Subsection management for Symphony.
 - Author: Nils Hörrmann, post@nilshoerrmann.de
 - Constributors: [A list of contributors can be found in the commit history](http://github.com/nilshoerrmann/subsectionmanager/commits/development/)
 - GitHub Repository: <http://github.com/nilshoerrmann/subsectionmanager/>
-- Available languages: English (default), German
+- Available languages: English (default), German, Italian
 
 ## Synopsis
 
