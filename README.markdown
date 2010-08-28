@@ -2,8 +2,8 @@
 
 Subsection management for Symphony.  
 
-- Version: 1.0
-- Date: 27th August 2010
+- Version: 1.0.1
+- Date: 28th August 2010
 - Requirements: Symphony 2.1 or newer, <http://github.com/symphonycms/symphony-2/>
 - Optional Requirement: JIT Image Manipulation (for image previews), <http://github.com/symphonycms/jit_image_manipulation/>
 - Author: Nils Hörrmann, post@nilshoerrmann.de
@@ -37,7 +37,12 @@ Be aware that this upgrade process will alter your database and will uninstall y
 
 ## Release Notes
 
-**Version 1.0** 
+**Version 1.0.1**
+
+- Fixed issue with the section editor display.
+- Fixed issues with updates from beta versions.
+
+**Version 1.0.0** 
 
 - Initial release.
 - The drag and drop feature is considered experimental. You may run into bugs.

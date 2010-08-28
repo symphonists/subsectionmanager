@@ -101,10 +101,10 @@
 									// Merge dynamic and static values
 									$filters = array_unique(array_merge($dynamic, $static));
 									
-									$section = 'section' . $section->get('id');
+									$relation = 'section' . $section->get('id');
 									foreach($filters as $value) {
 										if(!empty($value)) {
-											$values[$value][] = $section;
+											$values[$value][] = $relation;
 										}
 									}				
 

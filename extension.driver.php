@@ -9,8 +9,8 @@
 			return array(
 				'name' => 'Subsection Manager',
 				'type' => 'Field, Interface',
-				'version' => '1.0',
-				'release-date' => '2010-08-27',
+				'version' => '1.0.1',
+				'release-date' => '2010-08-28',
 				'author' => array(
 					'name' => 'Nils Hörrmann',
 					'website' => 'http://nilshoerrmann.de',
@@ -176,15 +176,26 @@
 		public function update($previousVersion) {
 		
 			// Update beta installs
-			if(version_compare($previousVersion, '1.0.0RC2', '<')) {
+			if(version_compare($previousVersion, '1.0.0', '<')) {
 				
 				// Install missing tables
 				$this->install();
 				
+				// Check if context column exists
+				$columns = Administration::instance()->Database->fetch("SHOW COLUMNS FROM `tbl_fields_stage`");
+				$context = false;
+				foreach($columns as $column) {
+					if($column['Field'] == 'context') {
+						$context = true;
+					}
+				}
+
 				// Add context row and return status
-				Administration::instance()->Database->query(
-					"ALTER TABLE `tbl_fields_stage` ADD `context` varchar(255) default NULL"
-				);
+				if(!$context) {
+					Administration::instance()->Database->query(
+						"ALTER TABLE `tbl_fields_stage` ADD `context` varchar(255) default NULL"
+					);
+				}
 				
 				return true;
 				
