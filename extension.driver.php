@@ -9,8 +9,8 @@
 			return array(
 				'name' => 'Subsection Manager',
 				'type' => 'Field, Interface',
-				'version' => '1.0',
-				'release-date' => '2010-08-27',
+				'version' => '1.0.1',
+				'release-date' => '2010-08-28',
 				'author' => array(
 					'name' => 'Nils Hörrmann',
 					'website' => 'http://nilshoerrmann.de',
@@ -176,7 +176,7 @@
 		public function update($previousVersion) {
 		
 			// Update beta installs
-			if(version_compare($previousVersion, '1.0', '<')) {
+			if(version_compare($previousVersion, '1.0.0', '<')) {
 				
 				// Install missing tables
 				$this->install();
