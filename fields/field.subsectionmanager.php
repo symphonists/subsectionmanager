@@ -262,21 +262,24 @@
 						if(is_array($elements) && !empty($elements)) {
 							foreach($elements as $name) {
 							
-								// Check for formatted or unformatted textareas
-								$format = '';
-								if(strpos($name, ': formatted') !== false) {
-									$format = ':formatted';
+								// Get mode
+								$element_mode = '';
+								if(strpos($name, ': ') !== false) {
+									$element_mode = explode(': ', $name);
+									$element_mode = ':' . $element_mode[1];
 								}
-								elseif(strpos($name, ': unformatted') !== false) {
-									$format = ':unformatted';
+								
+								// Generate ID
+								$element_id = $field->get('id') . $element_mode;
+								
+								// Selection status
+								$element_status = false;
+								if(in_array($field->get('id') . $element_mode, explode(',', $this->get('included_fields')))) {
+									$element_status = true;
 								}
 							
 								// Generate field list
-								$fields[] = array(
-									$field->get('id') . $format, 
-									(in_array($field->get('id') . $format, explode(',', $this->get('included_fields')))), 
-									$name
-								);
+								$fields[] = array($element_id, $element_status, $name);
 
 							}
 						}
@@ -672,17 +675,47 @@
 				// Create entry element
 				$item = new XMLElement('item');
 				
-				// Populate entry element
+				// Get included elements
+				$included = array();
 				$included_fields = explode(',', $this->get('included_fields'));
+				foreach($included_fields as $included_field) {
+				
+					// Get fields with modes
+					if(strpos($included_field, ':') !== false) {
+						$component = explode(':', $included_field);
+						$included[$component[0]][] = $component[1];
+					}
+			
+					// Get fields without modes
+					else {
+						$included[$included_field] = NULL;
+					}
+					
+				}
+				
+				// Populate entry element
 				foreach ($entry_data as $field_id => $values) {
 				
 					// Only append if field is listed or if list empty
-					if(in_array($field_id, $included_fields) || empty($included_fields[0])) {
+					if(array_key_exists($field_id, $included) || empty($included_fields[0])) {
 						$item_id = $entry->get('id');
 						$item->setAttribute('id', $item_id);
 						$field =& $entryManager->fieldManager->fetch($field_id);
-						$field->appendFormattedElement($item, $values, false);
+						
+						// Append fields with modes
+						if($included[$field_id] !== NULL) {
+							foreach($included[$field_id] as $mode) {
+								$field->appendFormattedElement($item, $values, false, $mode);
+							}					
+						}
+						
+						// Append fields without modes
+						else {
+							$field->appendFormattedElement($item, $values, false, NULL);
+						}
+						
 					}
+					
 				}
 				
 				// Append entry element
