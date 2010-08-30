@@ -455,9 +455,8 @@
 
 			// Prepare select options
 			$options = $content['options'];
-			
 			if($this->get('allow_multiple') == 0) {
-				$options[] = array(-1, false, __('None Selected'));
+				array_unshift($options, array(0, false, __('None Selected')));
 			}
 			if(!is_array($data['relation_id'])) {
 				$data['relation_id'] = array($data['relation_id']);
