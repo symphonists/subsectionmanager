@@ -210,6 +210,7 @@
 							
 							// Synchronize Stage
 							item = object.find('li[value=' + result.attr('value') + ']');
+							object.find('div.queue li.message').remove();
 							object.find('div.stage').trigger('sync', [item]);
 							
 							// Queue
