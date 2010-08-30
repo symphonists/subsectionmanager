@@ -241,6 +241,7 @@
 			$fieldset = new XMLElement('fieldset', '<legend>' . __('Data Source XML') . '</legend>', array('class' => 'settings'));
 
 			$label = new XMLElement('label', __('Included elements') . '<i>' . __('Don&#8217;t forget to include the Subsection Manager field in your Data Source') . '</i>');
+			
 			$field_groups = array();
 			if(is_array($sections) && !empty($sections)) {
 				foreach($sections as $section) {
@@ -251,15 +252,45 @@
 			foreach($field_groups as $group) {
 				if(!is_array($group['fields'])) continue;
 				$fields = array();
-				foreach($group['fields'] as $field){
+				foreach($group['fields'] as $field) {
 					if($field->get('id') != $this->get('id')) {
-						$fields[] = array($field->get('id'), (in_array($field->get('id'), explode(',', $this->get('included_fields')))), $field->get('label'));
+					
+						// Fetch includable elements (formatted/unformatted)
+						$elements = $field->fetchIncludableElements();
+
+						// Loop through elements
+						if(is_array($elements) && !empty($elements)) {
+							foreach($elements as $name) {
+							
+								// Check for formatted or unformatted textareas
+								$format = '';
+								if(strpos($name, ': formatted') !== false) {
+									$format = ':formatted';
+								}
+								elseif(strpos($name, ': unformatted') !== false) {
+									$format = ':unformatted';
+								}
+							
+								// Generate field list
+								$fields[] = array(
+									$field->get('id') . $format, 
+									(in_array($field->get('id') . $format, explode(',', $this->get('included_fields')))), 
+									$name
+								);
+
+							}
+						}
+				
 					}
+					
 				}
+
+				// Generate includable field list options
 				if(is_array($fields) && !empty($fields)) {
 					$options[] = array('label' => $group['section']->get('id'), 'options' => $fields);
 				}
-			}
+			}		
+			
 			$label->appendChild(Widget::Select('fields[' . $this->get('sortorder') . '][included_fields][]', $options, array('multiple' => 'multiple', 'class' => 'datasource')));
 			$fieldset->appendChild($label);
 			
