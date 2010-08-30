@@ -33,7 +33,6 @@
 			template:			'li.item.template',
 			autodiscover:		false,
 			speed:				'fast',
-			draggable:			true,
 			dragtarget:			'textarea',
 			formatter: {
 				markdown: {
@@ -192,8 +191,10 @@
 					
 						// Find destructor
 						var destructor = item.find('.destructor').clone().click(function(event) {
+							event.stopPropagation();
 							var item = jQuery(event.target).parent('li');
 							object.find('div.stage').trigger('destruct', [item]);
+							object.subsection.close();
 						});
 
 						// Remove old data and replace it
@@ -360,13 +361,13 @@
 					var meta = object.find('input[name*=subsection_id]');
 					var id = meta.attr('name').match(/\[subsection_id\]\[(.*)\]/)[1];
 					var section = meta.val();
+					var stage = object.find('div.stage');
 					
 					// Set sortorder
 					object.subsection.setSortOrder();
 				
 					// Initialize stage for subsections
 					jQuery(document).ready(function() {
-						var stage = object.find('div.stage');
 						stage.symphonyStage({
 							source: object.find('select'),
 							draggable: stage.hasClass('draggable'),
@@ -389,27 +390,44 @@
 						});
 					});
 
-					// Attach events
+					// Handle construct and destruct events
 					object.find('.create').live('click', create);
-					object.find('div.stage').bind('dragstop', object.subsection.getSortOrder);
 					object.find('div.stage').bind('constructstop', object.subsection.getSortOrder);
 					object.bind('createstop', object.subsection.getSortOrder);
-					object.find('div.stage').bind('dragstart', object.subsection.close);
-					object.find('.destructor').bind('click', function(event) {
-						jQuery('ul.selection li.drawer:not(.template)').slideUp(settings.speed, function() {
-							jQuery(this).remove();
-						});
-					})
+					object.find('.destructor').live('click', function(event) {
+						event.stopPropagation();
+						var item = jQuery(event.target).parent('li');
+						object.find('div.stage').trigger('destruct', [item]);
+						object.subsection.close();
+					});
 					
-					// Handle drop events
-					if(settings.draggable) {
+					// Handle drag & drop events
+					object.find('div.stage').bind('dragstop', object.subsection.getSortOrder);
+					object.find('div.stage').bind('dragstart', object.subsection.close);
+					if(stage.hasClass('draggable')) {
 						jQuery(settings.dragtarget).unbind('drop').bind('drop', function(event, item) {
 							drop(event, item);
 						});
 					}
+					else {
+						object.find(settings.items).live('click', function(event) {
+							var item = jQuery(event.target);
+							if(item.is('.destructor')) return false;
+							
+							// Get list item
+							if(!item.is('li')) {
+								item = item.parents().filter('li');
+							}
+							
+							// Edit
+							if(!item.hasClass('message')) {
+								edit(item);
+							}
+							
+						});
+					}
 
 				},
-
 				
 				close: function() {
 											
