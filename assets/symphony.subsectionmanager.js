@@ -193,8 +193,8 @@
 						var destructor = item.find('.destructor').clone().click(function(event) {
 							event.stopPropagation();
 							var item = jQuery(event.target).parent('li');
-							object.find('div.stage').trigger('destruct', [item]);
 							object.subsection.close();
+							object.find('div.stage').trigger('destruct', [item]);
 						});
 
 						// Remove old data and replace it
@@ -397,8 +397,8 @@
 					object.find('.destructor').live('click', function(event) {
 						event.stopPropagation();
 						var item = jQuery(event.target).parent('li');
-						object.find('div.stage').trigger('destruct', [item]);
 						object.subsection.close();
+						object.find('div.stage').trigger('destruct', [item]);
 					});
 					
 					// Handle drag & drop events
