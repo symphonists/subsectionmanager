@@ -3,6 +3,7 @@
 	if(!defined('__IN_SYMPHONY__')) die('<h2>Symphony Error</h2><p>You cannot directly access this file</p>');
 
 	require_once(EXTENSIONS . '/subsectionmanager/lib/class.subsectionmanager.php');
+	require_once(EXTENSIONS . '/subsectionmanager/lib/stage/class.stage.php');
 
 	Class fieldSubsectionmanager extends Field {
 
@@ -129,48 +130,20 @@
 			
 			
 			// BEHAVIOUR
-			$fieldset = new XMLElement('fieldset', '<legend>' . __('Behaviour') . '</legend>', array('class' => 'settings group compact'));
-			
-			// Get stage settings
-			$stage = Administration::instance()->Database->fetchRow(0, 
-				"SELECT * FROM tbl_fields_stage WHERE field_id = '" . $this->get('id') . "' LIMIT 1"
+			$fieldset = Stage::displaySettings(
+				$this->get('id'), 
+				$this->get('sortorder'), 
+				__('Behaviour')
 			);
-			
-			// Handle missing stage settings
-			if(empty($stage)) {
-				$stage = array(
-					'constructable' => 1,
-					'destructable' => 1,
-					'searchable' => 1,
-					'droppable' => 0,
-					'draggable' => 1
-				);
+
+			// Handle missing settings
+			if(!$this->get('id') && $errors == NULL) {
 				$this->set('allow_multiple', 1);
 				$this->set('show_preview', 1);
 			}
 			
-			// Setting: constructable
-			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][stage][constructable]" value="1" type="checkbox"' . ($stage['constructable'] == 0 ? '' : ' checked="checked"') . '/> ' . __('Allow creation of new items') . ' <i>' . __('This will add a <code>Create New</code> button to the interface') . '</i>');
-			$fieldset->appendChild($setting);
-			
-			// Setting: destructable		
-			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][stage][destructable]" value="1" type="checkbox"' . ($stage['destructable'] == 0 ? '' : ' checked="checked"') . '/> ' . __('Allow deselection of items') . ' <i>' . __('This will add a <code>Remove</code> button to the interface') . '</i>');
-			$fieldset->appendChild($setting);
-			
-			// Setting: searchable
-			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][stage][searchable]" value="1" type="checkbox"' . ($stage['searchable'] == 0 ? '' : ' checked="checked"') . '/> ' . __('Allow selection of items from a list of existing items') . ' <i>' . __('This will add a search field to the interface') . '</i>');
-			$fieldset->appendChild($setting);
-			
-			// Setting: droppable
-			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][stage][droppable]" value="1" type="checkbox"' . ($stage['droppable'] == 0 ? '' : ' checked="checked"') . '/> ' . __('Allow dropping of items') . ' <i>' . __('This will enable item dropping on textareas') . '</i>');
-			$fieldset->appendChild($setting);
-			
 			// Setting: allow multiple
 			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][allow_multiple]" value="1" type="checkbox"' . ($this->get('allow_multiple') == 0 ? '' : ' checked="checked"') . '/> ' . __('Allow selection of multiple items') . ' <i>' . __('This will switch between single and multiple item lists') . '</i>');
-			$fieldset->appendChild($setting);
-			
-			// Setting: draggable
-			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][stage][draggable]" value="1" type="checkbox"' . ($stage['draggable'] == 0 ? '' : ' checked="checked"') . '/> ' . __('Allow sorting of items') . ' <i>' . __('This will enable item dragging and reordering') . '</i>');
 			$fieldset->appendChild($setting);
 			
 			// Append behaviour settings
