@@ -70,13 +70,13 @@
 
 			// Append javascript for field settings pane
 			if($callback['driver'] == 'blueprintssections' && is_array($callback['context'])) {
-				Administration::instance()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/assets/settings.subsectionmanager.js', 100, false);
-				Administration::instance()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/assets/settings.subsectionmanager.css', 'screen', 101, false);
+				Administration::instance()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.settings.js', 100, false);
+				Administration::instance()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.settings.css', 'screen', 101, false);
 			}
 
 			// Append styles and javascript for mediasection display
 			if($callback['driver'] == 'publish' && ($callback['context']['page'] == 'edit' || $callback['context']['page'] == 'new')) {
-					Administration::instance()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/assets/symphony.subsection.css', 'screen', 101, false);
+					Administration::instance()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/assets/subsection.publish.css', 'screen', 101, false);
 			}
 			
 		}
