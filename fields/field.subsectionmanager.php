@@ -459,8 +459,8 @@
 			$wrapper->appendChild($label);
 			
 			// Check if all needed components are available
-			$flagAsMissing['draggable'] = !file_exists(EXTENSIONS. '/subsectionmanager/lib/draggable/symphony.draggable.js');
-			$flagAsMissing['stage'] = !file_exists(EXTENSIONS. '/subsectionmanager/lib/stage/symphony.stage.js');
+			$flagAsMissing['draggable'] = !file_exists(EXTENSIONS. '/subsectionmanager/lib/draggable/draggable.publish.js');
+			$flagAsMissing['stage'] = !file_exists(EXTENSIONS. '/subsectionmanager/lib/stage/stage.publish.js');
 			
 			if($flagAsMissing['draggable'] || $flagAsMissing['stage']) {
 				$error = new XMLElement('ul');
