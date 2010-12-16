@@ -1,11 +1,9 @@
 /**
- * SUBSECTION MANAGER
- * for Symphony
+ * Subsection Manager for Symphony
  *
  * @author: Nils Hörrmann, http://nilshoerrmann.de
  * @source: http://github.com/nilshoerrmann/subsectionmanager
  */
-
 
 div.field-subsectionmanager select {
 	display: none;
