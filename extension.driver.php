@@ -1,31 +1,44 @@
 <?php
 
+	/**
+	 * Subsection Manager Extension
+	 */
 	Class extension_subsectionmanager extends Extension {
 
 		/**
-		 * Extension information
+		 * The about method allows an extension to provide
+		 * information about itself as an associative array.
+		 *
+		 * @return array
+		 *  An associative array describing this extension.
 		 */
 		public function about() {
 			return array(
 				'name' => 'Subsection Manager',
 				'type' => 'Field, Interface',
-				'version' => '1.0',
-				'release-date' => '2010-08-27',
+				'version' => '1.1dev',
+				'release-date' => NULL,
 				'author' => array(
 					'name' => 'Nils Hörrmann',
 					'website' => 'http://nilshoerrmann.de',
 					'email' => 'post@nilshoerrmann.de'
 				),
-				'description' => 'Subsection Management for Symphony.',
-				'compatibility' => array(
-					'2.0' => false,
-					'2.1.0' => true
-				)
+				'description' => 'Subsection Management for Symphony.'
 			);
 		}
 
 		/**
-		 * Add callback functions to backend delegates
+		 * Extensions use delegates to perform logic at certain times
+		 * throughout Symphony. This function allows an extension to
+		 * subscribe to a delegate which will notify the extension when it
+		 * is used so that it can perform it's custom logic.
+		 * This method returns an array with the delegate name, delegate
+		 * namespace, and then name of the method that should be called.
+		 * The method that is called is passed an associative array containing
+		 * the current context which is the $_Parent, current page object
+		 * and any other variables that is passed via this delegate.
+		 *
+		 * @return array
 		 */
 		public function getSubscribedDelegates(){
 			return array(
@@ -78,7 +91,6 @@
 			if($callback['driver'] == 'publish' && ($callback['context']['page'] == 'edit' || $callback['context']['page'] == 'new')) {
 					Administration::instance()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/assets/subsection.publish.css', 'screen', 101, false);
 			}
-			
 		}
 
 		/**
@@ -107,9 +119,7 @@
 						"INSERT INTO `tbl_fields_subsectionmanager_sorting` (`entry_id`, `field_id`, `order`) VALUES ('$entry_id', '$field_id', '" . implode(',', $order) . "')"
 					);
 				}
-				
 			}
-			
 		}
 
 		/**
@@ -146,67 +156,17 @@
 						__('You are using Mediathek and Subsection Manager simultaneously.') . ' <a href="http://' . DOMAIN . '/symphony/extension/subsectionmanager/">' . __('Upgrade') . '?</a> <a href="http://' . DOMAIN . '/symphony/extension/subsectionmanager/uninstall/mediathek">' . __('Uninstall Mediathek') . '</a> <a href="http://' . DOMAIN . '/symphony/extension/subsectionmanager/uninstall/subsectionmanager">' . __('Uninstall Subsection Manager') . '</a>', 
 						Alert::ERROR
 					);
-					
 				}
-				
 			}
-			
 		}
 
 		/**
-		 * Function to be executed on uninstallation
-		 */
-		public function uninstall() {
-		
-			// Drop related entries from stage table
-			Administration::instance()->Database->query("DELETE FROM `tbl_fields_stage` WHERE `context` = 'subsectionmanager'");
-		
-			// Drop database table
-			Administration::instance()->Database->query("DROP TABLE IF EXISTS `tbl_fields_subsectionmanager`");
-			Administration::instance()->Database->query("DROP TABLE IF EXISTS `tbl_fields_subsectionmanager_sorting`");
-			
-		}
-
-		/**
-		 * Function to be executed if the extension has been updated
+		 * Any logic that assists this extension in being installed such as
+		 * table creation, checking for dependancies etc.
 		 *
-		 * @param string $previousVersion - version number of the currently installed extension build
-		 * @return boolean - true on success, false otherwise
-		 */
-		public function update($previousVersion) {
-		
-			// Update beta installs
-			if(version_compare($previousVersion, '1.0', '<')) {
-				
-				// Install missing tables
-				$this->install();
-				
-				// Check if context column exists
-				$columns = Administration::instance()->Database->fetch("SHOW COLUMNS FROM `tbl_fields_stage`");
-				$context = false;
-				foreach($columns as $column) {
-					if($column['Field'] == 'context') {
-						$context = true;
-					}
-				}
-
-				// Add context row and return status
-				if(!$context) {
-					Administration::instance()->Database->query(
-						"ALTER TABLE `tbl_fields_stage` ADD `context` varchar(255) default NULL"
-					);
-				}
-				
-				return true;
-				
-			}
-			
-		}
-
-		/**
-		 * Function to be executed on installation.
-		 *
-		 * @return boolean - true on success, false otherwise
+		 * @see toolkit.ExtensionManager#install
+		 * @return boolean
+		 *  True if the install completely successfully, false otherwise
 		 */
 		public function install() {
 		
@@ -259,7 +219,68 @@
 			else {
 				return false;
 			}
-			
 		}
 
+		/**
+		 * Logic that should take place when an extension is to be been updated
+		 * when a user runs the 'Enable' action from the backend. The currently
+		 * installed version of this extension is provided so that it can be
+		 * compared to the current version of the extension in the file system.
+		 * This is commonly done using PHP's version_compare function. Common
+		 * logic done by this method is to update differences between extension
+		 * tables.
+		 *
+		 * @see toolkit.ExtensionManager#update
+		 * @param string $previousVersion
+		 *  The currently installed version of this extension from the
+		 *  tbl_extensions table. The current version of this extension is
+		 *  provided by the about() method.
+		 * @return boolean
+		 */
+		public function update($previousVersion) {
+		
+			// Update beta installs
+			if(version_compare($previousVersion, '1.0', '<')) {
+				
+				// Install missing tables
+				$this->install();
+				
+				// Check if context column exists
+				$columns = Administration::instance()->Database->fetch("SHOW COLUMNS FROM `tbl_fields_stage`");
+				$context = false;
+				foreach($columns as $column) {
+					if($column['Field'] == 'context') {
+						$context = true;
+					}
+				}
+
+				// Add context row and return status
+				if(!$context) {
+					Administration::instance()->Database->query(
+						"ALTER TABLE `tbl_fields_stage` ADD `context` varchar(255) default NULL"
+					);
+				}
+				
+				return true;
+			}
+		}
+
+		/**
+		 * Any logic that should be run when an extension is to be uninstalled
+		 * such as the removal of database tables.
+		 *
+		 * @see toolkit.ExtensionManager#uninstall
+		 * @return boolean
+		 */
+		public function uninstall() {
+		
+			// Drop related entries from stage table
+			Administration::instance()->Database->query("DELETE FROM `tbl_fields_stage` WHERE `context` = 'subsectionmanager'");
+		
+			// Drop database table
+			Administration::instance()->Database->query("DROP TABLE IF EXISTS `tbl_fields_subsectionmanager`");
+			Administration::instance()->Database->query("DROP TABLE IF EXISTS `tbl_fields_subsectionmanager_sorting`");
+			
+		}
+		
 	}
