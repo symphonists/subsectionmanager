@@ -291,22 +291,8 @@
 			$fields['allow_multiple'] = ($this->get('allow_multiple') ? 1 : 0);
 			$fields['show_preview'] = ($this->get('show_preview') ? 1 : 0);
 			
-			// Delete old stage settings for this field
-			Administration::instance()->Database->query(
-				"DELETE FROM `tbl_fields_stage` WHERE `field_id` = '$id' LIMIT 1"
-			);
-					
 			// Save new stage settings for this field
-			if(is_array($this->get('stage'))) {
-				Administration::instance()->Database->query(
-					"INSERT INTO `tbl_fields_stage` (`field_id`, " . implode(', ', array_keys($this->get('stage'))) . ", `context`) VALUES ($id, " . implode(', ', $this->get('stage')) . ", 'subsectionmanager')"
-				);
-			}
-			else {
-				Administration::instance()->Database->query(
-					"INSERT INTO `tbl_fields_stage` (`field_id`, `context`) VALUES ($id, 'subsectionmanager')"
-				);
-			}
+			Stage::saveSettings($this->get('id'), $this->get('stage'), 'subsectionmanager');
 
 			// Clean up filter values
 			if($this->get('filter_tags') != '') {
@@ -463,13 +449,7 @@
 			}
 
 			// Get stage settings
-			$settings = Administration::instance()->Database->fetchRow(0,
-				"SELECT `constructable`, `destructable`, `draggable`, `droppable`, `searchable` FROM `tbl_fields_stage` WHERE `field_id` = '" . $this->get('id') . "' LIMIT 1"
-			);
-			foreach($settings as $key => $value) {
-				if($value == 0) unset($settings[$key]);
-			}
-			$settings = ' ' . implode(' ', array_keys($settings));
+			$settings = ' ' . implode(' ', Stage::getComponents($this->get('id')));
 			
 			// Create stage
 			$stage = new XMLElement('div', NULL, array('class' => 'stage' . $settings . ($this->get('show_preview') == 1 ? ' preview' : '')));
