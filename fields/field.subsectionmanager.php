@@ -1,5 +1,11 @@
 <?php
 
+	/**
+	 * @package subsectionmanager
+	 */
+	/**
+	 * This field provides inline subsection management. 
+	 */
 	if(!defined('__IN_SYMPHONY__')) die('<h2>Symphony Error</h2><p>You cannot directly access this file</p>');
 
 	require_once(EXTENSIONS . '/subsectionmanager/lib/class.subsectionmanager.php');
@@ -8,7 +14,11 @@
 	Class fieldSubsectionmanager extends Field {
 
 		/**
-		 * Initialize Subsection Manager as unrequired field
+		 * Construct a new instance of this field.
+		 *
+		 * @param mixed $parent
+		 *  The class that created this Field object, usually the FieldManager,
+		 *  passed by reference.
 		 */
 		function __construct(&$parent) {
 			parent::__construct($parent);
@@ -17,29 +27,44 @@
 		}
 
 		/**
-		 * Allow data source filtering
+		 * Test whether this field can be filtered. Filtering allows the 
+		 * xml output results to be limited according to an input parameter. 
+		 *
+		 * @return boolean
+		 *	true if this can be filtered, false otherwise.
 		 */
 		function canFilter(){
 			return true;
 		}
 
 		/**
-		 * Allow data source parameter output
+		 * Test whether this field supports data-source output grouping. 
+		 * Data-source grouping allows clients of this field to group the 
+		 * xml output according to this field.
+		 *
+		 * @return boolean
+		 *	true if this field does support data-source grouping, false otherwise.
 		 */
 		function allowDatasourceParamOutput(){
 			return true;
 		}
 
 		/**
-		 * Displays setting panel in section editor.
+		 * Display the default settings panel, calls the buildSummaryBlock
+		 * function after basic field settings are added to the wrapper.
 		 *
-		 * @param XMLElement $wrapper - parent element wrapping the field
-		 * @param array $errors - array with field errors, $errors['name-of-field-element']
+		 * @see buildSummaryBlock()
+		 * @param XMLElement $wrapper
+		 *	the input XMLElement to which the display of this will be appended.
+		 * @param mixed errors (optional)
+		 *	the input error collection. this defaults to null.
 		 */
 		function displaySettingsPanel(&$wrapper, $errors=NULL) {
 
 			// Initialize field settings based on class defaults (name, placement)
 			parent::displaySettingsPanel($wrapper, $errors);
+
+		/*-----------------------------------------------------------------------*/
 
 			// Get current section id
 			$section_id = Administration::instance()->Page->_context[1];
@@ -65,8 +90,9 @@
 			else {
 				$wrapper->appendChild($label);
 			}
-			
-			
+
+		/*-----------------------------------------------------------------------*/
+
 			// Filter input
 			$label = new XMLElement('label', __('Filter items by tags or categories') . '<i>' . __('Comma separated, alt+click for negation') . '</i>', array('class' => 'filter', 'style' => 'display: none;'));
 			$label->appendChild(Widget::Input('fields[' . $this->get('sortorder') . '][filter_tags]', $this->get('filter_tags')));
@@ -127,9 +153,10 @@
 				}
 					
 			}
-			
-			
-			// BEHAVIOUR
+
+		/*-----------------------------------------------------------------------*/
+
+			// Behaviour
 			$fieldset = Stage::displaySettings(
 				$this->get('id'), 
 				$this->get('sortorder'), 
@@ -148,9 +175,10 @@
 			
 			// Append behaviour settings
 			$wrapper->appendChild($fieldset);
-			
-			
-			// DISPLAY
+
+		/*-----------------------------------------------------------------------*/
+
+			// Display
 			$fieldset = new XMLElement('fieldset', '<legend>' . __('Display') . '</legend>', array('class' => 'settings group'));
 			$container = new XMLElement('div');
 			
@@ -208,9 +236,10 @@
 			$label->setValue(__('%s Show thumbnail images', array($input->generate())));
 			$fieldset->appendChild($label);			
 			$wrapper->appendChild($fieldset);
-		
-			
-			// DATA SOURCE
+
+		/*-----------------------------------------------------------------------*/
+
+			// Data Source
 			$fieldset = new XMLElement('fieldset', '<legend>' . __('Data Source XML') . '</legend>', array('class' => 'settings'));
 
 			$label = new XMLElement('label', __('Included elements') . '<i>' . __('Don&#8217;t forget to include the Subsection Manager field in your Data Source') . '</i>');
@@ -238,8 +267,9 @@
 			
 			$wrapper->appendChild($fieldset);
 
+		/*-----------------------------------------------------------------------*/
 
-			// GENERAL
+			// General
 			$fieldset = new XMLElement('fieldset', NULL, array('class' => 'settings group'));
 			$this->appendShowColumnCheckbox($fieldset);
 			$this->appendRequiredCheckbox($fieldset);
@@ -248,10 +278,17 @@
 		}
 
 		/**
-		 * Check fields for errors in section editor.
+		 * Check the field's settings to ensure they are valid on the section
+		 * editor
 		 *
 		 * @param array $errors
-		 * @param boolean $checkForDuplicates
+		 *	the array to populate with the errors found.
+		 * @param boolean $checkFoeDuplicates (optional)
+		 *	if set to true, duplicate field entries will be flagged as errors.
+		 *	this defaults to true.
+		 * @return number
+		 *	returns the status of the checking. if errors has been populated with
+		 *	any errors self::__ERROR__, self__OK__ otherwise.
 		 */
 		function checkFields(&$errors, $checkForDuplicates=true) {
 
@@ -275,7 +312,11 @@
 		}
 
 		/**
-		 * Save field settings in section editor.
+		 * Commit the settings of this field from the section editor to
+		 * create an instance of this field in a section.
+		 *
+		 * @return boolean
+		 *	true if the commit was successful, false otherwise.
 		 */
 		function commit() {
 
@@ -353,13 +394,28 @@
 		}
 
 		/**
-		 * Display publish panel in content area.
+		 * Display the publish panel for this field. The display panel is the
+		 * interface to create the data in instances of this field once added
+		 * to a section.
 		 *
 		 * @param XMLElement $wrapper
-		 * @param $data
-		 * @param $flagWithError
-		 * @param $fieldnamePrefix
-		 * @param $fieldnamePostfix
+		 *	the xml element to append the html defined user interface to this
+		 *	field.
+		 * @param array $data (optional)
+		 *	any existing data that has been supplied for this field instance.
+		 *	this is encoded as an array of columns, each column maps to an
+		 *	array of row indexes to the contents of that column. this defaults
+		 *	to null.
+		 * @param mixed $flagWithError (optional)
+		 *	flag with error defaults to null.
+		 * @param string $fieldnamePrefix (optional)
+		 *	the string to be prepended to the display of the name of this field.
+		 *	this defaults to null.
+		 * @param string $fieldnameSuffix (optional)
+		 *	the string to be appended to the display of the name of this field.
+		 *	this defaults to null.
+		 * @param number $entry_id (optional)
+		 *	the entry id of this field. this defaults to null.
 		 */
 		function displayPublishPanel(&$wrapper, $data=NULL, $flagWithError=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL) {
 		
@@ -485,8 +541,22 @@
 
 		}
 
- 		/**
-		 * Prepare field values for database.
+		/**
+		 * Process the raw field data.
+		 *
+		 * @param mixed $data
+		 *	post data from the entry form
+		 * @param reference $status
+		 *	the status code resultant from processing the data.
+		 * @param boolean $simulate (optional)
+		 *	true if this will tell the CF's to simulate data creation, false
+		 *	otherwise. this defaults to false. this is important if clients
+		 *	will be deleting or adding data outside of the main entry object
+		 *	commit function.
+		 * @param mixed $entry_id (optional)
+		 *	the current entry. defaults to null.
+		 * @return array[string]mixed
+		 *	the processed field data.
 		 */
 		function processRawFieldData($data, &$status, $simulate=false, $entry_id=NULL) {
 		
@@ -521,11 +591,16 @@
 
 		}
 
- 		/**
-		 * Prepare value for the content overview table.
+		/**
+		 * Format this field value for display in the administration pages summary tables.
 		 *
 		 * @param array $data
-		 * @param XMLElement $link
+		 *	the data to use to generate the summary string.
+		 * @param XMLElement $link (optional)
+		 *	an xml link structure to append the content of this to provided it is not
+		 *	null. it defaults to null.
+		 * @return string
+		 *	the formatted string summary of the values of this field instance.
 		 */
 		function prepareTableValue($data, XMLElement $link=NULL) {
 		
@@ -535,13 +610,24 @@
 
 		}
 
- 		/**
-		 * Generate data source output.
+		/**
+		 * Append the formatted xml output of this field as utilized as a data source.
 		 *
 		 * @param XMLElement $wrapper
+		 *	the xml element to append the xml representation of this to.
 		 * @param array $data
-		 * @param boolean $encode
+		 *	the current set of values for this field. the values are structured as
+		 *	for displayPublishPanel.
+		 * @param boolean $encode (optional)
+		 *	flag as to whether this should be html encoded prior to output. this
+		 *	defaults to false.
 		 * @param string $mode
+		 *	 A field can provide ways to output this field's data. For instance a mode
+		 *  could be 'items' or 'full' and then the function would display the data
+		 *  in a different way depending on what was selected in the datasource
+		 *  included elements.
+		 * @param number $entry_id (optional)
+		 *	the identifier of this field entry instance. defaults to null.
 		 */
 		public function appendFormattedElement(&$wrapper, $data, $encode = false) {
 
@@ -620,10 +706,14 @@
 
 		}
 
- 		/**
-		 * Generate parameter pool values.
+		/**
+		 * Function to format this field if it chosen in a data-source to be
+		 * output as a parameter in the XML
 		 *
 		 * @param array $data
+		 *	 The data for this field from it's tbl_entry_data_{id} table
+		 * @return string
+		 *	 The formatted value to be used as the parameter
 		 */
 		public function getParameterPoolValue($data) {
 
@@ -632,14 +722,19 @@
 
 		}
 
- 		/**
-		 * Generate data source filter panel.
+		/**
+		 * Display the default data-source filter panel.
 		 *
 		 * @param XMLElement $wrapper
-		 * @param array $data
-		 * @param $errors
-		 * @param $fieldnamePrefix
-		 * @param $fieldnamePostfix
+		 *	the input XMLElement to which the display of this will be appended.
+		 * @param mixed $data (optional)
+		 *	the input data. this defaults to null.
+		 * @param mixed errors (optional)
+		 *	the input error collection. this defaults to null.
+		 * @param string $fieldNamePrefix
+		 *	the prefix to apply to the display of this.
+		 * @param string $fieldNameSuffix
+		 *	the suffix to apply to the display of this.
 		 */
 		function displayDatasourceFilterPanel(&$wrapper, $data=NULL, $errors=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL) {
 
@@ -651,6 +746,9 @@
 
  		/**
 		 * Return sample markup for the event editor.
+		 *
+		 * @return XMLElement
+		 *	a label widget containing the formatted field element name of this.
 		 */
 		public function getExampleFormMarkup() {
 		
