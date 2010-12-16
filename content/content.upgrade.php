@@ -1,13 +1,15 @@
 <?php
  
+	/**
+	 * @package content
+	 */
 	require_once(TOOLKIT . '/class.administrationpage.php');
 	
 	class contentExtensionSubsectionmanagerUpgrade extends AdministrationPage {
- 
-		public function __construct(&$parent) {
-			parent::__construct($parent);
-		}
-
+		
+		/**
+		 * Called to build the content for the page.
+		 */
 		function view() {
 			$this->setPageType('form');
 			$this->setTitle(__('%1$s &ndash; %2$s', array(__('Symphony'), __('Subsection Manager Upgrade'))));
@@ -29,6 +31,9 @@
 
 		}
 		
+		/**
+		 * Upgrade Mediathek fields to Subsection Manager fields
+		 */
 		function upgrade() {
 		
 			// Fetch Mediathek fields

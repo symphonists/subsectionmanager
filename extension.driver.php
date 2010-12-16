@@ -1,6 +1,9 @@
 <?php
 
 	/**
+	 * @package subsectionmanager
+	 */
+	/**
 	 * Subsection Manager Extension
 	 */
 	Class extension_subsectionmanager extends Extension {
