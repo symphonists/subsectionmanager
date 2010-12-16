@@ -368,11 +368,13 @@
 			$version = strtolower($about['version']);	
 
 			// Append assets
-			$this->_engine->Page->addScriptToHead(URL . '/extensions/subsectionmanager/lib/draggable/draggable.publish.js?v=' . $version, 101, false);
-			$this->_engine->Page->addScriptToHead(URL . '/extensions/subsectionmanager/lib/stage/stage.publish.js?v=' . $version, 101, false);
-			$this->_engine->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/lib/stage/stage.publish.css?v=' . $version, 'screen', 103, false);
-			$this->_engine->Page->addScriptToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.publish.js?v=' . $version, 102, false);
-			$this->_engine->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.publish.css?v=' . $version, 'screen', 104, false);
+			if(Administration::instance() instanceof Symphony && !is_null(Administration::instance()->Page)) {
+				Administration::instance()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/lib/draggable/draggable.publish.js?v=' . $version, 101, false);
+				Administration::instance()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/lib/stage/stage.publish.js?v=' . $version, 101, false);
+				Administration::instance()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/lib/stage/stage.publish.css?v=' . $version, 'screen', 103, false);
+				Administration::instance()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.publish.js?v=' . $version, 102, false);
+				Administration::instance()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.publish.css?v=' . $version, 'screen', 104, false);
+			}
 
 			// Get Subsection
 			$subsection = new SubsectionManager($this->_Parent);
