@@ -353,26 +353,26 @@
 					// Initialize stage for subsections
 					$(document).ready(function() {
 						var stage = object.find('div.stage');
-						stage.symphonyStage({
-							source: object.find('select'),
-							draggable: stage.hasClass('draggable'),
-							droppable: stage.hasClass('droppable'),
-							constructable: stage.hasClass('constructable'),
-							destructable: stage.hasClass('destructable'),
-							searchable: stage.hasClass('searchable'),
-							dragclick: function(item) {
-								if(!item.hasClass('message')) {
-									edit(item);
-								}
-							},
-							queue_ajax: {
-								url: Symphony.WEBSITE + '/symphony/extension/subsectionmanager/get/',
-								data: { 
-									id: id, 
-									section: section 
-								}
-							}						
-						});
+//						stage.symphonyStage({
+//							source: object.find('select'),
+//							draggable: stage.hasClass('draggable'),
+//							droppable: stage.hasClass('droppable'),
+//							constructable: stage.hasClass('constructable'),
+//							destructable: stage.hasClass('destructable'),
+//							searchable: stage.hasClass('searchable'),
+//							dragclick: function(item) {
+//								if(!item.hasClass('message')) {
+//									edit(item);
+//								}
+//							},
+//							queue_ajax: {
+//								url: Symphony.WEBSITE + '/symphony/extension/subsectionmanager/get/',
+//								data: { 
+//									id: id, 
+//									section: section 
+//								}
+//							}						
+//						});
 					});
 
 					// Attach events
