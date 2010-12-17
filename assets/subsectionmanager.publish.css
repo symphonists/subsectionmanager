@@ -21,10 +21,6 @@ div.stage li.preview, div.draghelper.preview, div.stage ul.dragging li.preview:h
 	padding-left: 52px;
 }
 
-div.queue li.message, div.stage li.empty {
-	padding: 0 !important;
-}
-
 div.stage.preview img, div.draghelper img {
 	position: absolute;
 	border: 1px solid #ccc;
