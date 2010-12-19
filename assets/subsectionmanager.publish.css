@@ -9,6 +9,41 @@ div.field-subsectionmanager select {
 	display: none;
 }
 
+div.field-subsectionmanager div.stage li.preview {
+	padding-left: 52px;
+}
+
+div.field-subsectionmanager div.stage li.new {
+	padding-left: 52px;
+	height: 52px;
+}
+
+div.field-subsectionmanager div.stage li.drawer.new {
+	padding: 0;
+}
+
+div.field-subsectionmanager div.stage.preview img {
+	position: absolute;
+	border: 1px solid #ccc;
+	top: 5px;
+	left: 12px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	cursor: pointer;
+}
+
+div.field-subsectionmanager div.stage li.drawer iframe {
+	width: 100%;
+	display: block;
+}
+
+div.field-subsectionmanager div.stage div.queue ul.loading {
+	min-height: 32px;
+}
+
+
+/*
+
 div.field-subsectionmanager div.stage li, div.draghelper {
 	padding-left: 0;
 }
@@ -46,10 +81,6 @@ div.field-subsectionmanager div.stage.preview strong.file, div.draghelper strong
 	text-align: center;
 }
 
-div.field-subsectionmanager div.stage li.drawer iframe {
-	width: 100%;
-	display: block;
-}
 
 div.field-subsectionmanager div.stage li em, div.draghelper em, div.field-subsectionmanager div.stage li em, div.field-subsectionmanager div.stage li em:hover, div.draghelper em:hover, div.field-subsectionmanager div.stage li em:hover {
 	font-style: normal;
@@ -94,8 +125,6 @@ div.dropper {
 	background: rgba(0, 0, 0, 0.8) url(images/drop.png) center no-repeat;
 }
 
-/* System error messages */
-
 div.field-subsectionmanager div.invalid {
 	margin: -1.75em 0 1.75em;
 }
@@ -107,4 +136,4 @@ div.field-subsectionmanager div.invalid div.field-subsectionmanager div.stage {
 
 div.field-subsectionmanager div.invalid code {
 	font-size: 1em;
-}
+}*/
