@@ -5,14 +5,14 @@
  * @source: http://github.com/nilshoerrmann/subsectionmanager
  */
  
-body.subsection {
+body.inline.subsection {
 	background: #353533;
 	border: none;
 	padding: 0;
 	margin: 0;
 }
 
-body.subsection form {
+body.inline.subsection form {
 	margin: 0;
 	padding: 0 12px;
 	position: relative;
@@ -21,7 +21,7 @@ body.subsection form {
 	border: none;
 }
 
-body.subsection form fieldset {
+body.inline.subsection form fieldset {
 	float: none !important;
 	width: 100% !important;
 	border: 1px solid transpareant;
@@ -30,35 +30,35 @@ body.subsection form fieldset {
 	padding: 0;
 }
 
-body.subsection fieldset input {
+body.inline.subsection fieldset input {
 	width: 100%;
 }
 
-body.subsection form input.button {
+body.inline.subsection form input.button {
 	width: auto;
 }
 
-body.subsection form label, body.subsection form p {
+body.inline.subsection form label, body.inline.subsection form p {
 	color: #fff;
 }
 
-body.subsection form a {
+body.inline.subsection form a {
 	color: #8fafd9;
 }
 
-body.subsection form label > span {
+body.inline.subsection form label > span {
 	border: 1px solid #616057;
 	background: #504f49;
 }
 
-body.subsection form .actions {
+body.inline.subsection form .actions {
 	border: none;
 	padding: 0;
 	margin: 0;
 	height: 4em;
 }
 
-body.subsection #notice {
+body.inline.subsection #notice {
 	display: block;
 	margin: 0 -12px !important;
 	padding: 2px 12px !important;
@@ -68,16 +68,16 @@ body.subsection #notice {
 	color: #fff !important;
 }
 
-body.subsection form input[type="file"] {
+body.inline.subsection form input[type="file"] {
 	color: #fff;
 	background: #504F49;
 	border: 1px solid #504F49 !important;
 }
 
-body.subsection form input[type="checkbox"] {
+body.inline.subsection form input[type="checkbox"] {
 	width: auto;
 }
 
-body.subsection #version {
+body.inline.subsection #version {
 	display: none;
 }
