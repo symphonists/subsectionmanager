@@ -92,6 +92,11 @@
 			stage.bind('browsestart', function(event) {
 				browse();
 			});
+			
+			// Deleting
+			stage.bind('erase', function(event, item) {
+				erase(item);
+			});
 					
 		/*-----------------------------------------------------------------------*/
 
@@ -124,6 +129,20 @@
 				if(content.find('#notice.success').size() > 0) {
 					stage.trigger('edit', [item, iframe]);
 				}
+
+				// Trigger erase
+				var erase = content.find('button.confirm').die().unbind().click(function(event) {
+				
+					// Get item ID
+					var id = $(event.target).parents('form').attr('action').match(/\d+/g);
+					if(jQuery.isArray(id)) {
+						id = id[id.length - 1];
+					}
+					
+					// Erase item
+					var item = selection.find('li[data-value="' + id + '"]');
+					stage.trigger('erase', [item]);
+				});
 			};
 			
 			// Browse queue
@@ -232,55 +251,46 @@
 						if(queue_item.size() == 0) {
 						
 							// Update queue
-							stage.find('div.queue ul').prepend(result);
+							stage.find('div.queue ul').prepend(result.clone());
 							
 							// Update selected item
 							item.children(':not(.destructor)').fadeOut('fast', function() {
 								$(this).remove();
 								result.children().hide().prependTo(item);
-								item.attr('class', result.attr('class')).children().fadeIn();
+								item.attr('class', result.attr('class')).attr('data-value', result.attr('data-value')).children().fadeIn();
+								stage.trigger('update');
 							});
 						}
 						
 						// Existing item
 						else {
 							queue_item.html(result.html());
-							item.html(result.html()).attr('class', result.attr('class')).append(destructor);
-						}
-						
-						stage.trigger('update');
+							item.html(result.html()).attr('class', result.attr('class')).attr('data-value', result.attr('data-value')).append(destructor);
+							stage.trigger('update');
+						}				
 					}
 				});
 			};
 			
 			// Remove item
 			var erase = function(item) {
-				object.trigger('removestart');
+				stage.trigger('removestart');
 				
 				var question = Symphony.Language.get(
 					'Are you sure you want to delete this item? It will be remove from all entries. This step cannot be undone.'
 				);
 				if(confirm(question)) {
-					object.find('li[value=' + id + '], li.drawer:not(.template)').slideUp(settings.speed, function() {
-						$(this).remove();
-
-						// Add empty selection message
-						var selection = object.find('ul.selection').find(settings.items);
-						if(selection.filter(':not(.new)').size() < 1) {
-							object.find('ul.selection li.empty').slideDown(settings.speed);
-						}
-
-					});
-					object.find('select option[value=' + id + ']').removeAttr('selected');
-					
-					
+//					item.trigger('destruct');
+//					queue.find('li[data-value="' + item.attr('data-value') + '"]').slideUp('fast', function() {
+//						$(this).remove();
+//					})
 					return true;
 				}
 				else {
 					return false;
 				}
 				
-				object.trigger('removestop');
+				stage.trigger('removestop');
 			};
 			
 			// Synchronize lists
