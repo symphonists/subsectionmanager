@@ -13,7 +13,8 @@
 		Symphony.Language.add({
 			'There are no selected items': false,
 			'Are you sure you want to delete this item? It will be remove from all entries. This step cannot be undone.': false,
-			'There are currently no items available. Perhaps you want create one first?': false
+			'There are currently no items available. Perhaps you want create one first?': false,
+			'Remove Item': false			
 		}); 
 
 		// Initialize Subsection Manager
@@ -22,6 +23,7 @@
 				stage = manager.find('div.stage'),
 				selection = stage.find('ul.selection'),
 				queue = stage.find('div.queue'),
+				queue_loaded = false,
 				drawer = stage.data('templates.stage').templates.filter('.drawer').removeClass('template'),
 				context = manager.find('input[name*=subsection_id]'),
 				subsection = context.val(),
@@ -56,8 +58,10 @@
 					editor = item.next('.drawer');
 				
 				// Don't open editor for item that will be removed
-				if(event.srcElement.className == 'destructor') return;
-				
+				if(event.srcElement != undefined) {
+					if(event.srcElement.className == 'destructor') return;
+				}
+			
 				// Open editor
 				if(editor.size() == 0) {
 					edit(item);
@@ -69,6 +73,19 @@
 						$(this).remove();
 					});
 				}
+			});
+			
+			// Updating
+			stage.bind('edit', function(event, item, iframe) {
+				var id = iframe.contents().find('form').attr('action').match(/\d+/g);
+
+				// Fetch item id
+				if($.isArray(id)) {
+					id = id[id.length - 1];
+				}
+
+				// Update item
+				update(id, item, iframe);
 			});
 					
 			// Searching
@@ -105,7 +122,7 @@
 				
 				// Trigger update 
 				if(content.find('#notice.success').size() > 0) {
-					item.trigger('update');
+					stage.trigger('edit', [item, iframe]);
 				}
 			};
 			
@@ -113,8 +130,8 @@
 			var browse = function() {
 
 				// Append queue if it's not present yet
-				if(queue.find('ul').size() == 0) {
-					var list = $('<ul class="queue loading"></ul>').hide().appendTo(queue).slideDown('fast');
+				if(queue_loaded == false) {
+					var list = queue.find('ul').addClass('loading').slideDown('fast');
 
 					// Get queue items
 					$.ajax({
@@ -138,21 +155,22 @@
 								$(result).hide().appendTo(list);
 								
 								// Highlight selected items
-								selection.find('li').each(function(index, item) {
-									list.find('li[data-value="' + $(item).attr('data-value') + '"]').addClass('selected');
-								});
+								stage.trigger('update');
 							}
 
 							// Slide queue
 							list.find('li').slideDown('fast', function() {
 								$(this).parent('ul').removeClass('loading');
 							});
+							
+							// Save status
+							queue_loaded = true;
 						}
 					});
 				}
 			};
 			
-			// Edit item
+			// Create item
 			var create = function(item) {
 				stage.trigger('createstart', [item]);
 
@@ -189,7 +207,86 @@
 				stage.trigger('editstop', [item]);
 			};
 
-			//			
+			// Update item
+			var update = function(id, item, iframe) {
+				item.addClass('updating');
+							
+				// Load item data
+				$.ajax({
+					type: 'GET',
+					url: Symphony.Context.get('root') + '/symphony/extension/subsectionmanager/get/',
+					data: { 
+						id: subsectionmanager_id, 
+						section: subsection,
+						entry: id
+					},
+					dataType: 'html',
+					success: function(result) {
+						var result = $(result),
+							destructor = item.find('a.destructor').clone();
+
+						// Get queue item
+						var queue_item = queue.find('li[data-value="' + item.attr('data-value') + '"]');
+						
+						// New item
+						if(queue_item.size() == 0) {
+						
+							// Update queue
+							stage.find('div.queue ul').prepend(result);
+							
+							// Update selected item
+							item.children(':not(.destructor)').fadeOut('fast', function() {
+								$(this).remove();
+								result.children().hide().prependTo(item);
+								item.attr('class', result.attr('class')).children().fadeIn();
+							});
+						}
+						
+						// Existing item
+						else {
+							queue_item.html(result.html());
+							item.html(result.html()).attr('class', result.attr('class')).append(destructor);
+						}
+						
+						stage.trigger('update');
+					}
+				});
+			};
+			
+			// Remove item
+			var erase = function(item) {
+				object.trigger('removestart');
+				
+				var question = Symphony.Language.get(
+					'Are you sure you want to delete this item? It will be remove from all entries. This step cannot be undone.'
+				);
+				if(confirm(question)) {
+					object.find('li[value=' + id + '], li.drawer:not(.template)').slideUp(settings.speed, function() {
+						$(this).remove();
+
+						// Add empty selection message
+						var selection = object.find('ul.selection').find(settings.items);
+						if(selection.filter(':not(.new)').size() < 1) {
+							object.find('ul.selection li.empty').slideDown(settings.speed);
+						}
+
+					});
+					object.find('select option[value=' + id + ']').removeAttr('selected');
+					
+					
+					return true;
+				}
+				else {
+					return false;
+				}
+				
+				object.trigger('removestop');
+			};
+			
+			// Synchronize lists
+			var sync = function() {
+			
+			}
 			
 		});
 
