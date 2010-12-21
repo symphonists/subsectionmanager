@@ -135,6 +135,13 @@
 						height: height
 					}, 'fast');
 					
+					// Handle inline image preview
+					if(content.find('body > img').width() > iframe.width()) {
+					  content.find('body > img').css({
+						'width': iframe.width()
+					  });
+					}
+								
 					// Fetch saving
 					content.find('div.actions input').click(function() {
 						iframe.animate({
