@@ -14,12 +14,14 @@
 			'There are no selected items': false,
 			'Are you sure you want to delete {$item}? It will be removed from all entries. This step cannot be undone.': false,
 			'There are currently no items available. Perhaps you want create one first?': false,
-			'Remove Item': false			
+			'Remove Item': false,
+			'New item': false			
 		}); 
 
 		// Initialize Subsection Manager
 		$('div.field-subsectionmanager').each(function() {
 			var manager = $(this),
+				storage = manager.find('select'),
 				stage = manager.find('div.stage'),
 				selection = stage.find('ul.selection'),
 				queue = stage.find('div.queue'),
@@ -49,6 +51,11 @@
 					$(this).remove();
 				})
 			});
+			
+			// Synchronizing
+			stage.bind('constructstop destructstop update', function(event) {
+				sync();
+			})
 			
 			// Editing
 			selection.delegate('li:not(.new, .drawer, .empty)', 'click', function(event) {
@@ -313,7 +320,26 @@
 			
 			// Synchronize lists
 			var sync = function() {
-			
+				var stock = storage.find('option').removeAttr('selected');
+								
+				selection.find('li').not('.drawer').not('.new').not('empty').each(function(index, item) {
+					var item = $(item),
+						id = item.attr('data-value'),
+						stored = stock.filter('[value="' + id + '"]');
+
+					// Existing item
+					if(stored.size() == 1) {
+						stored.attr('selected', 'selected');
+					}
+					
+					// New item
+					else {
+						$('<option />').attr('selected', true).attr('value', id).text(Symphony.Language.get('New item') + ' ' + id).appendTo(storage);
+					}
+				});
+				
+				// Activate Storage
+				storage.removeAttr('disabled');
 			}
 			
 		});
