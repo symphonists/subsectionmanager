@@ -64,11 +64,13 @@
 			
 				// Open editor
 				if(editor.size() == 0) {
+					item.addClass('active');
 					edit(item);
 				}
 				
 				// Close editor
 				else {
+					item.removeClass('active');
 					editor.slideUp('fast', function() {
 						$(this).remove();
 					});
