@@ -106,7 +106,7 @@
 			if(!is_null($context['fields']['sort_order'])) {
 			
 				// Delete current sort order
-				$entry_id = $context['entry']->_fields['id'];
+				$entry_id = $context['entry']->get('id');
 				Administration::instance()->Database->query(
 					"DELETE FROM `tbl_fields_subsectionmanager_sorting` WHERE `entry_id` = '$entry_id'"
 				);
