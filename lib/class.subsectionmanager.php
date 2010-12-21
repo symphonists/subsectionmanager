@@ -167,13 +167,15 @@
 					else {
 						$field_value = __('Untitled');
 					}
-					
-					// Populate select options
-					$options[] = array($entry['id'], in_array($entry['id'], $this->_Items), General::sanitize($field_value));
-					
+								
 					// Generate subsection values
 					$caption = $caption_template;
 					if(in_array($entry['id'], $this->_Items) || $full) {
+
+						// Populate select options
+						$options[] = array($entry['id'], in_array($entry['id'], $this->_Items), General::sanitize($field_value));
+
+						// Generate layout
 						$thumb = $type = $preview = $template = '';
 						foreach($fields as $field) {
 							$field_name = $field->get('element_name');
