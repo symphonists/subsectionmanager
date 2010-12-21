@@ -12,7 +12,7 @@
 		// Language strings
 		Symphony.Language.add({
 			'There are no selected items': false,
-			'Are you sure you want to delete this item? It will be remove from all entries. This step cannot be undone.': false,
+			'Are you sure you want to delete {$item}? It will be removed from all entries. This step cannot be undone.': false,
 			'There are currently no items available. Perhaps you want create one first?': false,
 			'Remove Item': false			
 		}); 
@@ -102,47 +102,79 @@
 
 			// Load subsection
 			var load = function(item, editor, iframe) {
-				content = iframe.contents();
-				
+				var content = iframe.contents();
+
 				// Adjust interface
 				content.find('body').addClass('inline subsection');
 				content.find('h1, h2, #nav, #usr, #notice:not(.error):not(.success), #notice a').remove();
 				content.find('fieldset input:first').focus();
 			
-				// Set frame and drawer height
-				var height = content.find('form').outerHeight();
-				iframe.height(height).animate({
-					opacity: 1
-				}, 'fast');
-				editor.animate({
-					height: height
-				}, 'fast');
-				
-				// Fetch saving
-				content.find('div.actions input').click(function() {
-					iframe.animate({
-						opacity: 0.01
-					}, 'fast');
-				})
-				
-				// Trigger update 
-				if(content.find('#notice.success').size() > 0) {
-					stage.trigger('edit', [item, iframe]);
-				}
-
-				// Trigger erase
-				var erase = content.find('button.confirm').die().unbind().click(function(event) {
-				
-					// Get item ID
-					var id = $(event.target).parents('form').attr('action').match(/\d+/g);
-					if(jQuery.isArray(id)) {
-						id = id[id.length - 1];
-					}
+				// Delete item
+				if(item.is('.delete')) {
 					
-					// Erase item
-					var item = selection.find('li[data-value="' + id + '"]');
-					stage.trigger('erase', [item]);
-				});
+					// Remove queue item
+					queue.find('li[data-value="' + item.attr('data-value') + '"]').slideUp('fast', function() {
+						$(this).remove();
+					});
+					
+					// Remove item
+					item.trigger('destruct');
+					
+					stage.trigger('deletestop', [item]);
+				}
+				
+				// Edit item
+				else {			
+				
+					// Set height
+					var height = content.find('form').outerHeight();
+					iframe.height(height).animate({
+						opacity: 1
+					}, 'fast');
+					editor.animate({
+						height: height
+					}, 'fast');
+					
+					// Fetch saving
+					content.find('div.actions input').click(function() {
+						iframe.animate({
+							opacity: 0.01
+						}, 'fast');
+					})
+					
+					// Trigger update 
+					if(content.find('#notice.success').size() > 0) {
+						stage.trigger('edit', [item, iframe]);
+					}
+	
+					// Trigger delete
+					content.find('button.confirm').click(function(event) {
+						event.stopPropagation();
+						
+						var message = Symphony.Language.get('Are you sure you want to delete {$item}? It will be removed from all entries. This step cannot be undone.', { 
+							'item': item.find('span:first').text()
+						});
+						
+						// Prepare deletion
+						if(confirm(message)) {
+							stage.trigger('deletestart', [item]);
+							item.addClass('delete');
+							
+							// Hide iframe
+							iframe.animate({
+								opacity: 0.01
+							}, 'fast');
+
+							// Delete item
+							return true;
+						}
+						
+						// Stop deletion
+						else {
+							return false;
+						}
+					});
+				}
 			};
 			
 			// Browse queue
@@ -270,27 +302,6 @@
 						}				
 					}
 				});
-			};
-			
-			// Remove item
-			var erase = function(item) {
-				stage.trigger('removestart');
-				
-				var question = Symphony.Language.get(
-					'Are you sure you want to delete this item? It will be remove from all entries. This step cannot be undone.'
-				);
-				if(confirm(question)) {
-//					item.trigger('destruct');
-//					queue.find('li[data-value="' + item.attr('data-value') + '"]').slideUp('fast', function() {
-//						$(this).remove();
-//					})
-					return true;
-				}
-				else {
-					return false;
-				}
-				
-				stage.trigger('removestop');
 			};
 			
 			// Synchronize lists
