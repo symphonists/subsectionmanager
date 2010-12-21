@@ -44,12 +44,10 @@
 			// Destructing
 			stage.bind('destructstart', function(event, item) {
 			
-				// Hide drawer for new or single item
-				if(item.is('.new') || stage.is('.single')) {
-					item.next('li.drawer').slideUp('fast', function() {
-						$(this).remove();
-					})
-				}
+				// Hide drawer
+				item.next('li.drawer').slideUp('fast', function() {
+					$(this).remove();
+				})
 			});
 			
 			// Editing
