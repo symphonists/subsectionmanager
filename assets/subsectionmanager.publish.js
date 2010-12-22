@@ -134,7 +134,7 @@
 				else {			
 				
 					// Set height
-					var height = content.find('form').outerHeight();
+					var height = content.find('form').outerHeight() || iframe.height();
 					iframe.height(height).animate({
 						opacity: 1
 					}, 'fast');
