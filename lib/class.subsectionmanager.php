@@ -182,12 +182,22 @@
 							$field_id = $field->get('id');
 							$field_data = $entry['data'][$field_id]['value'];
 							
+							// Tags
 							if(is_array($field_data)) {
 								$field_value = implode(', ', $field_data);				
 							}
+							
+							// Files
 							elseif(empty($field_data) && $entry['data'][$field_id]['file']) {
 								$field_value = $entry['data'][$field_id]['file'];
 							}
+							
+							// Relations
+							elseif(empty($field_data) && ($entry['data'][$field_id]['relation_id'] || $entry['data'][$field_id]['related_field_id'])) {
+								$field_value = strip_tags($field->prepareTableValue($entry['data'][$field_id]));
+							}
+							
+							// Default
 							else {
 								$field_value = $field_data;				
 							}
