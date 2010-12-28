@@ -129,10 +129,6 @@ div.field-subsectionmanager div.stage ul li.drawer {
 	background: #353533 url(images/loading-dark.gif) center no-repeat;
 }
 
-div.dropper {
-	background: rgba(0, 0, 0, 0.8) url(images/drop.png) center no-repeat;
-}
-
 div.field-subsectionmanager div.invalid {
 	margin: -1.75em 0 1.75em;
 }
