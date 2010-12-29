@@ -117,7 +117,7 @@
 								if($field->get('type') == 'taglist' || $field->get('type') == 'select' ) {
 									
 									// Fetch dynamic filter values
-									$dynamic = $this->Database->fetchCol(
+									$dynamic = Administration::instance()->Database->fetchCol(
 										'value',
 										"SELECT DISTINCT `value` FROM `tbl_entries_data_" . $field->get('id') . "` LIMIT 100"
 									);						
@@ -650,7 +650,7 @@
 			$entries = $entryManager->fetch($data['relation_id'], $this->get('subsection_id'));
 
 			// Sort entries
-			$order = $this->_Parent->_Parent->Database->fetchVar('order', 0,
+			$order = Frontend::instance()->Database->fetchVar('order', 0,
 				"SELECT `order`
 				FROM `tbl_fields_subsectionmanager_sorting`
 				WHERE `entry_id` = " . $wrapper->getAttribute('id') . "
