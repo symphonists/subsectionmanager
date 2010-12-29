@@ -334,7 +334,7 @@
 					
 					// New item
 					else {
-						$('<option />').attr('selected', true).attr('value', id).text(Symphony.Language.get('New item') + ' ' + id).appendTo(storage);
+						$('<option />').attr('selected', true).val(id).text(Symphony.Language.get('New item') + ' ' + id).appendTo(storage);
 					}
 				});
 				
