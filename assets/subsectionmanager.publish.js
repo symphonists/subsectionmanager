@@ -322,7 +322,7 @@
 			var sync = function() {
 				var stock = storage.find('option').removeAttr('selected');
 								
-				selection.find('li').not('.drawer').not('.new').not('empty').each(function(index, item) {
+				selection.find('li').not('.drawer').not('.new').not('.message').not('empty').each(function(index, item) {
 					var item = $(item),
 						id = item.attr('data-value'),
 						stored = stock.filter('[value="' + id + '"]');
