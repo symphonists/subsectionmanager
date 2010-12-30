@@ -181,6 +181,7 @@
 					`subsection_id` VARCHAR(255) NOT NULL,
 					`filter_tags` text,
 					`caption` text,
+					`droptext` text,
 					`included_fields` text,
 					`allow_multiple` tinyint(1) default '0',
 					`show_preview` tinyint(1) default '0',
@@ -241,6 +242,7 @@
 		 * @return boolean
 		 */
 		public function update($previousVersion) {
+			$status = array();
 		
 			// Update beta installs
 			if(version_compare($previousVersion, '1.0', '<')) {
@@ -251,19 +253,35 @@
 				// Check if context column exists
 				$columns = Administration::instance()->Database->fetch("SHOW COLUMNS FROM `tbl_fields_stage`");
 				$context = false;
-				foreach($columns as $column) {
-					if($column['Field'] == 'context') {
-						$context = true;
+				if(is_array($columns)) {
+					foreach($columns as $column) {
+						if($column['Field'] == 'context') {
+							$context = true;
+						}
 					}
 				}
 
 				// Add context row and return status
 				if(!$context) {
-					Administration::instance()->Database->query(
+					$status[] = Administration::instance()->Database->query(
 						"ALTER TABLE `tbl_fields_stage` ADD `context` varchar(255) default NULL"
 					);
 				}
 				
+			}
+
+			// Update 1.0 installs
+			if(version_compare($previousVersion, '1.1', '<')) {
+				$status[] = Administration::instance()->Database->query(
+					"ALTER TABLE `tbl_fields_subsectionmanager` ADD `droptext` text default NULL"
+				);
+			}
+			
+			// Report status
+			if(in_array(false, $status, true)) {
+				return false;
+			}
+			else {
 				return true;
 			}
 		}
