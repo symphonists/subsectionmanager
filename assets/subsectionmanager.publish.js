@@ -119,15 +119,14 @@
 			// Dragging
 			selection.delegate('.handle', 'mousedown.stage', function(event) {
 				var handle = $(this);
-				console.log(handle, handle.parents('li.preview'));
 				
-				if(handle.parents('li.preview').size() > 0) {
+				// Set class
+				if(handle.parents('li').hasClass('preview')) {
 					dragger.addClass('preview');	
 				}
 				else {
 					dragger.removeClass('preview');
 				}
-				console.log(dragger);
 			});
 			
 			// Dropping
@@ -394,32 +393,35 @@
 							file: '<a href="{@path}">{@text}</a>'
 						}
 					},
-					text, file, type, match, matches;
+					text = item.attr('data-drop'),
+					file, type, match, matches;
 				
-				// Prepare content
-				text = $.trim(item.clone().find('a.destructor').remove().end().text());
-				
-				// Image or file
-				if(item.find('a.file').size() != 0) {
-				
-					//
-					file = item.find('a.file');				
-					matches = {
-						text: text,
-						path: file.attr('href')
-					}
-
-					// Get type
-					type = 'file';
-					if(file.hasClass('image')) {
-						type = 'image';
-					}
+				// No custom drop text available
+				if(!text) {
+					text = $.trim(item.clone().find('a.destructor').remove().end().text());
 					
-					// Prepare text
-					text = syntax[formatter.join()][type];
-					for(match in matches) {
-						text = text.replace('{@' + match + '}', matches[match]);
-					}			
+					// Image or file
+					if(item.find('a.file').size() != 0) {
+					
+						//
+						file = item.find('a.file');				
+						matches = {
+							text: text,
+							path: file.attr('href')
+						}
+	
+						// Get type
+						type = 'file';
+						if(file.hasClass('image')) {
+							type = 'image';
+						}
+						
+						// Prepare text
+						text = syntax[formatter.join()][type];
+						for(match in matches) {
+							text = text.replace('{@' + match + '}', matches[match]);
+						}			
+					}
 				}
 				
 				// Replace text
