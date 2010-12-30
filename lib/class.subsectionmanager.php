@@ -22,7 +22,7 @@
 		
 			// Fetch subsection meta data
 			$meta = Administration::instance()->Database->fetch(
-				"SELECT filter_tags, caption, show_preview
+				"SELECT filter_tags, caption, droptext, show_preview
 				FROM tbl_fields_subsectionmanager
 				WHERE field_id = '$subsection_field'
 				LIMIT 1"
@@ -41,6 +41,7 @@
 		  	$subsection = $sectionManager->fetch($subsection_id, 'ASC', 'name');
 		  	$fields = $subsection->fetchFields();
 		  	$entries = $this->__filterEntries($subsection_id, $fields, $meta[0]['filter_tags'], $entry_id);
+		  	$droptext = $meta[0]['droptext'];
 		  	
 		  	// Check caption
 		  	$caption = $meta[0]['caption'];
@@ -59,7 +60,7 @@
 		  	}
 		  	
 		  	// Layout subsection data
-		  	$data = $this->__layoutSubsection($entries, $fields, $caption, $mode, $full);
+		  	$data = $this->__layoutSubsection($entries, $fields, $caption, $droptext, $mode, $full);
 		  	return $data;
 		  	
 		}
@@ -133,19 +134,19 @@
 			return $entry_data;
 		}
 		
-		function __layoutSubsection($entries, $fields, $caption_template, $mode, $full) {
+		function __layoutSubsection($entries, $fields, $caption_template, $droptext_template, $mode, $full) {
 
 			// Templates
 			$templates = array(
 				'plain' => array(
-					'text' => '<li data-value="{$value}"><span>{$caption}</span></li>',
-					'image' => '<li data-value="{$value}"><a href="{$href}" class="image file handle">{$caption}</a></li>',
-					'file' => '<li data-value="{$value}"><a href="{$href}" class="file handle">{$caption}</a></li>'
+					'text' => '<li data-value="{$value}" data-drop="{$droptext}"><span>{$caption}</span></li>',
+					'image' => '<li data-value="{$value}" data-drop="{$droptext}"><a href="{$href}" class="image file handle">{$caption}</a></li>',
+					'file' => '<li data-value="{$value}" data-drop="{$droptext}"><a href="{$href}" class="file handle">{$caption}</a></li>'
 				),
 				'preview' => array(
-					'text' => '<li data-value="{$value}"><span>{$caption}</span></li>',
-					'image' => '<li data-value="{$value}" class="preview"><img src="' . URL . '/image/2/40/40/5{$preview}" width="40" height="40" /><a href="{$href}" class="image file handle">{$caption}</a></li>',
-					'file' => '<li data-value="{$value}" class="preview"><strong class="file">{$type}</strong><a href="{$href}" class="file handle">{$caption}</a></li>'
+					'text' => '<li data-value="{$value}" data-drop="{$droptext}"><span>{$caption}</span></li>',
+					'image' => '<li data-value="{$value}" data-drop="{$droptext}" class="preview"><img src="' . URL . '/image/2/40/40/5{$preview}" width="40" height="40" /><a href="{$href}" class="image file handle">{$caption}</a></li>',
+					'file' => '<li data-value="{$value}" data-drop="{$droptext}" class="preview"><strong class="file">{$type}</strong><a href="{$href}" class="file handle">{$caption}</a></li>'
 				)
 			);
 			
@@ -170,6 +171,7 @@
 								
 					// Generate subsection values
 					$caption = $caption_template;
+					$droptext = $droptext_template;
 					if(in_array($entry['id'], $this->_Items) || $full) {
 
 						// Populate select options
@@ -202,8 +204,9 @@
 								$field_value = $field_data;				
 							}
 												
-							// Caption
+							// Caption & Drop text
 							$caption = str_replace('{$' . $field_name . '}', $field_value, $caption);
+							$droptext = str_replace('{$' . $field_name . '}', $field_value, $droptext);
 							
 							// Find upload fields
 							if(strpos($field->get('type'), 'upload') !== false && !empty($entry['data'][$field->get('id')]['file'])) {
@@ -230,23 +233,28 @@
 							$template = str_replace('{$preview}', $preview, $templates[$mode]['image']);
 							$template = str_replace('{$href}', $href, $template);
 							$template = str_replace('{$value}', $entry['id'], $template);
+							$template = str_replace('{$droptext}', $droptext, $template);
 							$html .= str_replace('{$caption}', $caption, $template);
 						}
 						elseif($type == 'file') {
 							$template = str_replace('{$type}', $preview, $templates[$mode]['file']);
 							$template = str_replace('{$href}', $href, $template);
 							$template = str_replace('{$value}', $entry['id'], $template);
+							$template = str_replace('{$droptext}', $droptext, $template);
 							$html .= str_replace('{$caption}', $caption, $template);
 						}
 						else {
 							$template = str_replace('{$preview}', $entry['id'], $templates[$mode]['text']);
 							$template = str_replace('{$value}', $entry['id'], $template);
+							$template = str_replace('{$droptext}', $droptext, $template);
 							$html .= str_replace('{$caption}', $caption, $template);
 						}
-						
 					}
 				}
 			}
+			
+			// Remove empty drop texts
+			$html = str_replace(' data-drop=""', '', $html);		
 						
 			// Return options and html
 			return array(

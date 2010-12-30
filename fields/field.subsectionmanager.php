@@ -400,6 +400,9 @@
 				}
 								
 			}
+			
+			// Drop text
+			$fields['droptext'] = $this->get('droptext');
 
 			// Data source fields
 			$fields['included_fields'] = (is_null($this->get('included_fields')) ? NULL : implode(',', $this->get('included_fields')));
