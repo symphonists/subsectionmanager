@@ -58,6 +58,13 @@
 				sync();
 			})
 			
+			// Queuing
+			stage.delegate('li.preview a.file', 'click', function() {
+				
+				// Prevent clicks on links in queue
+				return false;
+			});
+			
 			// Editing
 			selection.delegate('li:not(.new, .drawer, .empty)', 'click', function(event) {
 				var item = $(this),
@@ -81,6 +88,9 @@
 						$(this).remove();
 					});
 				}
+				
+				// Don't follow links
+				return false;
 			});
 			
 			// Updating

@@ -17,6 +17,10 @@ div.field-subsectionmanager div.stage li.preview a.file, div.dragger a.file {
 	text-decoration: none;
 }
 
+div.field-subsectionmanager div.stage div.queue li.selected a.file {
+	color: #fff;
+}
+
 div.dragger a.file {
 	padding: 0 0 0 52px;
 }
