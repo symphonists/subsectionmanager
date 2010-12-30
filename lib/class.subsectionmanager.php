@@ -139,13 +139,13 @@
 			$templates = array(
 				'plain' => array(
 					'text' => '<li data-value="{$value}"><span>{$caption}</span></li>',
-					'image' => '<li data-value="{$value}"><a href="{$href}" class="image file">{$caption}</a></li>',
-					'file' => '<li data-value="{$value}"><a href="{$href}" class="file">{$caption}</a></li>'
+					'image' => '<li data-value="{$value}"><a href="{$href}" class="image file handle">{$caption}</a></li>',
+					'file' => '<li data-value="{$value}"><a href="{$href}" class="file handle">{$caption}</a></li>'
 				),
 				'preview' => array(
 					'text' => '<li data-value="{$value}"><span>{$caption}</span></li>',
-					'image' => '<li data-value="{$value}" class="preview"><img src="' . URL . '/image/2/40/40/5{$preview}" width="40" height="40" /><a href="{$href}" class="image file">{$caption}</a></li>',
-					'file' => '<li data-value="{$value}" class="preview"><strong class="file">{$type}</strong><a href="{$href}" class="file">{$caption}</a></li>'
+					'image' => '<li data-value="{$value}" class="preview"><img src="' . URL . '/image/2/40/40/5{$preview}" width="40" height="40" /><a href="{$href}" class="image file handle">{$caption}</a></li>',
+					'file' => '<li data-value="{$value}" class="preview"><strong class="file">{$type}</strong><a href="{$href}" class="file handle">{$caption}</a></li>'
 				)
 			);
 			
