@@ -9,8 +9,16 @@ div.field-subsectionmanager select {
 	display: none;
 }
 
-div.field-subsectionmanager div.stage li.preview {
-	padding-left: 52px;
+div.field-subsectionmanager div.stage li.preview a.file, div.dragger a.file {
+	display: inline-block;
+	margin: 0;
+	padding: 7px 14px 7px 66px;
+	color: #3f3d35;
+	text-decoration: none;
+}
+
+div.dragger a.file {
+	padding: 0 0 0 52px;
 }
 
 div.field-subsectionmanager div.stage li.new {
@@ -22,11 +30,11 @@ div.field-subsectionmanager div.stage li.drawer.new {
 	padding: 0;
 }
 
-div.field-subsectionmanager div.stage.preview img {
+div.field-subsectionmanager div.stage.preview img, div.dragger img {
 	position: absolute;
 	border: 1px solid #ccc;
 	top: 5px;
-	left: 12px;
+	left: 14px;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
 	cursor: pointer;
@@ -49,6 +57,32 @@ div.field-subsectionmanager div.stage div.queue ul.loading {
 	min-height: 32px;
 }
 
+div.field-subsectionmanager div.stage li em, div.field-subsectionmanager div.stage li em:hover, div.dragger em {
+	font-style: normal;
+	color: #908e88;
+	cursor: auto;
+	float: none;
+	font-style: inherit;
+	margin-right: 0;
+	text-decoration: none;
+	width: auto;	
+}
+
+div.field-subsectionmanager div.stage li.preview a.file, div.field-subsectionmanager div.stage li.preview span, div.dragger a.file {
+	min-height: 39px;
+}
+
+div.dragger.preview {
+	min-height: 38px;
+}
+
+div.field-subsectionmanager div.stage div.queue li.selected em {
+	color: #aabbee;
+}
+
+div.field-subsectionmanager div.stage div.queue li.selected img, div.field-subsectionmanager div.stage div.queue li.selected strong.file {
+	border-color: #335e9e;
+}
 
 /*
 

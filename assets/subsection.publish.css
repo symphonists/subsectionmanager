@@ -136,7 +136,7 @@ body.inline.subsection div.stage li a.destructor:hover {
 	border-color: #7f8180;
 }
 
-body.inline.subsection div.stage ul li span, div.stage ul li a.file {
+body.inline.subsection div.stage ul li span, body.inline.subsection div.stage ul li a.file {
 	color: #cfcfd0;
 }
 

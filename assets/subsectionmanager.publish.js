@@ -30,7 +30,8 @@
 				context = manager.find('input[name*=subsection_id]'),
 				subsection = context.val(),
 				subsectionmanager_id = context.attr('name').match(/\[subsection_id\]\[(.*)\]/)[1],
-				subsection_link = drawer.find('iframe').attr('target');
+				subsection_link = drawer.find('iframe').attr('target'),
+				dragger = $('div.dragger');
 					
 		/*-----------------------------------------------------------------------*/
 
@@ -104,7 +105,31 @@
 			stage.bind('erase', function(event, item) {
 				erase(item);
 			});
-					
+			
+			// Dragging
+			selection.delegate('.handle', 'mousedown.stage', function(event) {
+				var handle = $(this);
+				console.log(handle, handle.parents('li.preview'));
+				
+				if(handle.parents('li.preview').size() > 0) {
+					dragger.addClass('preview');	
+				}
+				else {
+					dragger.removeClass('preview');
+				}
+				console.log(dragger);
+			});
+			
+			// Dropping
+			$('textarea').bind('drop.stage', function(event, item) {
+				var target = $(this);
+				
+				// Insert text
+				if(target.is('.droptarget')) {
+					drop(target, item);
+				}
+			});
+								
 		/*-----------------------------------------------------------------------*/
 
 			// Load subsection
@@ -340,7 +365,61 @@
 				
 				// Activate Storage
 				storage.removeAttr('disabled');
-			}
+			};
+			
+			// Dropping items
+			var drop = function(target, item) {
+				var formatter = target.attr('class').match(/(?:markdown)|(?:textile)/) || ['html'],
+					syntax = {
+						markdown: {
+							image: '![{@text}]({@path})',
+							file: '[{@text}]({@path})'
+						},
+						textile: {
+							image: '!{@path}({@text})!',
+							file: '"{@text}":({@path})'
+						},
+						html: {
+							image: '<img src="{@path}" alt="{@text}" />',
+							file: '<a href="{@path}">{@text}</a>'
+						}
+					},
+					text, file, type, match, matches;
+				
+				// Prepare content
+				text = $.trim(item.clone().find('a.destructor').remove().end().text());
+				
+				// Image or file
+				if(item.find('a.file').size() != 0) {
+				
+					//
+					file = item.find('a.file');				
+					matches = {
+						text: text,
+						path: file.attr('href')
+					}
+
+					// Get type
+					type = 'file';
+					if(file.hasClass('image')) {
+						type = 'image';
+					}
+					
+					// Prepare text
+					text = syntax[formatter.join()][type];
+					for(match in matches) {
+						text = text.replace('{@' + match + '}', matches[match]);
+					}			
+				}
+				
+				// Replace text
+				var start = target[0].selectionStart || 0;
+				var end = target[0].selectionEnd || 0;
+				var original = target.val();
+				target.val(original.substring(0, start) + text + original.substring(end, original.length));
+				target[0].selectionStart = start + text.length;
+				target[0].selectionEnd = start + text.length;
+			};
 			
 		});
 
