@@ -425,7 +425,6 @@
 
 			// Append assets
 			if(Administration::instance() instanceof Symphony && !is_null(Administration::instance()->Page)) {
-//				Administration::instance()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/lib/draggable/draggable.publish.js?v=' . $version, 101, false);
 				Administration::instance()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/lib/stage/stage.publish.js?v=' . $version, 101, false);
 				Administration::instance()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/lib/stage/stage.publish.css?v=' . $version, 'screen', 103, false);
 				Administration::instance()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.publish.js?v=' . $version, 102, false);
@@ -476,33 +475,12 @@
 			$wrapper->appendChild($label);
 			
 			// Check if all needed components are available
-			$flagAsMissing['draggable'] = !file_exists(EXTENSIONS. '/subsectionmanager/lib/draggable/draggable.publish.js');
-			$flagAsMissing['stage'] = !file_exists(EXTENSIONS. '/subsectionmanager/lib/stage/stage.publish.js');
-			
-			if($flagAsMissing['draggable'] || $flagAsMissing['stage']) {
+			if(!file_exists(EXTENSIONS. '/subsectionmanager/lib/stage/stage.publish.js')) {
 				$error = new XMLElement('ul');
-				
-				// Draggable missing
-				if($flagAsMissing['draggable']) {
-					$message = new XMLElement('li', __('Submodule %s is missing.', array('<code>Draggable</code>')));
-					$error->appendChild($message);
-				}
-				
-				// Stage missing
-				if($flagAsMissing['stage']) {
-					$message = new XMLElement('li', __('Submodule %s is missing.', array('<code>Stage</code>')));
-					$error->appendChild($message);
-				}
-				
-				// Display error
-				if($flagAsMissing['draggable'] && $flagAsMissing['stage']) {
-					$addition = __('Please add the missing submodules to %s. ', array('<code>' . URL . '/extensions/subsectionmanager/lib/</code>'));
-				}
-				else {
-					$addition = __('Please add the missing submodule to %s. ', array('<code>' . URL . '/extensions/subsectionmanager/lib/</code>'));
-				}
+				$message = new XMLElement('li', __('Submodule %s is missing.', array('<code>Stage</code>')));
+				$error->appendChild($message);
+				$addition = __('Please add the missing submodule to %s. ', array('<code>' . URL . '/extensions/subsectionmanager/lib/</code>'));
 				$wrapper->appendChild(Widget::wrapFormElementWithError($error, $addition . __('For further assistence have a look at the documentation available on %s.', array('<a href="http://github.com/nilshoerrmann/subsectionmanager/">GitHub</a>'))));
-				
 				return;
 			}
 

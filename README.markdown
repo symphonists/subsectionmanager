@@ -19,13 +19,12 @@ Subsection Manager is the successor of [Mediathek](http://github.com/nilshoerrma
 
 ## Installation
 
-Subsection Manager contains three components:
+Subsection Manager contains two components:
 
 - The Subsection Manager itself which handles the section interactions,
 - [Stage](http://github.com/nilshoerrmann/stage/) which offers the interface for the inline section management and
-- [Draggable](http://github.com/nilshoerrmann/draggable/) which provides drag and drop features.
 
-If you are working with Git, please clone the `development` branch of this extension which contains all components as submodules. Please don't forget to pull the submodules as well. If you are not using Git and want to install this extension using FTP, please just download a copy of the `release` branch which bundles all needed submodules. More information about [installing and updating extensions](http://symphony-cms.com/learn/tasks/view/install-an-extension/) can be found in the Symphony documentation at <http://symphony-cms.com/learn/>. 
+If you are working with Git, please clone the `development` branch of this extension which contains all additional components as submodules. Please don't forget to pull the submodules as well. If you are not using Git and want to install this extension using FTP, please just download a copy of the `release` branch which bundles all needed submodules. More information about [installing and updating extensions](http://symphony-cms.com/learn/tasks/view/install-an-extension/) can be found in the Symphony documentation at <http://symphony-cms.com/learn/>. 
 
 All interface related components of the Subsection Manager are JavaScript based. If you are upgrading from an earlier version, please make sure to clear your browser cache to avoid interface issues. If another extension or the Symphony core throws a JavaScript error, the Subsection Manager will stop working. 
 
@@ -40,6 +39,7 @@ Be aware that this upgrade process will alter your database and will uninstall y
 **Version 1.1**
 
 - Updated Stage.
+- Removed Draggable plugin
 - General improvements and code clean-up
 
 **Version 1.0** 
