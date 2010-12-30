@@ -180,55 +180,15 @@
 
 			// Display
 			$fieldset = new XMLElement('fieldset', '<legend>' . __('Display') . '</legend>', array('class' => 'settings group'));
-			$container = new XMLElement('div');
 			
 			// Caption input
-			$label = new XMLElement('label', __('Caption'));
-			$label->appendChild(Widget::Input('fields[' . $this->get('sortorder') . '][caption]', htmlspecialchars($this->get('caption'))));
+			$fieldset->appendChild($this->__groupContentGenerator('caption', __('Caption'), $sections));
 			
-			// Append Caption
-			if(isset($errors['caption'])) {
-				$container->appendChild(Widget::wrapFormElementWithError($label, $errors['caption']));
-			}
-			else {
-				$container->appendChild($label);
-			}
-			
-			// Caption suggestions		
-			if(is_array($sections) && !empty($sections) && !isset($errors['caption'])) {
-				
-				// Get values
-				$values = array();
-				foreach($sections as $section) {
-				
-					// Don't include the current section
-					if($section->get('id') != $section_id) {
-						$fields = $section->fetchFields();
-						
-						// Continue if fields exist
-						if(is_array($fields)) {
-							foreach($fields as $field) {
-								$values[$field->get('element_name')][] = 'section' . $section->get('id');
-							}
-						}
-						
-					}
-				}
-				
-				// Generate list
-				if(is_array($values)) {
-					$filter = new XMLElement('ul', NULL, array('class' => 'tags inline'));
-					foreach($values as $handle => $fields) {
-						$filter->appendChild(new XMLElement('li', '{$' . $handle . '}', array('rel' => implode(' ', $fields))));
-					}
-					$container->appendChild($filter);
-				}
-				
-			}
-			$fieldset->appendChild($container);
+			// Custom drop text
+			$fieldset->appendChild($this->__groupContentGenerator('droptext', __('Drop text'), $sections));
 
 			// Preview options
-			$label = new XMLElement('label', NULL, array('class' => 'thumbnails'));
+			$label = new XMLElement('label');
 			$input = Widget::Input('fields[' . $this->get('sortorder') . '][show_preview]', 1, 'checkbox');
 			if($this->get('show_preview') != 0) {
 				$input->setAttribute('checked', 'checked');
@@ -275,6 +235,67 @@
 			$this->appendRequiredCheckbox($fieldset);
 			$wrapper->appendChild($fieldset);
 
+		}
+		
+		/**
+		 * Generate a content generator consisting of a text input field and 
+		 * an inline tag list with field name.
+		 *
+		 * @param string $name
+		 *  handle of the group
+		 * @param string $title
+		 *  title used for the group label
+		 * @param SectionManager $sections
+		 *  section object
+		 * @return XMLElement
+		 *  returns the content generator element
+		 */
+		private function __groupContentGenerator($name, $title, $sections) {
+			$container = new XMLElement('div');
+			$label = new XMLElement('label', $title);
+			$label->appendChild(Widget::Input('fields[' . $this->get('sortorder') . '][' . $name . ']', htmlspecialchars($this->get($name))));
+			
+			// Append Caption
+			if(isset($errors[$name])) {
+				$container->appendChild(Widget::wrapFormElementWithError($label, $errors[$name]));
+			}
+			else {
+				$container->appendChild($label);
+			}
+			
+			// Caption suggestions		
+			if(is_array($sections) && !empty($sections) && !isset($errors[$name])) {
+				
+				// Get values
+				$values = array();
+				foreach($sections as $section) {
+				
+					// Don't include the current section
+					if($section->get('id') != $section_id) {
+						$fields = $section->fetchFields();
+						
+						// Continue if fields exist
+						if(is_array($fields)) {
+							foreach($fields as $field) {
+								$values[$field->get('element_name')][] = 'section' . $section->get('id');
+							}
+						}
+						
+					}
+				}
+				
+				// Generate list
+				if(is_array($values)) {
+					$filter = new XMLElement('ul', NULL, array('class' => 'tags inline'));
+					foreach($values as $handle => $fields) {
+						$filter->appendChild(new XMLElement('li', '{$' . $handle . '}', array('rel' => implode(' ', $fields))));
+					}
+					$container->appendChild($filter);
+				}
+				
+			}
+			
+			return $container;
 		}
 
 		/**
