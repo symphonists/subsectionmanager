@@ -484,7 +484,7 @@
 			if($entry_id) {
 				$order = Administration::instance()->Database->fetchVar('order', 0,
 					"SELECT `order`
-					FROM `tbl_fields_subsectionmanager_sorting`
+					FROM `tbl_fields_stage_sorting`
 					WHERE `entry_id` = " . $entry_id . "
 					AND `field_id` = " . $this->get('id') . "
 					LIMIT 1"
@@ -654,7 +654,7 @@
 			// Sort entries
 			$order = Frontend::instance()->Database->fetchVar('order', 0,
 				"SELECT `order`
-				FROM `tbl_fields_subsectionmanager_sorting`
+				FROM `tbl_fields_stage_sorting`
 				WHERE `entry_id` = " . $wrapper->getAttribute('id') . "
 				AND `field_id` = " . $this->get('id') . "
 				LIMIT 1"

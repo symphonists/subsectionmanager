@@ -6,6 +6,8 @@
 	/**
 	 * Subsection Manager Extension
 	 */
+	require_once(EXTENSIONS . '/subsectionmanager/lib/stage/class.stage.php');
+
 	Class extension_subsectionmanager extends Extension {
 
 		/**
@@ -172,9 +174,10 @@
 		 *  True if the install completely successfully, false otherwise
 		 */
 		public function install() {
+			$status = array();
 		
 			// Create database field table
-			$fields = Administration::instance()->Database->query(
+			$status[] = Administration::instance()->Database->query(
 				"CREATE TABLE IF NOT EXISTS `tbl_fields_subsectionmanager` (
 					`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 					`field_id` int(11) unsigned NOT NULL,
@@ -190,38 +193,15 @@
 				)"
 			);
 			
-			// Create database sorting table
-			$sorting = Administration::instance()->Database->query(
-				"CREATE TABLE IF NOT EXISTS `tbl_fields_subsectionmanager_sorting` (
-					`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-					`entry_id` int(11) NOT NULL,
-					`field_id` int(11) NOT NULL,
-					`order` text,
-					PRIMARY KEY (`id`)
-				)"
-			);
+			// Create stage
+			$status[] = Stage::install();
 			
-			// Create database stage table
-			$stage = Administration::instance()->Database->query(
-				"CREATE TABLE IF NOT EXISTS `tbl_fields_stage` (
-				  `id` int(11) unsigned NOT NULL auto_increment,
-				  `field_id` int(11) unsigned NOT NULL default '0',
-				  `constructable` smallint(1) default '0',
-				  `destructable` smallint(1) default '0',
-				  `draggable` smallint(1) default '0',
-				  `droppable` smallint(1) default '0',
-				  `searchable` smallint(1) default '0',
-				  `context` varchar(255) default NULL,
-				  PRIMARY KEY  (`id`)
-				) TYPE=MyISAM;"
-			);
-			
-			// Return status
-			if($fields && $sorting && $stage) {
-				return true;
+			// Report status
+			if(in_array(false, $status, true)) {
+				return false;
 			}
 			else {
-				return false;
+				return true;
 			}
 		}
 
@@ -272,9 +252,29 @@
 
 			// Update 1.0 installs
 			if(version_compare($previousVersion, '1.1', '<')) {
+			
+				// Add droptext column
 				$status[] = Administration::instance()->Database->query(
 					"ALTER TABLE `tbl_fields_subsectionmanager` ADD `droptext` text default NULL"
 				);
+				
+				// Create stage tables
+				$status[] = Stage::install();
+				
+				// Fetch sort orders
+				$sortings = Administration::instance()->Database->fetch("SELECT * FROM tbl_fields_subsectionmanager_sorting LIMIT 1000");
+				
+				// Move sort orders to stage table
+				if(is_array($sortings)) {
+					foreach($sortings as $sorting) {
+						$status[] = Administration::instance()->Database->query(
+							"INSERT INTO tbl_fields_stage_sorting (`entry_id`, `field_id`, `order`, `context`) VALUES (" . $sorting['entry_id'] . ", " . $sorting['field_id'] . ", '" . $sorting['order'] . "', 'subsectionmanager')"
+						);
+					}
+				}
+
+				// Drop old sorting table
+				$status[] = Administration::instance()->Database->query("DROP TABLE IF EXISTS `tbl_fields_subsectionmanager_sorting`");			
 			}
 			
 			// Report status
@@ -295,13 +295,13 @@
 		 */
 		public function uninstall() {
 		
-			// Drop related entries from stage table
+			// Drop related entries from stage tables
 			Administration::instance()->Database->query("DELETE FROM `tbl_fields_stage` WHERE `context` = 'subsectionmanager'");
-		
-			// Drop database table
-			Administration::instance()->Database->query("DROP TABLE IF EXISTS `tbl_fields_subsectionmanager`");
-			Administration::instance()->Database->query("DROP TABLE IF EXISTS `tbl_fields_subsectionmanager_sorting`");
-			
+			Administration::instance()->Database->query("DELETE FROM `tbl_fields_stage_sorting` WHERE `context` = 'subsectionmanager'");
+
+			// Drop tables
+			Administration::instance()->Database->query("DROP TABLE IF EXISTS `tbl_fields_subsectionmanager`");			
+			Administration::instance()->Database->query("DROP TABLE IF EXISTS `tbl_fields_subsectionmanager_sorting`");			
 		}
 		
 	}

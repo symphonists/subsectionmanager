@@ -58,10 +58,12 @@
 			$sortings = Administration::instance()->Database->fetch("SELECT * FROM tbl_fields_mediathek_sorting LIMIT 1000");
 			
 			// Store sort orders
-			foreach($sortings as $sorting) {
-				Administration::instance()->Database->query(
-					"INSERT INTO tbl_fields_subsectionmanager_sorting (`entry_id`, `field_id`, `order`) VALUES (" . $sorting['entry_id'] . ", " . $sorting['field_id'] . ", '" . $sorting['order'] . "')"
-				);
+			if(is_array($sortings)) {
+				foreach($sortings as $sorting) {
+					Administration::instance()->Database->query(
+						"INSERT INTO tbl_fields_stage_sorting (`entry_id`, `field_id`, `order`, `context`) VALUES (" . $sorting['entry_id'] . ", " . $sorting['field_id'] . ", '" . $sorting['order'] . "', 'subsectionmanager')"
+					);
+				}
 			}
 
 			// Replace Mediathek by Subsection Manager fields
