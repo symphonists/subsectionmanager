@@ -88,94 +88,30 @@ div.field-subsectionmanager div.stage div.queue li.selected img, div.field-subse
 	border-color: #335e9e;
 }
 
-/*
 
-div.field-subsectionmanager div.stage li, div.draghelper {
-	padding-left: 0;
-}
+/* Missing Stage */
 
-div.draghelper a.destructor {
-	display: none;
-}
-
-div.field-subsectionmanager div.stage li.preview, div.draghelper.preview, div.field-subsectionmanager div.stage ul.dragging li.preview:hover {
-	padding-left: 52px;
-}
-
-div.field-subsectionmanager div.stage.preview img, div.draghelper img {
-	position: absolute;
-	border: 1px solid #ccc;
-	top: 5px;
-	left: 12px;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	cursor: pointer;
-}
-
-div.field-subsectionmanager div.stage.preview strong.file, div.draghelper strong.file {
-	position: absolute;
-	border: 1px solid #ccc;
-	top: 5px;
-	left: 12px;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
-	width: 40px;
-	height: 40px;
-	background: #fff url(images/file.png) 0 0 no-repeat;
-	text-transform: uppercase;
-	color: #ccc;
-	text-align: center;
-}
-
-
-div.field-subsectionmanager div.stage li em, div.draghelper em, div.field-subsectionmanager div.stage li em, div.field-subsectionmanager div.stage li em:hover, div.draghelper em:hover, div.field-subsectionmanager div.stage li em:hover {
-	font-style: normal;
-	color: #908e88;
-	cursor: auto;
-	float: none;
-	font-style: inherit;
-	margin-right: 0;
-	text-decoration: none;
-	width: auto;	
-}
-
-div.field-subsectionmanager div.stage li.preview a.file, div.field-subsectionmanager div.stage li.preview span, div.draghelper a.file, div.draghelper span {
-	min-height: 39px;
-}
-
-div.field-subsectionmanager div.stage div.queue li.selected em {
-	color: #aabbee;
-}
-
-div.field-subsectionmanager div.stage div.queue li.selected img, div.field-subsectionmanager div.stage div.queue li.selected strong.file {
-	border-color: #335e9e;
-}
-
-div.field-subsectionmanager div.stage ul.selection {
-	cursor: pointer;
-}
-
-div.field-subsectionmanager div.stage ul.selection.draggable {
-	cursor: move;
-}
-
-div.field-subsectionmanager div.stage ul li.drawer {
-	-moz-box-shadow: 0 0 4px rgba(46, 45, 40, 0.3);
-	-webkit-box-shadow: 0 0 4px rgba(46, 45, 40, 0.3);
-	z-index: 1000;
-	overflow: hidden;
-	background: #353533 url(images/loading-dark.gif) center no-repeat;
-}
-
-div.field-subsectionmanager div.invalid {
-	margin: -1.75em 0 1.75em;
-}
-
-div.field-subsectionmanager div.invalid div.field-subsectionmanager div.stage {
-	margin: 0 0px 1.75em;
+div.field div.invalid div.stage {
+	background-color: #D42;
+	margin: -1.75em 0 0;
+	padding: 0.5em;
 	border: 1px solid #B21;
+	border-bottom: none;
 }
 
-div.field-subsectionmanager div.invalid code {
+div.field div.invalid div.stage ul {
+	background: #ea653b;
+	border: 1px solid #dd3d0e;
+	margin: 0;
+	list-style: none;
+	padding: 0.5em;
+}
+
+div.field div.invalid div.stage strong {
+	font-size: 1.3em;
+	font-weight: normal;
+}
+
+div.field div.invalid div.stage code {
 	font-size: 1em;
-}*/
+}

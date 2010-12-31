@@ -499,13 +499,15 @@
 			$wrapper->appendChild($label);
 			
 			// Check if all needed components are available
-			if(!file_exists(EXTENSIONS. '/subsectionmanager/lib/stage/stage.publish.js')) {
-				$error = new XMLElement('ul');
-				$message = new XMLElement('li', __('Submodule %s is missing.', array('<code>Stage</code>')));
-				$error->appendChild($message);
-				$addition = __('Please add the missing submodule to %s. ', array('<code>' . URL . '/extensions/subsectionmanager/lib/</code>'));
-				$wrapper->appendChild(Widget::wrapFormElementWithError($error, $addition . __('For further assistence have a look at the documentation available on %s.', array('<a href="http://github.com/nilshoerrmann/subsectionmanager/">GitHub</a>'))));
-				return;
+			if(!file_exists(EXTENSIONS . '/subsectionmanager/lib/stage/stage.publish.js')) {
+				$missing = __('Submodule Stage is missing');
+				$action = __('Please add the missing submodule to %s.', array('<code>' . URL . '/extensions/subsectionmanager/lib/</code>'));
+				$documentation = __('For further assistence have a look at the documentation available on %s.', array('<a href="http://github.com/nilshoerrmann/stage/">GitHub</a>'));
+				$error = new XMLElement('div', '<ul><li><strong>' . $missing . '</strong></li><li>' . $action . '</li></ul>', array('class' => 'stage'));
+
+				// Display error
+				$wrapper->appendChild(Widget::wrapFormElementWithError($error, $documentation));
+				return false;
 			}
 
 			// Get stage settings
