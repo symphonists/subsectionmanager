@@ -179,13 +179,17 @@
 		/*-----------------------------------------------------------------------*/
 
 			// Display
-			$fieldset = new XMLElement('fieldset', '<legend>' . __('Display') . '</legend>', array('class' => 'settings group'));
+			$fieldset = new XMLElement('fieldset', '<legend>' . __('Display') . '</legend>', array('class' => ''));
+
+			$div = new XMLElement('div', NULL, array('class' => 'group'));
 			
 			// Caption input
-			$fieldset->appendChild($this->__groupContentGenerator('caption', __('Caption'), $sections));
+			$div->appendChild($this->__groupContentGenerator('caption', __('Caption'), $sections));
 			
 			// Custom drop text
-			$fieldset->appendChild($this->__groupContentGenerator('droptext', __('Drop text'), $sections));
+			$div->appendChild($this->__groupContentGenerator('droptext', __('Drop text'), $sections));
+
+			$fieldset->appendChild($div);
 
 			// Preview options
 			$label = new XMLElement('label');
@@ -200,7 +204,7 @@
 		/*-----------------------------------------------------------------------*/
 
 			// Data Source
-			$fieldset = new XMLElement('fieldset', '<legend>' . __('Data Source XML') . '</legend>', array('class' => 'settings'));
+			$fieldset = new XMLElement('fieldset', '<legend>' . __('Data Source XML') . '</legend>', array('class' => ''));
 
 			$label = new XMLElement('label', __('Included elements') . '<i>' . __('Don&#8217;t forget to include the Subsection Manager field in your Data Source') . '</i>');
 			$field_groups = array();
@@ -230,7 +234,7 @@
 		/*-----------------------------------------------------------------------*/
 
 			// General
-			$fieldset = new XMLElement('fieldset', NULL, array('class' => 'settings group'));
+			$fieldset = new XMLElement('fieldset', NULL, array('class' => ''));
 			$this->appendShowColumnCheckbox($fieldset);
 			$this->appendRequiredCheckbox($fieldset);
 			$wrapper->appendChild($fieldset);
