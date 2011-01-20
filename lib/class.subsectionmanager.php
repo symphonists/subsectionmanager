@@ -21,7 +21,7 @@
 			$this->_Items = $items;
 		
 			// Fetch subsection meta data
-			$meta = Administration::instance()->Database->fetch(
+			$meta = Symphony::Database()->fetch(
 				"SELECT filter_tags, caption, droptext, show_preview
 				FROM tbl_fields_subsectionmanager
 				WHERE field_id = '$subsection_field'
@@ -48,7 +48,7 @@
 		  	if($caption == '') {
 		  		
 		  		// Fetch name of primary field in subsection
-				$primary = Administration::instance()->Database->fetch(
+				$primary = Symphony::Database()->fetch(
 					"SELECT element_name
 					FROM tbl_fields
 					WHERE parent_section = '$subsection_id'

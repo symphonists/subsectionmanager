@@ -67,7 +67,7 @@
 		/*-----------------------------------------------------------------------*/
 
 			// Get current section id
-			$section_id = Administration::instance()->Page->_context[1];
+			$section_id = Symphony::Engine()->Page->_context[1];
 
 			// Related section
 			$label = new XMLElement('label', __('Subsection'));
@@ -117,7 +117,7 @@
 								if($field->get('type') == 'taglist' || $field->get('type') == 'select' ) {
 									
 									// Fetch dynamic filter values
-									$dynamic = Administration::instance()->Database->fetchCol(
+									$dynamic = Symphony::Database()->fetchCol(
 										'value',
 										"SELECT DISTINCT `value` FROM `tbl_entries_data_" . $field->get('id') . "` LIMIT 100"
 									);						
@@ -371,7 +371,7 @@
 			if($this->get('caption') == '') {
 			
 		  		// Fetch fields in subsection
-				$subsection_fields = Administration::instance()->Database->fetch(
+				$subsection_fields = Symphony::Database()->fetch(
 					"SELECT element_name, type
 					FROM tbl_fields
 					WHERE parent_section = '" . $this->get('subsection_id') . "'
@@ -408,12 +408,12 @@
 			$fields['included_fields'] = (is_null($this->get('included_fields')) ? NULL : implode(',', $this->get('included_fields')));
 
 			// Delete old field settings
-			Administration::instance()->Database->query(
+			Symphony::Database()->query(
 				"DELETE FROM `tbl_fields_".$this->handle()."` WHERE `field_id` = '$id' LIMIT 1"
 			);
 
 			// Save new field setting
-			return Administration::instance()->Database->insert($fields, 'tbl_fields_' . $this->handle());
+			return Symphony::Database()->insert($fields, 'tbl_fields_' . $this->handle());
 
 		}
 
@@ -444,15 +444,15 @@
 		function displayPublishPanel(&$wrapper, $data=NULL, $flagWithError=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL) {
 		
 			// Get version number
-			$about = Administration::instance()->ExtensionManager->about('subsectionmanager');
+			$about = Symphony::ExtensionManager()->about('subsectionmanager');
 			$version = strtolower($about['version']);	
 
 			// Append assets
 			if(Administration::instance() instanceof Symphony && !is_null(Administration::instance()->Page)) {
-				Administration::instance()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/lib/stage/stage.publish.js?v=' . $version, 101, false);
-				Administration::instance()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/lib/stage/stage.publish.css?v=' . $version, 'screen', 103, false);
-				Administration::instance()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.publish.js?v=' . $version, 102, false);
-				Administration::instance()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.publish.css?v=' . $version, 'screen', 104, false);
+				Symphony::Engine()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/lib/stage/stage.publish.js?v=' . $version, 101, false);
+				Symphony::Engine()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/lib/stage/stage.publish.css?v=' . $version, 'screen', 103, false);
+				Symphony::Engine()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.publish.js?v=' . $version, 102, false);
+				Symphony::Engine()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.publish.css?v=' . $version, 'screen', 104, false);
 			}
 
 			// Get Subsection
@@ -478,11 +478,11 @@
 			$label->appendChild($select);
 
 			// Setup sorting
-			$currentPageURL = Administration::instance()->getCurrentPageURL();
+			$currentPageURL = Symphony::Engine()->getCurrentPageURL();
 			preg_match_all('/\d+/', $currentPageURL, $entry_id, PREG_PATTERN_ORDER);
 			$entry_id = $entry_id[0][count($entry_id[0])-1];
 			if($entry_id) {
-				$order = Administration::instance()->Database->fetchVar('order', 0,
+				$order = Symphony::Database()->fetchVar('order', 0,
 					"SELECT `order`
 					FROM `tbl_fields_stage_sorting`
 					WHERE `entry_id` = " . $entry_id . "
@@ -525,7 +525,7 @@
 			$selected->appendChild($item);
 			
 			// Append drawer template
-			$subsection_handle = Administration::instance()->Database->fetchVar('handle', 0,
+			$subsection_handle = Symphony::Database()->fetchVar('handle', 0,
 				"SELECT `handle`
 				FROM `tbl_sections`
 				WHERE `id` = '" . $this->get('subsection_id') . "'
@@ -582,7 +582,7 @@
 		 */
 		function createTable(){
 
-			return Administration::instance()->Database->query(
+			return Symphony::Database()->query(
 				"CREATE TABLE IF NOT EXISTS `tbl_entries_data_" . $this->get('id') . "` (
 				  `id` int(11) unsigned NOT NULL auto_increment,
 				  `entry_id` int(11) unsigned NOT NULL,

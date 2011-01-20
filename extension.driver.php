@@ -10,13 +10,6 @@
 
 	Class extension_subsectionmanager extends Extension {
 
-		/**
-		 * The about method allows an extension to provide
-		 * information about itself as an associative array.
-		 *
-		 * @return array
-		 *  An associative array describing this extension.
-		 */
 		public function about() {
 			return array(
 				'name' => 'Subsection Manager',
@@ -32,19 +25,6 @@
 			);
 		}
 
-		/**
-		 * Extensions use delegates to perform logic at certain times
-		 * throughout Symphony. This function allows an extension to
-		 * subscribe to a delegate which will notify the extension when it
-		 * is used so that it can perform it's custom logic.
-		 * This method returns an array with the delegate name, delegate
-		 * namespace, and then name of the method that should be called.
-		 * The method that is called is passed an associative array containing
-		 * the current context which is the $_Parent, current page object
-		 * and any other variables that is passed via this delegate.
-		 *
-		 * @return array
-		 */
 		public function getSubscribedDelegates(){
 			return array(
 				array(
@@ -81,20 +61,17 @@
 		 * @param object $context
  		 */
  		public function __appendAssets($context) {
-
-			// Do not use Administration::instance() in this context, see:
-			// http://github.com/nilshoerrmann/subsectionmanager/issues#issue/27
-			$callback = $this->_Parent->getPageCallback();
+			$callback = Symphony::Engine()->getPageCallback();
 
 			// Append javascript for field settings pane
 			if($callback['driver'] == 'blueprintssections' && is_array($callback['context'])) {
-				Administration::instance()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.settings.js', 100, false);
-				Administration::instance()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.settings.css', 'screen', 101, false);
+				Symphony::Engine()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.settings.js', 100, false);
+				Symphony::Engine()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.settings.css', 'screen', 101, false);
 			}
 
 			// Append styles and javascript for mediasection display
 			if($callback['driver'] == 'publish' && ($callback['context']['page'] == 'edit' || $callback['context']['page'] == 'new')) {
-					Administration::instance()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/assets/subsection.publish.css', 'screen', 101, false);
+					Symphony::Engine()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/assets/subsection.publish.css', 'screen', 101, false);
 			}
 		}
 
@@ -109,7 +86,7 @@
 			
 				// Delete current sort order
 				$entry_id = $context['entry']->get('id');
-				Administration::instance()->Database->query(
+				Symphony::Database()->query(
 					"DELETE FROM `tbl_fields_subsectionmanager_sorting` WHERE `entry_id` = '$entry_id'"
 				);
 				
@@ -120,7 +97,7 @@
 					foreach($entries as $entry) {
 						$order[] = intval($entry);
 					}
-					Administration::instance()->Database->query(
+					Symphony::Database()->query(
 						"INSERT INTO `tbl_fields_subsectionmanager_sorting` (`entry_id`, `field_id`, `order`) VALUES ('$entry_id', '$field_id', '" . implode(',', $order) . "')"
 					);
 				}
@@ -157,7 +134,7 @@
 				if($mediathek == EXTENSION_ENABLED || $mediathek == EXTENSION_DISABLED) {
 				
 					// Append upgrade notice to page
-					Administration::instance()->Page->Alert = new Alert(
+					Symphony::Engine()->Page->Alert = new Alert(
 						__('You are using Mediathek and Subsection Manager simultaneously.') . ' <a href="http://' . DOMAIN . '/symphony/extension/subsectionmanager/">' . __('Upgrade') . '?</a> <a href="http://' . DOMAIN . '/symphony/extension/subsectionmanager/uninstall/mediathek">' . __('Uninstall Mediathek') . '</a> <a href="http://' . DOMAIN . '/symphony/extension/subsectionmanager/uninstall/subsectionmanager">' . __('Uninstall Subsection Manager') . '</a>', 
 						Alert::ERROR
 					);
@@ -177,7 +154,7 @@
 			$status = array();
 		
 			// Create database field table
-			$status[] = Administration::instance()->Database->query(
+			$status[] = Symphony::Database()->query(
 				"CREATE TABLE IF NOT EXISTS `tbl_fields_subsectionmanager` (
 					`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 					`field_id` int(11) unsigned NOT NULL,
@@ -231,7 +208,7 @@
 				$this->install();
 				
 				// Check if context column exists
-				$columns = Administration::instance()->Database->fetch("SHOW COLUMNS FROM `tbl_fields_stage`");
+				$columns = Symphony::Database()->fetch("SHOW COLUMNS FROM `tbl_fields_stage`");
 				$context = false;
 				if(is_array($columns)) {
 					foreach($columns as $column) {
@@ -243,7 +220,7 @@
 
 				// Add context row and return status
 				if(!$context) {
-					$status[] = Administration::instance()->Database->query(
+					$status[] = Symphony::Database()->query(
 						"ALTER TABLE `tbl_fields_stage` ADD `context` varchar(255) default NULL"
 					);
 				}
@@ -254,7 +231,7 @@
 			if(version_compare($previousVersion, '1.1', '<')) {
 			
 				// Add droptext column
-				$status[] = Administration::instance()->Database->query(
+				$status[] = Symphony::Database()->query(
 					"ALTER TABLE `tbl_fields_subsectionmanager` ADD `droptext` text default NULL"
 				);
 				
@@ -262,19 +239,19 @@
 				$status[] = Stage::install();
 				
 				// Fetch sort orders
-				$sortings = Administration::instance()->Database->fetch("SELECT * FROM tbl_fields_subsectionmanager_sorting LIMIT 1000");
+				$sortings = Symphony::Database()->fetch("SELECT * FROM tbl_fields_subsectionmanager_sorting LIMIT 1000");
 				
 				// Move sort orders to stage table
 				if(is_array($sortings)) {
 					foreach($sortings as $sorting) {
-						$status[] = Administration::instance()->Database->query(
+						$status[] = Symphony::Database()->query(
 							"INSERT INTO tbl_fields_stage_sorting (`entry_id`, `field_id`, `order`, `context`) VALUES (" . $sorting['entry_id'] . ", " . $sorting['field_id'] . ", '" . $sorting['order'] . "', 'subsectionmanager')"
 						);
 					}
 				}
 
 				// Drop old sorting table
-				$status[] = Administration::instance()->Database->query("DROP TABLE IF EXISTS `tbl_fields_subsectionmanager_sorting`");			
+				$status[] = Symphony::Database()->query("DROP TABLE IF EXISTS `tbl_fields_subsectionmanager_sorting`");			
 			}
 			
 			// Report status
@@ -296,12 +273,14 @@
 		public function uninstall() {
 		
 			// Drop related entries from stage tables
-			Administration::instance()->Database->query("DELETE FROM `tbl_fields_stage` WHERE `context` = 'subsectionmanager'");
-			Administration::instance()->Database->query("DELETE FROM `tbl_fields_stage_sorting` WHERE `context` = 'subsectionmanager'");
+			Symphony::Database()->query("DELETE FROM `tbl_fields_stage` WHERE `context` = 'subsectionmanager'");
+			Symphony::Database()->query("DELETE FROM `tbl_fields_stage_sorting` WHERE `context` = 'subsectionmanager'");
 
 			// Drop tables
-			Administration::instance()->Database->query("DROP TABLE IF EXISTS `tbl_fields_subsectionmanager`");			
-			Administration::instance()->Database->query("DROP TABLE IF EXISTS `tbl_fields_subsectionmanager_sorting`");			
+			Symphony::Database()->query("DROP TABLE IF EXISTS `tbl_fields_subsectionmanager`");
+			
+			// Maintenance		
+			Symphony::Database()->query("DROP TABLE IF EXISTS `tbl_fields_subsectionmanager_sorting`");			
 		}
 		
 	}

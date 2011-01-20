@@ -19,12 +19,10 @@
 		 *  and extensions can add their own keys to the array.
 		 */
 		public function build($context) {
-		
-			$ExtensionManager = new ExtensionManager(Administration::instance());
 			
 			// Deactivate extension
 			if($context[0] == 'mediathek' || $context[0] == 'subsectionmanager') {
-				$ExtensionManager->uninstall($context[0]);
+				Symphony::ExtensionManager()->uninstall($context[0]);
 			}
 			
 			// Return to extension overview
