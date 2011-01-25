@@ -171,7 +171,8 @@
 			
 			// Setting: allow multiple
 			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][allow_multiple]" value="1" type="checkbox"' . ($this->get('allow_multiple') == 0 ? '' : ' checked="checked"') . '/> ' . __('Allow selection of multiple items') . ' <i>' . __('This will switch between single and multiple item lists') . '</i>');
-			$fieldset->appendChild($setting);
+			$div = $fieldset->getChildren();
+			$div[0]->appendChild($setting);
 			
 			// Append behaviour settings
 			$wrapper->appendChild($fieldset);
@@ -179,7 +180,7 @@
 		/*-----------------------------------------------------------------------*/
 
 			// Display
-			$fieldset = new XMLElement('fieldset', '<legend>' . __('Display') . '</legend>', array('class' => ''));
+			$fieldset = new XMLElement('fieldset', '<legend>' . __('Display') . '</legend>');
 
 			$div = new XMLElement('div', NULL, array('class' => 'group'));
 			
@@ -204,7 +205,7 @@
 		/*-----------------------------------------------------------------------*/
 
 			// Data Source
-			$fieldset = new XMLElement('fieldset', '<legend>' . __('Data Source XML') . '</legend>', array('class' => ''));
+			$fieldset = new XMLElement('fieldset', '<legend>' . __('Data Source XML') . '</legend>');
 
 			$label = new XMLElement('label', __('Included elements') . '<i>' . __('Don&#8217;t forget to include the Subsection Manager field in your Data Source') . '</i>');
 			$field_groups = array();
@@ -234,7 +235,7 @@
 		/*-----------------------------------------------------------------------*/
 
 			// General
-			$fieldset = new XMLElement('fieldset', NULL, array('class' => ''));
+			$fieldset = new XMLElement('fieldset');
 			$this->appendShowColumnCheckbox($fieldset);
 			$this->appendRequiredCheckbox($fieldset);
 			$wrapper->appendChild($fieldset);
