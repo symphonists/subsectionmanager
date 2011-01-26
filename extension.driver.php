@@ -239,7 +239,7 @@
 				$status[] = Stage::install();
 				
 				// Fetch sort orders
-				$sortings = Symphony::Database()->fetch("SELECT * FROM tbl_fields_subsectionmanager_sorting LIMIT 1000");
+				$sortings = Symphony::Database()->fetch("SELECT * FROM tbl_fields_stage_sorting LIMIT 1000");
 				
 				// Move sort orders to stage table
 				if(is_array($sortings)) {
