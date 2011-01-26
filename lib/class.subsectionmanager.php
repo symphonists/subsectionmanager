@@ -106,7 +106,8 @@
 					// Collect taglist and select field values
 					$tags = array();
 					foreach($tag_fields as $field_id) {
-						$tag_values = $entry->_data[$field_id]['value'];
+						$entry_data = $entry->getData();
+						$tag_values = $entry_data[$field_id]['value'];
 						if(!is_array($tag_values)) {
 							$tag_values = array($tag_values);
 						}
