@@ -12,21 +12,18 @@ body.inline.subsection {
 	margin: 0;
 }
 
+body.inline.subsection div.contents {
+	padding: 0;
+}
+
 body.inline.subsection form {
-	margin: 0;
 	padding: 0 12px;
-	position: relative;
-	top: 0;
-	bottom: 0;
-	border: none;
 }
 
 body.inline.subsection form fieldset {
-	float: none !important;
 	width: 100% !important;
-	border: 1px solid transpareant;
 	border-bottom: 1px solid #616057 !important;
-	margin: 1em 0;
+	margin: 0;
 	padding: 0;
 }
 
@@ -58,8 +55,6 @@ body.inline.subsection form #error label span {
 
 body.inline.subsection form .actions {
 	border: none;
-	padding: 0;
-	margin: 0;
 	height: 4em;
 }
 
@@ -68,8 +63,8 @@ body.inline.subsection #notice {
 	margin: 0 -12px !important;
 	padding: 2px 12px !important;
 	border-top: none !important;
-	border-bottom: 1px solid #2c2c2a !important; /*#616057 !important;*/
-	background: #2a2a29 !important; /*#504f49 !important;*/
+	border-bottom: 1px solid #2c2c2a !important;
+	background: #2a2a29 !important;
 	color: #fff !important;
 }
 
@@ -85,135 +80,4 @@ body.inline.subsection form #error input[type="file"] {
 
 body.inline.subsection form input[type="checkbox"] {
 	width: auto;
-}
-
-body.inline.subsection #version {
-	display: none;
-}
-
-/* Stage */
-
-body.inline.subsection div.stage ul {
-	border-top-color: #656564;
-	border-bottom-color: #3d3d3d;
-}
-
-body.inline.subsection div.stage ul li {
-	background-color: #656564;
-	border-top-color: transparent;
-	border-bottom-color: #565655;
-	border-left-color: #787877;
-	border-right-color: #787877;
-	color: #cfcfd0;
-}
-
-body.inline.subsection div.stage ul li:hover {
-	background-color: #787877;
-}
-
-body.inline.subsection div.stage li.active, body.inline.subsection div.stage li.active:hover, body.inline.subsection div.stage ul.selection li.ordering {
-	background-color: #585856;
-	border-bottom-color: #505050;
-	border-left-color: #707070;
-	border-right-color: #707070;
-	border-top-color: #656564;
-	-moz-box-shadow: 0 0 4px rgba(46, 45, 40, 0.3);
-	-webkit-box-shadow: 0 0 4px rgba(46, 45, 40, 0.3);
-}
-
-body.inline.subsection div.stage ul.selection li.ordering {
-	border-bottom-color: #4b4b49;
-}
-
-body.inline.subsection div.stage li a.destructor {
-	color: #d5d5d6;
-	background-color: #585856;
-	border-color: #5d5d5b;
-}
-
-body.inline.subsection div.stage li a.destructor:hover {
-	background-color: #7f8180;
-	border-color: #7f8180;
-}
-
-body.inline.subsection div.stage ul li span, body.inline.subsection div.stage ul li a.file {
-	color: #cfcfd0;
-}
-
-body.inline.subsection div.stage li em {
-	color: #8f8f8f;
-}
-
-body.inline.subsection div.stage div.queue ul li.selected span {
-	color: #fff;
-}
-
-body.inline.subsection div.stage ul li.drawer {
-/*	background-color: #d5d5d6;*/
-	border-bottom-color: #2a2a29;
-/*	border-left-color: #2a2a29;
-	border-right-color: #2a2a29;*/
-}
-
-body.inline.subsection div.stage div.queue {
-	background-color: #494949;
-	border-color: #565655;
-	border-top-color: #494949;}
-
-body.inline.subsection div.stage div.queue input {
-	border: 1px inset rgba(0, 0, 0, 0.3);
-	-moz-box-shadow: inset 1px 1px 1px rgba(69, 69, 69, 0.2);
-}
-
-body.inline.subsection div.stage div.queue a.create {
-	border-color: #4a4a4a;
-	background-color: #454545;
-	color: #d5d5d6;
-}
-
-body.inline.subsection div.stage div.queue a.create:hover {
-	color: #353533;
-	background-color: #858485;
-	border-color: #858485;
-}
-
-body.inline.subsection div.stage.searchable div.queue ul {
-	border-top-color: #494949;
-	background-color: #3d3d3d;
-}
-
-body.inline.subsection div.stage div.queue li {
-	background-color: #3d3d3d;
-	border-bottom-color: #565655;
-}
-
-body.inline.subsection div.stage div.queue li:nth-child(even) {
-	background-color: #494949;
-}
-
-body.inline.subsection div.stage div.queue li.selected {
-	background-color: #5677c3;
-	border-bottom-color: #617DC5;
-}
-
-body.inline.subsection div.stage div.queue li.selected a.file {
-	color: #353533;
-}
-
-body.inline.subsection div.stage div.queue li:nth-child(even).selected {
-	background-color: #5273c0;
-	border-bottom-color: #617DC5;
-}
-
-body.inline.subsection div.dropper {
-	background-color: rgba(0, 0, 0, 0.8);
-	border-color: #353533;
-}
-
-body.inline.subsection div.dragger {
-	background-color: #494949;
-	border-color: #585856;
-	color: #cfcfd0;
-	-moz-box-shadow: 0 0 4px rgba(46, 45, 40, 0.1);
-	-webkit-box-shadow: 0 0 4px rgba(46, 45, 40, 0.1);
 }
