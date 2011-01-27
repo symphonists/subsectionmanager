@@ -39,6 +39,7 @@ div.field-subsectionmanager div.stage.preview img, div.dragger img {
 	border: 1px solid #ccc;
 	top: 5px;
 	left: 14px;
+	border-radius: 2px;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
 	cursor: pointer;
