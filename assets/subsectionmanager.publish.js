@@ -139,6 +139,14 @@
 					drop(target, item);
 				}
 			});
+			
+			// Sorting
+			selection.bind('orderstart.stage', function() {
+				selection.find('li.active').removeClass('active');
+				selection.find('li.drawer').slideUp('fast', function() {
+					$(this).remove();
+				});
+			});			
 								
 		/*-----------------------------------------------------------------------*/
 
