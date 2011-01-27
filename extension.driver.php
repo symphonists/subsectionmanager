@@ -87,7 +87,7 @@
 				// Delete current sort order
 				$entry_id = $context['entry']->get('id');
 				Symphony::Database()->query(
-					"DELETE FROM `tbl_fields_subsectionmanager_sorting` WHERE `entry_id` = '$entry_id'"
+					"DELETE FROM `tbl_fields_stage_sorting` WHERE `entry_id` = '$entry_id'"
 				);
 				
 				// Add new sort order
@@ -98,7 +98,7 @@
 						$order[] = intval($entry);
 					}
 					Symphony::Database()->query(
-						"INSERT INTO `tbl_fields_subsectionmanager_sorting` (`entry_id`, `field_id`, `order`) VALUES ('$entry_id', '$field_id', '" . implode(',', $order) . "')"
+						"INSERT INTO `tbl_fields_stage_sorting` (`entry_id`, `field_id`, `order`) VALUES ('$entry_id', '$field_id', '" . implode(',', $order) . "')"
 					);
 				}
 			}
@@ -232,7 +232,7 @@
 			
 				// Add droptext column
 				$status[] = Symphony::Database()->query(
-					"ALTER TABLE `tbl_fields_subsectionmanager` ADD `droptext` text default NULL"
+					"ALTER TABLE `tbl_fields_v` ADD `droptext` text default NULL"
 				);
 				
 				// Create stage tables
