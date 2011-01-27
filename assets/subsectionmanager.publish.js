@@ -147,7 +147,7 @@
 
 				// Adjust interface
 				content.find('body').addClass('inline subsection');
-				content.find('div.header, div.footer, h2, #notice:not(.error):not(.success), #notice a').remove();
+				content.find('h1, h2, #nav, #notice:not(.error):not(.success), #notice a, div.footer').remove();
 				content.find('fieldset input:first').focus();
 			
 				// Delete item
@@ -168,7 +168,7 @@
 				else {			
 				
 					// Set height
-					var height = content.find('div.contents').outerHeight() || iframe.height();
+					var height = content.find('div.wrapper').outerHeight() || iframe.height();
 					iframe.height(height).animate({
 						opacity: 1
 					}, 'fast');
