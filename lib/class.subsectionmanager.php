@@ -200,6 +200,11 @@
 								$field_value = strip_tags($field->prepareTableValue($entry['data'][$field_id]));
 							}
 							
+							// Author
+							elseif(empty($field_data) && $entry['data'][$field_id]['author_id']) {
+								$field_value = $field->prepareTableValue($entry['data'][$field_id]);
+							}
+							
 							// Default
 							else {
 								$field_value = $field_data;				
@@ -228,7 +233,7 @@
 								
 							}
 						}
-						
+
 						// Apply template
 						if($type == 'image') {
 							$template = str_replace('{$preview}', $preview, $templates[$mode]['image']);
