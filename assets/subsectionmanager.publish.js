@@ -31,7 +31,8 @@
 				subsection = context.val(),
 				subsectionmanager_id = context.attr('name').match(/\[subsection_id\]\[(.*)\]/)[1],
 				subsection_link = drawer.find('iframe').attr('target'),
-				dragger = $('div.dragger');
+				dragger = $('div.dragger'),
+				empty = $('<li class="message"><span>' + Symphony.Language.get('There are currently no items available. Perhaps you want create one first?') + '</li>');
 					
 		/*-----------------------------------------------------------------------*/
 
@@ -156,11 +157,16 @@
 					// Remove queue item
 					queue.find('li[data-value="' + item.attr('data-value') + '"]').slideUp('fast', function() {
 						$(this).remove();
+	
+						// Show empty queue message
+						if(queue.find('li').size() == 0) {
+							empty.clone().appendTo(queue.find('ul')).slideDown('fast');
+						}
 					});
 					
 					// Remove item
 					item.trigger('destruct');
-					
+										
 					stage.trigger('deletestop', [item]);
 				}
 				
@@ -246,7 +252,7 @@
 
 							// Empty queue
 							if(!result) {
-								$('<li class="message"><span>' + Symphony.Language.get('There are currently no items available. Perhaps you want create one first?') + '</li>').appendTo(list);
+								empty.clone().appendTo(list);
 							}
 							
 							// Append queue items
