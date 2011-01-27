@@ -12,6 +12,10 @@ body.inline.subsection {
 	margin: 0;
 }
 
+body.inline.subsection div.header {
+	margin: 0;
+}
+
 body.inline.subsection div.contents {
 	padding: 0;
 }
