@@ -340,6 +340,9 @@
 								item.attr('class', result.attr('class')).attr('data-value', result.attr('data-value')).children().fadeIn();
 								stage.trigger('update');
 							});
+							
+							// Remove empty queue message
+							queue.find('li.message').remove();
 						}
 						
 						// Existing item
