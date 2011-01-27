@@ -60,8 +60,7 @@ body.inline.subsection form .actions {
 
 body.inline.subsection #notice {
 	display: block;
-	margin: 0 -12px !important;
-	padding: 2px 12px !important;
+	padding-left: 12px;
 	border-top: none !important;
 	border-bottom: 1px solid #2c2c2a !important;
 	background: #2a2a29 !important;
