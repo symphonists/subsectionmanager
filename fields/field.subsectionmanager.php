@@ -78,9 +78,7 @@
 			);
 			if(is_array($sections) && !empty($sections)) {
 				foreach($sections as $section) {
-					if($section->get('id') != $section_id) {
-						$options[] = array($section->get('id'), ($section->get('id') == $this->get('subsection_id')), $section->get('name'));
-					}
+					$options[] = array($section->get('id'), ($section->get('id') == $this->get('subsection_id')), $section->get('name'));
 				}
 			}
 			$label->appendChild(Widget::Select('fields[' . $this->get('sortorder') . '][subsection_id]', $options, array('class' => 'subsectionmanager')));
