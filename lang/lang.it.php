@@ -5,11 +5,10 @@
 		'author' => array(
 			'name' => 'Simone Economo',
 			'email' => 'my.ekoes@gmail.com',
-			'website' => 'http://lineheight.net',
+			'website' => 'http://lineheight.net'
 		),
-		'release-date' => '2010-08-13',
+		'release-date' => '2011-01-29'
 	);
-
 
 	/**
 	 * Subsection Manager
@@ -37,9 +36,6 @@
 		'Allow sorting of items' => 
 		'Consenti il trascinamento delle voci',
 
-		'Are you sure you want to delete this item? It will be remove from all entries. This step cannot be undone.' => 
-		'Sei sicuro di voler eliminare questa voce?  L\'operazione non potr&agrave; essere annullata.',
-
 		'Before you proceed' => 
 		'Prima di procedere',
 
@@ -54,9 +50,6 @@
 
 		'Caption has to be well-formed. Please check opening and closing tags.' => 
 		'L\'intestazione deve contenere codice ben formato. Controlla i tag di apertura e chiusura.',
-
-		'Click here to create a new item.' => 
-		'Clicca qui per creare una nuova voce',
 
 		'Comma separated, alt+click for negation' => 
 		'Separati da virgola, <code>alt+click</code> per la negazione',
@@ -91,9 +84,6 @@
 		'Introduction' => 
 		'Introduzione',
 
-		'Load items' => 
-		'Carica le voci',
-
 		'New item' => 
 		'Nuova voce',
 
@@ -102,12 +92,6 @@
 
 		'None Selected' => 
 		'Nessuna sezione selezionata',
-
-		'Please add the missing submodule to %s. ' => 
-		'Inserisci il modulo mancante in %s. ',
-
-		'Please add the missing submodules to %s. ' => 
-		'Inserisci i moduli mancanti in %s. ',
 
 		'Please delete the old Mediathek folder from your <code>extensions</code> folder.' => 
 		'Elimina la vecchia cartella Mediathek dalla cartella <code>extensions</code>.',
@@ -123,9 +107,6 @@
 
 		'Replace all Mediathek fields with the Subsection Manager, copying all attached information to the new fields.' => 
 		'Sostituzione di tutti i campi Mediathek con nuovi campi Subsection Manager, assieme a tutte le informazioni associate a questi campi.',
-
-		'Submodule %s is missing.' => 
-		'Non &#232; stato possibile trovare il seguente modulo: %s.',
 
 		'Subsection' => 
 		'Attingi da',
@@ -210,5 +191,28 @@
 
 		'items' => 
 		'voci',
+
+		// Missing
+
+		'Are you sure you want to delete {$item}? It will be removed from all entries. This step cannot be undone.' => 
+		false,
+
+		'Drop text' => 
+		false,
+
+		'Submodule Stage is missing' => 
+		false,
+
+		'Please add the missing submodule to %s.' => 
+		false,
+
+		'no results' => 
+		false,
+
+		'1 result' => 
+		false,
+
+		'{$count} results' => 
+		false,
 
 	);
