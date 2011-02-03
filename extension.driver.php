@@ -232,7 +232,7 @@
 			
 				// Add droptext column
 				$status[] = Symphony::Database()->query(
-					"ALTER TABLE `tbl_fields_v` ADD `droptext` text default NULL"
+					"ALTER TABLE `tbl_fields_subsectionmanager` ADD `droptext` text default NULL"
 				);
 				
 				// Create stage tables
