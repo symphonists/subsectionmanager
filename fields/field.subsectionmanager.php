@@ -216,15 +216,47 @@
 			foreach($field_groups as $group) {
 				if(!is_array($group['fields'])) continue;
 				$fields = array();
-				foreach($group['fields'] as $field){
+				foreach($group['fields'] as $field) {
 					if($field->get('id') != $this->get('id')) {
-						$fields[] = array($field->get('id'), (in_array($field->get('id'), explode(',', $this->get('included_fields')))), $field->get('label'));
+
+						// Fetch includable elements (formatted/unformatted)
+						$elements = $field->fetchIncludableElements();
+
+						// Loop through elements
+						if(is_array($elements) && !empty($elements)) {
+							foreach($elements as $name) {
+
+								// Get mode
+								$element_mode = '';
+								if(strpos($name, ': ') !== false) {
+									$element_mode = explode(': ', $name);
+									$element_mode = ':' . $element_mode[1];
+								}
+
+								// Generate ID
+								$element_id = $field->get('id') . $element_mode;
+
+								// Selection status
+								$element_status = false;
+								if(in_array($field->get('id') . $element_mode, explode(',', $this->get('included_fields')))) {
+									$element_status = true;
+								}
+
+								// Generate field list
+								$fields[] = array($element_id, $element_status, $name);
+
+							}
+						}
+
 					}
+
 				}
+
+				// Generate includable field list options
 				if(is_array($fields) && !empty($fields)) {
 					$options[] = array('label' => $group['section']->get('id'), 'options' => $fields);
 				}
-			}
+			}			
 			$label->appendChild(Widget::Select('fields[' . $this->get('sortorder') . '][included_fields][]', $options, array('multiple' => 'multiple', 'class' => 'datasource')));
 			$fieldset->appendChild($label);
 			
@@ -657,7 +689,7 @@
 			$entries = $entryManager->fetch($data['relation_id'], $this->get('subsection_id'));
 
 			// Sort entries
-			$order = Frontend::instance()->Database->fetchVar('order', 0,
+			$order = Symphony::Database()->fetchVar('order', 0,
 				"SELECT `order`
 				FROM `tbl_fields_stage_sorting`
 				WHERE `entry_id` = " . $wrapper->getAttribute('id') . "
@@ -682,26 +714,53 @@
 			// Build XML
 			$count = 1;
 			foreach($sorted_entries as $entry) {
-			
+
 				// Fetch entry data
 				$entry_data = $entry->getData();
 
 				// Create entry element
 				$item = new XMLElement('item');
-				
-				// Populate entry element
+
+				// Get included elements
+				$included = array();
 				$included_fields = explode(',', $this->get('included_fields'));
+				foreach($included_fields as $included_field) {
+
+					// Get fields with modes
+					if(strpos($included_field, ':') !== false) {
+						$component = explode(':', $included_field);
+						$included[$component[0]][] = $component[1];
+					}
+
+					// Get fields without modes
+					else {
+						$included[$included_field] = NULL;
+					}
+				}
+
+				// Populate entry element
 				foreach ($entry_data as $field_id => $values) {
-				
+
 					// Only append if field is listed or if list empty
-					if(in_array($field_id, $included_fields) || empty($included_fields[0])) {
+					if(array_key_exists($field_id, $included) || empty($included_fields[0])) {
 						$item_id = $entry->get('id');
 						$item->setAttribute('id', $item_id);
 						$field =& $entryManager->fieldManager->fetch($field_id);
-						$field->appendFormattedElement($item, $values, false);
+
+						// Append fields with modes
+						if($included[$field_id] !== NULL) {
+							foreach($included[$field_id] as $mode) {
+								$field->appendFormattedElement($item, $values, false, $mode);
+							}					
+						}
+
+						// Append fields without modes
+						else {
+							$field->appendFormattedElement($item, $values, false, NULL);
+						}
 					}
 				}
-				
+
 				// Append entry element
 				$subsectionmanager->appendChild($item);
 				$subsectionmanager->setAttribute('items', $count);
@@ -710,7 +769,6 @@
 
 			// Append Subsection Manager to data source
 			$wrapper->appendChild($subsectionmanager);
-
 		}
 
 		/**
