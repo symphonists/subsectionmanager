@@ -22,6 +22,10 @@ div.subsectionmanager img {
 	border-color: #ABE;
 }
 
+div.subsectionmanager a span {
+	text-decoration: underline;
+}
+
 div.subsectionmanager span {
 	padding: 4px 0 0;
 	display: block;
@@ -30,6 +34,10 @@ div.subsectionmanager span {
 div.subsectionmanager em {
 	font-style: normal;
 	color: #908e88;
+}
+
+div.subsectionmanager a em {
+	text-decoration: none !important;
 }
 
 .selecting div.subsectionmanager em, .selected div.subsectionmanager em {
