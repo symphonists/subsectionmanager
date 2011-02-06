@@ -183,10 +183,10 @@
 			$div = new XMLElement('div', NULL, array('class' => 'group'));
 			
 			// Caption input
-			$div->appendChild($this->__groupContentGenerator('caption', __('Caption'), $sections));
+			$div->appendChild($this->__groupContentGenerator('caption', __('Caption'), $sections, $errors));
 			
 			// Custom drop text
-			$div->appendChild($this->__groupContentGenerator('droptext', __('Drop text'), $sections));
+			$div->appendChild($this->__groupContentGenerator('droptext', __('Drop text'), $sections, $errors));
 
 			$fieldset->appendChild($div);
 
@@ -285,7 +285,7 @@
 		 * @return XMLElement
 		 *  returns the content generator element
 		 */
-		private function __groupContentGenerator($name, $title, $sections) {
+		private function __groupContentGenerator($name, $title, $sections, $errors) {
 			$container = new XMLElement('div');
 			$label = new XMLElement('label', $title);
 			$label->appendChild(Widget::Input('fields[' . $this->get('sortorder') . '][' . $name . ']', htmlspecialchars($this->get($name))));
@@ -357,14 +357,25 @@
 
 			// Check if caption content is well formed
 			if($this->get('caption')) {
-				$validate = @simplexml_load_string('<li>' . $this->get('caption') . '</li>');
-				if(!$validate) {
-					$errors['caption'] = __('Caption has to be well-formed. Please check opening and closing tags.');
+				try {
+					simplexml_load_string('<li>' . $this->get('caption') . '</li>');
+				}
+				catch(Exception $e) {
+					$errors['caption'] = __('%s has to be well-formed. Please check opening and closing tags.', array(__('Caption')));
+				}
+			}
+
+			// Check if droptext content is well formed
+			if($this->get('droptext')) {
+				try {
+					simplexml_load_string('<li>' . $this->get('droptext') . '</li>');
+				}
+				catch(Exception $e) {
+					$errors['droptext'] = __('%s has to be well-formed. Please check opening and closing tags.', array(__('Droptext')));
 				}
 			}
 
 			parent::checkFields($errors, $checkForDuplicates);
-
 		}
 
 		/**
