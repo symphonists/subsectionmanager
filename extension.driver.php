@@ -62,16 +62,21 @@
  		 */
  		public function __appendAssets($context) {
 			$callback = Symphony::Engine()->getPageCallback();
-
-			// Append javascript for field settings pane
+			
+			// Append skripts and styles for field settings pane
 			if($callback['driver'] == 'blueprintssections' && is_array($callback['context'])) {
-				Symphony::Engine()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.settings.js', 100, false);
-				Symphony::Engine()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.settings.css', 'screen', 101, false);
+				Administration::instance()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.settings.js', 100, false);
+				Administration::instance()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.settings.css', 'screen', 101, false);
 			}
 
-			// Append styles and javascript for mediasection display
-			if($callback['driver'] == 'publish' && ($callback['context']['page'] == 'edit' || $callback['context']['page'] == 'new')) {
-					Symphony::Engine()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/assets/subsection.publish.css', 'screen', 101, false);
+			// Append styles for publish area
+			if($callback['driver'] == 'publish' && $callback['context']['page'] == 'index') {
+				Administration::instance()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.index.publish.css', 'screen', 100, false);
+			}
+
+			// Append styles for subsection display
+			if($callback['driver'] == 'publish' && $callback['context']['page'] != 'index') {
+				Administration::instance()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/assets/subsection.publish.css', 'screen', 101, false);
 			}
 		}
 

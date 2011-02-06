@@ -147,7 +147,7 @@
 				'preview' => array(
 					'text' => '<li data-value="{$value}" data-drop="{$droptext}"><span>{$caption}</span></li>',
 					'image' => '<li data-value="{$value}" data-drop="{$droptext}" class="preview"><img src="' . URL . '/image/2/40/40/5{$preview}" width="40" height="40" /><a href="{$href}" class="image file handle">{$caption}</a></li>',
-					'file' => '<li data-value="{$value}" data-drop="{$droptext}" class="preview"><strong class="file">{$type}</strong><a href="{$href}" class="file handle">{$caption}</a></li>'
+					'file' => '<li data-value="{$value}" data-drop="{$droptext}" class="preview"><strong class="file">{$type}</strong><a href="{$href}" class="file handle">{$caption}</a></li>'					
 				)
 			);
 			
@@ -234,7 +234,7 @@
 							}
 						}
 
-						// Apply template
+						// Create stage template
 						if($type == 'image') {
 							$template = str_replace('{$preview}', $preview, $templates[$mode]['image']);
 							$template = str_replace('{$href}', $href, $template);
@@ -255,6 +255,14 @@
 							$template = str_replace('{$droptext}', $droptext, $template);
 							$html .= str_replace('{$caption}', $caption, $template);
 						}
+						
+						// Create publish index template
+						if($type == 'image') {
+							$preview = '<img src="' . URL . '/image/2/40/40/5' . $preview . '" width="40" height="40" /><span>' . $caption . '</span></a>';
+						}
+						else {
+							$preview = $caption;
+						}
 					}
 				}
 			}
@@ -265,7 +273,8 @@
 			// Return options and html
 			return array(
 				'options' => $options,
-				'html' => $html
+				'html' => $html,
+				'preview' => $preview
 			);		
 		}
 		

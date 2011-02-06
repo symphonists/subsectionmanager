@@ -641,11 +641,30 @@
 		 *	the formatted string summary of the values of this field instance.
 		 */
 		function prepareTableValue($data, XMLElement $link=NULL) {
-		
 			if(empty($data['relation_id'])) return NULL;
-			$count = count($data['relation_id']);
-			return parent::prepareTableValue(array('value' => ($count > 1) ? $count . ' ' . __('items') : $count . ' ' . __('item')), $link);
 
+			// Single select
+			if($this->get('allow_multiple') == 0) {
+				$subsection = new SubsectionManager($this->_Parent);
+				$content = $subsection->generate(null, $this->get('id'), $this->get('subsection_id'), $data['relation_id'], true);
+				
+				// Link?
+				if($link) {
+					$href = $link->getAttribute('href');
+					$item = '<a href="' . $href . '">' . $content['preview'] . '</a>';
+				}
+				else {
+					$item = $content['preview'];
+				}
+				
+				return '<div class="subsectionmanager">' . $item . '</div>';
+			}
+						
+			// Multiple select
+			else {
+				$count = count($data['relation_id']);
+				return parent::prepareTableValue(array('value' => ($count > 1) ? $count . ' ' . __('items') : $count . ' ' . __('item')), $link);
+			}
 		}
 
 		/**
