@@ -94,31 +94,3 @@ div.field-subsectionmanager div.stage div.queue li.selected em {
 div.field-subsectionmanager div.stage div.queue li.selected img, div.field-subsectionmanager div.stage div.queue li.selected strong.file {
 	border-color: #335e9e;
 }
-
-
-/* Missing Stage */
-
-div.field div.invalid div.stage {
-	background-color: #D42;
-	margin: -1.75em 0 0;
-	padding: 0.5em;
-	border: 1px solid #B21;
-	border-bottom: none;
-}
-
-div.field div.invalid div.stage ul {
-	background: #ea653b;
-	border: 1px solid #dd3d0e;
-	margin: 0;
-	list-style: none;
-	padding: 0.5em;
-}
-
-div.field div.invalid div.stage strong {
-	font-size: 1.3em;
-	font-weight: normal;
-}
-
-div.field div.invalid div.stage code {
-	font-size: 1em;
-}
