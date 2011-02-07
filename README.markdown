@@ -17,6 +17,10 @@ Symphony offers an easy way to [create sections](http://symphony-cms.com/learn/c
 
 Subsection Manager is the successor of [Mediathek](http://github.com/nilshoerrmann/mediathek/) and requires [Symphony 2.1 or newer](http://github.com/symphonycms/symphony-2/). Subsection Manager and Mediathek should not be used simultaneously. This extension comes with an upgrade script that automatically replaces all Mediathek fields with the Subsection Manager (see below).
 
+## Compatibility
+
+Please note that Symphony 2.2 introduces new features that Subsection Manager 1.1 relies on. If you are using Symphony 2.1.x, please [download or checkout Subsection Manager 1.0.1](https://github.com/nilshoerrmann/subsectionmanager/tree/1.0.1) which does not have these dependencies.
+
 ## Installation
 
 Subsection Manager contains two components:
@@ -38,17 +42,22 @@ Be aware that this upgrade process will alter your database and will uninstall y
 
 **Version 1.1**
 
-- Updated Stage.
+- Updated Stage
 - Removed Draggable plugin
 - General improvements and code clean-up
+- Symphony 2.2. compability
+
+**Version 1.0.1**
+
+- Fixed issue with the section editor display
+- Fixed issues with updates from beta versions
 
 **Version 1.0** 
 
-- Initial release.
-- The drag and drop feature is considered experimental. You may run into bugs.
+- Initial release
 
 ## Acknowledgement
 
 The drawer colors and layout were inspired by Scott Hughes' [Calendar Mock-up](http://symphony-cms.com/community/discussions/103/) and Rowan Lewis' [Calendar Overlay](http://github.com/rowan-lewis/calendaroverlay/).
 
-A lot of people have been testing this extension and providing valuable feedback. A big thank you to all of you, in alphabetic order: Alistair Kearney, Allen Chang, Andrea Buran, Andrew Minton, Andrew Shooner, Brendan Abbott, Brian Zerangue, Brien Wright, Craig Zheng, Dale Tan, David Hund, Doug Stewart, Fazal Khan, Frode Danielsen, Giulio Trico, Grzegorz Michlicki, Huib Keemink, Jiri Vanmeerbeeck, Johanna Hörrmann, John Porter, Jonas Coch, Mark a.k.a. Ecko, Mark a.k.a. m165, Mark Lewis, Max Wheeler, Michael Eichelsdörfer, Nick Dunn, Nils Werner, Simone Economo, Stephen Bau, Tony Arnold and all of you who love and use Symphony and try to make it better every day.
+A lot of people have been testing this extension and providing valuable feedback. A big thank you to all of you, in alphabetic order: Aaron Harnly, Adam Fox, Alistair Kearney, Allen Chang, Andrea Buran, Andrew Minton, Andrew Shooner, Bob Donderwinkel, Brendan Abbott, Brian Zerangue, Brien Wright, Christopher Clark, Craig Zheng, Dale Tan, David Hund, David Oliver, Doug Stewart, Fazal Khan, Frode Danielsen, Giulio Trico, Grzegorz Michlicki, Huib Keemink, Ida Engmark, Ingmars Lazdins, Jiri Vanmeerbeeck, Johanna Hörrmann, John Porter, Jonas Coch, Liam Egan, Mario Butera, Mark a.k.a. Ecko, Mark a.k.a. m165, Mark Lewis, Max Wheeler, Michael Eichelsdörfer, Nick Dunn, Nils Werner, Sandor Kerst, Simone Economo, Stephen Bau, Tony Arnold, Vlad Ghita and all of you who love and use Symphony and try to make it better every day.
