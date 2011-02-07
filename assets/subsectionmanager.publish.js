@@ -51,13 +51,13 @@
 				// Hide drawer
 				item.next('li.drawer').slideUp('fast', function() {
 					$(this).remove();
-				})
+				});
 			});
 			
 			// Synchronizing
 			stage.bind('constructstop destructstop update', function(event) {
 				sync();
-			})
+			});
 			
 			// Queuing
 			stage.delegate('li.preview a.file', 'click', function() {
@@ -202,7 +202,7 @@
 						iframe.animate({
 							opacity: 0.01
 						}, 'fast');
-					})
+					});
 					
 					// Trigger update 
 					if(content.find('#notice.success').size() > 0) {
@@ -425,7 +425,7 @@
 						matches = {
 							text: text,
 							path: file.attr('href')
-						}
+						};
 	
 						// Get type
 						type = 'file';
