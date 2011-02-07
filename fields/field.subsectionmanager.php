@@ -459,8 +459,58 @@
 			);
 
 			// Save new field setting
-			return Symphony::Database()->insert($fields, 'tbl_fields_' . $this->handle());
+			$settings = Symphony::Database()->insert($fields, 'tbl_fields_' . $this->handle());
 
+			// Remove old secion association
+			$this->removeSectionAssociation($id);
+
+			// Save new section association
+			$association = $this->createSectionAssociation(NULL, $this->get('subsection_id'), $id, $id, false);
+			
+			if ($settings && $association) {
+				return true;
+			} else {
+				return false;
+			}
+			
+		}
+
+		/**
+		 * Create an association between two sections.
+		 *
+		 * @param number $parent_section_id
+		 *  The current section id.
+		 * @param number $child_section_id
+		 *  The linked section id.
+		 * @param number $child_field_id
+		 *  The field ID of the field that is creating the association
+		 * @param number $parent_field_id (optional)
+		 *  The field ID of the field that is creating the association
+		 * @param boolean $show_association (optional)
+		 *	Whether of not the link should be shown on the Publish Index of the
+		 * linked section. This defaults to false.
+		 * @return boolean
+		 *	true if the association was successfully made, false otherwise.
+		 */
+		public function createSectionAssociation($parent_section_id = null, $child_section_id = null, $child_field_id = null, $parent_field_id = null, $show_association = false){
+
+			if(is_null($parent_section_id) && is_null($child_section_id) && (is_null($parent_field_id) || !$parent_field_id)) return false;
+
+			if(is_null($parent_section_id )) {
+				$parent_section_id = Symphony::Database()->fetchVar('parent_section', 0,
+					"SELECT `parent_section` FROM `tbl_fields` WHERE `id` = '$parent_field_id' LIMIT 1"
+				);
+			}
+
+			$fields = array(
+				'parent_section_id' => $parent_section_id,
+				'parent_section_field_id' => $parent_field_id,
+				'child_section_id' => $child_section_id,
+				'child_section_field_id' => $child_field_id,
+				'hide_association' => ($show_association ? 'no' : 'yes')
+			);
+
+			return Symphony::Database()->insert($fields, 'tbl_sections_association');
 		}
 
 		/**
@@ -789,6 +839,42 @@
 			$wrapper->appendChild($subsectionmanager);
 		}
 
+		/**
+		 * Accessor to the associated entry search value for this field
+		 * instance.
+		 *
+		 * @param array $data
+		 *	the data from which to construct the associated search entry value.
+		 * @param number $field_id (optional)
+		 *	an optional id of the associated field? this defaults to null.
+		 * @param number $parent_entry_id (optional)
+		 *	an optional parent identifier of the associated field entry. this defaults
+		 *	to null.
+		 * @return integer
+		 *	the entry id
+		 */
+		public function fetchAssociatedEntrySearchValue($data, $field_id = null, $parent_entry_id = null){
+			// $data would contain the related entries, but is usually `null` when called from the frontend
+			// (when the field is not included in the DS, and only then "associated entry count" makes sense)
+			if(!is_null($parent_entry_id)) return $parent_entry_id;
+		}
+
+		/**
+		 * Fetch the count of the associate entries for the input value.
+		 *
+		 * @param number $value
+		 *	the value to find the associated entry count for.
+		 * @return integer
+		 *	the count of associated entries
+		 */
+		public function fetchAssociatedEntryCount($value){
+			if (isset($value)) {
+				return $this->_engine->Database->fetchVar('count', 0, "SELECT count(*) AS `count` FROM `tbl_entries_data_".$this->get('id')."` WHERE `entry_id` = '$value'");
+			} else {
+				return 0;
+			}
+		}
+		
 		/**
 		 * Function to format this field if it chosen in a data-source to be
 		 * output as a parameter in the XML
