@@ -239,20 +239,20 @@
 							$template = str_replace('{$preview}', $preview, $templates[$mode]['image']);
 							$template = str_replace('{$href}', $href, $template);
 							$template = str_replace('{$value}', $entry['id'], $template);
-							$template = str_replace('{$droptext}', $droptext, $template);
+							$template = str_replace('{$droptext}', htmlspecialchars($droptext), $template);
 							$html .= str_replace('{$caption}', $caption, $template);
 						}
 						elseif($type == 'file') {
 							$template = str_replace('{$type}', $preview, $templates[$mode]['file']);
 							$template = str_replace('{$href}', $href, $template);
 							$template = str_replace('{$value}', $entry['id'], $template);
-							$template = str_replace('{$droptext}', $droptext, $template);
+							$template = str_replace('{$droptext}', htmlspecialchars($droptext), $template);
 							$html .= str_replace('{$caption}', $caption, $template);
 						}
 						else {
 							$template = str_replace('{$preview}', $entry['id'], $templates[$mode]['text']);
 							$template = str_replace('{$value}', $entry['id'], $template);
-							$template = str_replace('{$droptext}', $droptext, $template);
+							$template = str_replace('{$droptext}', htmlspecialchars($droptext), $template);
 							$html .= str_replace('{$caption}', $caption, $template);
 						}
 						
