@@ -14,7 +14,6 @@
 			'There are no selected items': false,
 			'Are you sure you want to delete {$item}? It will be removed from all entries. This step cannot be undone.': false,
 			'There are currently no items available. Perhaps you want create one first?': false,
-			'Remove Item': false,
 			'New item': false			
 		}); 
 
