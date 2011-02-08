@@ -17,6 +17,23 @@ div.field-subsectionmanager div.stage li.preview a.file, div.dragger a.file {
 	text-decoration: none;
 }
 
+div.field-subsectionmanager div.stage li.preview strong.file, div.dragger strong.file {
+	position: absolute;
+	border: 1px solid #ccc;
+	top: 5px;
+	left: 14px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	width: 31px;
+	height: 40px;
+	padding: 0 0 0 9px;
+	background: #fff url(images/file.png) 0 0 no-repeat;
+	text-transform: uppercase;
+	color: #ccc;
+	text-align: left;
+	overflow: hidden;
+}
+
 div.field-subsectionmanager div.stage div.queue li.selected a.file {
 	color: #fff;
 }
