@@ -21,15 +21,16 @@ div.field-subsectionmanager div.stage li.preview strong.file, div.dragger strong
 	position: absolute;
 	border: 1px solid #ccc;
 	top: 5px;
-	left: 12px;
+	left: 14px;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
-	width: 40px;
+	width: 31px;
 	height: 40px;
+	padding: 0 0 0 9px;
 	background: #fff url(images/file.png) 0 0 no-repeat;
 	text-transform: uppercase;
 	color: #ccc;
-	text-align: center;
+	text-align: left;
 	overflow: hidden;
 }
 
