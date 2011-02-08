@@ -69,13 +69,14 @@
 			// Editing
 			selection.delegate('li:not(.new, .drawer, .empty)', 'click', function(event) {
 				var item = $(this),
+					target = $(event.target),
 					editor = item.next('.drawer');
 				
 				// Don't open editor for item that will be removed
-				if(event.srcElement != undefined) {
-					if(event.srcElement.className == 'destructor') return;
+				if(target.is('.destructor')) {
+					return true;
 				}
-			
+				
 				// Open editor
 				if(editor.size() == 0) {
 					item.addClass('active');
