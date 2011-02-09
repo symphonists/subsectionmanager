@@ -212,18 +212,8 @@
 				// Install missing tables
 				$this->install();
 				
-				// Check if context column exists
-				$columns = Symphony::Database()->fetch("SHOW COLUMNS FROM `tbl_fields_stage`");
-				$context = false;
-				if(is_array($columns)) {
-					foreach($columns as $column) {
-						if($column['Field'] == 'context') {
-							$context = true;
-						}
-					}
-				}
-
 				// Add context row and return status
+				$context = Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'context'");
 				if(!$context) {
 					$status[] = Symphony::Database()->query(
 						"ALTER TABLE `tbl_fields_stage` ADD `context` varchar(255) default NULL"
@@ -236,27 +226,33 @@
 			if(version_compare($previousVersion, '1.1', '<')) {
 			
 				// Add droptext column
-				$status[] = Symphony::Database()->query(
-					"ALTER TABLE `tbl_fields_subsectionmanager` ADD `droptext` text default NULL"
-				);
+				$droptext = Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'droptext'");
+				if(!$droptext) {
+					$status[] = Symphony::Database()->query(
+						"ALTER TABLE `tbl_fields_subsectionmanager` ADD `droptext` text default NULL"
+					);
+				}
 				
 				// Create stage tables
 				$status[] = Stage::install();
 				
 				// Fetch sort orders
-				$sortings = Symphony::Database()->fetch("SELECT * FROM tbl_fields_stage_sorting LIMIT 1000");
-				
-				// Move sort orders to stage table
-				if(is_array($sortings)) {
-					foreach($sortings as $sorting) {
-						$status[] = Symphony::Database()->query(
-							"INSERT INTO tbl_fields_stage_sorting (`entry_id`, `field_id`, `order`, `context`) VALUES (" . $sorting['entry_id'] . ", " . $sorting['field_id'] . ", '" . $sorting['order'] . "', 'subsectionmanager')"
-						);
+				$table = Symphony::Database()->fetch("SHOW TABLES LIKE 'tbl_fields_subsectionmanager_sorting'");
+				if(!empty($table)) {
+					$sortings = Symphony::Database()->fetch("SELECT * FROM tbl_fields_subsectionmanager_sorting LIMIT 1000");
+					
+					// Move sort orders to stage table
+					if(is_array($sortings)) {
+						foreach($sortings as $sorting) {
+							$status[] = Symphony::Database()->query(
+								"INSERT INTO tbl_fields_stage_sorting (`entry_id`, `field_id`, `order`, `context`) VALUES (" . $sorting['entry_id'] . ", " . $sorting['field_id'] . ", '" . $sorting['order'] . "', 'subsectionmanager')"
+							);
+						}
 					}
+	
+					// Drop old sorting table
+					$status[] = Symphony::Database()->query("DROP TABLE IF EXISTS `tbl_fields_subsectionmanager_sorting`");			
 				}
-
-				// Drop old sorting table
-				$status[] = Symphony::Database()->query("DROP TABLE IF EXISTS `tbl_fields_subsectionmanager_sorting`");			
 			}
 			
 			// Report status
