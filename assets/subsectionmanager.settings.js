@@ -1,22 +1,18 @@
-/**
- * SUBSECTION MANAGER
- * for Symphony
- *
- * @author: Nils Hörrmann, http://nilshoerrmann.de
- * @source: http://github.com/nilshoerrmann/subsectionmanager
- */
+
+(function($) {
 	
-
-/*-----------------------------------------------------------------------------
-	Settings
------------------------------------------------------------------------------*/
-
-	jQuery(document).ready(function() {
+	/**
+	 * Subsection Manager settings
+	 *
+	 * @author: Nils Hörrmann, post@nilshoerrmann.de
+	 * @source: http://github.com/nilshoerrmann/subsectionmanager
+	 */
+	$(document).ready(function() {
 	
 		// Subsection setup on change
-		jQuery('select.subsectionmanager').live('change', function(event) {
+		$('select.subsectionmanager').live('change', function(event) {
 		
-			var select = jQuery(event.target);
+			var select = $(event.target);
 			var id = select.val();
 			var subsectionmanager = select.parents('li').filter('li');
 			var groups = subsectionmanager.find('select.datasource optgroup');
@@ -42,7 +38,7 @@
 			// Show and hide data source sections
 			if(groups.length > 0) {
 				groups.each(function() {
-					subsectionmanager.data(this.label, jQuery(this).children());
+					subsectionmanager.data(this.label, $(this).children());
 				});
 				groups.remove();
 			}
@@ -54,22 +50,22 @@
 		});
 		
 		// Subsection setup on start up
-		jQuery('select.subsectionmanager').each(function() {
-			jQuery(this).trigger('change');
+		$('select.subsectionmanager').each(function() {
+			$(this).trigger('change');
 		});	
 
 		// Subsection setup on click			
-		jQuery('div.controls a').click(function() {
-			jQuery('select.subsectionmanager:last').trigger('change');
+		$('div.controls a').click(function() {
+			$('select.subsectionmanager:last').trigger('change');
 		});
 		
 	});
 
 	// Add negation signs for all suggestions while alt key is pressed
-    jQuery(window).keydown(function(event) {
+    $(window).keydown(function(event) {
 		if(event.altKey) {
-			jQuery('ul.subsectionmanager.negation li').each(function() {
-				var tag = jQuery(this);
+			$('ul.subsectionmanager.negation li').each(function() {
+				var tag = $(this);
 				if(tag.text().substr(0, 1) != '-') {
 					tag.html('-' + tag.text());
 				}
@@ -78,11 +74,13 @@
     });
 
 	// Remove negation signs for all suggestions on keyup
-	jQuery(window).keyup(function(event) {
-		jQuery('ul.subsectionmanager li').each(function() {
-			var tag = jQuery(this);
+	$(window).keyup(function(event) {
+		$('ul.subsectionmanager li').each(function() {
+			var tag = $(this);
 			if(tag.text().substr(0, 1) == '-') {
 				tag.html(tag.text().substr(1));
 			}
 		});
 	});
+	
+})(jQuery.noConflict());

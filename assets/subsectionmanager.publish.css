@@ -1,0 +1,113 @@
+/**
+ * Subsection Manager for Symphony
+ *
+ * @author: Nils Hörrmann, http://nilshoerrmann.de
+ * @source: http://github.com/nilshoerrmann/subsectionmanager
+ */
+
+div.field-subsectionmanager select {
+	display: none;
+}
+
+div.field-subsectionmanager div.stage li.preview a.file, div.dragger a.file {
+	display: inline-block;
+	margin: 0;
+	padding: 7px 14px 7px 66px;
+	color: #3f3d35;
+	text-decoration: none;
+}
+
+div.field-subsectionmanager div.stage li.preview strong.file, div.dragger strong.file {
+	position: absolute;
+	border: 1px solid #ccc;
+	top: 5px;
+	left: 14px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	width: 31px;
+	height: 40px;
+	padding: 0 0 0 9px;
+	background: #fff url(images/file.png) 0 0 no-repeat;
+	text-transform: uppercase;
+	color: #ccc;
+	text-align: left;
+	overflow: hidden;
+}
+
+div.field-subsectionmanager div.stage div.queue li.selected a.file {
+	color: #fff;
+}
+
+div.dragger a.file {
+	padding: 0 0 0 52px;
+}
+
+div.field-subsectionmanager div.stage li.new {
+	padding-left: 52px;
+	height: 52px;
+}
+
+div.field-subsectionmanager div.stage li.new span, div.field-subsectionmanager div.stage li.new span:hover,
+div.field-subsectionmanager div.stage li.empty span, div.field-subsectionmanager div.stage li.empty span:hover {
+	background: none;
+}
+
+
+div.field-subsectionmanager div.stage li.drawer.new {
+	padding: 0;
+}
+
+div.field-subsectionmanager div.stage.preview img, div.dragger img {
+	position: absolute;
+	border: 1px solid #ccc;
+	top: 5px;
+	left: 14px;
+	border-radius: 2px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	cursor: pointer;
+}
+
+div.field-subsectionmanager div.stage li {
+	cursor: pointer;
+}
+
+div.field-subsectionmanager div.stage li.empty, div.field-subsectionmanager div.stage li.new {
+	cursor: auto;
+}
+
+div.field-subsectionmanager div.stage li.drawer iframe {
+	width: 100%;
+	display: block;
+}
+
+div.field-subsectionmanager div.stage div.queue ul.loading {
+	min-height: 32px;
+}
+
+div.field-subsectionmanager div.stage li em, div.field-subsectionmanager div.stage li em:hover, div.dragger em {
+	font-style: normal;
+	color: #908e88;
+	cursor: auto;
+	float: none;
+	font-style: inherit;
+	margin-right: 0;
+	text-decoration: none;
+	width: auto;	
+}
+
+div.field-subsectionmanager div.stage li.preview a.file, div.field-subsectionmanager div.stage li.preview span, div.dragger a.file {
+	min-height: 39px;
+}
+
+div.dragger.preview {
+	min-height: 38px;
+}
+
+div.field-subsectionmanager div.stage div.queue li.selected em {
+	color: #aabbee;
+}
+
+div.field-subsectionmanager div.stage div.queue li.selected img, div.field-subsectionmanager div.stage div.queue li.selected strong.file {
+	border-color: #335e9e;
+}

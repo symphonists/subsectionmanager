@@ -1,11 +1,11 @@
 <?php
 
 	$about = array(
-		'name' => 'Română',
+		'name' => 'Norsk bokmål',
 		'author' => array(
-			'name' => 'Vlad Ghiţă',
-			'email' => 'vlad_micutul@zahoo.com',
-			'website' => ''
+			'name' => 'Frode Danielsen',
+			'email' => 'frode@danielsen.net',
+			'website' => 'http://frode.danielsen.net/'
 		),
 		'release-date' => '2011-02-09'
 	);
@@ -16,190 +16,190 @@
 	$dictionary = array(
 
 		'%s Show thumbnail images' => 
-		'%s Arată imaginile în miniatură',
+		'%s Vis miniatyrbilder',
 
 		'%s has to be well-formed. Please check opening and closing tags.' => 
-		'%s trebuie să fie bine-formatat. Verificaţi împerecherea tag-urilor.',
+		'%s må være velformet. Vennligst kontroller åpne- og lukke-taggene.',
 
 		'1 result' => 
-		'1 rezultat',
+		'1 resultat',
 
 		'Allow creation of new items' => 
-		'Permite crearea de noi elemente',
+		'Tillat oppretting av nye innlegg',
 
 		'Allow deselection of items' => 
-		'Permite deselectarea de elemente',
+		'Tillat fjerning av markering for innlegg',
 
 		'Allow dropping of items' => 
-		'Permite ataşarea de elemente',
+		'Tillat slipp av innlegg',
 
 		'Allow selection of items from a list of existing items' => 
-		'Permite selectarea elementelor dintr-o listă de elemente existente',
+		'Tillat valg av innlegg fra en liste med eksisterende innlegg',
 
 		'Allow selection of multiple items' => 
-		'Permite selectarea mai multor elemente',
+		'Tillat valg av flere innlegg',
 
 		'Allow sorting of items' => 
-		'Permite sortarea elementelor',
+		'Tillat sortering av innlegg',
 
 		'Are you sure you want to delete {$item}? It will be removed from all entries. This step cannot be undone.' => 
-		'Sigur doreşti să ştergi {$item}? Va fi şters din toate înregistrările. Acest pas este ireversibil.',
+		'Er du sikker på at du ønsker å slette {$item}? Den vil bli fjernet fra alle innlegg. Dette kan ikke reverseres.',
 
 		'Before you proceed' => 
-		'Înainte de a continua',
+		'Før du fortsetter',
 
 		'Behaviour' => 
-		'Comportament',
+		'Oppførsel',
 
 		'Browse' => 
-		'Browse',
+		'Bla gjennom',
 
 		'Caption' => 
-		'Descriere',
+		'Tittel',
 
 		'Comma separated, alt+click for negation' => 
-		'Separare prin virgulă, alt+clic pentru negare',
+		'Kommaseparert, alt+klikk for negering',
 
 		'Data Source XML' => 
-		'XML-ul Sursei de Date',
+		'XML i datakilde',
 
 		'Display' => 
-		'Afişează',
+		'Visning',
 
 		'Don&#8217;t forget to include the Subsection Manager field in your Data Source' => 
-		'Nu uita să incluzi câmpul Administrator de Subsecţiune în Sursa ta de Date.',
+		'Ikke glem å inkludere Subsection Manager-feltet i din datakilde',
 
 		'Drop text' => 
-		'Drop text',
+		'Tekst ved slipp',
 
 		'Filter items by tags or categories' => 
-		'Filtrează elementele după etichete sau categorii',
+		'Filtrer innlegg etter merkelapper eller kategorier',
 
 		'Go back to the extension overview.' => 
-		'}ntoarceţi-vă la descriere extensiei.',
+		'Gå tilbake til oversikten over tillegg.',
 
 		'I have a working backup of my site including files and database and like to upgrade all my Mediathek fields to Subsection Manager fields.' => 
-		'Am o versiune a siteului meu incluzând fişiere şi baza de date şi aş dori să acualizez toate câmpurile Mediathek la câmpuri Administrator de Subsecţiune.',
+		'Jeg har en fungerende sikkerhetskopi av min nettside inklusive alle filer og databasen og ønsker å oppgradere alle mine Mediathek-felt til Subsection Manager-felt.',
 
 		'If you don&#8217;t have a backup, create one now!' => 
-		'Dacă nu a veţi o copie de rezervă, faceţi una acum!',
+		'Om du ikke har en sikkerhetskopi, opprett en nå!',
 
 		'Included elements' => 
-		'Elementele incluse',
+		'Inkluderte felt',
 
 		'Introduction' => 
-		'Introducere',
+		'Introduksjon',
 
 		'New item' => 
-		'Element Nou',
+		'Nytt innlegg',
 
 		'No items found.' => 
-		'Niciun element găsit.',
+		'Ingen innlegg ble funnet.',
 
 		'None Selected' => 
-		'Niciun element selectat',
+		'Ingen valgte',
 
 		'Please delete the old Mediathek folder from your <code>extensions</code> folder.' => 
-		'Ştergeţi vechiul director Mediathek din folderul <code>extensii</code>.',
+		'Vennligst slett den gamle Mediathek-mappen fra din <code>extensions</code>-mappe.',
 
 		'Please fill out the form below.' => 
-		'Completaţi formularul de mai jos.',
+		'Vennligst fyll ut skjemaet nedenfor.',
 
 		'Please make sure that you have an up-to-date backup of your site, containing all files and folders, and a copy of your database.' => 
-		'Asiguraţi-vă că aveţi o copie de rezervă la zi a site-ului, conţinând toate fişierele si directoarele şi o copie a bazei de date.',
+		'Vennligst sørg for at du har en fersk sikkerhetskopi av din nettside, inklusive all filer og mapper samt en kopi av din database.',
 
 		'Replace all Mediathek fields with the Subsection Manager, copying all attached information to the new fields.' => 
-		'Înlocuieşte toate câmpurile Mediathek cu Administrator de Subsecţiune cu copierea informaţiei adiacente în noile câmpuri.',
+		'Erstatte alle dine Mediathek-felt med Subsection Manager og kopiere all informasjon til de nye feltene.',
 
 		'Subsection' => 
-		'Subsecţiune',
+		'Underseksjon',
 
 		'Subsection Manager' => 
-		'Administrator Subsecţiune',
+		'Subsection Manager',
 
 		'Subsection Manager Upgrade' => 
-		'Actualizare Administratorul de Subsecţiune',
+		'Oppgradering til Subsection Manager',
 
 		'Subsection Manager is a replacement of the Mediathek field, introducing a new interface and an improved feature set. Subsection Manager requires Symphony 2.1 and should not be used side-by-side with Mediathek. This page will help you upgrading your fields from Mediathek to Subsection Manager.' => 
-		'Administratorul de Subsecţiune este un înlocuitor pentru câmpul Mediathek, introducând o nouă interfaţă şi noi facilităţi. Managerul de subsecţiune necesită cel puţin Szmphonz 2.1 şi nu ar trebui folosit laolaltă cu Mediathek. Această pagină vă va ajuta să actualizaţi câmpurile de la Mediathek la Administrator de Subsecţiune.',
+		'Subsection Manager er en erstatning for Mediathek-feltet, med et helt nytt grensesnitt og forbedrede funksjoner. Subsection Manager krever Symphony 2.1 og bør ikke brukes sammen med Mediathek. Denne siden hjelper deg med å oppgradere dine felt fra Mediathek til Subsection Manager.',
 
 		'The Mediathek folder will stay intact in your extension folder. You will have to delete it manually.' => 
-		'Directorul Mediathek va rămâne neschimbat în directorul cu extensii. Acesta va trebui şters manual.',
+		'Mediathek-mappen vil ikke bli berørt i din <code>extensions</code>-mappe. Du må slette denne manuelt selv.',
 
 		'The Subsection Manager Upgrade will automatically perform the following actions:' => 
-		'Actualizarea Administratorului de Subsecţiune va efectua automat următoarele acţiuni:',
+		'Oppgradering til Subsection Manager vil automatisk gjennomføre følgende:',
 
 		'There are currently no items available. Perhaps you want create one first?' => 
-		'Momentan nu există înregistrări. Creaţi una?',
+		'Det er for øyeblikket ingen innlegg tilgjengelig. Kanskje du ønsker opprette et først?',
 
 		'There are no selected items' => 
-		'Nu există elemente selectate',
+		'Ingen valgte innlegg',
 
 		'This process cannot be undone!' => 
-		'Acest proces este ireversibil!',
+		'Denne prosessen kan ikke reverseres!',
 
 		'This will add a <code>Create New</code> button to the interface' => 
-		'Aceasta va adăuga un buton <code>Crează Element</code> la interfaţă',
+		'Dette vil legge til en <code>Opprett ny</code>-knapp i grensesnittet',
 
 		'This will add a <code>Remove</code> button to the interface' => 
-		'Aceasta va adăuga un buton <code>Şterge</code> la interfaţă',
+		'Dette vil legge til en <code>Fjern</code>-knapp i grensesnittet',
 
 		'This will add a search field to the interface' => 
-		'Aceasta va adăuga un câmp de căutare la interfaţă',
+		'Dette vil legge til et søkefelt i grensesnittet',
 
 		'This will enable item dragging and reordering' => 
-		'Aceasta permite reordonarea elementelor',
+		'Dette muliggjør endring av rekkefølge ved å dra innlegg opp eller ned',
 
 		'This will enable item dropping on textareas' => 
-		'Aceasta va permite ataşarea de elemente pe câmpurile de text',
+		'Dette muliggjør å slippe innlegg oppå tekstfelt',
 
 		'This will switch between single and multiple item lists' => 
-		'Aceasta va schimba între liste de elemente simple şi multiple',
+		'Dette vil veksle mellom muligheten for å velge én eller flere innlegg i opplistinger',
 
 		'Uninstall Mediathek' => 
-		'Dezinstalare Mediathek',
+		'Avinstaller Mediathek',
 
 		'Uninstall Subsection Manager' => 
-		'Dezinstalare Administratorul de Subsecţiune',
+		'Avinstaller Subsection Manager',
 
 		'Uninstall the Mediathek extension removing all references in the database.' => 
-		'Dezinstalează extensia Mediathek cu ştergerea tuturor referinţelor din baza de date.',
+		'Avinstallere Mediathek-tillegget og fjerne alle referanser til det i databasen.',
 
 		'Upgrade' => 
-		'Actualizează',
+		'Oppgrader',
 
 		'Upgrade all Mediathek fields' => 
-		'Actualizează toate câmpurile Mediathek',
+		'Oppgrader alle Mediathek-felt',
 
 		'Upgrade successful' => 
-		'Actualizare reuşită',
+		'Oppgraderingen var vellykket',
 
 		'Upgrading your Mediathek' => 
-		'Actualizare Mediathek in curs',
+		'Oppgraderer dine Mediathek-felt',
 
 		'Upgrading your Mediathek fields to Subsection Manager will alter your database.' => 
-		'Schimbarea câmpurilor Mediathek în Administrator de Subsecţiune va modifica baza de date.',
+		'Oppgradering av dine Mediathek-felt til Subsection Manager vil føre til endringer i din database.',
 
 		'Use comma separated entry ids for filtering.' => 
-		'Pentru filtrare, folosiţi id-urile de la intrări, separate prin virgulă.',
+		'Bruk en kommaseparert liste med ID-er for innlegg ved filtrering.',
 
 		'You are using Mediathek and Subsection Manager simultaneously.' => 
-		'Folosiţi Mediathek şi Managerul de Subsecţiuni simultan.',
+		'Du bruker Mediathek og Subsection Manager samtidig.',
 
 		'Your Mediathek fields have successfully been upgrade to Subsection Manager.' => 
-		'Câmpurile Mediathek au fost actualizate cu succes la Administrator de Subsecţiune.',
+		'Dine Mediathek-felt har blitt vellykket oppgradert til Subsection Manager.',
 
 		'item' => 
-		'element',
+		'innlegg',
 
 		'items' => 
-		'elemente',
+		'innlegg',
 
 		'no results' => 
-		'lipsă rezultate',
+		'ingen resultater',
 
 		'{$count} results' => 
-		'{$count} rezultate',
+		'{$count} resultater',
 
 		// Missing
 
