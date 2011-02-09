@@ -12,11 +12,11 @@ body.inline.subsection {
 	margin: 0;
 }
 
-body.inline.subsection div.header {
+body.inline.subsection #header {
 	margin: 0;
 }
 
-body.inline.subsection div.contents {
+body.inline.subsection #contents {
 	padding: 0;
 }
 
