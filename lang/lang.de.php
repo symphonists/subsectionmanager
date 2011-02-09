@@ -18,6 +18,9 @@
 		'%s Show thumbnail images' => 
 		'%s Zeige Vorschaubilder',
 
+		'%s has to be well-formed. Please check opening and closing tags.' => 
+		'Dieses Feld muss wohlgeformt sein. Bitte überprüfen Sie öffnende und schließende Tags.',
+
 		'1 result' => 
 		'1 Ergebnis',
 
@@ -102,11 +105,17 @@
 		'Please fill out the form below.' => 
 		'Bitte ergänzen Sie nachfolgende Angaben.',
 
+		'Please make sure that the Stage submodule is initialised and available at %s.' => 
+		'Bitte überprüfen Sie, ob das Submodul Stage initialisiert wurde und unter %s zur Verfügung steht.',
+
 		'Please make sure that you have an up-to-date backup of your site, containing all files and folders, and a copy of your database.' => 
 		'Stellen Sie sicher, dass Sie eine aktuelle Sicherungskopie Ihrer Seite, die alle Dateien und Ordner beinhaltet, sowie eine Kopie Ihrer Datenbank haben.',
 
 		'Replace all Mediathek fields with the Subsection Manager, copying all attached information to the new fields.' => 
 		'Alle Mediathek-Felder werden durch Subsection-Manager-Felder ersetzt und alle verknüpften Daten in das neue Feld kopiert.',
+
+		'Stage not found' => 
+		'Stage konnte nicht gefunden werden',
 
 		'Subsection' => 
 		'Unterbereich',
@@ -198,19 +207,7 @@
 		'{$count} results' => 
 		'{$count} Ergebnisse',
 
-		'Please make sure that the Stage submodule is initialised and available at %s.' => 
-		'Bitte überprüfen Sie, ob das Submodul Stage initialisiert wurde und unter %s zur Verfügung steht.',
-
 		'It\'s available at %s.' => 
 		'Es wird unter %s zur Verfügung gestellt. ',
-
-		'Stage not found' => 
-		'Stage konnte nicht gefunden werden',
-
-		'%s has to be well-formed. Please check opening and closing tags.' => 
-		'Dieses Feld muss wohlgeformt sein. Bitte überprüfen Sie öffnende und schließende Tags.',
-
-		'Droptext' => 
-		'Droptext',
 
 	);

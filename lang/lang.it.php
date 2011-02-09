@@ -18,6 +18,9 @@
 		'%s Show thumbnail images' => 
 		'%s Mostra l\'anteprima delle immagini',
 
+		'%s has to be well-formed. Please check opening and closing tags.' => 
+		'Il campo %s deve essere ben formato. Controlla i tag di apertura e chiusura.',
+
 		'1 result' => 
 		'1 risultato',
 
@@ -102,11 +105,17 @@
 		'Please fill out the form below.' => 
 		'Compila il modulo sottostante.',
 
+		'Please make sure that the Stage submodule is initialised and available at %s.' => 
+		'Per favore assicurati che il modulo mancante compaia all\'interno della cartella %s.',
+
 		'Please make sure that you have an up-to-date backup of your site, containing all files and folders, and a copy of your database.' => 
 		'Assicurati di avere una copia di backup aggiornata del tuo sito e del tuo database con tutti i file e le cartelle.',
 
 		'Replace all Mediathek fields with the Subsection Manager, copying all attached information to the new fields.' => 
 		'Sostituzione di tutti i campi Mediathek con nuovi campi Subsection Manager, assieme a tutte le informazioni associate a questi campi.',
+
+		'Stage not found' => 
+		'Modulo Stage mancante',
 
 		'Subsection' => 
 		'Attingi da',
@@ -198,16 +207,7 @@
 		'{$count} results' => 
 		'{$count} risultati',
 
-		'Please make sure that the Stage submodule is initialised and available at %s.' => 
-		'Per favore assicurati che il modulo mancante compaia all\'interno della cartella %s.',
-
 		'It\'s available at %s.' => 
 		'Puoi scaricare Stage da qui: %s.',
-
-		'Stage not found' => 
-		'Modulo Stage mancante',
-
-		'%s has to be well-formed. Please check opening and closing tags.' => 
-		'Il campo %s deve essere ben formato. Controlla i tag di apertura e chiusura.',
 
 	);
