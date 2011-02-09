@@ -7,7 +7,7 @@
 			'email' => 'my.ekoes@gmail.com',
 			'website' => 'http://lineheight.net'
 		),
-		'release-date' => '2011-01-29'
+		'release-date' => '2011-02-09'
 	);
 
 	/**
@@ -17,6 +17,9 @@
 
 		'%s Show thumbnail images' => 
 		'%s Mostra l\'anteprima delle immagini',
+
+		'1 result' => 
+		'1 risultato',
 
 		'Allow creation of new items' => 
 		'Consenti la creazione di nuove voci',
@@ -36,6 +39,9 @@
 		'Allow sorting of items' => 
 		'Consenti il trascinamento delle voci',
 
+		'Are you sure you want to delete {$item}? It will be removed from all entries. This step cannot be undone.' => 
+		'Sei sicuro di voler procedere alla cancellazione? Questa operazione non pu&#242; essere annullata.',
+
 		'Before you proceed' => 
 		'Prima di procedere',
 
@@ -43,13 +49,10 @@
 		'Comportamento',
 
 		'Browse' => 
-		'Cerca fra tutte le voci',
+		'Esplora tutte le voci',
 
 		'Caption' => 
-		'Intestazione',
-
-		'Caption has to be well-formed. Please check opening and closing tags.' => 
-		'L\'intestazione deve contenere codice ben formato. Controlla i tag di apertura e chiusura.',
+		'Nei risultati',
 
 		'Comma separated, alt+click for negation' => 
 		'Separati da virgola, <code>alt+click</code> per la negazione',
@@ -58,16 +61,16 @@
 		'XML per la sorgente dati',
 
 		'Display' => 
-		'Interfaccia',
+		'Scelta dei campi da mostrare',
 
 		'Don&#8217;t forget to include the Subsection Manager field in your Data Source' => 
 		'Non dimenticare di includere il campo Subsection Manager nella tua sorgente dati',
 
+		'Drop text' => 
+		'Al rilascio',
+
 		'Filter items by tags or categories' => 
 		'Filtra le voci per tag',
-
-		'For further assistence have a look at the documentation available on %s.' => 
-		'Per maggiori informazioni consulta la documentazione disponibile su %s.',
 
 		'Go back to the extension overview.' => 
 		'Torna alla pagina delle estensioni',
@@ -101,9 +104,6 @@
 
 		'Please make sure that you have an up-to-date backup of your site, containing all files and folders, and a copy of your database.' => 
 		'Assicurati di avere una copia di backup aggiornata del tuo sito e del tuo database con tutti i file e le cartelle.',
-
-		'Remove Item' => 
-		'Elimina la voce',
 
 		'Replace all Mediathek fields with the Subsection Manager, copying all attached information to the new fields.' => 
 		'Sostituzione di tutti i campi Mediathek con nuovi campi Subsection Manager, assieme a tutte le informazioni associate a questi campi.',
@@ -148,7 +148,7 @@
 		'Verr&#224; abilitato il trascinamento e il riordinamento delle voci',
 
 		'This will enable item dropping on textareas' => 
-		'Verr&#224; abilitata la possibilit&#224; di rilasciare le voci all\'interno delle textarea',
+		'Verr&#224; abilitata la possibilit&#224; di rilasciare le voci all\'interno dei campi di tipo textarea',
 
 		'This will switch between single and multiple item lists' => 
 		'Verr&#224; abilitata la possibilit&#224; di selezionare pi&#249; voci',
@@ -192,27 +192,22 @@
 		'items' => 
 		'voci',
 
-		// Missing
-
-		'Are you sure you want to delete {$item}? It will be removed from all entries. This step cannot be undone.' => 
-		false,
-
-		'Drop text' => 
-		false,
-
-		'Submodule Stage is missing' => 
-		false,
-
-		'Please add the missing submodule to %s.' => 
-		false,
-
 		'no results' => 
-		false,
-
-		'1 result' => 
-		false,
+		'nessun risultato',
 
 		'{$count} results' => 
-		false,
+		'{$count} risultati',
+
+		'Please make sure that the Stage submodule is initialised and available at %s.' => 
+		'Per favore assicurati che il modulo mancante compaia all\'interno della cartella %s.',
+
+		'It\'s available at %s.' => 
+		'Puoi scaricare Stage da qui: %s.',
+
+		'Stage not found' => 
+		'Modulo Stage mancante',
+
+		'%s has to be well-formed. Please check opening and closing tags.' => 
+		'Il campo %s deve essere ben formato. Controlla i tag di apertura e chiusura.',
 
 	);
