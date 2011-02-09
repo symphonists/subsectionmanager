@@ -27,8 +27,8 @@
 			return array(
 				'name' => 'Subsection Manager',
 				'type' => 'Field, Interface',
-				'version' => '1.1beta4',
-				'release-date' => '2011-01-27',
+				'version' => '1.1',
+				'release-date' => '2011-02-09',
 				'author' => array(
 					'name' => 'Nils Hörrmann',
 					'website' => 'http://nilshoerrmann.de',
@@ -276,7 +276,7 @@
 					FROM
 						`tbl_fields_subsectionmanager` AS f
 				");
-				if (!empty($field_ids)) {
+				if(!empty($field_ids)) {
 					foreach ($field_ids as $id) {
 						$parent_section_id = Symphony::Database()->fetchVar('parent_section', 0, "
 							SELECT
@@ -305,7 +305,7 @@
 						);
 					}
 				}
-				if (!empty($associations)) {
+				if(!empty($associations)) {
 					foreach ($associations as $association) {
 						$status[] = Symphony::Database()->insert($association, 'tbl_sections_association');
 					}
