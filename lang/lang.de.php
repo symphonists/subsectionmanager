@@ -208,7 +208,7 @@
 		'Stage konnte nicht gefunden werden',
 
 		'%s has to be well-formed. Please check opening and closing tags.' => 
-		'%s muss wohlgeformt sein. Bitte überprüfen Sie öffnende und schließende Tags.',
+		'Dieses Feld muss wohlgeformt sein. Bitte überprüfen Sie öffnende und schließende Tags.',
 
 		'Droptext' => 
 		'Droptext',
