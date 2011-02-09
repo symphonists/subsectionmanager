@@ -2,9 +2,9 @@
 
 Subsection management for Symphony.  
 
-- Version: 1.0.1
-- Date: 28th August 2010
-- Requirements: Symphony 2.1 or newer, <http://github.com/symphonycms/symphony-2/>
+- Version: 1.1
+- Date: 9th February 2011
+- Requirements: Symphony 2.2 or newer, <http://github.com/symphonycms/symphony-2/>
 - Optional Requirement: JIT Image Manipulation (for image previews), <http://github.com/symphonycms/jit_image_manipulation/>
 - Author: Nils Hörrmann, post@nilshoerrmann.de
 - Constributors: [A list of contributors can be found in the commit history](http://github.com/nilshoerrmann/subsectionmanager/commits/development/)
@@ -17,17 +17,28 @@ Symphony offers an easy way to [create sections](http://symphony-cms.com/learn/c
 
 Subsection Manager is the successor of [Mediathek](http://github.com/nilshoerrmann/mediathek/) and requires [Symphony 2.1 or newer](http://github.com/symphonycms/symphony-2/). Subsection Manager and Mediathek should not be used simultaneously. This extension comes with an upgrade script that automatically replaces all Mediathek fields with the Subsection Manager (see below).
 
+## Compatibility
+
+Please note that Symphony 2.2 introduces new features that Subsection Manager 1.1 relies on. If you are using Symphony 2.1.x, please [download or checkout Subsection Manager 1.0.1](https://github.com/nilshoerrmann/subsectionmanager/tree/1.0.1) which does not have these dependencies.
+
 ## Installation
 
-Subsection Manager contains three components:
+Subsection Manager contains two components:
 
 - The Subsection Manager itself which handles the section interactions,
 - [Stage](http://github.com/nilshoerrmann/stage/) which offers the interface for the inline section management and
-- [Draggable](http://github.com/nilshoerrmann/draggable/) which provides drag and drop features.
 
-If you are working with Git, please clone the `development` branch of this extension which contains all components as submodules. Please don't forget to pull the submodules as well. If you are not using Git and want to install this extension using FTP, please just download a copy of the `release` branch which bundles all needed submodules. More information about [installing and updating extensions](http://symphony-cms.com/learn/tasks/view/install-an-extension/) can be found in the Symphony documentation at <http://symphony-cms.com/learn/>. 
+If you are working with Git, please clone the `development` branch of this extension which contains all additional components as submodules. Please don't forget to pull the submodules as well. If you are not using Git and want to install this extension using FTP, please just download a copy of the `master` branch which bundles all needed submodules. More information about [installing and updating extensions](http://symphony-cms.com/learn/tasks/view/install-an-extension/) can be found in the Symphony documentation at <http://symphony-cms.com/learn/>. 
 
-All interface related components of the Subsection Manager are JavaScript based. If you are upgrading from an earlier version, please make sure to clear your browser cache to avoid interface issues. If another extension or the Symphony core throws a JavaScript error, the Subsection Manager will stop working. 
+All interface related components of the Subsection Manager are JavaScript based. If you are upgrading from an earlier version, please make sure to clear your browser cache to avoid interface issues. If another extension or the Symphony core throws a JavaScript error, the Subsection Manager will stop working.
+
+## Updating
+
+To update Subsection Manager to a newer version perform the following steps:
+
+- Make sure that you have a working backup of your Symphony install.
+- Update the Subsection Manager folder by either updating the submodule or by replacing the files manually.
+- Log into the backend and enable the Subsection Manager extension to run the update script.
 
 ## Upgrading Mediathek Fields
 
@@ -37,18 +48,24 @@ Be aware that this upgrade process will alter your database and will uninstall y
 
 ## Release Notes
 
+**Version 1.1**
+
+- Updated Stage
+- Removed Draggable plugin
+- General improvements and code clean-up
+- Symphony 2.2. compability
+
 **Version 1.0.1**
 
-- Fixed issue with the section editor display.
-- Fixed issues with updates from beta versions.
+- Fixed issue with the section editor display
+- Fixed issues with updates from beta versions
 
-**Version 1.0.0** 
+**Version 1.0** 
 
-- Initial release.
-- The drag and drop feature is considered experimental. You may run into bugs.
+- Initial release
 
 ## Acknowledgement
 
 The drawer colors and layout were inspired by Scott Hughes' [Calendar Mock-up](http://symphony-cms.com/community/discussions/103/) and Rowan Lewis' [Calendar Overlay](http://github.com/rowan-lewis/calendaroverlay/).
 
-A lot of people have been testing this extension and providing valuable feedback. A big thank you to all of you, in alphabetic order: Alistair Kearney, Allen Chang, Andrea Buran, Andrew Minton, Andrew Shooner, Brendan Abbott, Brian Zerangue, Brien Wright, Craig Zheng, Dale Tan, David Hund, Doug Stewart, Fazal Khan, Frode Danielsen, Giulio Trico, Grzegorz Michlicki, Huib Keemink, Jiri Vanmeerbeeck, Johanna Hörrmann, John Porter, Jonas Coch, Mark a.k.a. Ecko, Mark a.k.a. m165, Mark Lewis, Max Wheeler, Michael Eichelsdörfer, Nick Dunn, Nils Werner, Simone Economo, Stephen Bau, Tony Arnold and all of you who love and use Symphony and try to make it better every day.
+A lot of people have been testing this extension and providing valuable feedback. A big thank you to all of you, in alphabetic order: Aaron Harnly, Adam Fox, Alistair Kearney, Allen Chang, Andrea Buran, Andrew Minton, Andrew Shooner, Bob Donderwinkel, Brendan Abbott, Brian Zerangue, Brien Wright, Christopher Clark, Craig Zheng, Dale Tan, David Hund, David Oliver, Doug Stewart, Fazal Khan, Frode Danielsen, Giulio Trico, Grzegorz Michlicki, Huib Keemink, Ida Engmark, Ingmars Lazdins, Jiri Vanmeerbeeck, Johanna Hörrmann, John Porter, Jonas Coch, Liam Egan, Mario Butera, Mark a.k.a. Ecko, Mark a.k.a. m165, Mark Lewis, Max Wheeler, Michael Eichelsdörfer, Nick Dunn, Nils Werner, Sandor Kerst, Simone Economo, Stephen Bau, Tony Arnold, Vlad Ghita and all of you who love and use Symphony and try to make it better every day.

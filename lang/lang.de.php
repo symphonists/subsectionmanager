@@ -7,9 +7,8 @@
 			'email' => 'post@nilshoerrmann.de',
 			'website' => 'http://nilshoerrmann.de'
 		),
-		'release-date' => '2010-08-08',
+		'release-date' => '2011-02-09'
 	);
-
 
 	/**
 	 * Subsection Manager
@@ -18,6 +17,12 @@
 
 		'%s Show thumbnail images' => 
 		'%s Zeige Vorschaubilder',
+
+		'%s has to be well-formed. Please check opening and closing tags.' => 
+		'Dieses Feld muss wohlgeformt sein. Bitte überprüfen Sie öffnende und schließende Tags.',
+
+		'1 result' => 
+		'1 Ergebnis',
 
 		'Allow creation of new items' => 
 		'Erstellen von Einträgen zulassen',
@@ -37,8 +42,8 @@
 		'Allow sorting of items' => 
 		'Sortieren von Einträgen erlauben.',
 
-		'Are you sure you want to delete this item? It will be remove from all entries. This step cannot be undone.' => 
-		'Sind Sie sicher, dass Sie diesen Eintrag löschen wollen? Er wird von allen verknüpften Einträgen entfernt. Dieser Vorgang kann nicht rückgängig gemacht werden.',
+		'Are you sure you want to delete {$item}? It will be removed from all entries. This step cannot be undone.' => 
+		'Sind Sie sicher, dass Sie {$item} löschen wollen? Er wird von allen verknüpften Einträgen entfernt. Dieser Vorgang kann nicht rückgängig gemacht werden.',
 
 		'Before you proceed' => 
 		'Bevor Sie fortfahren',
@@ -52,12 +57,6 @@
 		'Caption' => 
 		'Bezeichnung',
 
-		'Caption has to be well-formed. Please check opening and closing tags.' => 
-		'Der Eintragstitel muss wohlgeformt sein. Bitte überprüfen Sie öffnende und schließende Tags.',
-
-		'Click here to create a new item.' => 
-		'Klicken Sie hier, um einen neuen Eintrag zu erstellen.',
-
 		'Comma separated, alt+click for negation' => 
 		'kommagetrennt, für Verneinung alt+Klick',
 
@@ -70,11 +69,11 @@
 		'Don&#8217;t forget to include the Subsection Manager field in your Data Source' => 
 		'Vergessen Sie nicht das Subsection-Manager-Feld Ihrer Datenquelle hinzuzufügen',
 
+		'Drop text' => 
+		'Droptext',
+
 		'Filter items by tags or categories' => 
 		'Einträge nach Tags oder Kategorien filtern',
-
-		'For further assistence have a look at the documentation available on %s.' => 
-		'Weitere Hilfestellungen finden Sie in der Dokumentation auf %s.',
 
 		'Go back to the extension overview.' => 
 		'Zurück zur Übersicht der Erweiterungen.',
@@ -91,9 +90,6 @@
 		'Introduction' => 
 		'Einführung',
 
-		'Load items' => 
-		'Einträge laden',
-
 		'New item' => 
 		'Neuer Eintrag',
 
@@ -103,29 +99,23 @@
 		'None Selected' => 
 		'Keiner',
 
-		'Please add the missing submodule to %s. ' => 
-		'Bitte fügen Sie das fehlende Untermodul %s hinzu. ',
-
-		'Please add the missing submodules to %s. ' => 
-		'Bitte fügen Sie die fehlenden Untermodul %s hinzu. ',
-
 		'Please delete the old Mediathek folder from your <code>extensions</code> folder.' => 
 		'Bitte löschen Sie den alten Mediathek-Ordner in Ihrem <code>extensions</code>-Ordner.',
 
 		'Please fill out the form below.' => 
 		'Bitte ergänzen Sie nachfolgende Angaben.',
 
+		'Please make sure that the Stage submodule is initialised and available at %s.' => 
+		'Bitte überprüfen Sie, ob das Submodul Stage initialisiert wurde und unter %s zur Verfügung steht.',
+
 		'Please make sure that you have an up-to-date backup of your site, containing all files and folders, and a copy of your database.' => 
 		'Stellen Sie sicher, dass Sie eine aktuelle Sicherungskopie Ihrer Seite, die alle Dateien und Ordner beinhaltet, sowie eine Kopie Ihrer Datenbank haben.',
-
-		'Remove Item' => 
-		'Eintrag entfernen',
 
 		'Replace all Mediathek fields with the Subsection Manager, copying all attached information to the new fields.' => 
 		'Alle Mediathek-Felder werden durch Subsection-Manager-Felder ersetzt und alle verknüpften Daten in das neue Feld kopiert.',
 
-		'Submodule %s is missing.' => 
-		'Das Untermodul %s fehlt.',
+		'Stage not found' => 
+		'Stage konnte nicht gefunden werden',
 
 		'Subsection' => 
 		'Unterbereich',
@@ -210,5 +200,14 @@
 
 		'items' => 
 		'Einträge',
+
+		'no results' => 
+		'Keine Ergebnisse',
+
+		'{$count} results' => 
+		'{$count} Ergebnisse',
+
+		'It\'s available at %s.' => 
+		'Es wird unter %s zur Verfügung gestellt. ',
 
 	);

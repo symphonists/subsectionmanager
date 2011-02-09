@@ -5,11 +5,10 @@
 		'author' => array(
 			'name' => 'Simone Economo',
 			'email' => 'my.ekoes@gmail.com',
-			'website' => 'http://lineheight.net',
+			'website' => 'http://lineheight.net'
 		),
-		'release-date' => '2010-08-13',
+		'release-date' => '2011-02-09'
 	);
-
 
 	/**
 	 * Subsection Manager
@@ -18,6 +17,12 @@
 
 		'%s Show thumbnail images' => 
 		'%s Mostra l\'anteprima delle immagini',
+
+		'%s has to be well-formed. Please check opening and closing tags.' => 
+		'Il campo %s deve essere ben formato. Controlla i tag di apertura e chiusura.',
+
+		'1 result' => 
+		'1 risultato',
 
 		'Allow creation of new items' => 
 		'Consenti la creazione di nuove voci',
@@ -37,8 +42,8 @@
 		'Allow sorting of items' => 
 		'Consenti il trascinamento delle voci',
 
-		'Are you sure you want to delete this item? It will be remove from all entries. This step cannot be undone.' => 
-		'Sei sicuro di voler eliminare questa voce?  L\'operazione non potr&agrave; essere annullata.',
+		'Are you sure you want to delete {$item}? It will be removed from all entries. This step cannot be undone.' => 
+		'Sei sicuro di voler procedere alla cancellazione? Questa operazione non pu&#242; essere annullata.',
 
 		'Before you proceed' => 
 		'Prima di procedere',
@@ -47,16 +52,10 @@
 		'Comportamento',
 
 		'Browse' => 
-		'Cerca fra tutte le voci',
+		'Esplora tutte le voci',
 
 		'Caption' => 
-		'Intestazione',
-
-		'Caption has to be well-formed. Please check opening and closing tags.' => 
-		'L\'intestazione deve contenere codice ben formato. Controlla i tag di apertura e chiusura.',
-
-		'Click here to create a new item.' => 
-		'Clicca qui per creare una nuova voce',
+		'Nei risultati',
 
 		'Comma separated, alt+click for negation' => 
 		'Separati da virgola, <code>alt+click</code> per la negazione',
@@ -65,16 +64,16 @@
 		'XML per la sorgente dati',
 
 		'Display' => 
-		'Interfaccia',
+		'Scelta dei campi da mostrare',
 
 		'Don&#8217;t forget to include the Subsection Manager field in your Data Source' => 
 		'Non dimenticare di includere il campo Subsection Manager nella tua sorgente dati',
 
+		'Drop text' => 
+		'Al rilascio',
+
 		'Filter items by tags or categories' => 
 		'Filtra le voci per tag',
-
-		'For further assistence have a look at the documentation available on %s.' => 
-		'Per maggiori informazioni consulta la documentazione disponibile su %s.',
 
 		'Go back to the extension overview.' => 
 		'Torna alla pagina delle estensioni',
@@ -91,9 +90,6 @@
 		'Introduction' => 
 		'Introduzione',
 
-		'Load items' => 
-		'Carica le voci',
-
 		'New item' => 
 		'Nuova voce',
 
@@ -103,29 +99,23 @@
 		'None Selected' => 
 		'Nessuna sezione selezionata',
 
-		'Please add the missing submodule to %s. ' => 
-		'Inserisci il modulo mancante in %s. ',
-
-		'Please add the missing submodules to %s. ' => 
-		'Inserisci i moduli mancanti in %s. ',
-
 		'Please delete the old Mediathek folder from your <code>extensions</code> folder.' => 
 		'Elimina la vecchia cartella Mediathek dalla cartella <code>extensions</code>.',
 
 		'Please fill out the form below.' => 
 		'Compila il modulo sottostante.',
 
+		'Please make sure that the Stage submodule is initialised and available at %s.' => 
+		'Per favore assicurati che il modulo mancante compaia all\'interno della cartella %s.',
+
 		'Please make sure that you have an up-to-date backup of your site, containing all files and folders, and a copy of your database.' => 
 		'Assicurati di avere una copia di backup aggiornata del tuo sito e del tuo database con tutti i file e le cartelle.',
-
-		'Remove Item' => 
-		'Elimina la voce',
 
 		'Replace all Mediathek fields with the Subsection Manager, copying all attached information to the new fields.' => 
 		'Sostituzione di tutti i campi Mediathek con nuovi campi Subsection Manager, assieme a tutte le informazioni associate a questi campi.',
 
-		'Submodule %s is missing.' => 
-		'Non &#232; stato possibile trovare il seguente modulo: %s.',
+		'Stage not found' => 
+		'Modulo Stage mancante',
 
 		'Subsection' => 
 		'Attingi da',
@@ -167,7 +157,7 @@
 		'Verr&#224; abilitato il trascinamento e il riordinamento delle voci',
 
 		'This will enable item dropping on textareas' => 
-		'Verr&#224; abilitata la possibilit&#224; di rilasciare le voci all\'interno delle textarea',
+		'Verr&#224; abilitata la possibilit&#224; di rilasciare le voci all\'interno dei campi di tipo textarea',
 
 		'This will switch between single and multiple item lists' => 
 		'Verr&#224; abilitata la possibilit&#224; di selezionare pi&#249; voci',
@@ -210,5 +200,14 @@
 
 		'items' => 
 		'voci',
+
+		'no results' => 
+		'nessun risultato',
+
+		'{$count} results' => 
+		'{$count} risultati',
+
+		'It\'s available at %s.' => 
+		'Puoi scaricare Stage da qui: %s.',
 
 	);

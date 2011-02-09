@@ -1,17 +1,19 @@
 <?php
  
+	/**
+	 * @package content
+	 */
 	require_once(TOOLKIT . '/class.administrationpage.php');
 	
 	class contentExtensionSubsectionmanagerIndex extends AdministrationPage {
- 
-		public function __construct(&$parent) {
-			parent::__construct($parent);
-		}
-
+		
+		/**
+		 * Called to build the content for the page.
+		 */
 		function view() {
 			$this->setPageType('form');
 			$this->setTitle(__('%1$s &ndash; %2$s', array(__('Symphony'), __('Subsection Manager Upgrade'))));
-			$this->addScriptToHead(URL . '/extensions/subsectionmanager/assets/upgrade.mediathek.js', 100, false);
+			$this->addScriptToHead(URL . '/extensions/subsectionmanager/assets/mediathek.upgrade.js', 100, false);
 			$this->appendSubheading(__('Subsection Manager Upgrade'));
 			$this->Form->setAttribute('action', $this->_Parent->getCurrentPageURL() . 'upgrade/');
 			

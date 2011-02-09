@@ -1,13 +1,15 @@
 <?php
  
+	/**
+	 * @package content
+	 */
 	require_once(TOOLKIT . '/class.administrationpage.php');
 	
 	class contentExtensionSubsectionmanagerUpgrade extends AdministrationPage {
- 
-		public function __construct(&$parent) {
-			parent::__construct($parent);
-		}
-
+		
+		/**
+		 * Called to build the content for the page.
+		 */
 		function view() {
 			$this->setPageType('form');
 			$this->setTitle(__('%1$s &ndash; %2$s', array(__('Symphony'), __('Subsection Manager Upgrade'))));
@@ -29,43 +31,48 @@
 
 		}
 		
+		/**
+		 * Upgrade Mediathek fields to Subsection Manager fields
+		 */
 		function upgrade() {
 		
 			// Fetch Mediathek fields
-			$mediathek = Administration::instance()->Database->fetch("SELECT * FROM tbl_fields_mediathek LIMIT 100");
+			$mediathek = Symphony::Database()->fetch("SELECT * FROM tbl_fields_mediathek LIMIT 100");
 			
 			// Create Subsection Manager instances
 			foreach($mediathek as $subsection) {
 			
 				// Add data
-				Administration::instance()->Database->query(
+				Symphony::Database()->query(
 					"INSERT INTO tbl_fields_subsectionmanager (`field_id`, `subsection_id`, `filter_tags`, `caption`, `included_fields`, `allow_multiple`, `show_preview`) VALUES (" . $subsection['field_id'] . ", " . $subsection['related_section_id'] . ", '" . $subsection['filter_tags'] . "', '" . $subsection['caption'] . "', '" . $subsection['included_fields'] . "', " . ($subsection['allow_multiple_selection'] == 'yes' ? 1 : 0) . ", 1)"
 				);
 
 				// Add stage settings			
-				Administration::instance()->Database->query(
+				Symphony::Database()->query(
 					"INSERT INTO tbl_fields_stage (`field_id`, `constructable`, `destructable`, `draggable`, `droppable`, `searchable`, `context`) VALUES (" . $subsection['field_id'] . ", 1, 1, 1, 1, 1, 'subsectionmanager')"
 				);
 
 			}
 
 			// Fetch sort orders
-			$sortings = Administration::instance()->Database->fetch("SELECT * FROM tbl_fields_mediathek_sorting LIMIT 1000");
+			$sortings = Symphony::Database()->fetch("SELECT * FROM tbl_fields_mediathek_sorting LIMIT 1000");
 			
 			// Store sort orders
-			foreach($sortings as $sorting) {
-				Administration::instance()->Database->query(
-					"INSERT INTO tbl_fields_subsectionmanager_sorting (`entry_id`, `field_id`, `order`) VALUES (" . $sorting['entry_id'] . ", " . $sorting['field_id'] . ", '" . $sorting['order'] . "')"
-				);
+			if(is_array($sortings)) {
+				foreach($sortings as $sorting) {
+					Symphony::Database()->query(
+						"INSERT INTO tbl_fields_stage_sorting (`entry_id`, `field_id`, `order`, `context`) VALUES (" . $sorting['entry_id'] . ", " . $sorting['field_id'] . ", '" . $sorting['order'] . "', 'subsectionmanager')"
+					);
+				}
 			}
 
 			// Replace Mediathek by Subsection Manager fields
-			Administration::instance()->Database->query(
+			Symphony::Database()->query(
 				"UPDATE tbl_fields SET `type` = 'subsectionmanager' WHERE `type` = 'mediathek'"
 			);
 			
 			// Uninstall Mediathek
-			Administration::instance()->ExtensionManager->uninstall('mediathek');
+			Symphony::ExtensionManager()->uninstall('mediathek');
 				
 		}
 	
