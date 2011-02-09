@@ -40,7 +40,7 @@
 		'Consenti il trascinamento delle voci',
 
 		'Are you sure you want to delete {$item}? It will be removed from all entries. This step cannot be undone.' => 
-		'Sei sicuro di voler procedere alla cancellazione? Questa operazione non pu&ograve; essere annullata.',
+		'Sei sicuro di voler procedere alla cancellazione? Questa operazione non pu&#242; essere annullata.',
 
 		'Before you proceed' => 
 		'Prima di procedere',
@@ -208,6 +208,6 @@
 		'Modulo Stage mancante',
 
 		'%s has to be well-formed. Please check opening and closing tags.' => 
-		'Il markup del campo %s deve essere ben formato. Controlla i tag di apertura e chiusura.',
+		'Il campo %s deve essere ben formato. Controlla i tag di apertura e chiusura.',
 
 	);
