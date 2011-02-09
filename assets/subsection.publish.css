@@ -84,3 +84,25 @@ body.inline.subsection form #error input[type="file"] {
 body.inline.subsection form input[type="checkbox"] {
 	width: auto;
 }
+
+/* Stage inside Stage */
+
+body.inline.subsection div.stage ul.selection {
+	border-top: none;
+	border-left: none;
+	border-right: none;
+}
+
+body.inline.subsection div.stage div.queue {
+	border-left: none;
+	border-right: none;
+}
+
+body.inline.subsection div.stage li a.destructor {
+	color: #fff;
+}
+
+body.inline.subsection div.stage li.drawer {
+	border-left-color: #616057;
+	border-right-color: #616057;
+}
