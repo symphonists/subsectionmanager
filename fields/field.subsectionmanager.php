@@ -371,7 +371,7 @@
 					simplexml_load_string('<li>' . $this->get('droptext') . '</li>');
 				}
 				catch(Exception $e) {
-					$errors['droptext'] = __('%s has to be well-formed. Please check opening and closing tags.', array(__('Droptext')));
+					$errors['droptext'] = __('%s has to be well-formed. Please check opening and closing tags.', array(__('Drop text')));
 				}
 			}
 
