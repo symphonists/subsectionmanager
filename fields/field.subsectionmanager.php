@@ -71,7 +71,7 @@
 
 			// Related section
 			$label = new XMLElement('label', __('Subsection'));
-			$sectionManager = new SectionManager($this->_engine);
+			$sectionManager = new SectionManager(Symphony::Engine());
 		  	$sections = $sectionManager->fetch(NULL, 'ASC', 'name');
 			$options = array(
 				array('', false, __('None Selected')),
@@ -753,7 +753,7 @@
 			}
 
 			// Fetch field data
-			$entryManager = new EntryManager($this->_engine);
+			$entryManager = new EntryManager(Symphony::Engine());
 			$entries = $entryManager->fetch($data['relation_id'], $this->get('subsection_id'));
 
 			// Sort entries
@@ -856,7 +856,9 @@
 		public function fetchAssociatedEntrySearchValue($data, $field_id = null, $parent_entry_id = null){
 			// $data would contain the related entries, but is usually `null` when called from the frontend
 			// (when the field is not included in the DS, and only then "associated entry count" makes sense)
-			if(!is_null($parent_entry_id)) return $parent_entry_id;
+			if(!is_null($parent_entry_id)) {
+				return $parent_entry_id;
+			}
 		}
 
 		/**
@@ -868,9 +870,10 @@
 		 *	the count of associated entries
 		 */
 		public function fetchAssociatedEntryCount($value){
-			if (isset($value)) {
-				return $this->_engine->Database->fetchVar('count', 0, "SELECT count(*) AS `count` FROM `tbl_entries_data_".$this->get('id')."` WHERE `entry_id` = '$value'");
-			} else {
+			if(isset($value)) {
+				return Symphony::Database()->fetchVar('count', 0, "SELECT count(*) AS `count` FROM `tbl_entries_data_".$this->get('id')."` WHERE `entry_id` = '$value'");
+			} 
+			else {
 				return 0;
 			}
 		}
@@ -885,10 +888,12 @@
 		 *	 The formatted value to be used as the parameter
 		 */
 		public function getParameterPoolValue($data) {
-
-			if(is_array($data['relation_id'])) return implode(", ", $data['relation_id']);
-			return $data['relation_id'];
-
+			if(is_array($data['relation_id'])) {
+				return implode(", ", $data['relation_id']);
+			}
+			else {
+				return $data['relation_id'];
+			}
 		}
 
 		/**
