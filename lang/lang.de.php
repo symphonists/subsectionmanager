@@ -7,7 +7,7 @@
 			'email' => 'post@nilshoerrmann.de',
 			'website' => 'http://nilshoerrmann.de'
 		),
-		'release-date' => '2011-01-29'
+		'release-date' => '2011-02-09'
 	);
 
 	/**
@@ -54,9 +54,6 @@
 		'Caption' => 
 		'Bezeichnung',
 
-		'Caption has to be well-formed. Please check opening and closing tags.' => 
-		'Der Eintragstitel muss wohlgeformt sein. Bitte überprüfen Sie öffnende und schließende Tags.',
-
 		'Comma separated, alt+click for negation' => 
 		'kommagetrennt, für Verneinung alt+Klick',
 
@@ -74,9 +71,6 @@
 
 		'Filter items by tags or categories' => 
 		'Einträge nach Tags oder Kategorien filtern',
-
-		'For further assistence have a look at the documentation available on %s.' => 
-		'Weitere Hilfestellungen finden Sie in der Dokumentation auf %s.',
 
 		'Go back to the extension overview.' => 
 		'Zurück zur Übersicht der Erweiterungen.',
@@ -102,9 +96,6 @@
 		'None Selected' => 
 		'Keiner',
 
-		'Please add the missing submodule to %s.' => 
-		'Bitte fügen Sie das fehlende Untermodul %s hinzu. ',
-
 		'Please delete the old Mediathek folder from your <code>extensions</code> folder.' => 
 		'Bitte löschen Sie den alten Mediathek-Ordner in Ihrem <code>extensions</code>-Ordner.',
 
@@ -114,14 +105,8 @@
 		'Please make sure that you have an up-to-date backup of your site, containing all files and folders, and a copy of your database.' => 
 		'Stellen Sie sicher, dass Sie eine aktuelle Sicherungskopie Ihrer Seite, die alle Dateien und Ordner beinhaltet, sowie eine Kopie Ihrer Datenbank haben.',
 
-		'Remove Item' => 
-		'Eintrag entfernen',
-
 		'Replace all Mediathek fields with the Subsection Manager, copying all attached information to the new fields.' => 
 		'Alle Mediathek-Felder werden durch Subsection-Manager-Felder ersetzt und alle verknüpften Daten in das neue Feld kopiert.',
-
-		'Submodule Stage is missing' => 
-		'Das Untermodul Stage fehlt',
 
 		'Subsection' => 
 		'Unterbereich',
@@ -212,5 +197,20 @@
 
 		'{$count} results' => 
 		'{$count} Ergebnisse',
+
+		'Please make sure that the Stage submodule is initialised and available at %s.' => 
+		'Bitte überprüfen Sie, ob das Submodul Stage initialisiert wurde und unter %s zur Verfügung steht.',
+
+		'It\'s available at %s.' => 
+		'Es wird unter %s zur Verfügung gestellt. ',
+
+		'Stage not found' => 
+		'Stage konnte nicht gefunden werden',
+
+		'%s has to be well-formed. Please check opening and closing tags.' => 
+		'%s muss wohlgeformt sein. Bitte überprüfen Sie öffnende und schließende Tags.',
+
+		'Droptext' => 
+		'Droptext',
 
 	);
