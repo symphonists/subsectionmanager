@@ -266,6 +266,50 @@
 					// Drop old sorting table
 					$status[] = Symphony::Database()->query("DROP TABLE IF EXISTS `tbl_fields_subsectionmanager_sorting`");			
 				}
+				
+				// Add section associations data to sections_association table
+				$field_ids = array();
+				$associations = array();
+				$field_ids = Symphony::Database()->fetchCol('field_id', "
+					SELECT
+						f.field_id
+					FROM
+						`tbl_fields_subsectionmanager` AS f
+				");
+				if (!empty($field_ids)) {
+					foreach ($field_ids as $id) {
+						$parent_section_id = Symphony::Database()->fetchVar('parent_section', 0, "
+							SELECT
+								f.parent_section
+							FROM
+								`tbl_fields` AS f
+							WHERE
+								f.id = '{$id}'
+							LIMIT 1
+						");
+						$child_section_id = Symphony::Database()->fetchVar('subsection_id', 0, "
+							SELECT
+								f.subsection_id
+							FROM
+								`tbl_fields_subsectionmanager` AS f
+							WHERE
+								f.field_id = '{$id}'
+							LIMIT 1
+						");
+						$associations[] = array(
+							'parent_section_id' => $parent_section_id,
+							'parent_section_field_id' => $id,
+							'child_section_id' => $child_section_id,
+							'child_section_field_id' => $id,
+							'hide_association' => 'yes',
+						);
+					}
+				}
+				if (!empty($associations)) {
+					foreach ($associations as $association) {
+						$status[] = Symphony::Database()->insert($association, 'tbl_sections_association');
+					}
+				}
 			}
 			
 			// Report status
