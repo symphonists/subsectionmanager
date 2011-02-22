@@ -201,15 +201,13 @@
 		'{$count} results' => 
 		'{$count} resultater',
 
-		// Missing
-
 		'Please make sure that the Stage submodule is initialised and available at %s.' => 
-		false,
+		'Vennligst sørg for at undermodulen Stage er initialisert og tilgjengelig på %s.',
 
 		'It\'s available at %s.' => 
-		false,
+		'Den er tilgjengelig på %s.',
 
 		'Stage not found' => 
-		false,
+		'Stage ble ikke funnet',
 
 	);

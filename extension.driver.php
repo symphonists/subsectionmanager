@@ -27,8 +27,8 @@
 			return array(
 				'name' => 'Subsection Manager',
 				'type' => 'Field, Interface',
-				'version' => '1.1',
-				'release-date' => '2011-02-09',
+				'version' => '1.1.1',
+				'release-date' => '2011-02-22',
 				'author' => array(
 					'name' => 'Nils Hörrmann',
 					'website' => 'http://nilshoerrmann.de',
@@ -79,7 +79,6 @@
 			// Append skripts and styles for field settings pane
 			if($callback['driver'] == 'blueprintssections' && is_array($callback['context'])) {
 				Administration::instance()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.settings.js', 100, false);
-				Administration::instance()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.settings.css', 'screen', 101, false);
 			}
 
 			// Append styles for publish area
