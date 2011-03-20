@@ -14,8 +14,10 @@
 			
 			// Include Stage
 			try {
-				if((include_once(EXTENSIONS . '/subsectionmanager/lib/stage/class.stage.php')) === FALSE) {
-					throw new Exception();
+				if(!class_exists('Stage')){
+					if((include_once(EXTENSIONS . '/subsectionmanager/lib/stage/class.stage.php')) === FALSE) {
+						throw new Exception();
+					}
 				}
 			}
 			catch(Exception $e) {
