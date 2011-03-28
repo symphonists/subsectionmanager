@@ -4,7 +4,7 @@
  * @author: Nils Hörrmann, http://nilshoerrmann.de
  * @source: http://github.com/nilshoerrmann/subsectionmanager
  */
- 
+
 body.inline.subsection {
 	background: #353533;
 	border: none;
@@ -12,7 +12,13 @@ body.inline.subsection {
 	margin: 0;
 }
 
-body.inline.subsection #header {
+body.tabbed.subsection {
+	padding: 0;
+	border: none;
+	margin: 0;
+}
+
+body.inline.subsection #header, body.tabbed.subsection #header {
 	margin: 0;
 }
 
@@ -20,8 +26,20 @@ body.inline.subsection #contents {
 	padding: 0;
 }
 
+body.tabbed.subsection #contents {
+	padding: 0 19px;
+}
+
+body.tabbed.subsection #contents {
+	margin: 0;
+}
+
 body.inline.subsection form {
 	padding: 0 12px;
+}
+
+body.tabbed.subsection form {
+	padding: 0;
 }
 
 body.inline.subsection form fieldset {
@@ -55,6 +73,11 @@ body.inline.subsection form label span {
 body.inline.subsection form #error label span {
 	background: #ed4a26;
 	border-color: #656564;
+}
+
+body.tabbed.subsection form .actions {
+	border: none;
+	padding: 0;
 }
 
 body.inline.subsection form .actions {

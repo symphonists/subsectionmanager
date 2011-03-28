@@ -576,10 +576,9 @@
 			$label->appendChild($select);
 
 			// Setup sorting
-			$currentPageURL = Symphony::Engine()->getCurrentPageURL();
-			preg_match_all('/\d+/', $currentPageURL, $entry_id, PREG_PATTERN_ORDER);
-			$entry_id = $entry_id[0][count($entry_id[0])-1];
-			if($entry_id) {
+			$page = Symphony::Engine()->getPageCallback();
+			$entry_id = $page['context']['entry_id'];
+			if(!empty($entry_id)) {
 				$order = Symphony::Database()->fetchVar('order', 0,
 					"SELECT `order`
 					FROM `tbl_fields_stage_sorting`

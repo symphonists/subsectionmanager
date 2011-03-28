@@ -265,16 +265,11 @@
 							
 							// Append queue items
 							else {
-								$(result).hide().appendTo(list);
+								$(result).appendTo(list);
 								
 								// Highlight selected items
 								stage.trigger('update');
 							}
-
-							// Slide queue
-							list.find('li').slideDown('fast', function() {
-								$(this).parent('ul').removeClass('loading');
-							});
 							
 							// Save status
 							queue_loaded = true;
