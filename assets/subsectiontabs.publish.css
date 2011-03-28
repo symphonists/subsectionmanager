@@ -32,7 +32,7 @@ body.subsectiontabs iframe.subsectiontab {
 #subsectiontabs li {
 	list-style-type: none;
 	float: left;
-	padding: 3px 7px 0;
+	padding: 2px 7px 0;
 	margin: 0 3px 0 0;
 	cursor: pointer;
 	background: rgba(0, 0, 0, 0.02);
@@ -42,7 +42,7 @@ body.subsectiontabs iframe.subsectiontab {
 	border: 1px solid rgba(0, 0, 0, 0.1);
 	border-bottom: transparent;
 	color: rgba(0, 0, 0, 0.5);
-	height: 19px;
+	height: 20px;
 }
 
 #subsectiontabs li:hover {
@@ -58,7 +58,6 @@ body.subsectiontabs iframe.subsectiontab {
 	border-bottom: 1px solid #fff;
 	color: rgba(0, 0, 0, 0.8);
 	z-index: 1000;
-	height: 19px;
 }
 
 #subsectiontabs li span {
@@ -68,7 +67,7 @@ body.subsectiontabs iframe.subsectiontab {
 }
 
 #subsectiontabs li input {
-	padding: 2px;
+	padding: 2px 2px 3px;
 	cursor: pointer;
 	border: 1px solid transparent;
 	background: transparent;
