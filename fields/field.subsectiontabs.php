@@ -140,6 +140,7 @@
 					"SELECT `relation_id`, `tab`
 					FROM `tbl_entries_data_" . $this->get('id') . "`
 					WHERE `entry_id` = " . $entry_id . "
+					ORDER BY `id`
 					LIMIT 100"
 				);
 				
