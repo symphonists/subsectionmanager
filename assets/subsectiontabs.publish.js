@@ -265,12 +265,11 @@
 		};
 		
 		var resize = function(subsection) {
-			var content = subsection.contents(),
-				height = subsection.height();
-				
-				
-			height = content.find('#wrapper').outerHeight() || height;
-			subsection.height(height).show();
+			var height;
+			
+			subsection.show();
+			height = subsection.contents().find('#wrapper').height();
+			subsection.height(height);
 			tabs.animate({
 				'height': height
 			});
