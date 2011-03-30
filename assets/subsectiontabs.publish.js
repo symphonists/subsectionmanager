@@ -2,7 +2,8 @@
 (function($) {
 
 	Symphony.Language.add({
-		'Some errors were encountered while attempting to save.': false
+		'Some errors were encountered while attempting to save.': false,
+		'Untitled': false
 	});
 	
 	/**
@@ -116,25 +117,23 @@
 				controls.find('li:has(input)').not($(tab)).each(function() {
 					var tab = $(this),
 						input = tab.find('input').remove(),
-						text = $.trim(input.val());
+						text = $.trim(input.val()),
+						counter = '',
+						count;
+					
+					// Handle empty names
+					if(text == '') {
+						text = Symphony.Language.get('Untitled');
+					}
+					
+					// Set counter
+					count = parseInt(controls.find('li:contains(' + text + ')').size());
+					if(count > 0) {
+						counter = ' ' + (count + 1).toString();
+					}
 					
 					// Save tab name
-					tab.html('<span>' + $.trim(input.val()) + '</span>');
-					
-					// Handle newly created tabs
-					if(tab.is('.new')) {
-						
-						// Empty tab
-						if(text == '' || text == '+') {
-							tab.html('<span>+</span>');
-						}
-						
-						// Add button
-						else {
-							tab.removeClass('new');
-							tab.after('<li class="new"><span>+</span></li>');
-						}
-					}
+					tab.html('<span>' + text + counter + '</span>');
 				});
 			});
 		}
