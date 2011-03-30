@@ -126,8 +126,16 @@
 						text = Symphony.Language.get('Untitled');
 					}
 					
+					// Get clones
+					count = controls.find('li').map(function() {
+						var control = $(this);
+						
+						if(control.text() == text) {
+							return false
+						}
+					}).size();
+					
 					// Set counter
-					count = parseInt(controls.find('li:contains(' + text + ')').size());
 					if(count > 0) {
 						counter = ' ' + (count + 1).toString();
 					}
