@@ -27,8 +27,8 @@
 			return array(
 				'name' => 'Subsection Manager',
 				'type' => 'Field, Interface',
-				'version' => '1.1.1',
-				'release-date' => '2011-02-22',
+				'version' => '1.2dev',
+				'release-date' => false,
 				'author' => array(
 					'name' => 'Nils Hörrmann',
 					'website' => 'http://nilshoerrmann.de',
@@ -170,7 +170,7 @@
 		public function install() {
 			$status = array();
 		
-			// Create database field table
+			// Create Subsection Manager
 			$status[] = Symphony::Database()->query(
 				"CREATE TABLE IF NOT EXISTS `tbl_fields_subsectionmanager` (
 					`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -183,6 +183,19 @@
 					`allow_multiple` tinyint(1) default '0',
 					`show_preview` tinyint(1) default '0',
 			  		PRIMARY KEY  (`id`),
+			  		KEY `field_id` (`field_id`)
+				)"
+			);
+			
+			// Create Subsection Tabs
+			$status[] = Symphony::Database()->query(
+				"CREATE TABLE `sym_fields_subsectiontabs` (
+					`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+					`field_id` int(11) unsigned NOT NULL,
+					`subsection_id` varchar(255) NOT NULL,
+					`static_tabs` varchar(255) DEFAULT NULL,
+					`allow_dynamic_tabs` tinyint(1) NOT NULL DEFAULT '1',
+				 	PRIMARY KEY (`id`),
 			  		KEY `field_id` (`field_id`)
 				)"
 			);
@@ -310,6 +323,21 @@
 					}
 				}
 			}
+			
+			if(version_compare($previousVersion, '1.2', '<')) {
+				$status[] = Symphony::Database()->query(
+					"CREATE TABLE `sym_fields_subsectiontabs` (
+						`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+						`field_id` int(11) unsigned NOT NULL,
+						`subsection_id` varchar(255) NOT NULL,
+						`static_tabs` varchar(255) DEFAULT NULL,
+						`allow_dynamic_tabs` tinyint(1) NOT NULL DEFAULT '1',
+					 	PRIMARY KEY (`id`),
+				  		KEY `field_id` (`field_id`)
+					)"
+				);
+			}
+			
 			
 			// Report status
 			if(in_array(false, $status, true)) {
