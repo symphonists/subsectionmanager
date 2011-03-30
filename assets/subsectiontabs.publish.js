@@ -14,6 +14,7 @@
 	 */
 	$(document).ready(function() {
 		var field = $('div.field-subsectiontabs').hide(),
+			title = $('h2:first'),
 			storage = field.find('ul'),
 			references = field.find('a'),
 			controls, tabs, create;
@@ -22,7 +23,7 @@
 		$('body').addClass('subsectiontabs');
 		
 		// Create interface
-		controls = $('<ul id="subsectiontabs" />').insertAfter('h2:first');
+		controls = $('<ul id="subsectiontabs" />').insertAfter(title);
 		tabs = $('<div class="tabs" />').insertAfter(controls);
 		
 		// Add controls
@@ -107,7 +108,27 @@
 					
 				// Replace text with input
 				tab.html(input.val(value));
-				input.focus();
+				
+				// Store name and focus
+				input.attr('data-name', value).focus();
+			});
+			
+			// Fetch keys
+			controls.delegate('input', 'keyup.subsectiontabs', function(event) {
+				var input = $(this);
+
+				// Enter
+				if(event.which == 13) {
+					$('body').click();
+				}
+				
+				// Escape
+				if(event.which == 27) {
+				
+					// Restore old name
+					input.val(input.attr('data-name'));
+					$('body').click();
+				}				
 			});
 			
 			// Stop editing tab names
@@ -127,13 +148,22 @@
 					}
 					
 					// Get clones
-					count = controls.find('li').map(function() {
-						var control = $(this);
-						
-						if(control.text() == text) {
-							return false
-						}
+					count = controls.find('li:contains(' + text + ')').map(function() {
+						return ($(this).text() == text);
 					}).size();
+					
+					if(count > 0) {
+						for(i = 1; i < 100; i++) {
+							count = controls.find('li:contains(' + text + ')').map(function() {
+								return ($(this).text() == text + ' ' + i.toString());
+							}).size();
+						
+							if(count == 0) {
+								count = i;
+								break;
+							};
+						}
+					}
 					
 					// Set counter
 					if(count > 0) {
@@ -187,6 +217,12 @@
 				// Set height
 				if(show == true) {
 					resize(subsection);
+				}
+				
+				// Set parent title
+				if(subsection.is('[name="' + controls.find('li:first').text() + '"]')) {
+					var headline = content.find('input:visible').filter(':first').val() || Symphony.Language.get('Untitled');
+					title.text(headline);
 				}
 			});
 		};
