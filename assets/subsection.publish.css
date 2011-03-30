@@ -22,6 +22,18 @@ body.inline.subsection #header, body.tabbed.subsection #header {
 	margin: 0;
 }
 
+body.tabbed.subsection #header {
+	background: transparent;
+}
+
+body.tabbed.subsection #notice {
+	height: 0;
+	overflow: hidden;
+	border: none;
+	padding: 0;
+	margin: 0;
+}
+
 body.inline.subsection #contents {
 	padding: 0;
 }

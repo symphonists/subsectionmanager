@@ -52,11 +52,12 @@ body.subsectiontabs iframe.subsectiontab {
 	color: rgba(0, 0, 0, 0.65);
 }
 
-#subsectiontabs li.selected {
+#subsectiontabs li.selected, #subsectiontabs li.error.selected {
 	background: #fff;
 	border: 1px solid rgba(0, 0, 0, 0.2);
 	border-bottom: 1px solid #fff;
 	color: rgba(0, 0, 0, 0.8);
+	text-shadow: none;
 	z-index: 1000;
 }
 
@@ -82,40 +83,10 @@ body.subsectiontabs iframe.subsectiontab {
 	background: #fff;
 }
 
-/*#subsectiontabs li.new:hover {
-	background-color: rgba(129, 185, 52, 0.5);
-	border-color: rgba(129, 185, 52, 1);
-	color: rgba(255, 255, 255, 1);
-}*/
-/*
-#subsectiontabs li.invalid span {
-	background-color: #aaa;
-	color: #fff;
-	display: inline-block;
-	font-weight: bold;
-	font-family: "Times New Roman", Times, serif;
-	font-size: 11px;
-	padding: 1px 5px;
-	-moz-border-radius: 8px;
-	-webkit-border-radius: 8px 8px;
-	border-radius: 8px 8px;
-	line-height: 1;
-	margin: 0 -5px 0 5px;
-	position: relative;
-	top: -1px;
+#subsectiontabs li.error {
+	background: #dd4422;
+	border-bottom: 1px solid;
+	border-color: #bb2211;
+	color: rgba(255, 255, 255, 0.8);
+	text-shadow: 1px 1px 1px rgba(187, 34, 17, 1);
 }
-
-#subsectiontabs li:hover span,
-#subsectiontabs li.selected span {
-	background-color: #dd4422;
-}
-
-.tab-group {
-	position: absolute;
-	top: -99999em;
-	left: -99999em;
-}
-
-.tab-group-selected {
-	position: static;
-}*/

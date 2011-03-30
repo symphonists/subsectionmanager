@@ -116,12 +116,22 @@
 			$wrapper->appendChild($label);
 
 			// Container
-			$container = new XMLElement('span', NULL, array('class' => 'frame'));	
+			$container = new XMLElement('span', NULL, array('class' => 'frame'));
+			$list = new XMLElement('ul');
+			$container->appendChild($list);
 			$label->appendChild($container);
 			
 			// Get entry ID
 			$page = Symphony::Engine()->getPageCallback();
 			$entry_id = $page['context']['entry_id'];
+			
+			// Get subsection name
+			$subsection = Symphony::Database()->fetchVar('handle', 0, 
+				"SELECT `handle` 
+				FROM `tbl_sections`
+				WHERE `id`= " . $this->get('subsection_id') . "
+				LIMIT 1"
+			);
 
 			// Fetch existing tabs
 			$existing_tabs = array();
@@ -145,12 +155,13 @@
 				
 				// Create tab				
 				foreach($static_tabs as $tab) {
+					$tab = trim($tab);
 
 					// Existing tab
-					if(isset($existing_tabs[$tab])) {
-						$container->appendChild($this->__createTab(
+					if(array_key_exists($tab, $existing_tabs) && $existing_tabs[$tab] !== NULL) {
+						$list->appendChild($this->__createTab(
 							$tab, 
-							URL . '/symphony/publish/subsection/edit/' . $existing_tabs[$tab],
+							URL . '/symphony/publish/' . $subsection . '/edit/' . $existing_tabs[$tab],
 							$existing_tabs[$tab]
 						));
 						
@@ -160,9 +171,9 @@
 					
 					// New tab
 					else {
-						$container->appendChild($this->__createTab(
+						$list->appendChild($this->__createTab(
 							$tab, 
-							URL . '/symphony/publish/subsection/new/'
+							URL . '/symphony/publish/' . $subsection . '/new/'
 						));
 					}
 				}
@@ -171,9 +182,19 @@
 			// Dynamic tabs
 			if($this->get('allow_dynamic_tabs') == 1) {
 				foreach($existing_tabs as $tab => $id) {
-					$container->appendChild($this->__createTab(
+					
+					// Get mode
+					if(empty($id)) {
+						$mode = 'new';
+					}
+					else {
+						$mode = 'edit';
+					}					
+					
+					// Append tab
+					$list->appendChild($this->__createTab(
 						$tab, 
-						URL . '/symphony/publish/subsection/edit/' . $id,
+						URL . '/symphony/publish/' . $subsection . '/' . $mode . '/' . $id,
 						$id
 					));
 				}
@@ -181,38 +202,52 @@
 			
 			// No tabs yet
 			if($this->get('static_tabs') == '' && empty($existing_tabs)) {
-				$container->appendChild($this->__createTab(
+				$list->appendChild($this->__createTab(
 					__('Untitled'), 
-					URL . '/symphony/publish/subsection/new/'
+					URL . '/symphony/publish/' . $subsection . '/new/'
 				));				
 			}
 			
 			// Field ID
-			$input = Widget::Input('field[subsectiontabs][id]', $this->get('id'), 'hidden');
+			$input = Widget::Input('field[subsection-tabs][new]', URL . '/symphony/publish/' . $subsection . '/new/', 'hidden');
 			$wrapper->appendChild($input);
 
 			return $wrapper;
 		}
 
-		private function __createTab($title, $link, $id=NULL) {
-			return new XMLElement('a', $title, array(
-				'href' => $link, 
-				'data-id' => $id
-			));
+		private function __createTab($name, $link, $id=NULL) {
+			$item = new XMLElement('li');
+			
+			// Relation ID
+			$storage = Widget::Input('fields[subsection-tabs][relation_id][]', $id, 'hidden');
+			$item->appendChild($storage);
+			
+			// Relation ID
+			$storage = Widget::Input('fields[subsection-tabs][tab][]', trim($name), 'hidden');
+			$item->appendChild($storage);
+			
+			// Link to subentry
+			$link = new XMLElement('a', trim($name), array('href' => $link));
+			$item->appendChild($link);
+			
+			// Return tab
+			return $item;
 		}
 		
 		function processRawFieldData($data, &$status, $simulate=false, $entry_id=NULL) {
 			$status = self::__OK__;
-			if(!is_array($data) && !is_null($data)) return array('relation_id' => $data);
 			if(empty($data)) return NULL;
-
-			$result = array();
-
-			foreach($data as $a => $value) {
-			  $result['relation_id'][] = $data[$a];
+			
+/*			$result = array('relation_id' => array(), 'tab' => array());
+			for($i = 0; $i < count($data['relation_id']); $i++) {
+				if(!empty($data['relation_id'][$i])) {
+					$result['relation_id'][] = $data['relation_id'][$i];
+					$result['tab'][] = $data['tab'][$i];
+				}
 			}
-
-			return $result;
+			
+			return $result;*/
+			return $data;
 		}
 		
 		function createTable(){
