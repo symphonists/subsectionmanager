@@ -134,29 +134,14 @@
 			);
 
 			// Fetch existing tabs
-			$existing_tabs = array();
-			if(isset($entry_id)) {
-				$current = Symphony::Database()->fetch(
-					"SELECT `relation_id`, `tab`
-					FROM `tbl_entries_data_" . $this->get('id') . "`
-					WHERE `entry_id` = " . $entry_id . "
-					ORDER BY `id`
-					LIMIT 100"
-				);
-				
-				// Create relations
-				foreach($current as $tab) {
-					$existing_tabs[$tab['tab']] = $tab['relation_id'];
-				}
-			}
+			$existing_tabs = $this->__getExistingTabs($entry_id);
 			
 			// Static tabs
 			if($this->get('static_tabs') != '') {
-				$static_tabs = explode(',', $this->get('static_tabs'));
+				$static_tabs = preg_split('/,( )?/', $this->get('static_tabs'));
 				
 				// Create tab				
 				foreach($static_tabs as $tab) {
-					$tab = trim($tab);
 
 					// Existing tab
 					if(array_key_exists($tab, $existing_tabs) && $existing_tabs[$tab] !== NULL) {
@@ -215,6 +200,26 @@
 
 			return $wrapper;
 		}
+		
+		private function __getExistingTabs($entry_id) {
+			$tabs = array();
+			if(isset($entry_id)) {
+				$existing = Symphony::Database()->fetch(
+					"SELECT `relation_id`, `tab`
+					FROM `tbl_entries_data_" . $this->get('id') . "`
+					WHERE `entry_id` = " . $entry_id . "
+					ORDER BY `id`
+					LIMIT 100"
+				);
+				
+				// Create relations
+				foreach($existing as $tab) {
+					$tabs[$tab['tab']] = $tab['relation_id'];
+				}
+			}
+			
+			return $tabs;	
+		}
 
 		private function __createTab($name, $link, $id=NULL) {
 			$item = new XMLElement('li');
@@ -238,17 +243,98 @@
 		function processRawFieldData($data, &$status, $simulate=false, $entry_id=NULL) {
 			$status = self::__OK__;
 			if(empty($data)) return NULL;
+			return $data;
+		}
+		
+		public function fetchIncludableElements() {
+			$includable = array();
+		
+			// Fetch subsection fields
+			$sectionManager = new SectionManager(Symphony::Engine());
+			$section = $sectionManager->fetch($this->get('subsection_id'));
+			$fields = $section->fetchFields();
 			
-/*			$result = array('relation_id' => array(), 'tab' => array());
-			for($i = 0; $i < count($data['relation_id']); $i++) {
-				if(!empty($data['relation_id'][$i])) {
-					$result['relation_id'][] = $data['relation_id'][$i];
-					$result['tab'][] = $data['tab'][$i];
+			foreach($fields as $field) {
+				$elements = $field->fetchIncludableElements();
+				
+				foreach($elements as $element) {
+					$includable[] = $this->get('element_name') . ': ' . $element;
 				}
 			}
 			
-			return $result;*/
-			return $data;
+			return $includable;
+		}
+		
+		public function appendFormattedElement(XMLElement &$wrapper, $data, $encode = false, $mode = null, $entry_id = null) {
+
+			// Create tabs
+			$entryManager = new EntryManager(Symphony::Engine());
+			$subsection = new XMLElement('subsection-tabs');
+			for($i = 0; $i < count($data['tab']); $i++) {
+			
+				// Fetch subsection
+				$entry = $entryManager->fetch($data['relation_id'][$i], $this->get('subsection_id'));
+				$entry_data = $entry[0]->getData();
+
+				// Create item
+				$item = new XMLElement('item', NULL, array('name' => $data['tab'][$i], 'handle' => Lang::createHandle($data['tab'][$i])));
+				$subsection->appendChild($item);
+				
+				// Populate entry element
+				foreach($entry_data as $field_id => $values) {
+
+					// Only append if field is listed or if list empty
+					//if(array_key_exists($field_id, $included) || empty($included_fields[0])) {
+						$item_id = $entry[0]->get('id');
+						$item->setAttribute('id', $item_id);
+						$field =& $entryManager->fieldManager->fetch($field_id);
+
+						// Append fields with modes
+						if($included[$field_id] !== NULL) {
+							foreach($included[$field_id] as $mode) {
+								$field->appendFormattedElement($item, $values, false, $mode);
+							}					
+						}
+
+						// Append fields without modes
+						else {
+							$field->appendFormattedElement($item, $values, false, NULL);
+						}
+					//}
+				}	
+			}
+			$wrapper->appendChild($subsection);
+		}
+
+		function prepareTableValue($data, XMLElement $link = null) {
+			$entryManager = new EntryManager(Symphony::Engine());
+
+			// Get tabs
+			$tabs = '';
+			for($i = 0; $i < count($data['tab']); $i++) {
+				if($i > 0) $tabs .= ', ';
+				$tabs .= $data['tab'][$i];
+			}
+			
+			// Get first title
+			$field_id = Symphony::Database()->fetchVar('id', 0, 
+				"SELECT `id` 
+				FROM `tbl_fields` 
+				WHERE `parent_section` = '" . $this->get('subsection_id') . "' 
+				ORDER BY `sortorder` 
+				LIMIT 1"
+			);
+			$entry = $entryManager->fetch($data['relation_id'][0], $this->get('subsection_id'));
+			$title = $entry[0]->getData($field_id);
+			$value = $title['value'] . ' <span>(' . $tabs . ')</span>';
+
+			if($link) {
+				$link->setValue($value);
+				return $link->generate();
+			}
+			else {
+				return $value;		
+			}
 		}
 		
 		function createTable(){
