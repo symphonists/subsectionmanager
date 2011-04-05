@@ -64,6 +64,11 @@
 					'page' => '/backend/',
 					'delegate' => 'AppendPageAlert', 
 					'callback' => '__upgradeMediathek'
+				),
+				array(
+					'page' => '/frontend/',
+					'delegate' => 'DataSourceEntriesBuilt', 
+					'callback' => '__fetchSubsectionElements'
 				)
 			);
 		}
@@ -157,6 +162,21 @@
 					);
 				}
 			}
+		}
+		
+		public function __fetchSubsectionElements(&$context) {
+			
+			// Store subsection elements
+			$storage = array();
+			for($i = 0; $i < count($context['datasource']->dsParamINCLUDEDELEMENTS); $i++) {
+				if(strpos($context['datasource']->dsParamINCLUDEDELEMENTS[$i], 'subsection-tabs') === 0) {
+					$storage[] = substr($context['datasource']->dsParamINCLUDEDELEMENTS[$i], 17);
+					unset($context['datasource']->dsParamINCLUDEDELEMENTS[$i]);				
+				}
+			}
+			
+			// Append combined mode
+			$context['datasource']->dsParamINCLUDEDELEMENTS[] = 'subsection-tabs: ' . serialize($storage);
 		}
 
 		/**
