@@ -266,42 +266,26 @@
 		}
 		
 		public function appendFormattedElement(XMLElement &$wrapper, $data, $encode = false, $mode = null, $entry_id = null) {
-
+		
 			// Create tabs
 			$entryManager = new EntryManager(Symphony::Engine());
 			$subsection = new XMLElement('subsection-tabs');
+			
 			for($i = 0; $i < count($data['tab']); $i++) {
 			
-				// Fetch subsection
-				$entry = $entryManager->fetch($data['relation_id'][$i], $this->get('subsection_id'));
-				$entry_data = $entry[0]->getData();
-
 				// Create item
 				$item = new XMLElement('item', NULL, array('name' => $data['tab'][$i], 'handle' => Lang::createHandle($data['tab'][$i])));
 				$subsection->appendChild($item);
-				
+
 				// Populate entry element
-				foreach($entry_data as $field_id => $values) {
-
-					// Only append if field is listed or if list empty
-					//if(array_key_exists($field_id, $included) || empty($included_fields[0])) {
-						$item_id = $entry[0]->get('id');
-						$item->setAttribute('id', $item_id);
-						$field =& $entryManager->fieldManager->fetch($field_id);
-
-						// Append fields with modes
-						if($included[$field_id] !== NULL) {
-							foreach($included[$field_id] as $mode) {
-								$field->appendFormattedElement($item, $values, false, $mode);
-							}					
-						}
-
-						// Append fields without modes
-						else {
-							$field->appendFormattedElement($item, $values, false, NULL);
-						}
-					//}
-				}	
+				$entry = Symphony::ExtensionManager()->SubsectionManager['entries'][$data['relation_id'][$i]];
+				$item->setAttribute('id', $data['relation_id'][$i]);
+				
+				foreach(Symphony::ExtensionManager()->SubsectionManager['fields'][$this->get('id')] as $field_id => $mode) {
+					$entry_data = $entry->getData($field_id);
+					$field = $entryManager->fieldManager->fetch($field_id);
+					$field->appendFormattedElement($item, $entry_data, false, $mode);
+				}
 			}
 			$wrapper->appendChild($subsection);
 		}

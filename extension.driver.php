@@ -165,18 +165,95 @@
 		}
 		
 		public function __fetchSubsectionElements(&$context) {
-			
-			// Store subsection elements
-			$storage = array();
-			for($i = 0; $i < count($context['datasource']->dsParamINCLUDEDELEMENTS); $i++) {
-				if(strpos($context['datasource']->dsParamINCLUDEDELEMENTS[$i], 'subsection-tabs') === 0) {
-					$storage[] = substr($context['datasource']->dsParamINCLUDEDELEMENTS[$i], 17);
-					unset($context['datasource']->dsParamINCLUDEDELEMENTS[$i]);				
-				}
+			$entryManager = new EntryManager(Symphony::Engine());
+		
+			// Create storage
+			if(!isset(Symphony::ExtensionManager()->SubsectionManager)) {
+				Symphony::ExtensionManager()->SubsectionManager = array();
 			}
 			
-			// Append combined mode
-			$context['datasource']->dsParamINCLUDEDELEMENTS[] = 'subsection-tabs: ' . serialize($storage);
+		/*-----------------------------------------------------------------------*/
+		
+			// Fetch subsection fields
+			$section_id = $context['datasource']->getSource();
+			$subsectionmanagers = Symphony::Database()->fetch(
+				"SELECT `id`, `element_name` 
+				FROM `tbl_fields` 
+				WHERE `parent_section` = " . $section_id . " 
+				AND `type` = 'subsectiontabs' 
+				OR `type` = 'subsectionmanager'"
+			);
+			
+			// Associate id and name
+			$subsection_fields = array();
+			foreach($subsectionmanagers as $manager) {
+				$subsection_fields[$manager['id']] = $manager['element_name'];
+			}
+
+			// Parse field modes
+			$subsections = array();
+			$subsection_ids = array();
+			foreach($context['datasource']->dsParamINCLUDEDELEMENTS as $index => $included) {
+				$fields = explode(': ', $included, 2);
+				
+				// Get subsection fields
+				$field_id = array_search($fields[0], $subsection_fields);
+				if($field_id) {
+					
+					// Get subsection id
+					$subsection_ids[$field_id] = Symphony::Database()->fetchVar('subsection_id', 0, 
+						"SELECT `subsection_id` 
+						FROM `tbl_fields_" . ($fields[0] == 'subsection-tabs' ? 'subsectiontabs' : 'subsectionmanager') . "` 
+						WHERE `field_id` LIKE '" . $field_id . "'
+						LIMIT 1"
+					);
+
+					// Get field id an mode
+					$components = explode(': ', $fields[1], 2);
+					$subfield_id = $entryManager->fieldManager->fetchFieldIDFromElementName($components[0], $subsection_ids[$field_id]);
+
+					// Store field data
+					Symphony::ExtensionManager()->SubsectionManager['fields'][$field_id][$subfield_id] = $components[1];
+	
+					// Set a single field call for subsection fields
+					unset($context['datasource']->dsParamINCLUDEDELEMENTS[$index]);
+					if(!in_array($fields[0], $context['datasource']->dsParamINCLUDEDELEMENTS)) {
+						$context['datasource']->dsParamINCLUDEDELEMENTS[$index] = $fields[0];
+					}
+				}
+			}
+				
+		/*-----------------------------------------------------------------------*/
+			
+			// Get entry data
+			$parent_entries = array();
+			foreach($context['entries']['records'] as $entry) {
+				$parent_entries[] = $entry->getData();
+			}
+			
+			// Fetch subsection entries
+			Symphony::ExtensionManager()->SubsectionManager['entries'] = array();
+			foreach($subsection_fields as $id => $name) {
+				
+				// Get ids
+				$entry_id = array();
+				foreach($parent_entries as $entry) {
+					$entry_id = array_merge((array)$entry[$id]['relation_id'], $entry_id);			
+				}
+				
+				// Check for already loaded entries
+				$entry_id = array_diff($entry_id, array_keys(Symphony::ExtensionManager()->SubsectionManager['entries']));
+				
+				// Fetch entries
+				if(!empty($entry_id) && !empty($subsection_ids[$id])) {
+					$entries = $entryManager->fetch($entry_id, $subsection_ids[$id]);
+					
+					// Store entries
+					foreach($entries as $entry) {
+						Symphony::ExtensionManager()->SubsectionManager['entries'][$entry->get('id')] = $entry;
+					}
+				}
+			}
 		}
 
 		/**
