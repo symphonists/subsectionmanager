@@ -265,7 +265,11 @@
 			return $includable;
 		}
 		
-		public function appendFormattedElement(XMLElement &$wrapper, $data, $encode = false, $mode = null, $entry_id = null) {
+		/**
+		 * Subsection entries are pre-processed in the extension driver and stored in 
+		 * Symphony::ExtensionManager()->SubsectionManager with other helpful data.
+		 */		
+		public function appendFormattedElement(XMLElement &$wrapper, $data) {
 		
 			// Create tabs
 			$entryManager = new EntryManager(Symphony::Engine());
