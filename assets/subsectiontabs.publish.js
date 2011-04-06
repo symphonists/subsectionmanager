@@ -44,8 +44,13 @@
 				headline = Symphony.Language.get('Untitled');
 			}
 			
-			// Set title
+			// Set page title
 			title.text(headline);
+			
+			// Set document title
+			fragments = document.title.split(' – ');
+			fragments.splice(fragments.length - 1, 1);
+			document.title = fragments.join(' – ') + ' – ' + headline;
 		}
 		
 		// Add controls
