@@ -330,21 +330,23 @@
 				$entry = extension_subsectionmanager::$storage['entries'][$entry_id];
 				$item->setAttribute('id', $entry_id);
 				
-				foreach(extension_subsectionmanager::$storage['fields'][$this->get('id')] as $field_id => $modes) {
-					$entry_data = $entry->getData($field_id);
-					$field = $entryManager->fieldManager->fetch($field_id);
-					
-					// No modes
-					if(empty($modes)) {
-						$field->appendFormattedElement($item, $entry_data, false, $mode, $entry_id);
-					}
-					
-					// With modes
-					else {
-						foreach($modes as $mode) {
+				if(!empty($entry)) {
+					foreach(extension_subsectionmanager::$storage['fields'][$this->get('id')] as $field_id => $modes) {
+						$entry_data = $entry->getData($field_id);
+						$field = $entryManager->fieldManager->fetch($field_id);
+						
+						// No modes
+						if(empty($modes)) {
 							$field->appendFormattedElement($item, $entry_data, false, $mode, $entry_id);
 						}
-					}						
+						
+						// With modes
+						else {
+							foreach($modes as $mode) {
+								$field->appendFormattedElement($item, $entry_data, false, $mode, $entry_id);
+							}
+						}						
+					}
 				}
 			}
 			$wrapper->appendChild($subsection);

@@ -175,17 +175,18 @@
 			// Fetch subsection fields
 			$section_id = $context['datasource']->getSource();
 			$subsectionmanagers = Symphony::Database()->fetch(
-				"SELECT `id`, `element_name` 
+				"SELECT `id`, `element_name`, `type`
 				FROM `tbl_fields` 
 				WHERE `parent_section` = " . $section_id . " 
 				AND `type` = 'subsectiontabs' 
 				OR `type` = 'subsectionmanager'"
 			);
 			
-			// Associate id and name
+			// Associate id, name and type
 			$subsection_fields = array();
 			foreach($subsectionmanagers as $manager) {
 				$subsection_fields[$manager['id']] = $manager['element_name'];
+				$subsection_fields['type'][$manager['id']] = $manager['type'];
 			}
 
 			// Parse field modes
@@ -201,7 +202,7 @@
 					// Get subsection id
 					$subsection_ids[$field_id] = Symphony::Database()->fetchVar('subsection_id', 0, 
 						"SELECT `subsection_id` 
-						FROM `tbl_fields_" . ($fields[0] == 'subsection-tabs' ? 'subsectiontabs' : 'subsectionmanager') . "` 
+						FROM `tbl_fields_" . $subsection_fields['type'][$field_id] . "` 
 						WHERE `field_id` = '" . $field_id . "'
 						LIMIT 1"
 					);
@@ -220,7 +221,7 @@
 					}
 				}
 			}
-				
+			
 		/*-----------------------------------------------------------------------*/
 			
 			// Get entry data
@@ -245,7 +246,7 @@
 				// Fetch entries
 				if(!empty($entry_id) && !empty($subsection_ids[$id])) {
 					$entries = $entryManager->fetch($entry_id, $subsection_ids[$id]);
-					
+
 					// Store entries
 					foreach($entries as $entry) {
 						self::$storage['entries'][$entry->get('id')] = $entry;
