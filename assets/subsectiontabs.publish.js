@@ -35,7 +35,7 @@
 			tabs.height(state.height);
 		}
 		else {
-			state.tab = NaN;
+			state = { tab: NaN };
 		}
 		
 		// Remove tab names from title
