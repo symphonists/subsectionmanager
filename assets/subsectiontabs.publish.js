@@ -14,6 +14,7 @@
 	 */
 	$(document).ready(function() {
 		var field = $('div.field-subsectiontabs').hide(),
+			handle = field.find('label').attr('data-handle'),
 			title = $('h2:first'),
 			storage = field.find('ul'),
 			references = field.find('a'),
@@ -131,7 +132,7 @@
 			// Create tab
 			controls.delegate('li.new', 'click.subsectiontabs', function(event) {
 				var control = $(this),
-					new_tab = $('<li data-id="" data-link="' + field.find('input[name="field[subsection-tabs][new]"]').val() + '"></li>').insertBefore(control).click().dblclick();
+					new_tab = $('<li data-id="" data-link="' + field.find('input[name="field[' + handle + '][new]"]').val() + '"></li>').insertBefore(control).click().dblclick();
 			});
 
 			// Edit tab name
@@ -309,8 +310,8 @@
 		var store = function(id, name, next) {
 			var item = $('<li />').appendTo(storage);
 			
-			item.append('<input name="fields[subsection-tabs][relation_id][]" value="' + id + '" />');
-			item.append('<input name="fields[subsection-tabs][name][]" value="' + name + '" />');
+			item.append('<input name="fields[' + handle + '][relation_id][]" value="' + id + '" />');
+			item.append('<input name="fields[' + handle + '][name][]" value="' + name + '" />');
 			
 			// Process next tab
 			if(next.size() > 0) {

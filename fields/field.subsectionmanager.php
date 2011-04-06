@@ -63,7 +63,7 @@
 		 */
 		function displaySettingsPanel(&$wrapper, $errors=NULL) {
 
-			// Initialize field settings based on class defaults (name, placement)
+			// Basics
 			parent::displaySettingsPanel($wrapper, $errors);
 
 		/*-----------------------------------------------------------------------*/

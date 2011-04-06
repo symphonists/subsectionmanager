@@ -37,19 +37,8 @@
 		public function displaySettingsPanel(&$wrapper, $errors=NULL) {
 		
 			// Basics
-			$wrapper->appendChild(new XMLElement('h4', $this->name()));
-			$wrapper->appendChild(Widget::Input('fields[' . $this->get('sortorder') . '][type]', $this->handle(), 'hidden'));
-			$wrapper->appendChild(Widget::Input('fields[' . $this->get('sortorder') . '][label]', __('Subsection Tabs'), 'hidden'));
-		
-			// Existing field
-			if($this->get('id')) {
-				$wrapper->appendChild(Widget::Input('fields['.$this->get('sortorder').'][id]', $this->get('id'), 'hidden'));
-			}
-			
-			// Settings
-			$group = new XMLElement('div', NULL, array('class' => 'group'));
-			$wrapper->appendChild($group);
-						
+			parent::displaySettingsPanel($wrapper, $errors);
+								
 			// Subsection
 			$sectionManager = new SectionManager(Symphony::Engine());
 		  	$sections = $sectionManager->fetch(NULL, 'ASC', 'name');
@@ -69,10 +58,7 @@
 			$label = new XMLElement('label', __('Subsection'));
 			$selection = Widget::Select('fields[' . $this->get('sortorder') . '][subsection_id]', $options);
 			$label->appendChild($selection);
-			$group->appendChild($label);
-
-			// Field location
-			$group->appendChild($this->buildLocationSelect($this->get('location'), 'fields['.$this->get('sortorder').'][location]'));
+			$wrapper->appendChild($label);
 			
 			// Static tab names
 			$label = new XMLElement('label', __('Static tab names') . '<i>' . __('List of comma-separated predefined tabs') . '</i>');
@@ -134,7 +120,7 @@
 			}
 			
 			// Label
-			$label = Widget::Label(__('Subsection Tabs'), NULL, $settings);
+			$label = Widget::Label($this->get('label'), NULL, $settings, NULL, array('data-handle' => $this->get('element_name')));
 			$wrapper->appendChild($label);
 
 			// Container
@@ -217,7 +203,7 @@
 			}
 			
 			// Field ID
-			$input = Widget::Input('field[subsection-tabs][new]', URL . '/symphony/publish/' . $subsection . '/new/', 'hidden');
+			$input = Widget::Input('field[' . $this->get('element_name') . '][new]', URL . '/symphony/publish/' . $subsection . '/new/', 'hidden');
 			$wrapper->appendChild($input);
 
 			return $wrapper;
@@ -267,11 +253,11 @@
 			$item = new XMLElement('li');
 			
 			// Relation ID
-			$storage = Widget::Input('fields[subsection-tabs][relation_id][]', $id, 'hidden');
+			$storage = Widget::Input('fields[' . $this->get('element_name') . '][relation_id][]', $id, 'hidden');
 			$item->appendChild($storage);
 			
 			// Relation ID
-			$storage = Widget::Input('fields[subsection-tabs][name][]', trim($name), 'hidden');
+			$storage = Widget::Input('fields[' . $this->get('element_name') . '][name][]', trim($name), 'hidden');
 			$item->appendChild($storage);
 			
 			// Link to subentry
@@ -329,7 +315,7 @@
 		
 			// Create tabs
 			$entryManager = new EntryManager(Symphony::Engine());
-			$subsection = new XMLElement('subsection-tabs');
+			$subsection = new XMLElement($this->get('element_name'));
 			
 			for($i = 0; $i < count($data['name']); $i++) {
 				$name = $data['name'][$i];
