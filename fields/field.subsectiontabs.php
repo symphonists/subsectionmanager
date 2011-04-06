@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * @package fields
+	 * @package subsectionmanager
 	 */
 	/**
 	 * This field provides a tabbed subsection management. 

@@ -14,6 +14,9 @@
 		 */
 		public static $storage = array();  
 
+		/**
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/extension/#__construct
+		 */
 		public function __construct(Array $args){
 			parent::__construct($args);
 			
@@ -28,6 +31,9 @@
 			}
 		}
 
+		/**
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/extension/#about
+		 */
 		public function about() {
 			return array(
 				'name' => 'Subsection Manager',
@@ -43,6 +49,9 @@
 			);
 		}
 
+		/**
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/extension/#getSubscribedDelegates
+		 */
 		public function getSubscribedDelegates(){
 			return array(
 				array(
@@ -59,11 +68,6 @@
 					'page' => '/publish/edit/',
 					'delegate' => 'EntryPostEdit',
 					'callback' => '__saveSortOrder'
-				),
-				array(
-					'page' => '/publish/',
-					'delegate' => 'Delete',
-					'callback' => '__deleteSortOrder'
 				),
 				array(
 					'page' => '/backend/',
@@ -108,7 +112,6 @@
 		 * @param object $context
 		 */
 		public function __saveSortOrder($context) {
-		
 			if(!is_null($context['fields']['sort_order'])) {
 			
 				// Delete current sort order
@@ -129,16 +132,6 @@
 					);
 				}
 			}
-		}
-
-		/**
-		 * Delete sort order of the field
-		 *
-		 * @param object $context
-		 */
-		public function __deleteSortOrder($context) {
-			// DELEGATE NOT WORKING:
-			// http://github.com/symphony/symphony-2/issues#issue/108
 		}
 		
 		/**
@@ -169,6 +162,13 @@
 			}
 		}
 		
+		/**
+		 * Fetch all subsection elements included in a data source and 
+		 * join modes into a single call to `appendFormattedElement()`.
+		 * Preprocess all subsection entry for performance reasons.
+		 *
+		 * @see http://symphony-cms.com/learn/api/2.2/delegates/#DataSourceEntriesBuilt
+		 */
 		public function __fetchSubsectionElements(&$context) {
 			$entryManager = new EntryManager(Symphony::Engine());
 		
@@ -256,12 +256,7 @@
 		}
 
 		/**
-		 * Any logic that assists this extension in being installed such as
-		 * table creation, checking for dependancies etc.
-		 *
-		 * @see toolkit.ExtensionManager#install
-		 * @return boolean
-		 *  True if the install completely successfully, false otherwise
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/extension/#install
 		 */
 		public function install() {
 			$status = array();
@@ -309,25 +304,11 @@
 		}
 
 		/**
-		 * Logic that should take place when an extension is to be been updated
-		 * when a user runs the 'Enable' action from the backend. The currently
-		 * installed version of this extension is provided so that it can be
-		 * compared to the current version of the extension in the file system.
-		 * This is commonly done using PHP's version_compare function. Common
-		 * logic done by this method is to update differences between extension
-		 * tables.
-		 *
-		 * @see toolkit.ExtensionManager#update
-		 * @param string $previousVersion
-		 *  The currently installed version of this extension from the
-		 *  tbl_extensions table. The current version of this extension is
-		 *  provided by the about() method.
-		 * @return boolean
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/extension/#update
 		 */
 		public function update($previousVersion) {
 			$status = array();
 		
-			// Update beta installs
 			if(version_compare($previousVersion, '1.0', '<')) {
 				
 				// Install missing tables
@@ -342,8 +323,9 @@
 				}
 				
 			}
-
-			// Update 1.0 installs
+			
+		/*-----------------------------------------------------------------------*/
+			
 			if(version_compare($previousVersion, '1.1', '<')) {
 			
 				// Add droptext column
@@ -420,6 +402,8 @@
 				}
 			}
 			
+		/*-----------------------------------------------------------------------*/
+			
 			if(version_compare($previousVersion, '1.2', '<')) {
 				$status[] = Symphony::Database()->query(
 					"CREATE TABLE `sym_fields_subsectiontabs` (
@@ -435,6 +419,8 @@
 			}
 			
 			
+		/*-----------------------------------------------------------------------*/
+			
 			// Report status
 			if(in_array(false, $status, true)) {
 				return false;
@@ -445,11 +431,7 @@
 		}
 
 		/**
-		 * Any logic that should be run when an extension is to be uninstalled
-		 * such as the removal of database tables.
-		 *
-		 * @see toolkit.ExtensionManager#uninstall
-		 * @return boolean
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/extension/#uninstall
 		 */
 		public function uninstall() {
 		
