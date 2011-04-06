@@ -381,7 +381,61 @@
 			// Append help for title or handle filtering
 			$help = new XMLElement('p', __('Use <code>title:</code> to filter by title or handle of an attached subsection entry.'), array('class' => 'help'));
 			$wrapper->appendChild($help);
-		}		
+		}
+		
+		public function buildDSRetrivalSQL($data, &$joins, &$where, $andOperation = false) {
+			$field_id = $this->get('id');
+
+			// Filter by subsection entry title or handle
+			if(preg_match('/^title:\s*/', $data[0], $matches)) {
+				$data = Lang::createHandle(trim(array_pop(explode(':', $data[0], 2))));
+							
+				// Get first field
+				$subfield_id = Symphony::Database()->fetchVar('id', 0,
+					"SELECT `id`
+					FROM `tbl_fields` 
+					WHERE `parent_section` = '" . $this->get('subsection_id') . "' 
+					AND `sortorder` = '0'
+					LIMIT 1"
+				);
+				
+				// Get entry ids
+				$entry_id = Symphony::Database()->fetchCol('entry_id',
+					"SELECT `entry_id` 
+					FROM `tbl_entries_data_" . $subfield_id . "` 
+					WHERE `handle` = '" . $data . "'" 
+				);
+				
+				// Query
+				$joins .= " LEFT JOIN `tbl_entries_data_$field_id` AS `t$field_id$key` ON (`e`.`id` = `t$field_id$key`.entry_id) ";
+				$where .= " AND `t$field_id`.relation_id IN ('" . @implode("', '", $entry_id) . "') ";
+			}
+			
+			// Filter by tab name or handle
+			else {
+			
+				// Get handles
+				for($i = 0; $i < count($data); $i++) {
+					$data[$i] = Lang::createHandle($data[$i]);
+				}
+
+				// And
+				if($andOperation) {
+					foreach($data as $key => $value) {
+						$joins .= " LEFT JOIN `tbl_entries_data_$field_id` AS `t$field_id$key` ON (`e`.`id` = `t$field_id$key`.entry_id) ";
+						$where .= " AND `t$field_id$key`.handle = '$value' ";
+					}
+				}
+	
+				// Or
+				else {
+					$joins .= " LEFT JOIN `tbl_entries_data_$field_id` AS `t$field_id` ON (`e`.`id` = `t$field_id`.entry_id) ";
+					$where .= " AND `t$field_id`.handle IN ('" . @implode("', '", $data) . "') ";
+				}
+			}
+
+			return true;
+		}			
 		
 		function createTable(){
 			return Symphony::Database()->query(
