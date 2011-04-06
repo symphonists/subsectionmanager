@@ -8,6 +8,11 @@
 	 */
 
 	Class extension_subsectionmanager extends Extension {
+	
+		/**
+		 * Storage for subsection entries
+		 */
+		public static $storage = array();  
 
 		public function __construct(Array $args){
 			parent::__construct($args);
@@ -167,13 +172,6 @@
 		public function __fetchSubsectionElements(&$context) {
 			$entryManager = new EntryManager(Symphony::Engine());
 		
-			// Create storage
-			if(!isset(Symphony::ExtensionManager()->SubsectionManager)) {
-				Symphony::ExtensionManager()->SubsectionManager = array();
-			}
-			
-		/*-----------------------------------------------------------------------*/
-		
 			// Fetch subsection fields
 			$section_id = $context['datasource']->getSource();
 			$subsectionmanagers = Symphony::Database()->fetch(
@@ -204,7 +202,7 @@
 					$subsection_ids[$field_id] = Symphony::Database()->fetchVar('subsection_id', 0, 
 						"SELECT `subsection_id` 
 						FROM `tbl_fields_" . ($fields[0] == 'subsection-tabs' ? 'subsectiontabs' : 'subsectionmanager') . "` 
-						WHERE `field_id` LIKE '" . $field_id . "'
+						WHERE `field_id` = '" . $field_id . "'
 						LIMIT 1"
 					);
 
@@ -213,7 +211,7 @@
 					$subfield_id = $entryManager->fieldManager->fetchFieldIDFromElementName($components[0], $subsection_ids[$field_id]);
 
 					// Store field data
-					Symphony::ExtensionManager()->SubsectionManager['fields'][$field_id][$subfield_id] = $components[1];
+					self::$storage['fields'][$field_id][$subfield_id] = $components[1];
 	
 					// Set a single field call for subsection fields
 					unset($context['datasource']->dsParamINCLUDEDELEMENTS[$index]);
@@ -232,7 +230,7 @@
 			}
 			
 			// Fetch subsection entries
-			Symphony::ExtensionManager()->SubsectionManager['entries'] = array();
+			self::$storage['entries'] = array();
 			foreach($subsection_fields as $id => $name) {
 				
 				// Get ids
@@ -242,7 +240,7 @@
 				}
 				
 				// Check for already loaded entries
-				$entry_id = array_diff($entry_id, array_keys(Symphony::ExtensionManager()->SubsectionManager['entries']));
+				$entry_id = array_diff($entry_id, array_keys(self::$storage['entries']));
 				
 				// Fetch entries
 				if(!empty($entry_id) && !empty($subsection_ids[$id])) {
@@ -250,7 +248,7 @@
 					
 					// Store entries
 					foreach($entries as $entry) {
-						Symphony::ExtensionManager()->SubsectionManager['entries'][$entry->get('id')] = $entry;
+						self::$storage['entries'][$entry->get('id')] = $entry;
 					}
 				}
 			}

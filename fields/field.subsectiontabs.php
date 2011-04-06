@@ -267,7 +267,7 @@
 		
 		/**
 		 * Subsection entries are pre-processed in the extension driver and stored in 
-		 * Symphony::ExtensionManager()->SubsectionManager with other helpful data.
+		 * extension_subsectionmanager::$storage with other helpful data.
 		 */		
 		public function appendFormattedElement(XMLElement &$wrapper, $data) {
 		
@@ -276,19 +276,21 @@
 			$subsection = new XMLElement('subsection-tabs');
 			
 			for($i = 0; $i < count($data['tab']); $i++) {
+				$name = $data['tab'][$i];
+				$entry_id = $data['relation_id'][$i];
 			
 				// Create item
-				$item = new XMLElement('item', NULL, array('name' => $data['tab'][$i], 'handle' => Lang::createHandle($data['tab'][$i])));
+				$item = new XMLElement('item', NULL, array('name' => $name, 'handle' => Lang::createHandle($name)));
 				$subsection->appendChild($item);
 
 				// Populate entry element
-				$entry = Symphony::ExtensionManager()->SubsectionManager['entries'][$data['relation_id'][$i]];
-				$item->setAttribute('id', $data['relation_id'][$i]);
+				$entry = extension_subsectionmanager::$storage['entries'][$entry_id];
+				$item->setAttribute('id', $entry_id);
 				
-				foreach(Symphony::ExtensionManager()->SubsectionManager['fields'][$this->get('id')] as $field_id => $mode) {
+				foreach(extension_subsectionmanager::$storage['fields'][$this->get('id')] as $field_id => $mode) {
 					$entry_data = $entry->getData($field_id);
 					$field = $entryManager->fieldManager->fetch($field_id);
-					$field->appendFormattedElement($item, $entry_data, false, $mode);
+					$field->appendFormattedElement($item, $entry_data, false, $mode, $entry_id);
 				}
 			}
 			$wrapper->appendChild($subsection);
