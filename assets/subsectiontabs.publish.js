@@ -18,7 +18,8 @@
 			storage = field.find('ul'),
 			references = field.find('a'),
 			state = $.parseJSON(localStorage.getItem('subsectiontabs-' + Symphony.Context.get('env').entry_id)),
-			controls, tabs, create;
+			controls, tabs, create,
+			fragments, headline;
 			
 		// Set context
 		$('body').addClass('subsectiontabs');
@@ -34,9 +35,17 @@
 		
 		// Remove tab names from title
 		if(title.text() != Symphony.Language.get('Untitled')) {
-			var fragments = title.text().split(' (');
+			fragments = title.text().split(' (');
 			fragments.splice(fragments.length - 1, 1);
-			title.text(fragments.join(' ('));
+			
+			// Get headline
+			headline = fragments.join(' (');
+			if(headline == '') {
+				headline = Symphony.Language.get('Untitled');
+			}
+			
+			// Set title
+			title.text(headline);
 		}
 		
 		// Add controls
