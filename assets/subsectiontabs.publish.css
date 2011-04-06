@@ -99,7 +99,7 @@ body.subsectiontabs iframe.subsectiontab {
 
 #subsectiontabs.destructable li a {
 	position: absolute;
-	top: 2px;
+	top: 3px;
 	right: 4px;
 	line-height: 1;
 	text-decoration: none;
