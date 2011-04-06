@@ -11,7 +11,7 @@
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#__construct
 		 */
-		function __construct(&$parent) {
+		public function __construct(&$parent) {
 			parent::__construct($parent);
 			$this->_name = __('Subsection Tabs');
 			$this->_required = true;
@@ -20,21 +20,21 @@
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#mustBeUnique
 		 */
-		function mustBeUnique(){
+		public function mustBeUnique(){
 			return true;
 		}
 		
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#canFilter
 		 */
-		function canFilter(){
+		public function canFilter(){
 			return true;
 		}
 
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#displaySettingsPanel
 		 */
-		function displaySettingsPanel(&$wrapper, $errors=NULL) {
+		public function displaySettingsPanel(&$wrapper, $errors=NULL) {
 		
 			// Basics
 			$wrapper->appendChild(new XMLElement('h4', $this->name()));
@@ -122,7 +122,7 @@
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#displayPublishPanel
 		 */
-		function displayPublishPanel(&$wrapper, $data=NULL, $flagWithError=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL) {
+		public function displayPublishPanel(&$wrapper, $data=NULL, $flagWithError=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL) {
 
 			// Append assets
 			Administration::instance()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/assets/subsectiontabs.publish.js', 101, false);
@@ -285,7 +285,7 @@
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#processRawFieldData
 		 */
-		function processRawFieldData($data, &$status, $simulate=false, $entry_id=NULL) {
+		public function processRawFieldData($data, &$status, $simulate=false, $entry_id=NULL) {
 			$status = self::__OK__;
 			if(empty($data)) return NULL;
 			
@@ -367,7 +367,7 @@
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#prepareTableValue
 		 */
-		function prepareTableValue($data, XMLElement $link = null) {
+		public function prepareTableValue($data, XMLElement $link = null) {
 			$entryManager = new EntryManager(Symphony::Engine());
 
 			// Get tabs
@@ -495,7 +495,7 @@
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#createTable
 		 */
-		function createTable(){
+		public function createTable(){
 			return Symphony::Database()->query(
 				"CREATE TABLE IF NOT EXISTS `tbl_entries_data_" . $this->get('id') . "` (
 				  `id` int(11) unsigned NOT NULL auto_increment,
