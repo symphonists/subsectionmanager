@@ -91,3 +91,27 @@ body.subsectiontabs iframe.subsectiontab {
 	color: rgba(255, 255, 255, 0.8);
 	text-shadow: 1px 1px 1px rgba(187, 34, 17, 1);
 }
+
+#subsectiontabs.destructable li {
+	padding-right: 20px;
+	position: relative;
+}
+
+#subsectiontabs.destructable li a {
+	position: absolute;
+	top: 2px;
+	right: 4px;
+	line-height: 1;
+	text-decoration: none;
+	color: rgba(0, 0, 0, 0.15);
+	text-shadow: 1px 1px #fff;
+	padding: 3px;
+}
+
+#subsectiontabs.destructable li a:hover {
+	color: rgba(0, 0, 0, 0.5);
+}
+
+#subsectiontabs li.new {
+	padding: 2px 7px 0;
+}

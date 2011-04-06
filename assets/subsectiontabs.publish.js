@@ -14,7 +14,8 @@
 	 */
 	$(document).ready(function() {
 		var field = $('div.field-subsectiontabs').hide(),
-			handle = field.find('label').attr('data-handle'),
+			label = field.find('label'),
+			handle = label.attr('data-handle'),
 			title = $('h2:first'),
 			storage = field.find('ul'),
 			references = field.find('a'),
@@ -32,6 +33,9 @@
 		// Set height
 		if(state) {
 			tabs.height(state.height);
+		}
+		else {
+			state.tab = NaN;
 		}
 		
 		// Remove tab names from title
@@ -61,16 +65,28 @@
 				id = item.find('input:eq(0)').val(),
 				name = item.find('input:eq(1)').val(),
 				link = item.find('a').attr('href');
+				
+				console.log(item);
+				
+			// Get id
+			if(!id) {
+				id = name;
+			}
 			
 			// Set values
 			control.html('<span>' + name + '</span>').attr({
 				'data-id': id,
 				'data-link': link
 			});
+			
+			// Deletable
+			if(label.is('.allow_dynamic_tabs')) {
+				control.append('<a class="destructor">×</a>');
+			}
 						
 			// Restore last tab
-			if(state) {
-				if(name == state.tab) {
+			if(!isNaN(parseInt(state.tab))) {
+				if(id == state.tab) {
 					control.addClass('selected');
 				}
 			}
@@ -82,7 +98,8 @@
 		});
 		
 		// Allow dynamic controls
-		if(field.find('label').is('.allow_dynamic_tabs')) {
+		if(label.is('.allow_dynamic_tabs')) {
+			controls.addClass('destructable');
 			create = $('<li class="new"><span>+</span></li>').appendTo(controls);
 		}
 
@@ -94,7 +111,7 @@
 				control = $(this),
 				link = control.attr('data-link'),
 				subsections = $('iframe.subsectiontab'),
-				current = subsections.filter('[name=' + $.trim(control.text()) + ']');
+				current = subsections.filter('[name=' + control.attr('data-id') + ']');
 				
 			// Close tab editors:
 			// Set timeout to not interfer with doubleclick actions
@@ -122,7 +139,7 @@
 			
 			// Tab not loaded yet
 			else {
-				load(link, control.text());
+				load(link, control);
 			}
 		});
 
@@ -132,17 +149,18 @@
 			// Create tab
 			controls.delegate('li.new', 'click.subsectiontabs', function(event) {
 				var control = $(this),
-					new_tab = $('<li data-id="" data-link="' + field.find('input[name="field[' + handle + '][new]"]').val() + '"></li>').insertBefore(control).click().dblclick();
+					new_tab = $('<li data-id="" data-link="' + field.find('input[name="field[' + handle + '][new]"]').val() + '"><span></span></li>').insertBefore(control).click().dblclick();
 			});
 
 			// Edit tab name
 			controls.delegate('li', 'dblclick.subsectiontabs', function(event) {
 				var tab = $(this).addClass('selected'),
-					value = tab.text(),
-					input = $('<input type="text" />');
+					label = tab.find('span'),
+					value = label.text(),
+					input = $('<input type="text" />').val(value);
 					
 				// Replace text with input
-				tab.html(input.val(value));
+				label.replaceWith(input);
 				
 				// Store name and focus
 				input.attr('data-name', value).focus();
@@ -171,9 +189,9 @@
 				if($(event.target).parents('#subsectiontabs li').size() > 0) return false;
 			
 				controls.find('li:has(input)').not($(tab)).each(function() {
-					var tab = $(this),
+					var control = $(this),
 						subsection = tabs.find('iframe:visible'),
-						input = tab.find('input').remove(),
+						input = control.find('input'),
 						text = $.trim(input.val()),
 						counter = '',
 						count;
@@ -207,11 +225,12 @@
 					}
 					
 					// Save tab name
-					tab.html('<span>' + text + counter + '</span>');
+					input.replaceWith('<span>' + text + counter + '</span>');
 					
 					// Rename iframe
-					subsection.attr('name', text + counter);
-					resize(subsection);
+					if(control.attr('data-id') == '') {
+						tabs.find('iframe:visible').attr('name', control.text());
+					}
 				});
 			});
 		}
@@ -243,18 +262,27 @@
 	/*-----------------------------------------------------------------------*/
 	
 		// Load tab
-		var load = function(link, name) {
-			var subsection = $('<iframe />', {
+		var load = function(link, control) {
+			var id = control.attr('data-id'), 
+				subsection;
+			
+			// Get id
+			if(!control.attr('data-id')) {
+				id = control.find('span').text();
+			}
+			
+			// Append iframe
+			subsection = $('<iframe />', {
 				'class': 'subsectiontab',
 				'src': link,
-				'name': $.trim(name)
+				'name': id
 			}).hide().appendTo(tabs);
 			
 			// Prepare subsection display
 			subsection.load(function() {
 				var content = subsection.contents(),
 					current = subsection.attr('name'),
-					selected = controls.find('li.selected').text();
+					selected = controls.find('li.selected').attr('data-id');
 
 				// Adjust interface
 				content.find('body').addClass('tabbed subsection');
@@ -273,11 +301,11 @@
 		
 		// Save tab
 		var save = function(control) {
-			var tab = tabs.find('iframe[name=' + $.trim(control.text()) + ']'),
+			var id = control.attr('data-id'),
+				tab = tabs.find('iframe[name=' + id + ']'),
 				next = control.next('li:not(.new)'),
 				button = tab.contents().find('div.actions input'),
-				name = $.trim(control.text()),
-				id = control.attr('data-id');
+				name = $.trim(control.find('span').text());
 			
 			// Tab loaded
 			if(tab.size() > 0) {
@@ -370,7 +398,7 @@
 		// Preload tab
 		controls.find('li').each(function(position) {
 			var control = $(this);
-			load(control.attr('data-link'), control.text());
+			load(control.attr('data-link'), control);
 		});
 		
 	});
