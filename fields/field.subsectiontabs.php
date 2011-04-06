@@ -287,10 +287,21 @@
 				$entry = extension_subsectionmanager::$storage['entries'][$entry_id];
 				$item->setAttribute('id', $entry_id);
 				
-				foreach(extension_subsectionmanager::$storage['fields'][$this->get('id')] as $field_id => $mode) {
+				foreach(extension_subsectionmanager::$storage['fields'][$this->get('id')] as $field_id => $modes) {
 					$entry_data = $entry->getData($field_id);
 					$field = $entryManager->fieldManager->fetch($field_id);
-					$field->appendFormattedElement($item, $entry_data, false, $mode, $entry_id);
+					
+					// No modes
+					if(empty($modes)) {
+						$field->appendFormattedElement($item, $entry_data, false, $mode, $entry_id);
+					}
+					
+					// With modes
+					else {
+						foreach($modes as $mode) {
+							$field->appendFormattedElement($item, $entry_data, false, $mode, $entry_id);
+						}
+					}						
 				}
 			}
 			$wrapper->appendChild($subsection);
@@ -316,14 +327,19 @@
 			);
 			$entry = $entryManager->fetch($data['relation_id'][0], $this->get('subsection_id'));
 			$title = $entry[0]->getData($field_id);
-			$value = $title['value'] . ' <span>(' . $tabs . ')</span>';
+			
+			// Handle empty titles
+			if($title['value'] == '') {
+				$title['value'] = __('Untitled');
+			}
 
+			// Link or plain text?
 			if($link) {
-				$link->setValue($value);
-				return $link->generate();
+				$link->setValue($title['value']);
+				return $link->generate() . ' <span class="inactive">(' . $tabs . ')</span>';
 			}
 			else {
-				return $value;		
+				return $title['value'] . ' <span class="inactive">(' . $tabs . ')</span>';		
 			}
 		}
 		

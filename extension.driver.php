@@ -206,12 +206,12 @@
 						LIMIT 1"
 					);
 
-					// Get field id an mode
+					// Get field id and mode
 					$components = explode(': ', $fields[1], 2);
 					$subfield_id = $entryManager->fieldManager->fetchFieldIDFromElementName($components[0], $subsection_ids[$field_id]);
 
 					// Store field data
-					self::$storage['fields'][$field_id][$subfield_id] = $components[1];
+					self::$storage['fields'][$field_id][$subfield_id][] = $components[1];
 	
 					// Set a single field call for subsection fields
 					unset($context['datasource']->dsParamINCLUDEDELEMENTS[$index]);
