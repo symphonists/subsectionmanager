@@ -8,20 +8,32 @@
 	 */
 	Class fieldSubsectiontabs extends Field {
 
+		/**
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#__construct
+		 */
 		function __construct(&$parent) {
 			parent::__construct($parent);
 			$this->_name = __('Subsection Tabs');
 			$this->_required = true;
 		}
 		
+		/**
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#mustBeUnique
+		 */
 		function mustBeUnique(){
 			return true;
 		}
 		
+		/**
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#canFilter
+		 */
 		function canFilter(){
 			return true;
 		}
 
+		/**
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#displaySettingsPanel
+		 */
 		function displaySettingsPanel(&$wrapper, $errors=NULL) {
 		
 			// Basics
@@ -82,6 +94,9 @@
 			$wrapper->appendChild($fieldset);
 		}
 
+		/**
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#commit
+		 */
 		public function commit(){
 
 			// Prepare commit
@@ -104,6 +119,9 @@
 			return Symphony::Database()->insert($fields, 'tbl_fields_' . $this->handle());
 		}
 
+		/**
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#displayPublishPanel
+		 */
 		function displayPublishPanel(&$wrapper, $data=NULL, $flagWithError=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL) {
 
 			// Append assets
@@ -205,6 +223,14 @@
 			return $wrapper;
 		}
 		
+		/**
+		 * Fetch names and relation ids from all existing tabs in the selected entry
+		 *
+		 * @param number $entry_id
+		 *  The identifier of this field entry instance
+		 * @return array
+		 *  Returns an array with tab names and their relation ids
+		 */
 		private function __getExistingTabs($entry_id) {
 			$tabs = array();
 			if(isset($entry_id)) {
@@ -225,6 +251,18 @@
 			return $tabs;	
 		}
 
+		/**
+		 * Create the markup that is used as storage for each tab's data.
+		 *
+		 * @param string $name
+		 *	Name of the tab
+		 * @param string $link
+		 *	Link to the subsection entry
+		 * @param number $id
+		 *	Relation id of the subsection entry
+		 * @return XMLElement
+		 *  Returns a list item with all attached data
+		 */
 		private function __createTab($name, $link, $id=NULL) {
 			$item = new XMLElement('li');
 			
@@ -244,6 +282,9 @@
 			return $item;
 		}
 		
+		/**
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#processRawFieldData
+		 */
 		function processRawFieldData($data, &$status, $simulate=false, $entry_id=NULL) {
 			$status = self::__OK__;
 			if(empty($data)) return NULL;
@@ -256,6 +297,9 @@
 			return $data;
 		}
 		
+		/**
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#fetchIncludableElements
+		 */
 		public function fetchIncludableElements() {
 			$includable = array();
 		
@@ -278,6 +322,8 @@
 		/**
 		 * Subsection entries are pre-processed in the extension driver and stored in 
 		 * extension_subsectionmanager::$storage with other helpful data.
+		 *
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#appendFormattedElement
 		 */		
 		public function appendFormattedElement(XMLElement &$wrapper, $data) {
 		
@@ -318,6 +364,9 @@
 			$wrapper->appendChild($subsection);
 		}
 
+		/**
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#prepareTableValue
+		 */
 		function prepareTableValue($data, XMLElement $link = null) {
 			$entryManager = new EntryManager(Symphony::Engine());
 
@@ -354,6 +403,9 @@
 			}
 		}
 		
+		/**
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#displayDatasourceFilterPanel
+		 */
 		public function displayDatasourceFilterPanel(XMLElement &$wrapper, $data = null, $errors = null, $fieldnamePrefix = null, $fieldnamePostfix = null) {
 			$wrapper->appendChild(new XMLElement('h4', $this->get('label') . ' <i>' . $this->Name() . '</i>'));
 			$label = Widget::Label(__('Name'));
@@ -383,6 +435,9 @@
 			$wrapper->appendChild($help);
 		}
 		
+		/**
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#buildDSRetrivalSQL
+		 */
 		public function buildDSRetrivalSQL($data, &$joins, &$where, $andOperation = false) {
 			$field_id = $this->get('id');
 
@@ -437,6 +492,9 @@
 			return true;
 		}			
 		
+		/**
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#createTable
+		 */
 		function createTable(){
 			return Symphony::Database()->query(
 				"CREATE TABLE IF NOT EXISTS `tbl_entries_data_" . $this->get('id') . "` (
