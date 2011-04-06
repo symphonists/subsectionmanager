@@ -224,6 +224,11 @@
 			
 				// Don't use hide(): tabs must be displayed to appease Firefox
 				tabs.find('iframe').show().css('visibility', 'hidden');
+				
+				// Scroll to top
+				$('body, html').animate({
+					'scrollTop': 0
+				}, 'fast');
 
 				// Save tabs
 				save(first);
