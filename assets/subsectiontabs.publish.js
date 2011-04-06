@@ -305,7 +305,7 @@
 			var item = $('<li />').appendTo(storage);
 			
 			item.append('<input name="fields[subsection-tabs][relation_id][]" value="' + id + '" />');
-			item.append('<input name="fields[subsection-tabs][tab][]" value="' + name + '" />');
+			item.append('<input name="fields[subsection-tabs][name][]" value="' + name + '" />');
 			
 			// Process next tab
 			if(next.size() > 0) {

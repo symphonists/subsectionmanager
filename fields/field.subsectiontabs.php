@@ -17,6 +17,10 @@
 		function mustBeUnique(){
 			return true;
 		}
+		
+		function canFilter(){
+			return true;
+		}
 
 		function displaySettingsPanel(&$wrapper, $errors=NULL) {
 		
@@ -205,7 +209,7 @@
 			$tabs = array();
 			if(isset($entry_id)) {
 				$existing = Symphony::Database()->fetch(
-					"SELECT `relation_id`, `tab`
+					"SELECT `relation_id`, `name`
 					FROM `tbl_entries_data_" . $this->get('id') . "`
 					WHERE `entry_id` = " . $entry_id . "
 					ORDER BY `id`
@@ -214,7 +218,7 @@
 				
 				// Create relations
 				foreach($existing as $tab) {
-					$tabs[$tab['tab']] = $tab['relation_id'];
+					$tabs[$tab['name']] = $tab['relation_id'];
 				}
 			}
 			
@@ -229,7 +233,7 @@
 			$item->appendChild($storage);
 			
 			// Relation ID
-			$storage = Widget::Input('fields[subsection-tabs][tab][]', trim($name), 'hidden');
+			$storage = Widget::Input('fields[subsection-tabs][name][]', trim($name), 'hidden');
 			$item->appendChild($storage);
 			
 			// Link to subentry
@@ -243,6 +247,12 @@
 		function processRawFieldData($data, &$status, $simulate=false, $entry_id=NULL) {
 			$status = self::__OK__;
 			if(empty($data)) return NULL;
+			
+			// Create handles
+			foreach($data['name'] as $name) {
+				$data['handle'][] = Lang::createHandle($name);
+			}
+			
 			return $data;
 		}
 		
@@ -275,12 +285,13 @@
 			$entryManager = new EntryManager(Symphony::Engine());
 			$subsection = new XMLElement('subsection-tabs');
 			
-			for($i = 0; $i < count($data['tab']); $i++) {
-				$name = $data['tab'][$i];
+			for($i = 0; $i < count($data['name']); $i++) {
+				$name = $data['name'][$i];
+				$handle= $data['handle'][$i];
 				$entry_id = $data['relation_id'][$i];
 			
 				// Create item
-				$item = new XMLElement('item', NULL, array('name' => $name, 'handle' => Lang::createHandle($name)));
+				$item = new XMLElement('item', NULL, array('name' => $name, 'handle' => $handle));
 				$subsection->appendChild($item);
 
 				// Populate entry element
@@ -312,9 +323,9 @@
 
 			// Get tabs
 			$tabs = '';
-			for($i = 0; $i < count($data['tab']); $i++) {
+			for($i = 0; $i < count($data['name']); $i++) {
 				if($i > 0) $tabs .= ', ';
-				$tabs .= $data['tab'][$i];
+				$tabs .= $data['name'][$i];
 			}
 			
 			// Get first title
@@ -343,13 +354,43 @@
 			}
 		}
 		
+		public function displayDatasourceFilterPanel(XMLElement &$wrapper, $data = null, $errors = null, $fieldnamePrefix = null, $fieldnamePostfix = null) {
+			$wrapper->appendChild(new XMLElement('h4', $this->get('label') . ' <i>' . $this->Name() . '</i>'));
+			$label = Widget::Label(__('Name'));
+			$label->appendChild(Widget::Input('fields[filter]' . ($fieldnamePrefix ? '['.$fieldnamePrefix.']' : '') . '[' . $this->get('id') . ']' . ($fieldnamePostfix ? '['.$fieldnamePostfix.']' : ''), ($data ? General::sanitize($data) : null)));
+			$wrapper->appendChild($label);
+			
+			// Existing tab names
+			$suggestions = Symphony::Database()->fetchCol('name',
+				"SELECT DISTINCT `name`
+				FROM `tbl_entries_data_" . $this->get('id') . "`
+				LIMIT 100"
+			);
+			
+			// Create suggestions
+			if(!empty($suggestions)) {
+				$tabs = new XMLElement('ul', NULL, array('class' => 'tags'));			
+				foreach($suggestions as $suggestion) {
+					$tabs->appendChild(
+						new XMLElement('li', $suggestion)
+					);
+				}
+				$wrapper->appendChild($tabs);
+			}
+			
+			// Append help for title or handle filtering
+			$help = new XMLElement('p', __('Use <code>title:</code> to filter by title or handle of an attached subsection entry.'), array('class' => 'help'));
+			$wrapper->appendChild($help);
+		}		
+		
 		function createTable(){
 			return Symphony::Database()->query(
 				"CREATE TABLE IF NOT EXISTS `tbl_entries_data_" . $this->get('id') . "` (
 				  `id` int(11) unsigned NOT NULL auto_increment,
 				  `entry_id` int(11) unsigned NOT NULL,
 				  `relation_id` int(11) unsigned DEFAULT NULL,
-				  `tab` varchar(255) NOT NULL,
+				  `name` varchar(255) NOT NULL,
+				  `handle` varchar(255) NOT NULL,
 				  PRIMARY KEY (`id`),
 				  KEY `entry_id` (`entry_id`),
 				  KEY `relation_id` (`relation_id`)
