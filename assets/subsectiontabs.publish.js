@@ -172,6 +172,7 @@
 			
 				controls.find('li:has(input)').not($(tab)).each(function() {
 					var tab = $(this),
+						subsection = tabs.find('iframe:visible'),
 						input = tab.find('input').remove(),
 						text = $.trim(input.val()),
 						counter = '',
@@ -207,6 +208,10 @@
 					
 					// Save tab name
 					tab.html('<span>' + text + counter + '</span>');
+					
+					// Rename iframe
+					subsection.attr('name', text + counter);
+					resize(subsection);
 				});
 			});
 		}
