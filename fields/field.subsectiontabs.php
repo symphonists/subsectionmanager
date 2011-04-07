@@ -327,7 +327,7 @@
 		 *
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#appendFormattedElement
 		 */		
-		public function appendFormattedElement(XMLElement &$wrapper, $data) {
+		public function appendFormattedElement(XMLElement &$wrapper, $data, $encode = false) {
 		
 			// Create tabs
 			$entryManager = new EntryManager(Symphony::Engine());
@@ -353,13 +353,13 @@
 						
 						// No modes
 						if(empty($modes)) {
-							$field->appendFormattedElement($item, $entry_data, false, $mode, $entry_id);
+							$field->appendFormattedElement($item, $entry_data, $encode, $mode, $entry_id);
 						}
 						
 						// With modes
 						else {
 							foreach($modes as $mode) {
-								$field->appendFormattedElement($item, $entry_data, false, $mode, $entry_id);
+								$field->appendFormattedElement($item, $entry_data, $encode, $mode, $entry_id);
 							}
 						}						
 					}
