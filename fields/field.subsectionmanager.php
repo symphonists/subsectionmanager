@@ -576,6 +576,31 @@
 		}
 
 		/**
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#buildDSRetrivalSQL
+		 */
+		public function buildDSRetrivalSQL($data, &$joins, &$where, $andOperation=false) {
+
+		    // Current field id
+		    $field_id = $this->get('id');
+
+		    // Filters connected with AND
+		    if($andOperation) {
+		        foreach($data as $key => $value) {
+		            $joins .= " LEFT JOIN `tbl_entries_data_$field_id` AS `t$field_id$key` ON (`e`.`id` = `t$field_id$key`.entry_id) ";
+		            $where .= " AND `t$field_id$key`.relation_id = '$value' ";
+		        }
+		    }
+
+		    // Filters connected with OR
+		    else {
+		        $joins .= " LEFT JOIN `tbl_entries_data_$field_id` AS `t$field_id` ON (`e`.`id` = `t$field_id`.entry_id) ";
+		        $where .= " AND `t$field_id`.relation_id IN ('" . @implode("', '", $data) . "') ";
+		    }
+
+		    return true;
+		}
+
+		/**
 		 * Subsection entries are pre-processed in the extension driver and stored in 
 		 * extension_subsectionmanager::$storage with other helpful data.
 		 *
