@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * @package fields
+	 * @package subsectionmanager
 	 */
 	/**
 	 * This field provides inline subsection management. 
@@ -16,11 +16,7 @@
 	Class fieldSubsectionmanager extends Field {
 
 		/**
-		 * Construct a new instance of this field.
-		 *
-		 * @param mixed $parent
-		 *  The class that created this Field object, usually the FieldManager,
-		 *  passed by reference.
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#__construct
 		 */
 		function __construct(&$parent) {
 			parent::__construct($parent);
@@ -29,37 +25,21 @@
 		}
 
 		/**
-		 * Test whether this field can be filtered. Filtering allows the 
-		 * xml output results to be limited according to an input parameter. 
-		 *
-		 * @return boolean
-		 *	true if this can be filtered, false otherwise.
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#canFilter
 		 */
 		function canFilter(){
 			return true;
 		}
 
 		/**
-		 * Test whether this field supports data-source output grouping. 
-		 * Data-source grouping allows clients of this field to group the 
-		 * xml output according to this field.
-		 *
-		 * @return boolean
-		 *	true if this field does support data-source grouping, false otherwise.
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#allowDatasourceParamOutput
 		 */
 		function allowDatasourceParamOutput(){
 			return true;
 		}
 
 		/**
-		 * Display the default settings panel, calls the buildSummaryBlock
-		 * function after basic field settings are added to the wrapper.
-		 *
-		 * @see buildSummaryBlock()
-		 * @param XMLElement $wrapper
-		 *	the input XMLElement to which the display of this will be appended.
-		 * @param mixed errors (optional)
-		 *	the input error collection. this defaults to null.
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#displaySettingsPanel
 		 */
 		function displaySettingsPanel(&$wrapper, $errors=NULL) {
 
@@ -275,17 +255,7 @@
 		}
 		
 		/**
-		 * Generate a content generator consisting of a text input field and 
-		 * an inline tag list with field name.
-		 *
-		 * @param string $name
-		 *  handle of the group
-		 * @param string $title
-		 *  title used for the group label
-		 * @param SectionManager $sections
-		 *  section object
-		 * @return XMLElement
-		 *  returns the content generator element
+		 * 
 		 */
 		private function __groupContentGenerator($name, $title, $sections, $errors) {
 			$container = new XMLElement('div');
@@ -336,17 +306,7 @@
 		}
 
 		/**
-		 * Check the field's settings to ensure they are valid on the section
-		 * editor
-		 *
-		 * @param array $errors
-		 *	the array to populate with the errors found.
-		 * @param boolean $checkFoeDuplicates (optional)
-		 *	if set to true, duplicate field entries will be flagged as errors.
-		 *	this defaults to true.
-		 * @return number
-		 *	returns the status of the checking. if errors has been populated with
-		 *	any errors self::__ERROR__, self__OK__ otherwise.
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#checkFields
 		 */
 		function checkFields(&$errors, $checkForDuplicates=true) {
 
@@ -381,11 +341,7 @@
 		}
 
 		/**
-		 * Commit the settings of this field from the section editor to
-		 * create an instance of this field in a section.
-		 *
-		 * @return boolean
-		 *	true if the commit was successful, false otherwise.
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#commit
 		 */
 		function commit() {
 
@@ -478,21 +434,7 @@
 		}
 
 		/**
-		 * Create an association between two sections.
-		 *
-		 * @param number $parent_section_id
-		 *  The current section id.
-		 * @param number $child_section_id
-		 *  The linked section id.
-		 * @param number $child_field_id
-		 *  The field ID of the field that is creating the association
-		 * @param number $parent_field_id (optional)
-		 *  The field ID of the field that is creating the association
-		 * @param boolean $show_association (optional)
-		 *	Whether of not the link should be shown on the Publish Index of the
-		 * linked section. This defaults to false.
-		 * @return boolean
-		 *	true if the association was successfully made, false otherwise.
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#createSectionAssociation
 		 */
 		public function createSectionAssociation($parent_section_id = null, $child_section_id = null, $child_field_id = null, $parent_field_id = null, $show_association = false){
 
@@ -516,28 +458,7 @@
 		}
 
 		/**
-		 * Display the publish panel for this field. The display panel is the
-		 * interface to create the data in instances of this field once added
-		 * to a section.
-		 *
-		 * @param XMLElement $wrapper
-		 *	the xml element to append the html defined user interface to this
-		 *	field.
-		 * @param array $data (optional)
-		 *	any existing data that has been supplied for this field instance.
-		 *	this is encoded as an array of columns, each column maps to an
-		 *	array of row indexes to the contents of that column. this defaults
-		 *	to null.
-		 * @param mixed $flagWithError (optional)
-		 *	flag with error defaults to null.
-		 * @param string $fieldnamePrefix (optional)
-		 *	the string to be prepended to the display of the name of this field.
-		 *	this defaults to null.
-		 * @param string $fieldnameSuffix (optional)
-		 *	the string to be appended to the display of the name of this field.
-		 *	this defaults to null.
-		 * @param number $entry_id (optional)
-		 *	the entry id of this field. this defaults to null.
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#displayPublishPanel
 		 */
 		function displayPublishPanel(&$wrapper, $data=NULL, $flagWithError=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL) {
 		
@@ -631,21 +552,7 @@
 		}
 
 		/**
-		 * Process the raw field data.
-		 *
-		 * @param mixed $data
-		 *	post data from the entry form
-		 * @param reference $status
-		 *	the status code resultant from processing the data.
-		 * @param boolean $simulate (optional)
-		 *	true if this will tell the CF's to simulate data creation, false
-		 *	otherwise. this defaults to false. this is important if clients
-		 *	will be deleting or adding data outside of the main entry object
-		 *	commit function.
-		 * @param mixed $entry_id (optional)
-		 *	the current entry. defaults to null.
-		 * @return array[string]mixed
-		 *	the processed field data.
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#processRawFieldData
 		 */
 		function processRawFieldData($data, &$status, $simulate=false, $entry_id=NULL) {
 		
@@ -662,11 +569,10 @@
 			return $result;
 		}
 
- 		/**
-		 * Create database field table.
+		/**
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#createTable
 		 */
 		function createTable(){
-
 			return Symphony::Database()->query(
 				"CREATE TABLE IF NOT EXISTS `tbl_entries_data_" . $this->get('id') . "` (
 				  `id` int(11) unsigned NOT NULL auto_increment,
@@ -677,19 +583,10 @@
 				  KEY `relation_id` (`relation_id`)
 				) TYPE=MyISAM;"
 			);
-
 		}
 
 		/**
-		 * Format this field value for display in the administration pages summary tables.
-		 *
-		 * @param array $data
-		 *	the data to use to generate the summary string.
-		 * @param XMLElement $link (optional)
-		 *	an xml link structure to append the content of this to provided it is not
-		 *	null. it defaults to null.
-		 * @return string
-		 *	the formatted string summary of the values of this field instance.
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#prepareTableValue
 		 */
 		function prepareTableValue($data, XMLElement $link=NULL) {
 			if(empty($data['relation_id'])) return NULL;
@@ -717,25 +614,31 @@
 				return parent::prepareTableValue(array('value' => ($count > 1) ? $count . ' ' . __('items') : $count . ' ' . __('item')), $link);
 			}
 		}
+		
+		/**
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#fetchIncludableElements
+		 */
+		public function fetchIncludableElements() {
+			$includable = array();
+		
+			// Fetch subsection fields
+			$sectionManager = new SectionManager(Symphony::Engine());
+			$section = $sectionManager->fetch($this->get('subsection_id'));
+			$fields = $section->fetchFields();
+			
+			foreach($fields as $field) {
+				$elements = $field->fetchIncludableElements();
+				
+				foreach($elements as $element) {
+					$includable[] = $this->get('element_name') . ': ' . $element;
+				}
+			}
+			
+			return $includable;
+		}
 
 		/**
-		 * Append the formatted xml output of this field as utilized as a data source.
-		 *
-		 * @param XMLElement $wrapper
-		 *	the xml element to append the xml representation of this to.
-		 * @param array $data
-		 *	the current set of values for this field. the values are structured as
-		 *	for displayPublishPanel.
-		 * @param boolean $encode (optional)
-		 *	flag as to whether this should be html encoded prior to output. this
-		 *	defaults to false.
-		 * @param string $mode
-		 *	 A field can provide ways to output this field's data. For instance a mode
-		 *  could be 'items' or 'full' and then the function would display the data
-		 *  in a different way depending on what was selected in the datasource
-		 *  included elements.
-		 * @param number $entry_id (optional)
-		 *	the identifier of this field entry instance. defaults to null.
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#appendFormattedElement
 		 */
 		public function appendFormattedElement(&$wrapper, $data, $encode = false) {
 
@@ -841,18 +744,7 @@
 		}
 
 		/**
-		 * Accessor to the associated entry search value for this field
-		 * instance.
-		 *
-		 * @param array $data
-		 *	the data from which to construct the associated search entry value.
-		 * @param number $field_id (optional)
-		 *	an optional id of the associated field? this defaults to null.
-		 * @param number $parent_entry_id (optional)
-		 *	an optional parent identifier of the associated field entry. this defaults
-		 *	to null.
-		 * @return integer
-		 *	the entry id
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#fetchAssociatedEntrySearchValue
 		 */
 		public function fetchAssociatedEntrySearchValue($data, $field_id = null, $parent_entry_id = null){
 			// $data would contain the related entries, but is usually `null` when called from the frontend
@@ -863,12 +755,7 @@
 		}
 
 		/**
-		 * Fetch the count of the associate entries for the input value.
-		 *
-		 * @param number $value
-		 *	the value to find the associated entry count for.
-		 * @return integer
-		 *	the count of associated entries
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#fetchAssociatedEntryCount
 		 */
 		public function fetchAssociatedEntryCount($value){
 			if(isset($value)) {
@@ -880,13 +767,7 @@
 		}
 		
 		/**
-		 * Function to format this field if it chosen in a data-source to be
-		 * output as a parameter in the XML
-		 *
-		 * @param array $data
-		 *	 The data for this field from it's tbl_entry_data_{id} table
-		 * @return string
-		 *	 The formatted value to be used as the parameter
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#getParameterPoolValue
 		 */
 		public function getParameterPoolValue($data) {
 			if(is_array($data['relation_id'])) {
@@ -898,18 +779,7 @@
 		}
 
 		/**
-		 * Display the default data-source filter panel.
-		 *
-		 * @param XMLElement $wrapper
-		 *	the input XMLElement to which the display of this will be appended.
-		 * @param mixed $data (optional)
-		 *	the input data. this defaults to null.
-		 * @param mixed errors (optional)
-		 *	the input error collection. this defaults to null.
-		 * @param string $fieldNamePrefix
-		 *	the prefix to apply to the display of this.
-		 * @param string $fieldNameSuffix
-		 *	the suffix to apply to the display of this.
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#displayDatasourceFilterPanel
 		 */
 		function displayDatasourceFilterPanel(&$wrapper, $data=NULL, $errors=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL) {
 
@@ -919,17 +789,11 @@
 
 		}
 
- 		/**
-		 * Return sample markup for the event editor.
-		 *
-		 * @return XMLElement
-		 *	a label widget containing the formatted field element name of this.
+		/**
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#getExampleFormMarkup
 		 */
 		public function getExampleFormMarkup() {
-		
-			// Nothing to show here yet
 			return Widget::Select('fields['.$this->get('element_name').']', array(array('...')));
-			
 		}
 
 	}
