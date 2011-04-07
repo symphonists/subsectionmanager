@@ -159,9 +159,6 @@
 							$existing_tabs[$tab],
 							true
 						));
-						
-						// Unset
-						unset($existing_tabs[$tab]);
 					}
 					
 					// New tab
@@ -173,6 +170,9 @@
 							true
 						));
 					}
+						
+					// Unset
+					unset($existing_tabs[$tab]);
 				}
 			}
 			
