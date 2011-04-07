@@ -16,7 +16,7 @@
 	 * @source: http://github.com/nilshoerrmann/subsectionmanager
 	 */
 	$(document).ready(function() {
-		var field = $('div.field-subsectiontabs').hide(),
+		var field = $('div.field-subsectiontabs'),
 			label = field.find('label'),
 			handle = label.attr('data-handle'),
 			title = $('h2:first'),
@@ -28,6 +28,11 @@
 			
 		// Set context
 		$('body').addClass('subsectiontabs');
+			
+		// Switch display modes
+		if(location.search != '?debug') {
+			field.hide();
+		}
 		
 		// Create interface
 		controls = $('<ul id="subsectiontabs" />').insertAfter(title);
@@ -317,8 +322,8 @@
 			var width = control.width(),
 				name = control.find('span').text(),
 				id = control.attr('data-id') || name,
-				prev = control.prev('li:not(.delete)'),
-				next = control.next('li:not(.new, .delete)');
+				prev = control.prev('li:visible').filter(':not(.delete)'),
+				next = control.next('li:visible').filter(':not(.new, .delete)');
 			
 			// Switch tab
 			if(control.is('.selected')) {
