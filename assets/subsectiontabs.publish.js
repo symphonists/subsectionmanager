@@ -316,11 +316,18 @@
 		var remove = function(control) {
 			var width = control.width(),
 				name = control.find('span').text(),
-				id = control.attr('data-id') || name;
+				id = control.attr('data-id') || name,
+				prev = control.prev('li:not(.delete)'),
+				next = control.next('li:not(.new, .delete)');
 			
 			// Switch tab
 			if(control.is('.selected')) {
-				control.prev('li').click();
+				if(prev.size() > 0) {
+					prev.click();
+				}
+				else if(next.size() > 0) {
+					next.click();
+				}
 			}
 
 			// Hide tab
@@ -328,6 +335,11 @@
 				'opacity': 0
 			}, 'fast', function() {
 			
+				// Create empty tab if needed
+				if(prev.size() == 0 && next.size() == 0) {
+					controls.find('li.new').click();
+				}
+					
 				// Shrink tab
 				control.find('span, a').hide();
 				control.addClass('delete').css('width', control.outerWidth()).attr('data-width', width).animate({
