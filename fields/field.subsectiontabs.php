@@ -381,29 +381,35 @@
 				$tabs .= $data['name'][$i];
 			}
 			
+			if(!empty($tabs)) {
+				$tabs =  ' <span class="inactive">(' . $tabs . ')</span>';
+			}
+			
 			// Get first title
-			$field_id = Symphony::Database()->fetchVar('id', 0, 
-				"SELECT `id` 
-				FROM `tbl_fields` 
-				WHERE `parent_section` = '" . $this->get('subsection_id') . "' 
-				ORDER BY `sortorder` 
-				LIMIT 1"
-			);
-			$entry = $entryManager->fetch($data['relation_id'][0], $this->get('subsection_id'));
-			$title = $entry[0]->getData($field_id);
+			if(isset($data['relation_id'])) {
+				$field_id = Symphony::Database()->fetchVar('id', 0, 
+					"SELECT `id` 
+					FROM `tbl_fields` 
+					WHERE `parent_section` = '" . $this->get('subsection_id') . "' 
+					ORDER BY `sortorder` 
+					LIMIT 1"
+				);
+				$entry = $entryManager->fetch($data['relation_id'][0], $this->get('subsection_id'));
+				$title = $entry[0]->getData($field_id);
+			}
 			
 			// Handle empty titles
-			if($title['value'] == '') {
+			else {
 				$title['value'] = __('Untitled');
 			}
 
 			// Link or plain text?
 			if($link) {
 				$link->setValue($title['value']);
-				return $link->generate() . ' <span class="inactive">(' . $tabs . ')</span>';
+				return $link->generate() . $tabs;
 			}
 			else {
-				return $title['value'] . ' <span class="inactive">(' . $tabs . ')</span>';		
+				return $title['value'] . $tabs;		
 			}
 		}
 		
