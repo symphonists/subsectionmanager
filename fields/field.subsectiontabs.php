@@ -156,7 +156,8 @@
 						$list->appendChild($this->__createTab(
 							$tab, 
 							URL . '/symphony/publish/' . $subsection . '/edit/' . $existing_tabs[$tab],
-							$existing_tabs[$tab]
+							$existing_tabs[$tab],
+							true
 						));
 						
 						// Unset
@@ -167,7 +168,9 @@
 					else {
 						$list->appendChild($this->__createTab(
 							$tab, 
-							URL . '/symphony/publish/' . $subsection . '/new/'
+							URL . '/symphony/publish/' . $subsection . '/new/',
+							NULL,
+							true
 						));
 					}
 				}
@@ -249,8 +252,13 @@
 		 * @return XMLElement
 		 *  Returns a list item with all attached data
 		 */
-		private function __createTab($name, $link, $id=NULL) {
+		private function __createTab($name, $link, $id=NULL, $static=false) {
 			$item = new XMLElement('li');
+			
+			// Static tabs
+			if($static) {
+				$item->setAttribute('class', 'static');
+			}
 			
 			// Relation ID
 			$storage = Widget::Input('fields[' . $this->get('element_name') . '][relation_id][]', $id, 'hidden');
