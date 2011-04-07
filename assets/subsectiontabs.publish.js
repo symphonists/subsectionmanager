@@ -119,7 +119,8 @@
 				subsection.hide();
 
 				// Load new tab
-				control.insertBefore(creator);
+				control.hide().insertBefore(creator);
+				insert(control);
 				load(control);
 			});
 
@@ -392,7 +393,8 @@
 				post = tab.contents().find('form').serialize();
 			
 			// Tab loaded
-			if(tab.size() > 0 && post != tab.data('post')) {
+			if(tab.size() > 0 && post != tab.data('post') && !control.is('.delete')) {
+				console.log('save');
 			
 				// Callback
 				tab.one('load', function(event) {
@@ -403,7 +405,7 @@
 					regexp = new RegExp(/\bid-(\d*)\b/);
 					id = regexp.exec(tab.contents().find('body').attr('class'));
 					if(id != null) {
-						id = id[1]
+						id = id[1];
 					}
 					
 					// Store errors
@@ -432,8 +434,10 @@
 		var store = function(id, name, next) {
 			var item = $('<li />').appendTo(storage);
 				
-			item.append('<input name="fields[' + handle + '][relation_id][]" value="' + id + '" />');
-			item.append('<input name="fields[' + handle + '][name][]" value="' + name + '" />');
+			if(!controls.find('li[data-id="' + id + '"]').is('.delete')) {
+				item.append('<input name="fields[' + handle + '][relation_id][]" value="' + id + '" />');
+				item.append('<input name="fields[' + handle + '][name][]" value="' + name + '" />');
+			}
 			
 			// Process next tab
 			if(next.size() > 0) {
