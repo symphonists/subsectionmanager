@@ -1,5 +1,9 @@
 /* This is based on Nick Dunn's Publish tabs, https://github.com/nickdunn/publish_tabs */
 
+body.subsectiontabs #nav {
+	z-index: 2000;
+}
+
 body.subsectiontabs h2 {
 	border-bottom: 0;
 }
@@ -116,6 +120,14 @@ body.subsectiontabs iframe.subsectiontab {
 	color: rgba(0, 0, 0, 0.5);
 }
 
-#subsectiontabs li.new {
-	padding: 2px 7px 0;
+#subsectiontabs li.new, #subsectiontabs.destructable li.static {
+	padding-right: 7px;
+}
+
+#subsectiontabs li.delete {
+	border-width: 0 !important;
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
 }

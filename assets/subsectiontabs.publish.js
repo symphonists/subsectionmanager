@@ -3,7 +3,10 @@
 
 	Symphony.Language.add({
 		'Some errors were encountered while attempting to save.': false,
-		'Untitled': false
+		'Untitled': false,
+		'You just removed the tab "{$tab}". It will be deleted when you save this entry.': false,
+		'Undo?': false,
+		'An error occured while restoring the tab.': false
 	});
 	
 	/**
@@ -19,8 +22,8 @@
 			title = $('h2:first'),
 			storage = field.find('ul'),
 			references = field.find('a'),
-			state = $.parseJSON(localStorage.getItem('subsectiontabs-' + Symphony.Context.get('env').entry_id)),
-			controls, tabs, create,
+			state = $.parseJSON(localStorage.getItem('subsectiontabs-' + Symphony.Context.get('env').entry_id)) || { tab: -1 },
+			controls, tabs,
 			fragments, headline;
 			
 		// Set context
@@ -34,11 +37,8 @@
 		if(state) {
 			tabs.height(state.height);
 		}
-		else {
-			state = { tab: NaN };
-		}
 		
-		// Remove tab names from title
+		// Clean up page and document title
 		if(title.text() != Symphony.Language.get('Untitled')) {
 			fragments = title.text().split(' (');
 			fragments.splice(fragments.length - 1, 1);
@@ -57,51 +57,6 @@
 			fragments.splice(fragments.length - 1, 1);
 			document.title = fragments.join(' – ') + ' – ' + headline;
 		}
-		
-		// Add controls
-		storage.find('li').each(function(count) {
-			var item = $(this),
-				control = $('<li />').appendTo(controls),
-				id = item.find('input:eq(0)').val(),
-				name = item.find('input:eq(1)').val(),
-				link = item.find('a').attr('href');
-				
-				console.log(item);
-				
-			// Get id
-			if(!id) {
-				id = name;
-			}
-			
-			// Set values
-			control.html('<span>' + name + '</span>').attr({
-				'data-id': id,
-				'data-link': link
-			});
-			
-			// Deletable
-			if(label.is('.allow_dynamic_tabs')) {
-				control.append('<a class="destructor">×</a>');
-			}
-						
-			// Restore last tab
-			if(!isNaN(parseInt(state.tab))) {
-				if(id == state.tab) {
-					control.addClass('selected');
-				}
-			}
-			
-			// Or select first tab
-			else if(count == 0) {
-				control.addClass('selected');
-			}
-		});
-		
-		// Allow dynamic controls
-		if(label.is('.allow_dynamic_tabs')) {
-			controls.addClass('destructable');
-			create = $('<li class="new"><span>+</span></li>').appendTo(controls);
-		}
 
 	/*-----------------------------------------------------------------------*/
 		
@@ -110,8 +65,14 @@
 			var target = $(event.target),
 				control = $(this),
 				link = control.attr('data-link'),
-				subsections = $('iframe.subsectiontab'),
-				current = subsections.filter('[name=' + control.attr('data-id') + ']');
+				subsections = tabs.find('iframe'),
+				id = control.attr('data-id') || control.find('span').text(),			
+				current = subsections.filter('[name=' + id + ']');
+				
+			// Don't process, is tab should be removed
+			if(target.is('a')) {
+				return false;
+			}
 				
 			// Close tab editors:
 			// Set timeout to not interfer with doubleclick actions
@@ -123,14 +84,14 @@
 			if(target.is('input')) {
 				return false;
 			}
-			else {
-				subsections.hide();
-			}
 				
 			// Switch tabs
 			control.siblings().removeClass('selected');
 			control.addClass('selected');
 				
+			// Hide subsections
+			subsections.hide();
+
 			// Tab already loaded
 			if(current.size() > 0) {
 				resize(current);
@@ -139,7 +100,7 @@
 			
 			// Tab not loaded yet
 			else {
-				load(link, control);
+				load(control);
 			}
 		});
 
@@ -148,8 +109,18 @@
 			
 			// Create tab
 			controls.delegate('li.new', 'click.subsectiontabs', function(event) {
-				var control = $(this),
-					new_tab = $('<li data-id="" data-link="' + field.find('input[name="field[' + handle + '][new]"]').val() + '"><span></span></li>').insertBefore(control).click().dblclick();
+				var creator = $(this),
+					name = getName(Symphony.Language.get('Untitled')),
+					control = create(name, 'new', field.find('input[name="field[' + handle + '][new]"]').val(), false, true),
+					subsection = tabs.find('iframe');
+
+				// Deselect other tabs
+				controls.find('li').removeClass('selected');
+				subsection.hide();
+
+				// Load new tab
+				control.insertBefore(creator);
+				load(control);
 			});
 
 			// Edit tab name
@@ -170,12 +141,12 @@
 			controls.delegate('input', 'keyup.subsectiontabs', function(event) {
 				var input = $(this);
 
-				// Enter
+				// Enter = apply
 				if(event.which == 13) {
 					$('body').click();
 				}
 				
-				// Escape
+				// Escape = undo
 				if(event.which == 27) {
 				
 					// Restore old name
@@ -192,46 +163,46 @@
 					var control = $(this),
 						subsection = tabs.find('iframe:visible'),
 						input = control.find('input'),
-						text = $.trim(input.val()),
-						counter = '',
-						count;
-					
-					// Handle empty names
-					if(text == '') {
-						text = Symphony.Language.get('Untitled');
-					}
-					
-					// Get clones
-					count = controls.find('li:contains(' + text + ')').map(function() {
-						return ($(this).text() == text);
-					}).size();
-					
-					if(count > 0) {
-						for(i = 1; i < 100; i++) {
-							count = controls.find('li:contains(' + text + ')').map(function() {
-								return ($(this).text() == text + ' ' + i.toString());
-							}).size();
-						
-							if(count == 0) {
-								count = i;
-								break;
-							};
-						}
-					}
-					
-					// Set counter
-					if(count > 0) {
-						counter = ' ' + (count + 1).toString();
-					}
-					
+						value = $.trim(input.val()),
+						name = getName(value);
+															
 					// Save tab name
-					input.replaceWith('<span>' + text + counter + '</span>');
+					input.replaceWith('<span>' + name + '</span>');
 					
-					// Rename iframe
-					if(control.attr('data-id') == '') {
-						tabs.find('iframe:visible').attr('name', control.text());
+					// Rename iframe if no identifier has been set
+					if(!control.attr('data-id')) {
+						subsection.attr('name', name);
+						remember(subsection);
 					}
 				});
+			});
+			
+			// Remove tab
+			controls.delegate('a', 'click', function() {
+				var control = $(this).parent();
+				
+				remove(control);
+			});
+			
+			// Undo removal
+			$('#header').delegate('a.undo', 'click', function() {
+				var undo = $(this),
+					id = undo.attr('name'),
+					control = controls.find('li[data-id="' + id + '"]');
+					
+				// Restore				
+				if(control.size() > 0) {
+					Symphony.Message.clear('notice');
+					insert(control);
+				}
+				
+				// Error
+				else {
+					Symphony.Message.post(
+						Symphony.Language.get('An error occured while restoring the tab.'),
+						'error'
+					);
+				}				
 			});
 		}
 		
@@ -261,15 +232,39 @@
 		
 	/*-----------------------------------------------------------------------*/
 	
-		// Load tab
-		var load = function(link, control) {
-			var id = control.attr('data-id'), 
-				subsection;
+		// Create control
+		var create = function(name, id, link, static, selected) {
+			var control = $('<li />');
+		
+			// Set values
+			control.append('<span>' + name + '</span>').attr({
+				'data-id': id,
+				'data-link': link
+			});
 			
-			// Get id
-			if(!control.attr('data-id')) {
-				id = control.find('span').text();
+			// Set mode
+			if(static === true) {
+				control.addClass('static');
 			}
+						
+			// Add destructor
+			else {
+				control.append('<a class="destructor">×</a>');
+			}
+			
+			// Select
+			if(selected === true) {
+				control.addClass('selected');
+			}
+			
+			return control;
+		}
+	
+		// Load tab
+		var load = function(control) {
+			var id = control.attr('data-id') || control.find('span').text(),
+				link = control.attr('data-link'),
+				subsection;
 			
 			// Append iframe
 			subsection = $('<iframe />', {
@@ -296,7 +291,95 @@
 				if(current == selected && content.find('#notice').size() == 0) {
 					resize(subsection);
 				}
+				
+				// Store current form values to check for changes before saving
+				subsection.data('post', content.find('form').serialize());
 			});
+		};
+		
+		// Insert a tab
+		var insert = function(control) {
+			var width = control.attr('data-width');
+			
+			control.fadeIn('fast', function() {
+				control.removeClass('delete').animate({
+					'width': width
+				}, 'fast', function() {
+					control.find('span, a').fadeIn('fast');
+					control.click();
+				});
+			});
+		}
+		
+		// Delete a tab
+		var remove = function(control) {
+			var width = control.width(),
+				name = control.find('span').text(),
+				id = control.attr('data-id') || name;
+			
+			// Switch tab
+			if(control.is('.selected')) {
+				control.prev('li').click();
+			}
+
+			// Hide tab
+			control.animate({
+				'opacity': 0
+			}, 'fast', function() {
+			
+				// Shrink tab
+				control.find('span, a').hide();
+				control.addClass('delete').css('width', control.outerWidth()).attr('data-width', width).animate({
+					'width': 0,
+				}, 'fast', function() {
+				
+					// Reset styles
+					control.removeAttr('style').hide();
+										
+					// Show undo message
+					Symphony.Message.post(
+						Symphony.Language.get('You just removed the tab "{$tab}". It will be deleted when you save this entry.', { 'tab': name }) + 
+						' <a class="undo" name="' + id + '">' + Symphony.Language.get('Undo?') + '</a>',
+						'notice'
+					);
+				});
+			});
+		}
+		
+		// Get name, making sure there are no duplicates
+		var getName = function(name) {
+			var counter = '',
+				count;
+		
+			// Handle empty names
+			if(name == '') {
+				name = Symphony.Language.get('Untitled');
+			}
+			
+			// Get clones
+			count = controls.find('li:contains(' + name + ')').map(function() {
+				return ($(this).text() == name);
+			}).size();
+			
+			if(count > 0) {
+				for(i = 1; i < 100; i++) {
+					count = controls.find('li:contains(' + name + ')').map(function() {
+						return ($(this).text() == name + ' ' + i.toString());
+					}).size();
+				
+					if(count == 0) {
+						count = i;
+						break;
+					};
+				}
+			}
+			
+			// Set counter
+			if(count > 0) {
+				counter = ' ' + (count + 1).toString();
+			}
+			
+			return name + counter;	
 		};
 		
 		// Save tab
@@ -305,10 +388,11 @@
 				tab = tabs.find('iframe[name=' + id + ']'),
 				next = control.next('li:not(.new)'),
 				button = tab.contents().find('div.actions input'),
-				name = $.trim(control.find('span').text());
+				name = $.trim(control.find('span').text())
+				post = tab.contents().find('form').serialize();
 			
 			// Tab loaded
-			if(tab.size() > 0) {
+			if(tab.size() > 0 && post != tab.data('post')) {
 			
 				// Callback
 				tab.one('load', function(event) {
@@ -347,7 +431,7 @@
 		// Store data
 		var store = function(id, name, next) {
 			var item = $('<li />').appendTo(storage);
-			
+				
 			item.append('<input name="fields[' + handle + '][relation_id][]" value="' + id + '" />');
 			item.append('<input name="fields[' + handle + '][name][]" value="' + name + '" />');
 			
@@ -371,36 +455,78 @@
 			}
 		};
 		
+		// Resize tab
 		var resize = function(subsection) {
 			var height, storage;
 			
 			// Resize tab
 			subsection.show();
-			height = subsection.contents().find('#wrapper').height();
+			height = getHeight(subsection);
 			subsection.height(height);
 			tabs.animate({
 				'height': height
 			}, 'fast');
 			
 			// Store current tab
+			remember(subsection, height);
+		};
+		
+		var getHeight = function(subsection) {
+			return subsection.contents().find('#wrapper').height();
+		}
+		
+		// Remember subsection name and height
+		var remember = function(subsection, height) {
 			if(localStorage) {
-				state = {
+
+				// Get height
+				if(!height) {
+					height = getHeight(subsection);
+				}
+				
+				// Store state
+				localStorage.setItem('subsectiontabs-' + Symphony.Context.get('env').entry_id, JSON.stringify({
 					'tab': subsection.attr('name'),
 					'height': height
-				};
-			
-				localStorage.setItem('subsectiontabs-' + Symphony.Context.get('env').entry_id, JSON.stringify(state));
+				}));
 			}
-		};
+		}
 		
 	/*-----------------------------------------------------------------------*/
 	
-		// Preload tab
-		controls.find('li').each(function(position) {
-			var control = $(this);
-			load(control.attr('data-link'), control);
+		// Add controls
+		storage.find('li').each(function(count) {
+			var item = $(this),
+				name = item.find('input:eq(1)').val(),
+				id = item.find('input:eq(0)').val() || name,
+				link = item.find('a').attr('href'),
+				static = false;
+				selected = false;
+			
+			// Static tabs
+			if(item.is('.static')) {
+				static = true;
+			}
+
+			// Selection
+			if(id == state.tab || ((state.tab == -1 || state.tab == '') && count == 0)) {
+				selected = true;
+			}
+
+			// Create control
+			control = create(name, id, link, static, selected);
+			controls.append(control);
+			
+			// Preload tab
+			load(control);
 		});
 		
+		// Allow dynamic controls
+		if(label.is('.allow_dynamic_tabs')) {
+			controls.addClass('destructable');
+			$('<li class="new"><span>+</span></li>').appendTo(controls);
+		}
+
 	});
 	
 })(jQuery.noConflict());
