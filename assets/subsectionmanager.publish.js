@@ -66,7 +66,7 @@
 			});
 			
 			// Editing
-			selection.delegate('li:not(.new, .drawer, .empty)', 'click', function(event) {
+			selection.delegate('li:not(.new, .drawer, .empty, .message)', 'click', function(event) {
 				var item = $(this),
 					target = $(event.target),
 					editor = item.next('.drawer');
