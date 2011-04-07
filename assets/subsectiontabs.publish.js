@@ -434,7 +434,13 @@
 		var store = function(id, name, next) {
 			var item = $('<li />').appendTo(storage);
 				
-			if(!controls.find('li[data-id="' + id + '"]').is('.delete')) {
+			// Delete
+			if(controls.find('li[data-id="' + id + '"]').is('.delete')) {
+				item.append('<input name="fields[' + handle + '][delete][]" value="' + id + '" />');
+			}
+			
+			// Store
+			else {
 				item.append('<input name="fields[' + handle + '][relation_id][]" value="' + id + '" />');
 				item.append('<input name="fields[' + handle + '][name][]" value="' + name + '" />');
 			}

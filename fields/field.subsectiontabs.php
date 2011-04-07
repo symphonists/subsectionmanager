@@ -288,6 +288,14 @@
 				$data['handle'][] = Lang::createHandle($name);
 			}
 			
+			// Delete removed tab entries
+			if(is_array($data['delete'])) {
+				$entryManager = new EntryManager(Symphony::Engine());
+				$entryManager->delete($data['delete']);
+				unset($data['delete']);
+			}
+			
+			// Return processed data
 			return $data;
 		}
 		
