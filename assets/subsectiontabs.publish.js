@@ -406,7 +406,6 @@
 			
 			// Tab loaded
 			if(tab.size() > 0 && post != tab.data('post') && !control.is('.delete')) {
-				console.log('save');
 			
 				// Callback
 				tab.one('load', function(event) {
@@ -531,7 +530,7 @@
 			}
 
 			// Selection
-			if(id == state.tab || ((state.tab == -1 || state.tab == '') && count == 0)) {
+			if(id == state.tab || ((state.tab == -1 || state.tab == '' || state.tab == 'new') && count == 0)) {
 				selected = true;
 			}
 
