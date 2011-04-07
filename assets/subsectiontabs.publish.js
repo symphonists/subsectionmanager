@@ -282,8 +282,7 @@
 			// Prepare subsection display
 			subsection.load(function() {
 				var content = subsection.contents(),
-					current = subsection.attr('name'),
-					selected = controls.find('li.selected').attr('data-id');
+					current = subsection.attr('name');
 
 				// Adjust interface
 				content.find('body').addClass('tabbed subsection');
@@ -294,7 +293,7 @@
 				});
 
 				// Set height
-				if(current == selected && content.find('#notice').size() == 0) {
+				if(current == id) {
 					resize(subsection);
 				}
 				
@@ -504,6 +503,12 @@
 		// Remember subsection name and height
 		var remember = function(subsection, height) {
 			if(localStorage) {
+				var tab = subsection.attr('name');
+				
+				// New entry
+				if(Symphony.Context.get('env').entry_id == null) {
+					tab = '';
+				}
 
 				// Get height
 				if(!height) {
@@ -512,7 +517,7 @@
 				
 				// Store state
 				localStorage.setItem('subsectiontabs-' + Symphony.Context.get('env').entry_id, JSON.stringify({
-					'tab': subsection.attr('name'),
+					'tab': tab,
 					'height': height
 				}));
 			}
