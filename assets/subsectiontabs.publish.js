@@ -176,7 +176,7 @@
 					input.replaceWith('<span>' + name + '</span>');
 					
 					// Rename iframe if no identifier has been set
-					if(!control.attr('data-id')) {
+					if(!control.attr('data-id') || control.attr('data-id') == 'new') {
 						subsection.attr('name', name);
 						remember(subsection);
 					}
@@ -524,7 +524,7 @@
 		storage.find('li').each(function(count) {
 			var item = $(this),
 				name = item.find('input:eq(1)').val(),
-				id = item.find('input:eq(0)').val() || name,
+				id = item.find('input:eq(0)').val(),
 				link = item.find('a').attr('href'),
 				static = false;
 				selected = false;
@@ -535,7 +535,7 @@
 			}
 
 			// Selection
-			if(id == state.tab || ((state.tab == -1 || state.tab == '' || state.tab == 'new') && count == 0)) {
+			if(id == state.tab || name == state.tab || ((state.tab <= 0 || state.tab == '' || state.tab == 'new') && count == 0)) {
 				selected = true;
 			}
 
