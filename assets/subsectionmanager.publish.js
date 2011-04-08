@@ -241,10 +241,11 @@
 			
 			// Browse queue
 			var browse = function() {
+				var list = queue.find('ul');
 
 				// Append queue if it's not present yet
-				if(queue_loaded == false) {
-					var list = queue.find('ul').addClass('loading').slideDown('fast');
+				if(queue_loaded == false && !list.is('.loading')) {
+					list.addClass('loading');
 
 					// Get queue items
 					$.ajax({
@@ -272,6 +273,7 @@
 							}
 							
 							// Save status
+							list.removeClass('loading');
 							queue_loaded = true;
 						}
 					});
@@ -444,6 +446,11 @@
 				target[0].selectionStart = start + text.length;
 				target[0].selectionEnd = start + text.length;
 			};
+								
+		/*-----------------------------------------------------------------------*/
+			
+			// Preload queue items
+			browse();
 			
 		});
 
