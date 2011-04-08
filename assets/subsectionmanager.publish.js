@@ -31,7 +31,8 @@
 				subsectionmanager_id = context.attr('name').match(/\[subsection_id\]\[(.*)\]/)[1],
 				subsection_link = drawer.find('iframe').attr('target'),
 				dragger = $('div.dragger'),
-				empty = $('<li class="message"><span>' + Symphony.Language.get('There are currently no items available. Perhaps you want create one first?') + '</li>');
+				empty = $('<li class="message"><span>' + Symphony.Language.get('There are currently no items available. Perhaps you want create one first?') + '</li>'),
+				textarea = $('textarea');
 					
 		/*-----------------------------------------------------------------------*/
 
@@ -131,14 +132,16 @@
 			});
 			
 			// Dropping
-			$('textarea').bind('drop.stage', function(event, item) {
-				var target = $(this);
+			if($.type(textarea.data('events').drop) == 'undefined') {
+				textarea.bind('drop.stage', function(event, item) {
+					var target = $(this);
 				
-				// Insert text
-				if(target.is('.droptarget')) {
-					drop(target, item);
-				}
-			});
+					// Insert text
+					if(target.is('.droptarget')) {
+						drop(target, item);
+					}
+				});
+			}
 			
 			// Sorting
 			selection.bind('orderstart.stage', function() {
