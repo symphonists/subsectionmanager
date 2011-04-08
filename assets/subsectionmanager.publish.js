@@ -132,7 +132,7 @@
 			});
 			
 			// Dropping
-			if($.type(textarea.data('events').drop) == 'undefined') {
+			if(!('drop' in textarea.data('events'))) {
 				textarea.bind('drop.stage', function(event, item) {
 					var target = $(this);
 				
