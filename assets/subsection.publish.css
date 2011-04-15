@@ -18,6 +18,10 @@ body.tabbed.subsection {
 	margin: 0;
 }
 
+body.inline.subsection #wrapper {
+	background: #353533;
+}
+
 body.inline.subsection #header, body.tabbed.subsection #header {
 	margin: 0;
 }
@@ -118,6 +122,10 @@ body.inline.subsection form #error input[type="file"] {
 
 body.inline.subsection form input[type="checkbox"] {
 	width: auto;
+}
+
+body.inline.subsection .group label > i:hover, body.inline.subsection .secondary label > i {
+	background-color: transparent !important;
 }
 
 /* Stage inside Stage */
