@@ -455,7 +455,7 @@
 			}
 			
 			// Store
-			else {
+			else if(!isNaN(id)) {
 				item.append('<input name="fields[' + handle + '][relation_id][]" value="' + id + '" />');
 				item.append('<input name="fields[' + handle + '][name][]" value="' + name + '" />');
 			}
@@ -533,6 +533,11 @@
 				link = item.find('a').attr('href'),
 				static = false;
 				selected = false;
+				
+			// Fallback id
+			if(!id) {
+				id = name;
+			}
 			
 			// Static tabs
 			if(item.is('.static')) {
@@ -540,7 +545,7 @@
 			}
 
 			// Selection
-			if(id == state.tab || name == state.tab || ((state.tab <= 0 || state.tab == '' || state.tab == 'new') && count == 0)) {
+			if(id == state.tab || ((state.tab <= 0 || state.tab == '' || state.tab == 'new') && count == 0)) {
 				selected = true;
 			}
 

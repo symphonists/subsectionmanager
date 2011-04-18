@@ -374,6 +374,10 @@
 		public function prepareTableValue($data, XMLElement $link = null) {
 			$entryManager = new EntryManager(Symphony::Engine());
 
+			// Prepare data
+			if(!is_array($data['name'])) $data['name'] = array($data['name']);
+			if(!is_array($data['relation_id'])) $data['relation_id'] = array($data['relation_id']);
+
 			// Get tabs
 			$tabs = '';
 			for($i = 0; $i < count($data['name']); $i++) {
