@@ -132,15 +132,17 @@
 			});
 			
 			// Dropping
-			if(!('drop' in textarea.data('events'))) {
-				textarea.bind('drop.stage', function(event, item) {
-					var target = $(this);
-				
-					// Insert text
-					if(target.is('.droptarget')) {
-						drop(target, item);
-					}
-				});
+			if(textarea.size() > 0) {
+				if(!('drop' in textarea.data('events'))) {
+					textarea.bind('drop.stage', function(event, item) {
+						var target = $(this);
+					
+						// Insert text
+						if(target.is('.droptarget')) {
+							drop(target, item);
+						}
+					});
+				}
 			}
 			
 			// Sorting
