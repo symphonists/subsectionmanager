@@ -329,6 +329,11 @@
 		 */		
 		public function appendFormattedElement(XMLElement &$wrapper, $data, $encode = false) {
 		
+			// Prepare data
+			if(!is_array($data['name'])) $data['name'] = array($data['name']);
+			if(!is_array($data['handle'])) $data['handle'] = array($data['handle']);
+			if(!is_array($data['relation_id'])) $data['relation_id'] = array($data['relation_id']);
+		
 			// Create tabs
 			$entryManager = new EntryManager(Symphony::Engine());
 			$subsection = new XMLElement($this->get('element_name'));
