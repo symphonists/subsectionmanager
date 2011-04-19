@@ -292,7 +292,10 @@
 				var editor = drawer.clone().hide().addClass('new');
 				
 				// Prepare iframe
-				editor.find('iframe').css('opacity', '0.01').attr('src', subsection_link + '/new/').load(function() {
+				editor.find('iframe').css({
+					'opacity': 0.01,
+					'height': 0					
+				}).attr('src', subsection_link + '/new/').load(function() {
 					iframe = $(this);
 					load(item, editor, iframe);
 				});
@@ -301,8 +304,7 @@
 				editor.insertAfter(item).slideDown('fast');			
 
 				stage.trigger('createstop', [item]);
-			};
-			
+			};			
 					
 			// Edit item
 			var edit = function(item) {
