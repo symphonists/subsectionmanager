@@ -43,3 +43,9 @@ div.subsectionmanager a em {
 .selecting div.subsectionmanager em, .selected div.subsectionmanager em {
 	color: #ABE;
 }
+
+/* Subsection Tabs */
+
+tr.selected td.field-subsectiontabs span.inactive {
+	color: #abe;
+}
