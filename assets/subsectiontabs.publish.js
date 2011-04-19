@@ -22,8 +22,7 @@
 			title = $('h2:first'),
 			storage = field.find('ul'),
 			references = field.find('a'),
-			state = $.parseJSON(localStorage.getItem('subsectiontabs-' + Symphony.Context.get('env').entry_id)) || { tab: -1 },
-			controls, tabs,
+			state, controls, tabs,
 			fragments, headline;
 			
 		// Set context
@@ -282,7 +281,8 @@
 			// Prepare subsection display
 			subsection.load(function() {
 				var content = subsection.contents(),
-					current = subsection.attr('name');
+					current = subsection.attr('name'),
+					selected = controls.find('li.selected').attr('data-id');
 
 				// Adjust interface
 				content.find('body').addClass('tabbed subsection');
@@ -293,7 +293,7 @@
 				});
 
 				// Set height
-				if(current == id) {
+				if(current == selected) {
 					resize(subsection);
 				}
 				
@@ -505,11 +505,6 @@
 			if(localStorage) {
 				var tab = subsection.attr('name');
 				
-				// New entry
-				if(Symphony.Context.get('env').entry_id == null) {
-					tab = '';
-				}
-
 				// Get height
 				if(!height) {
 					height = getHeight(subsection);
@@ -525,14 +520,53 @@
 		
 	/*-----------------------------------------------------------------------*/
 	
+		// Get state of new entry
+		if(Symphony.Context.get('env').flag == 'created') {
+			state = $.parseJSON(localStorage.getItem('subsectiontabs-null'));
+			
+			// Fetch id
+			active = storage.find('li').map(function() {
+				var item = $(this),
+					name = item.find('input:eq(1)').val(),
+					id = item.find('input:eq(0)').val();
+				
+				if(name == state.tab) return id;
+			});
+			
+			// Store id
+			if(active.length) {
+				state.tab = active[0];
+			}
+		}
+		
+		// Get state of current entry
+		else {
+			state = $.parseJSON(localStorage.getItem('subsectiontabs-' + Symphony.Context.get('env').entry_id));
+			console.log(state);
+			
+			// No storage yet
+			if(state == null) {
+				state = {
+					tab: -1,
+					height: 150
+				};
+			}
+		}
+
 		// Add controls
 		storage.find('li').each(function(count) {
 			var item = $(this),
 				name = item.find('input:eq(1)').val(),
 				id = item.find('input:eq(0)').val(),
 				link = item.find('a').attr('href'),
-				static = false;
-				selected = false;
+				static = false,
+				selected = false,
+				active;
+				
+			// Set tabs height
+			if(state.height) {
+				tabs.height(state.height);
+			}
 				
 			// Fallback id
 			if(!id) {
@@ -543,9 +577,9 @@
 			if(item.is('.static')) {
 				static = true;
 			}
-
+			
 			// Selection
-			if(id == state.tab || ((state.tab <= 0 || state.tab == '' || state.tab == 'new') && count == 0)) {
+			if((Symphony.Context.get('env').page == 'new' && count == 0) || (state.tab == -1 && count == 0) || id == state.tab) {
 				selected = true;
 			}
 
