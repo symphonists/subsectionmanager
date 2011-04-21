@@ -175,9 +175,6 @@
 					$droptext = $droptext_template;
 					if(in_array($entry['id'], $this->_Items) || $full) {
 
-						// Populate select options
-						$options[] = array($entry['id'], in_array($entry['id'], $this->_Items), General::sanitize($field_value));
-
 						// Generate layout
 						$thumb = $type = $preview = $template = '';
 						foreach($fields as $field) {
@@ -210,6 +207,9 @@
 								
 							}
 						}
+
+						// Populate select options
+						$options[] = array($entry['id'], in_array($entry['id'], $this->_Items), $caption);
 
 						// Create stage template
 						if($type == 'image') {

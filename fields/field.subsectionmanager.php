@@ -396,9 +396,18 @@
 		}
 
 		/**
+		 * If you need to fetch the pure data this field returns, please use getDefaultPublishContent()
+		 *
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#displayPublishPanel
 		 */
 		function displayPublishPanel(&$wrapper, $data=NULL, $flagWithError=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL) {
+		
+			// Houston, we have problem: we've been called out of context!
+			$callback = Administration::instance()->getPageCallback();
+			if($callback['context']['page'] != 'edit' && $callback['context']['page'] != 'new') {
+				$this->getDefaultPublishContent(&$wrapper);
+				return;
+			}
 		
 			// Get version number
 			$about = Symphony::ExtensionManager()->about('subsectionmanager');
@@ -487,6 +496,20 @@
 				$wrapper->appendChild($stage);
 			}
 
+		}
+		
+		/**
+		 * Get default publish content
+		 */
+		function getDefaultPublishContent(&$wrapper) {
+			
+			// Get items
+			$subsection = new SubsectionManager($this->_Parent);
+			$content = $subsection->generate(null, $this->get('id'), $this->get('subsection_id'), NULL, true);
+			
+			// Append items
+			$select = Widget::Select(null, $content['options']);
+			$wrapper->appendChild($select);
 		}
 
 		/**

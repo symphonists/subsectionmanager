@@ -106,10 +106,18 @@
 		}
 
 		/**
+		 * If you need to fetch the pure data this field returns, please use getDefaultPublishContent()
+		 *
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#displayPublishPanel
 		 */
-		public function displayPublishPanel(&$wrapper, $data=NULL, $flagWithError=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL) {
-
+		function displayPublishPanel(&$wrapper, $data=NULL, $flagWithError=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL) {
+		
+			// Houston, we have problem: we've been called out of context!
+			$callback = Administration::instance()->getPageCallback();
+			if($callback['context']['page'] != 'edit' && $callback['context']['page'] != 'new') {
+				return;
+			}
+		
 			// Append assets
 			Administration::instance()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/assets/subsectiontabs.publish.js', 101, false);
 			Administration::instance()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/assets/subsectiontabs.publish.css', 'screen', 102, false);
@@ -212,6 +220,26 @@
 			return $wrapper;
 		}
 		
+		/**
+		 * Get default publish content
+		 */
+/*		function getDefaultPublishContent(&$wrapper) {
+
+			// Prepare container
+			$content = new XMLElement('ul');
+			$wrapper->appendChild($content);
+
+			// Get entries
+			$entryManager = new EntryManager(Symphony::Engine());
+			$entries = $entryManager->fetch(null, $this->get('parent_section'));
+			
+			foreach($entries as $entry) {
+				$data = $entry->getData($this->get('field_id'));
+				$tab = new XMLElement('li', $this->prepareTableValue($data));
+				$content->appendChild($tab);
+			}			
+		}*/
+
 		/**
 		 * Fetch names and relation ids from all existing tabs in the selected entry
 		 *
@@ -460,8 +488,42 @@
 		public function buildDSRetrivalSQL($data, &$joins, &$where, $andOperation = false) {
 			$field_id = $this->get('id');
 
+			// Filter by regular expression
+			if(self::isFilterRegex($data[0])) {
+
+				// Get pattern and type
+				if(preg_match('/^regexp:/i', $data[0])) {
+					$pattern = preg_replace('/regexp:/i', null, $this->cleanValue($data[0]));
+					$regex = 'REGEXP';
+				} 
+				else {
+					$pattern = preg_replace('/not-?regexp:/i', null, $this->cleanValue($data[0]));
+					$regex = 'NOT REGEXP';
+				}
+			
+				// Get first field
+				$subfield_id = Symphony::Database()->fetchVar('id', 0,
+					"SELECT `id`
+					FROM `tbl_fields` 
+					WHERE `parent_section` = '" . $this->get('subsection_id') . "' 
+					AND `sortorder` = '0'
+					LIMIT 1"
+				);
+				
+				// Get entry ids
+				$entry_id = Symphony::Database()->fetchCol('entry_id',
+					"SELECT `entry_id` 
+					FROM `tbl_entries_data_" . $subfield_id . "` 
+					WHERE `handle` {$regex} '{$pattern}'" 
+				);
+				
+				// Query
+				$joins .= " LEFT JOIN `tbl_entries_data_$field_id` AS `t$field_id$key` ON (`e`.`id` = `t$field_id$key`.entry_id) ";
+				$where .= " AND `t$field_id`.relation_id IN ('" . @implode("', '", $entry_id) . "') OR `t$field_id`.name {$regex} '{$pattern}' ";
+			}
+
 			// Filter by subsection entry title or handle
-			if(preg_match('/^title:\s*/', $data[0], $matches)) {
+			elseif(preg_match('/^title:\s*/', $data[0], $matches)) {
 				$data = Lang::createHandle(trim(array_pop(explode(':', $data[0], 2))));
 							
 				// Get first field
