@@ -106,8 +106,6 @@
 		}
 
 		/**
-		 * If you need to fetch the pure data this field returns, please use getDefaultPublishContent()
-		 *
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#displayPublishPanel
 		 */
 		function displayPublishPanel(&$wrapper, $data=NULL, $flagWithError=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL) {
@@ -220,26 +218,6 @@
 			return $wrapper;
 		}
 		
-		/**
-		 * Get default publish content
-		 */
-/*		function getDefaultPublishContent(&$wrapper) {
-
-			// Prepare container
-			$content = new XMLElement('ul');
-			$wrapper->appendChild($content);
-
-			// Get entries
-			$entryManager = new EntryManager(Symphony::Engine());
-			$entries = $entryManager->fetch(null, $this->get('parent_section'));
-			
-			foreach($entries as $entry) {
-				$data = $entry->getData($this->get('field_id'));
-				$tab = new XMLElement('li', $this->prepareTableValue($data));
-				$content->appendChild($tab);
-			}			
-		}*/
-
 		/**
 		 * Fetch names and relation ids from all existing tabs in the selected entry
 		 *
