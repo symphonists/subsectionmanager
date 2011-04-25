@@ -9,26 +9,34 @@
 
 	Class extension_subsectionmanager extends Extension {
 
+		/**
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/extension/#__construct
+		 */
 		public function __construct(Array $args){
 			parent::__construct($args);
 			
 			// Include Stage
-			try {
-				if((include_once(EXTENSIONS . '/subsectionmanager/lib/stage/class.stage.php')) === FALSE) {
-					throw new Exception();
+			if(!class_exists('Stage')) {
+				try {
+					if((include_once(EXTENSIONS . '/subsectionmanager/lib/stage/class.stage.php')) === FALSE) {
+						throw new Exception();
+					}
 				}
-			}
-			catch(Exception $e) {
-			    throw new SymphonyErrorPage(__('Please make sure that the Stage submodule is initialised and available at %s.', array('<code>' . EXTENSIONS . '/subsectionmanager/lib/stage/</code>')) . '<br/><br/>' . __('It\'s available at %s.', array('<a href="https://github.com/nilshoerrmann/stage">github.com/nilshoerrmann/stage</a>')), __('Stage not found'));
+				catch(Exception $e) {
+				    throw new SymphonyErrorPage(__('Please make sure that the Stage submodule is initialised and available at %s.', array('<code>' . EXTENSIONS . '/subsectionmanager/lib/stage/</code>')) . '<br/><br/>' . __('It\'s available at %s.', array('<a href="https://github.com/nilshoerrmann/stage">github.com/nilshoerrmann/stage</a>')), __('Stage not found'));
+				}
 			}
 		}
 
+		/**
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/extension/#about
+		 */
 		public function about() {
 			return array(
 				'name' => 'Subsection Manager',
 				'type' => 'Field, Interface',
-				'version' => '1.1.1',
-				'release-date' => '2011-02-22',
+				'version' => '1.2dev',
+				'release-date' => false,
 				'author' => array(
 					'name' => 'Nils Hörrmann',
 					'website' => 'http://nilshoerrmann.de',
@@ -38,6 +46,9 @@
 			);
 		}
 
+		/**
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/extension/#getSubscribedDelegates
+		 */
 		public function getSubscribedDelegates(){
 			return array(
 				array(
@@ -54,11 +65,6 @@
 					'page' => '/publish/edit/',
 					'delegate' => 'EntryPostEdit',
 					'callback' => '__saveSortOrder'
-				),
-				array(
-					'page' => '/publish/',
-					'delegate' => 'Delete',
-					'callback' => '__deleteSortOrder'
 				),
 				array(
 					'page' => '/backend/',
@@ -98,7 +104,6 @@
 		 * @param object $context
 		 */
 		public function __saveSortOrder($context) {
-		
 			if(!is_null($context['fields']['sort_order'])) {
 			
 				// Delete current sort order
@@ -119,16 +124,6 @@
 					);
 				}
 			}
-		}
-
-		/**
-		 * Delete sort order of the field
-		 *
-		 * @param object $context
-		 */
-		public function __deleteSortOrder($context) {
-			// DELEGATE NOT WORKING:
-			// http://github.com/symphony/symphony-2/issues#issue/108
 		}
 		
 		/**
@@ -166,6 +161,9 @@
 		 * @see toolkit.ExtensionManager#install
 		 * @return boolean
 		 *  True if the install completely successfully, false otherwise
+
+		/**
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/extension/#install
 		 */
 		public function install() {
 			$status = array();
@@ -200,25 +198,11 @@
 		}
 
 		/**
-		 * Logic that should take place when an extension is to be been updated
-		 * when a user runs the 'Enable' action from the backend. The currently
-		 * installed version of this extension is provided so that it can be
-		 * compared to the current version of the extension in the file system.
-		 * This is commonly done using PHP's version_compare function. Common
-		 * logic done by this method is to update differences between extension
-		 * tables.
-		 *
-		 * @see toolkit.ExtensionManager#update
-		 * @param string $previousVersion
-		 *  The currently installed version of this extension from the
-		 *  tbl_extensions table. The current version of this extension is
-		 *  provided by the about() method.
-		 * @return boolean
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/extension/#update
 		 */
 		public function update($previousVersion) {
 			$status = array();
 		
-			// Update beta installs
 			if(version_compare($previousVersion, '1.0', '<')) {
 				
 				// Install missing tables
@@ -233,8 +217,9 @@
 				}
 				
 			}
-
-			// Update 1.0 installs
+			
+		/*-----------------------------------------------------------------------*/
+			
 			if(version_compare($previousVersion, '1.1', '<')) {
 			
 				// Add droptext column
@@ -321,11 +306,7 @@
 		}
 
 		/**
-		 * Any logic that should be run when an extension is to be uninstalled
-		 * such as the removal of database tables.
-		 *
-		 * @see toolkit.ExtensionManager#uninstall
-		 * @return boolean
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/extension/#uninstall
 		 */
 		public function uninstall() {
 		

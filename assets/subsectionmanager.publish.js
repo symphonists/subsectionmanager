@@ -31,7 +31,8 @@
 				subsectionmanager_id = context.attr('name').match(/\[subsection_id\]\[(.*)\]/)[1],
 				subsection_link = drawer.find('iframe').attr('target'),
 				dragger = $('div.dragger'),
-				empty = $('<li class="message"><span>' + Symphony.Language.get('There are currently no items available. Perhaps you want create one first?') + '</li>');
+				empty = $('<li class="message"><span>' + Symphony.Language.get('There are currently no items available. Perhaps you want create one first?') + '</li>'),
+				textarea = $('textarea');
 					
 		/*-----------------------------------------------------------------------*/
 
@@ -66,7 +67,7 @@
 			});
 			
 			// Editing
-			selection.delegate('li:not(.new, .drawer, .empty)', 'click', function(event) {
+			selection.delegate('li:not(.new, .drawer, .empty, .message)', 'click', function(event) {
 				var item = $(this),
 					target = $(event.target),
 					editor = item.next('.drawer');
@@ -131,14 +132,18 @@
 			});
 			
 			// Dropping
-			$('textarea').bind('drop.stage', function(event, item) {
-				var target = $(this);
-				
-				// Insert text
-				if(target.is('.droptarget')) {
-					drop(target, item);
+			if(textarea.size() > 0) {
+				if(!('drop' in textarea.data('events'))) {
+					textarea.bind('drop.stage', function(event, item) {
+						var target = $(this);
+					
+						// Insert text
+						if(target.is('.droptarget')) {
+							drop(target, item);
+						}
+					});
 				}
-			});
+			}
 			
 			// Sorting
 			selection.bind('orderstart.stage', function() {
@@ -241,10 +246,11 @@
 			
 			// Browse queue
 			var browse = function() {
+				var list = queue.find('ul');
 
 				// Append queue if it's not present yet
-				if(queue_loaded == false) {
-					var list = queue.find('ul').addClass('loading').slideDown('fast');
+				if(queue_loaded == false && !list.is('.loading')) {
+					list.addClass('loading');
 
 					// Get queue items
 					$.ajax({
@@ -265,18 +271,14 @@
 							
 							// Append queue items
 							else {
-								$(result).hide().appendTo(list);
+								$(result).appendTo(list);
 								
 								// Highlight selected items
 								stage.trigger('update');
 							}
-
-							// Slide queue
-							list.find('li').slideDown('fast', function() {
-								$(this).parent('ul').removeClass('loading');
-							});
 							
 							// Save status
+							list.removeClass('loading');
 							queue_loaded = true;
 						}
 					});
@@ -290,7 +292,10 @@
 				var editor = drawer.clone().hide().addClass('new');
 				
 				// Prepare iframe
-				editor.find('iframe').css('opacity', '0.01').attr('src', subsection_link + '/new/').load(function() {
+				editor.find('iframe').css({
+					'opacity': 0.01,
+					'height': 0					
+				}).attr('src', subsection_link + '/new/').load(function() {
 					iframe = $(this);
 					load(item, editor, iframe);
 				});
@@ -299,8 +304,7 @@
 				editor.insertAfter(item).slideDown('fast');			
 
 				stage.trigger('createstop', [item]);
-			};
-			
+			};			
 					
 			// Edit item
 			var edit = function(item) {
@@ -449,6 +453,11 @@
 				target[0].selectionStart = start + text.length;
 				target[0].selectionEnd = start + text.length;
 			};
+								
+		/*-----------------------------------------------------------------------*/
+			
+			// Preload queue items
+			browse();
 			
 		});
 
