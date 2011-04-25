@@ -35,7 +35,7 @@
 			return array(
 				'name' => 'Subsection Manager',
 				'type' => 'Field, Interface',
-				'version' => '1.2dev',
+				'version' => '1.2beta',
 				'release-date' => false,
 				'author' => array(
 					'name' => 'Nils Hörrmann',
