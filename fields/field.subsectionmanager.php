@@ -114,12 +114,9 @@
 											$values[$value][] = $relation;
 										}
 									}				
-
 								}
-							}
-							
+							}							
 						}
-						
 					}
 				}
 				
@@ -229,9 +226,7 @@
 
 							}
 						}
-
 					}
-
 				}
 
 				// Generate includable field list options
@@ -425,12 +420,12 @@
 			// Save new section association
 			$association = $this->createSectionAssociation(NULL, $this->get('subsection_id'), $id, $id, false);
 			
-			if ($settings && $association) {
+			if($settings && $association) {
 				return true;
-			} else {
+			} 
+			else {
 				return false;
 			}
-			
 		}
 
 		/**
@@ -476,12 +471,10 @@
 			$version = strtolower($about['version']);	
 
 			// Append assets
-			if(Administration::instance() instanceof Symphony && !is_null(Administration::instance()->Page)) {
-				Symphony::Engine()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/lib/stage/stage.publish.js', 101, false);
-				Symphony::Engine()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/lib/stage/stage.publish.css', 'screen', 103, false);
-				Symphony::Engine()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.publish.js', 102, false);
-				Symphony::Engine()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.publish.css', 'screen', 104, false);
-			}
+			Symphony::Engine()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/lib/stage/stage.publish.js', 101, false);
+			Symphony::Engine()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/lib/stage/stage.publish.css', 'screen', 103, false);
+			Symphony::Engine()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.publish.js', 102, false);
+			Symphony::Engine()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.publish.css', 'screen', 104, false);
 
 			// Get Subsection
 			$subsection = new SubsectionManager($this->_Parent);
@@ -557,7 +550,6 @@
 			else {
 				$wrapper->appendChild($stage);
 			}
-
 		}
 		
 		/**
@@ -810,11 +802,9 @@
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#displayDatasourceFilterPanel
 		 */
 		function displayDatasourceFilterPanel(&$wrapper, $data=NULL, $errors=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL) {
-
 			parent::displayDatasourceFilterPanel($wrapper, $data, $errors, $fieldnamePrefix, $fieldnamePostfix);
 			$text = new XMLElement('p', __('Use comma separated entry ids for filtering.'), array('class' => 'help') );
 			$wrapper->appendChild($text);
-
 		}
 
 		/**

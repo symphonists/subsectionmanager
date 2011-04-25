@@ -6,7 +6,6 @@
 	/**
 	 * Subsection Manager Extension
 	 */
-
 	Class extension_subsectionmanager extends Extension {
 
 		/**
@@ -125,7 +124,7 @@
 				}
 			}
 		}
-		
+
 		/**
 		 * Upgrade Mediathek fields to make use of this extension
 		 */
@@ -153,14 +152,6 @@
 				}
 			}
 		}
-
-		/**
-		 * Any logic that assists this extension in being installed such as
-		 * table creation, checking for dependancies etc.
-		 *
-		 * @see toolkit.ExtensionManager#install
-		 * @return boolean
-		 *  True if the install completely successfully, false otherwise
 
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/extension/#install
@@ -215,7 +206,6 @@
 						"ALTER TABLE `tbl_fields_stage` ADD `context` varchar(255) default NULL"
 					);
 				}
-				
 			}
 			
 		/*-----------------------------------------------------------------------*/
@@ -318,7 +308,7 @@
 			Symphony::Database()->query("DROP TABLE IF EXISTS `tbl_fields_subsectionmanager`");
 			
 			// Maintenance		
-			Symphony::Database()->query("DROP TABLE IF EXISTS `tbl_fields_subsectionmanager_sorting`");			
+			Symphony::Database()->query("DROP TABLE IF EXISTS `tbl_fields_subsectionmanager_sorting`");
 		}
 		
 	}
