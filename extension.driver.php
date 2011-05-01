@@ -8,11 +8,19 @@
 	 */
 
 	Class extension_subsectionmanager extends Extension {
+		
+		/**
+		 * Private instance of Entry Manager
+		 */		
+		private static $entryManager;
 	
 		/**
 		 * Storage for subsection entries
 		 */
-		public static $storage = array();  
+		public static $storage = array(
+			'fields' => array(),
+			'entries' => array()
+		);
 
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/extension/#__construct
@@ -79,7 +87,7 @@
 				array(
 					'page' => '/frontend/',
 					'delegate' => 'DataSourceEntriesBuilt', 
-					'callback' => '__fetchSubsectionElements'
+					'callback' => '__prepareSubsection'
 				)
 			);
 		}
@@ -171,85 +179,130 @@
 		 *
 		 * @see http://symphony-cms.com/learn/api/2.2/delegates/#DataSourceEntriesBuilt
 		 */
-		public function __fetchSubsectionElements(&$context) {
-			$entryManager = new EntryManager(Symphony::Engine());
-		
-			// Fetch subsection fields
-			$section_id = $context['datasource']->getSource();
-			$subsectionmanagers = Symphony::Database()->fetch(
-				"SELECT `id`, `element_name`, `type`
-				FROM `tbl_fields` 
-				WHERE `parent_section` = " . $section_id . " 
-				AND `type` = 'subsectiontabs' 
-				OR `type` = 'subsectionmanager'"
-			);
+		public function __prepareSubsection(&$context) {
+			$parent = get_parent_class($context['datasource']);
 			
-			// Associate id, name and type
-			$subsection_fields = array();
-			foreach($subsectionmanagers as $manager) {
-				$subsection_fields[$manager['id']] = $manager['element_name'];
-				$subsection_fields['type'][$manager['id']] = $manager['type'];
+			// Initialise Entry Manager
+			if(empty($this->entryManager)) {
+				self::$entryManager = new EntryManager(Symphony::Engine());
+			}
+		
+			// Default Data Source
+			if($parent == 'DataSource') {
+				$this->__parseSubsectionFields($context['datasource']);
+			}
+			
+			// Union Data Source
+			elseif($parent == 'UnionDatasource') {
+				foreach($context['datasource']->datasources as $datasource) {
+					$this->__parseSubsectionFields($datasource['datasource']);
+				}
 			}
 
-			// Parse field modes
-			$subsections = array();
-			$subsection_ids = array();
-			foreach($context['datasource']->dsParamINCLUDEDELEMENTS as $index => $included) {
-				$fields = explode(': ', $included, 2);
+			// Preload entries
+			self::preloadSubsectionEntries($context['entries']['records']);
+		}
+		
+		/**
+		 * Parse data source and extract subsection fields
+		 *
+		 * @param DataSource $datasource
+		 *	The data source class to parse
+		 */
+		private function __parseSubsectionFields(&$datasource) {
+
+			// Parse includes elements
+			foreach($datasource->dsParamINCLUDEDELEMENTS as $index => $included) {
+				list($subsection, $field) = explode(': ', $included, 2);
 				
 				// Get subsection fields
-				$field_id = array_search($fields[0], $subsection_fields);
-				if($field_id) {
+				if(strstr($field, ': ') !== false) {
 					
-					// Get subsection id
-					$subsection_ids[$field_id] = Symphony::Database()->fetchVar('subsection_id', 0, 
-						"SELECT `subsection_id` 
-						FROM `tbl_fields_" . $subsection_fields['type'][$field_id] . "` 
-						WHERE `field_id` = '" . $field_id . "'
+					// Get id
+					$id = Symphony::Database()->fetch( 
+						"(SELECT t1.`subsection_id`, t1.field_id
+							FROM `tbl_fields_subsectionmanager` AS t1 
+							INNER JOIN `tbl_fields` AS t2 
+							WHERE t2.`element_name` = '{$subsection}'
+							AND t1.`field_id` = t2.`id`
+							LIMIT 1) 
+						UNION
+						(SELECT t1.`subsection_id`, t1.field_id
+							FROM `tbl_fields_subsectiontabs` AS t1 
+							INNER JOIN `tbl_fields` AS t2 
+							WHERE t2.`element_name` = '{$subsection}'
+							AND t1.`field_id` = t2.`id`
+							LIMIT 1) 
 						LIMIT 1"
 					);
 
 					// Get field id and mode
-					$components = explode(': ', $fields[1], 2);
-					$subfield_id = $entryManager->fieldManager->fetchFieldIDFromElementName($components[0], $subsection_ids[$field_id]);
+					list($field, $mode) = explode(': ', $field, 2);
+					$subfield_id = self::$entryManager->fieldManager->fetchFieldIDFromElementName($field, $id[0]['subsection_id']);
 
 					// Store field data
-					self::$storage['fields'][$field_id][$subfield_id][] = $components[1];
+					self::storeSubsectionFields($id[0]['field_id'], $subfield_id, $mode);
 	
 					// Set a single field call for subsection fields
-					unset($context['datasource']->dsParamINCLUDEDELEMENTS[$index]);
-					if(!in_array($fields[0], $context['datasource']->dsParamINCLUDEDELEMENTS)) {
-						$context['datasource']->dsParamINCLUDEDELEMENTS[$index] = $fields[0];
+					unset($datasource->dsParamINCLUDEDELEMENTS[$index]);
+					if(!in_array($fields[0], $datasource->dsParamINCLUDEDELEMENTS)) {
+						$datasource->dsParamINCLUDEDELEMENTS[$index] = $subsection;
+					}
+				}
+			}
+		}
+		
+		/**
+		 * Store subsection fields
+		 *
+		 * @param integer $field_id
+		 *	The subsection field id
+		 * @param integer $subfield_id
+		 *	The subsection field subfield id
+		 * @param string $mode
+		 *	Subfield mode, e. g. 'formatted' or 'unformatted'
+		 */
+		public static function storeSubsectionFields($field_id, $subfield_id, $mode) {
+			self::$storage['fields'][$field_id][$subfield_id][] = $mode;
+		}
+
+		/**
+		 * Preload subsection entries
+		 *
+		 * @param Array $parents
+		 *	Array of entry objects
+		 */
+		public static function preloadSubsectionEntries($parents) {
+
+			// Get parent data
+			$fields = array();
+			foreach($parents as $entry) {
+				$data = $entry->getData();
+				
+				// Get relation id
+				foreach($data as $field => $settings) {
+					if(isset($settings['relation_id'])) {
+						foreach($settings['relation_id'] as $relation_id) {
+							$fields[$field][] = $relation_id;
+						}
 					}
 				}
 			}
 			
-		/*-----------------------------------------------------------------------*/
-			
-			// Get entry data
-			$parent_entries = array();
-			foreach($context['entries']['records'] as $entry) {
-				$parent_entries[] = $entry->getData();
-			}
-			
-			// Fetch subsection entries
-			self::$storage['entries'] = array();
-			foreach($subsection_fields as $id => $name) {
-				
-				// Get ids
-				$entry_id = array();
-				foreach($parent_entries as $entry) {
-					$entry_id = array_merge((array)$entry[$id]['relation_id'], $entry_id);			
-				}
-				
+			// Store entries	
+			foreach($fields as $field => $relation_id) {
+	
 				// Check for already loaded entries
-				$entry_id = array_diff($entry_id, array_keys(self::$storage['entries']));
+				$entry_id = array_diff($relation_id, array_keys(self::$storage['entries']));
 				
-				// Fetch entries
-				if(!empty($entry_id) && !empty($subsection_ids[$id])) {
-					$entries = $entryManager->fetch($entry_id, $subsection_ids[$id]);
-
-					// Store entries
+				// Load new entries
+				if(!empty($entry_id)) {
+				
+					// Get subsection id
+					$subsection_id = self::$entryManager->fetchEntrySectionID($entry_id[0]);
+				
+					// Fetch entries
+					$entries = self::$entryManager->fetch($entry_id, $subsection_id);
 					foreach($entries as $entry) {
 						self::$storage['entries'][$entry->get('id')] = $entry;
 					}

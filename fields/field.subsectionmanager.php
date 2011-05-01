@@ -625,7 +625,10 @@
 
 		/**
 		 * Subsection entries are pre-processed in the extension driver and stored in 
-		 * extension_subsectionmanager::$storage with other helpful data.
+		 * extension_subsectionmanager::$storage with other helpful data. If you are building 
+		 * custom data sources, please use extension_subsectionmanager::storeSubsectionFields() 
+		 * to store subsection fields and extension_subsectionmanager::preloadSubsectionEntries() 
+		 * to preload subsection entries.
 		 *
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#appendFormattedElement
 		 * @todo Sorting should be handled via system id
