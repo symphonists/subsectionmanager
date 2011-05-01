@@ -462,7 +462,7 @@
 			// Houston, we have problem: we've been called out of context!
 			$callback = Administration::instance()->getPageCallback();
 			if($callback['context']['page'] != 'edit' && $callback['context']['page'] != 'new') {
-				$this->getDefaultPublishContent(&$wrapper);
+				$this->getDefaultPublishContent($wrapper);
 				return;
 			}
 		
