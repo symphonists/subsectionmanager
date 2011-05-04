@@ -408,10 +408,6 @@
 				$this->getDefaultPublishContent(&$wrapper);
 				return;
 			}
-		
-			// Get version number
-			$about = Symphony::ExtensionManager()->about('subsectionmanager');
-			$version = strtolower($about['version']);	
 
 			// Append assets
 			if(Administration::instance() instanceof Symphony && !is_null(Administration::instance()->Page)) {
