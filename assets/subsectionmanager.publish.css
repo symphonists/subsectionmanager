@@ -44,7 +44,7 @@ div.dragger a.file {
 
 div.field-subsectionmanager div.stage li.new {
 	padding-left: 52px;
-	height: 52px;
+	min-height: 52px;
 }
 
 div.field-subsectionmanager div.stage li.new span, div.field-subsectionmanager div.stage li.new span:hover,
@@ -57,7 +57,7 @@ div.field-subsectionmanager div.stage li.drawer.new {
 	padding: 0;
 }
 
-div.field-subsectionmanager div.stage.preview img, div.dragger img {
+div.field-subsectionmanager div.stage.preview img, div.field-subsectionmanager li.preview.new img, div.dragger img {
 	position: absolute;
 	border: 1px solid #ccc;
 	top: 5px;
