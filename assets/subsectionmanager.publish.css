@@ -9,6 +9,10 @@ div.field-subsectionmanager select {
 	display: none;
 }
 
+div.field-subsectionmanager div.stage li a {
+	padding: 7px 14px;
+}
+
 div.field-subsectionmanager div.stage li.preview a.file, div.dragger a.file {
 	display: inline-block;
 	margin: 0;

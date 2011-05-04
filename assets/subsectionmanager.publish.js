@@ -345,6 +345,11 @@
 						// Get queue item
 						var queue_item = queue.find('li[data-value="' + item.attr('data-value') + '"]');
 						
+						// Add preview class
+						if(stage.is('.preview')) {
+							result.addClass('preview');
+						}
+						
 						// New item
 						if(queue_item.size() == 0) {
 						
