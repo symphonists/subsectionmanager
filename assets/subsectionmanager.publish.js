@@ -348,7 +348,7 @@
 						var queue_item = queue.find('li[data-value="' + item.attr('data-value') + '"]');
 						
 						// Add preview class
-						if(stage.is('.preview')) {
+						if(stage.is('.preview') && result.find('strong.file, img').size() > 0) {
 							result.addClass('preview');
 						}
 						
@@ -372,8 +372,8 @@
 						
 						// Existing item
 						else {
-							queue_item.html(result.html());
-							item.html(result.html()).attr('class', result.attr('class')).attr('data-value', result.attr('data-value')).append(destructor);
+							queue_item.html(result.html()).addClass(result.attr('class')).attr('data-value', result.attr('data-value'));
+							item.html(result.html()).addClass(result.attr('class')).attr('data-value', result.attr('data-value')).append(destructor);
 							stage.trigger('update');
 						}				
 					}
