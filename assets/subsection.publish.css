@@ -65,10 +65,6 @@ body.inline.subsection form fieldset {
 	padding: 0;
 }
 
-body.inline.subsection fieldset input {
-	width: 100%;
-}
-
 body.inline.subsection form input.button {
 	width: auto;
 }
