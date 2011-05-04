@@ -57,7 +57,7 @@ div.field-subsectionmanager div.stage li.drawer.new {
 	padding: 0;
 }
 
-div.field-subsectionmanager div.stage.preview img, div.dragger img {
+div.field-subsectionmanager div.stage.preview img, div.field-subsectionmanager li.preview.new img, div.dragger img {
 	position: absolute;
 	border: 1px solid #ccc;
 	top: 5px;
