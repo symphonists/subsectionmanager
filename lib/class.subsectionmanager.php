@@ -136,6 +136,7 @@
 		}
 		
 		function __layoutSubsection($entries, $fields, $caption_template, $droptext_template, $mode, $full) {
+			$html = array();
 
 			// Templates
 			$templates = array(
@@ -223,21 +224,24 @@
 							$template = str_replace('{$href}', $href, $template);
 							$template = str_replace('{$value}', $entry['id'], $template);
 							$template = str_replace('{$droptext}', htmlspecialchars($droptext), $template);
-							$html .= str_replace('{$caption}', $caption, $template);
+							$tmp = str_replace('{$caption}', $caption, $template);
 						}
 						elseif($type == 'file') {
 							$template = str_replace('{$type}', $preview, $templates[$mode]['file']);
 							$template = str_replace('{$href}', $href, $template);
 							$template = str_replace('{$value}', $entry['id'], $template);
 							$template = str_replace('{$droptext}', htmlspecialchars($droptext), $template);
-							$html .= str_replace('{$caption}', $caption, $template);
+							$tmp = str_replace('{$caption}', $caption, $template);
 						}
 						else {
 							$template = str_replace('{$preview}', $entry['id'], $templates[$mode]['text']);
 							$template = str_replace('{$value}', $entry['id'], $template);
 							$template = str_replace('{$droptext}', htmlspecialchars($droptext), $template);
-							$html .= str_replace('{$caption}', $caption, $template);
+							$tmp = str_replace('{$caption}', $caption, $template);
 						}
+						
+						// Remove empty drop texts
+						$html[strip_tags($tmp)] = str_replace(' data-drop=""', '', $tmp);
 						
 						// Create publish index template
 						if($type == 'image') {
@@ -250,13 +254,13 @@
 				}
 			}
 			
-			// Remove empty drop texts
-			$html = str_replace(' data-drop=""', '', $html);		
+			// Sort html
+			ksort($html);	
 						
 			// Return options and html
 			return array(
 				'options' => $options,
-				'html' => $html,
+				'html' => implode('', $html),
 				'preview' => $preview
 			);		
 		}
