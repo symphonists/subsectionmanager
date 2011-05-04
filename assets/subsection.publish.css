@@ -20,8 +20,6 @@ body.inline.subsection #wrapper {
 body.inline.subsection #header {
 	margin: 0;
 }
-	margin: 0;
-}
 
 body.inline.subsection #contents {
 	padding: 0;
@@ -36,10 +34,6 @@ body.inline.subsection form fieldset {
 	border-bottom: 1px solid #616057 !important;
 	margin: 0;
 	padding: 0;
-}
-
-body.inline.subsection fieldset input {
-	width: 100%;
 }
 
 body.inline.subsection form input.button {
