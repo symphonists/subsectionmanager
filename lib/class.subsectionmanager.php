@@ -183,10 +183,16 @@
 
 							// Get value
 							$field_value = strip_tags($field->prepareTableValue($entry['data'][$field_id]));
-												
+
 							// Caption & Drop text
-							$caption = str_replace('{$' . $field_name . '}', $field_value, $caption);
-							$droptext = str_replace('{$' . $field_name . '}', $field_value, $droptext);
+							if(empty($field_value) || $field_value == __('None')) {
+								$caption = preg_replace('/{\$' . $field_name . '(:([^}]*))?}/U', '$2', $caption);
+								$droptext = preg_replace('/{\$' . $field_name . '(:([^}]*))?}/U', '$2', $droptext);
+							}
+							else {
+								$caption = preg_replace('/{\$' . $field_name . '(:[^}]*)?}/', $field_value, $caption);
+								$droptext = preg_replace('/{\$' . $field_name . '(:[^}]*)?}/', $field_value, $droptext);
+							}
 							
 							// Find upload fields
 							if(strpos($field->get('type'), 'upload') !== false && !empty($entry['data'][$field->get('id')]['file'])) {
