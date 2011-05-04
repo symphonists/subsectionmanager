@@ -188,8 +188,8 @@
 				
 					// Set height
 					var height = content.find('#wrapper').outerHeight() || iframe.height();
-					iframe.height(height).animate({
-						opacity: 1
+					iframe.height(height).css('visibility', 'visible').animate({
+						opacity: 1,
 					}, 'fast');
 					editor.animate({
 						height: height
@@ -206,7 +206,9 @@
 					content.find('div.actions input').click(function() {
 						iframe.animate({
 							opacity: 0.01
-						}, 'fast');
+						}, 'fast', function() {
+							iframe.css('visibility', 'hidden');
+						});
 					});
 					
 					// Trigger update 
