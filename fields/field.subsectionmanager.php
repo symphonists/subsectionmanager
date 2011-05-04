@@ -465,10 +465,6 @@
 				$this->getDefaultPublishContent($wrapper);
 				return;
 			}
-		
-			// Get version number
-			$about = Symphony::ExtensionManager()->about('subsectionmanager');
-			$version = strtolower($about['version']);	
 
 			// Append assets
 			Symphony::Engine()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/lib/stage/stage.publish.js', 101, false);
