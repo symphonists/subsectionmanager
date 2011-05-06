@@ -291,7 +291,16 @@
 					'height': 0,
 					'overflow': 'hidden'
 				});
-
+				
+				// Resize frame
+//				content.find('body').resize(function() {
+//					var height = $(this).find('#wrapper').height();
+//					subsection.height(height);
+//					tabs.animate({
+//						'height': height
+//					}, 'fast');
+//				});
+				
 				// Set height
 				if(current == selected) {
 					resize(subsection);
@@ -542,7 +551,6 @@
 		// Get state of current entry
 		else {
 			state = $.parseJSON(localStorage.getItem('subsectiontabs-' + Symphony.Context.get('env').entry_id));
-			console.log(state);
 			
 			// No storage yet
 			if(state == null) {

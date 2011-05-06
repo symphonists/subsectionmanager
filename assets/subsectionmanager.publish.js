@@ -163,6 +163,14 @@
 				content.find('body').addClass('inline subsection');
 				content.find('h1, h2, #nav, #notice:not(.error):not(.success), #notice a, #footer').remove();
 				content.find('fieldset input:first').focus();
+				
+				// Frame resizing
+				content.find('body').resize(function() {
+					var height = $(this).find('#wrapper').outerHeight();
+					iframe.animate({
+						'height': height
+					}, 'fast');
+				});
 			
 				// Delete item
 				if(item.is('.delete')) {
