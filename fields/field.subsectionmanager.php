@@ -300,6 +300,7 @@
 			$fields['subsection_id'] = $this->get('subsection_id');
 			$fields['allow_multiple'] = ($this->get('allow_multiple') ? 1 : 0);
 			$fields['show_preview'] = ($this->get('show_preview') ? 1 : 0);
+			$fields['lock'] = ($this->get('lock') ? 1 : 0);
 			
 			// Save new stage settings for this field
 			Stage::saveSettings($this->get('id'), $this->get('stage'), 'subsectionmanager');
