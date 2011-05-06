@@ -67,33 +67,35 @@
 			});
 			
 			// Editing
-			selection.delegate('li:not(.new, .drawer, .empty, .message)', 'click', function(event) {
-				var item = $(this),
-					target = $(event.target),
-					editor = item.next('.drawer');
-				
-				// Don't open editor for item that will be removed
-				if(target.is('.destructor')) {
-					return true;
-				}
-				
-				// Open editor
-				if(editor.size() == 0) {
-					item.addClass('active');
-					edit(item);
-				}
-				
-				// Close editor
-				else {
-					item.removeClass('active');
-					editor.slideUp('fast', function() {
-						$(this).remove();
-					});
-				}
-				
-				// Don't follow links
-				return false;
-			});
+			if(!stage.is('.locked')) {
+				selection.delegate('li:not(.new, .drawer, .empty, .message)', 'click', function(event) {
+					var item = $(this),
+						target = $(event.target),
+						editor = item.next('.drawer');
+					
+					// Don't open editor for item that will be removed
+					if(target.is('.destructor')) {
+						return true;
+					}
+					
+					// Open editor
+					if(editor.size() == 0) {
+						item.addClass('active');
+						edit(item);
+					}
+					
+					// Close editor
+					else {
+						item.removeClass('active');
+						editor.slideUp('fast', function() {
+							$(this).remove();
+						});
+					}
+					
+					// Don't follow links
+					return false;
+				});
+			}
 			
 			// Updating
 			stage.bind('edit', function(event, item, iframe) {

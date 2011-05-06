@@ -149,9 +149,15 @@
 				$this->set('show_preview', 1);
 			}
 			
+			// Get settings
+			$div = $fieldset->getChildren();
+
 			// Setting: allow multiple
 			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][allow_multiple]" value="1" type="checkbox"' . ($this->get('allow_multiple') == 0 ? '' : ' checked="checked"') . '/> ' . __('Allow selection of multiple items') . ' <i>' . __('This will switch between single and multiple item lists') . '</i>');
-			$div = $fieldset->getChildren();
+			$div[0]->appendChild($setting);
+
+			// Setting: disallow editing
+			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][lock]" value="1" type="checkbox"' . ($this->get('lock') == 0 ? '' : ' checked="checked"') . '/> ' . __('Disallow item editing') . ' <i>' . __('This will lock items and disable the inline editor') . '</i>');
 			$div[0]->appendChild($setting);
 			
 			// Append behaviour settings
@@ -464,7 +470,7 @@
 			$settings = ' ' . implode(' ', Stage::getComponents($this->get('id')));
 			
 			// Create stage
-			$stage = new XMLElement('div', NULL, array('class' => 'stage' . $settings . ($this->get('show_preview') == 1 ? ' preview' : '') . ($this->get('allow_multiple') == 1 ? ' multiple' : ' single')));
+			$stage = new XMLElement('div', NULL, array('class' => 'stage' . $settings . ($this->get('show_preview') == 1 ? ' preview' : '') . ($this->get('allow_multiple') == 1 ? ' multiple' : ' single') . ($this->get('lock') == 1 ? ' locked' : '')));
 			$content['empty'] = '<li class="empty message"><span>' . __('There are no selected items') . '</span></li>';
 			$selected = new XMLElement('ul', $content['empty'] . $content['html'], array('class' => 'selection'));
 			$stage->appendChild($selected);

@@ -459,7 +459,17 @@
 			
 		/*-----------------------------------------------------------------------*/
 			
-			if(version_compare($previousVersion, '1.2', '<')) {
+			if(version_compare($previousVersion, '2.0', '<')) {
+
+				// Add lock column
+				$lock = Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'lock'");
+				if(!$lock) {
+					$status[] = Symphony::Database()->query(
+						"ALTER TABLE `tbl_fields_subsectionmanager` ADD `lock` tinyint(1) DEFAULT '0'"
+					);
+				}
+				
+				// Add subsection tabs
 				$status[] = Symphony::Database()->query(
 					"CREATE TABLE `sym_fields_subsectiontabs` (
 						`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
