@@ -10,12 +10,14 @@ body.inline.subsection {
 	border: none;
 	padding: 0;
 	margin: 0;
+	overflow: hidden;
 }
 
 body.tabbed.subsection {
 	padding: 0;
 	border: none;
 	margin: 0;
+	overflow: hidden;
 }
 
 body.inline.subsection #wrapper {
@@ -144,4 +146,5 @@ body.inline.subsection div.stage li a.destructor {
 body.inline.subsection div.stage li.drawer {
 	border-left-color: #616057;
 	border-right-color: #616057;
+	overflow: hidden;
 }

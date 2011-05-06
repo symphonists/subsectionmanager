@@ -293,13 +293,13 @@
 				});
 				
 				// Resize frame
-//				content.find('body').resize(function() {
-//					var height = $(this).find('#wrapper').height();
-//					subsection.height(height);
-//					tabs.animate({
-//						'height': height
-//					}, 'fast');
-//				});
+				content.find('#contents').resize(function() {
+					var height = $(this).height();
+					subsection.height(height);
+					tabs.animate({
+						'height': height
+					}, 'fast');
+				});
 				
 				// Set height
 				if(current == selected) {

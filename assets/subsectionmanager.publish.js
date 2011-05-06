@@ -158,6 +158,9 @@
 			// Load subsection
 			var load = function(item, editor, iframe) {
 				var content = iframe.contents();
+				
+				// Handle Firefox flickering
+				editor.css('overflow', 'hidden');
 
 				// Adjust interface
 				content.find('body').addClass('inline subsection');
@@ -165,9 +168,11 @@
 				content.find('fieldset input:first').focus();
 				
 				// Frame resizing
-				content.find('body').resize(function() {
-					var height = $(this).find('#wrapper').outerHeight();
-					iframe.animate({
+				content.find('#contents').resize(function() {
+					var height = $(this).height(),
+						body = content.find('body');
+					iframe.height(height);
+					editor.animate({
 						'height': height
 					}, 'fast');
 				});
@@ -186,8 +191,7 @@
 					});
 					
 					// Remove item
-					item.trigger('destruct');
-										
+					item.trigger('destruct');									
 					stage.trigger('deletestop', [item]);
 				}
 				
