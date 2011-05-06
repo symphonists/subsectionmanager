@@ -216,7 +216,7 @@
 						}
 
 						// Populate select options
-						$options[] = array($entry['id'], in_array($entry['id'], $this->_Items), $caption);
+						$options[] = array($entry['id'], in_array($entry['id'], $this->_Items), strip_tags($caption));
 
 						// Create stage template
 						if($type == 'image') {
