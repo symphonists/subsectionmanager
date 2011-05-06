@@ -418,8 +418,8 @@
 			}
 			
 			// Handle empty titles
-			else {
-				$title['value'] = __('Untitled');
+			if(empty($title['value'])) {
+				$title['value'] = __('Untitled');		
 			}
 
 			// Link or plain text?
