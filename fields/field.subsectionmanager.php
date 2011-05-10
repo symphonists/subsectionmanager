@@ -583,19 +583,23 @@
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#fetchIncludableElements
 		 */
-		public function fetchIncludableElements() {
+		public function fetchIncludableElements($break = false) {
 			$includable = array();
 		
-			// Fetch subsection fields
-			$sectionManager = new SectionManager(Symphony::Engine());
-			$section = $sectionManager->fetch($this->get('subsection_id'));
-			$fields = $section->fetchFields();
-			
-			foreach($fields as $field) {
-				$elements = $field->fetchIncludableElements();
+			// Check for recursive subsections
+			if($this->get('subsection_id') != $this->get('parent_section') || $break == false) {
+		
+				// Fetch subsection fields
+				$sectionManager = new SectionManager(Symphony::Engine());
+				$section = $sectionManager->fetch($this->get('subsection_id'));
+				$fields = $section->fetchFields();
 				
-				foreach($elements as $element) {
-					$includable[] = $this->get('element_name') . ': ' . $element;
+				foreach($fields as $field) {
+					$elements = $field->fetchIncludableElements(true);
+					
+					foreach($elements as $element) {
+						$includable[] = $this->get('element_name') . ': ' . $element;
+					}
 				}
 			}
 			
