@@ -51,7 +51,7 @@
 		public function getSubscribedDelegates(){
 			return array(
 				array(
-					'page' => '/administration/',
+					'page' => '/backend/',
 					'delegate' => 'AdminPagePreGenerate',
 					'callback' => '__appendAssets'
 				),
@@ -307,7 +307,7 @@
 			// Drop tables
 			Symphony::Database()->query("DROP TABLE IF EXISTS `tbl_fields_subsectionmanager`");
 			
-			// Maintenance		
+			// Maintenance
 			Symphony::Database()->query("DROP TABLE IF EXISTS `tbl_fields_subsectionmanager_sorting`");
 		}
 		
