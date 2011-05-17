@@ -282,6 +282,8 @@
 				// Get relation id
 				foreach($data as $field => $settings) {
 					if(isset($settings['relation_id'])) {
+						if(!is_array($settings['relation_id'])) $settings['relation_id'] = array($settings['relation_id']);
+					
 						foreach($settings['relation_id'] as $relation_id) {
 							$fields[$field][] = $relation_id;
 						}
