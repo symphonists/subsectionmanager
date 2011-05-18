@@ -641,10 +641,11 @@
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#appendFormattedElement
 		 * @todo Sorting should be handled via system id
 		 */
-		public function appendFormattedElement(&$wrapper, $data, $encode = false) {
+		public function appendFormattedElement(&$wrapper, $data, $encode = false, $context) {
 			
 			// Unify data
-			if(!is_array($data['relation_id'])) $data['relation_id'] = array($data['relation_id']);		
+			if(empty($data['relation_id'])) $data['relation_id'] = array();
+			if(!is_array($data['relation_id'])) $data['relation_id'] = array($data['relation_id']);
 
 			// Create subsection element
 			$entryManager = new EntryManager(Symphony::Engine());
@@ -662,14 +663,24 @@
 				$entry = extension_subsectionmanager::$storage['entries'][$entry_id];
 				$subsection->setAttribute('id', $entry_id);
 				
-				if(!empty($entry)) {
-					foreach(extension_subsectionmanager::$storage['fields'][$this->get('id')] as $field_id => $modes) {
+				// Fetch missing entries
+				if(empty($entry)) {
+					$entry = $entryManager->fetch($entry_id, $this->subsection_id);
+					
+					// Store entry
+					$entry = $entry[0];
+					extension_subsectionmanager::$storage['entries'][$entry_id] = $entry;
+				}
+				
+				// Process entry
+				if(!empty(extension_subsectionmanager::$storage['fields'][$context][$this->get('id')])) {
+					foreach(extension_subsectionmanager::$storage['fields'][$context][$this->get('id')] as $field_id => $modes) {
 						$entry_data = $entry->getData($field_id);
 						$field = $entryManager->fieldManager->fetch($field_id);
 						
 						// No modes
 						if(empty($modes)) {
-							$field->appendFormattedElement($item, $entry_data, $encode, $mode, $entry_id);
+							$field->appendFormattedElement($item, $entry_data, $encode, $context, $entry_id);
 						}
 						
 						// With modes

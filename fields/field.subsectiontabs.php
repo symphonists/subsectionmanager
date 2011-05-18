@@ -337,7 +337,7 @@
 		 *
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#appendFormattedElement
 		 */		
-		public function appendFormattedElement(XMLElement &$wrapper, $data, $encode = false) {
+		public function appendFormattedElement(XMLElement &$wrapper, $data, $encode = false, $context) {
 		
 			// Prepare data
 			if(!is_array($data['name'])) $data['name'] = array($data['name']);
@@ -361,14 +361,14 @@
 				$entry = extension_subsectionmanager::$storage['entries'][$entry_id];
 				$item->setAttribute('id', $entry_id);
 				
-				if(!empty($entry)) {
-					foreach(extension_subsectionmanager::$storage['fields'][$this->get('id')] as $field_id => $modes) {
+				if(!empty($entry) && !empty(extension_subsectionmanager::$storage['fields'][$context][$this->get('id')])) {
+					foreach(extension_subsectionmanager::$storage['fields'][$context][$this->get('id')] as $field_id => $modes) {
 						$entry_data = $entry->getData($field_id);
 						$field = $entryManager->fieldManager->fetch($field_id);
 						
 						// No modes
-						if(empty($modes)) {
-							$field->appendFormattedElement($item, $entry_data, $encode, $mode, $entry_id);
+						if(empty($modes) || empty($modes[0])) {
+							$field->appendFormattedElement($item, $entry_data, $encode, $context, $entry_id);
 						}
 						
 						// With modes
