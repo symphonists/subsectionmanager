@@ -15,6 +15,8 @@
 
 	Class fieldSubsectionmanager extends Field {
 
+		static $sortOrder = NULL;
+
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#__construct
 		 */
@@ -627,6 +629,42 @@
 		}
 
 		/**
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#buildSortingSQL
+		 */
+		public function buildSortingSQL(&$joins, &$where, &$sort, $order='ASC'){
+			// Normally there is no need to sort by SubsectionManager field,
+			// so we can use it for internal sorting (tough it probably could be 
+			// made "public" for DataSources). 
+			$entry_id = self::$sortOrder;
+			self::$sortOrder = NULL;
+			if (empty($entry_id)) return;
+
+			// Get sort order for entries
+			$order = Symphony::Database()->fetchVar('order', 0,
+				"SELECT `order`
+				FROM `tbl_fields_stage_sorting`
+				WHERE `entry_id` = " . intval($entry_id) . "
+				AND `field_id` = " . $this->get('id') . "
+				LIMIT 1"
+			);
+
+			if (empty($order)) {
+				$sort = 'ORDER BY `e`.`id` ASC';
+			}
+			else {
+				// We could validate $order to be sure all values are integers,
+				// but it always is validated before being saved to database.
+				// Reverse order because FIELD() returns 0 for "not found".
+				// So if order is "A,B,C,D", not found will be before them :(.
+				// If sortorder was stored in database in reversed order, we could drop next line.
+				$order = implode(',', array_reverse(explode(',', $order)));
+				if (!empty($order)) {
+					$sort = 'ORDER BY FIELD(`e`.`id`,'.$order.') DESC';
+				}
+			}
+		}
+
+		/**
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#buildDSRetrivalSQL
 		 */
 		public function buildDSRetrivalSQL($data, &$joins, &$where, $andOperation=false) {
@@ -674,30 +712,13 @@
 
 			// Fetch field data
 			$entryManager = new EntryManager(Symphony::Engine());
-			$entries = $entryManager->fetch($data['relation_id'], $this->get('subsection_id'));
+			$entryManager->setFetchSortingField($this->get('id'));
 
-			// Sort entries
-			$order = Symphony::Database()->fetchVar('order', 0,
-				"SELECT `order`
-				FROM `tbl_fields_stage_sorting`
-				WHERE `entry_id` = " . $wrapper->getAttribute('id') . "
-				AND `field_id` = " . $this->get('id') . "
-				LIMIT 1"
-			);
-			$sorted_ids = explode(',', $order);
-			$sorted_entries = array();
-			if(!empty($sorted_ids) && $sorted_ids[0] != 0 && !empty($sorted_ids[0])) {
-				foreach($sorted_ids as $id) {
-					foreach($entries as $entry) {
-						if($entry->get('id') == $id) {
-							$sorted_entries[] = $entry;
-						}
-					}
-				}
-			}
-			else {
-				$sorted_entries = $entries;
-			}
+			// Let our function know, that we are in "internal sorting" mode.
+			self::$sortOrder = $wrapper->getAttribute('id');
+
+			// Get sorted entries
+			$sorted_entries = $entryManager->fetch($data['relation_id'], $this->get('subsection_id'));
 
 			// Build XML
 			$count = 1;
