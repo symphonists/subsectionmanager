@@ -1,0 +1,45 @@
+/**
+ * Subsection Manager for Symphony
+ *
+ * @author: Nils Hörrmann, http://nilshoerrmann.de
+ * @source: http://github.com/nilshoerrmann/subsectionmanager
+ */
+
+div.subsectionmanager {
+	position: relative;
+}
+
+div.subsectionmanager img {
+	border: 1px solid #ccc;
+	float: left;
+	margin: 0 12px 0 0;
+	border-radius: 2px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;	
+}
+
+.selecting div.subsectionmanager img, .selected div.subsectionmanager img {
+	border-color: #ABE;
+}
+
+div.subsectionmanager a span {
+	text-decoration: underline;
+}
+
+div.subsectionmanager span {
+	padding: 4px 0 0;
+	display: block;
+}
+
+div.subsectionmanager em {
+	font-style: normal;
+	color: #908e88;
+}
+
+div.subsectionmanager a em {
+	text-decoration: none !important;
+}
+
+.selecting div.subsectionmanager em, .selected div.subsectionmanager em {
+	color: #ABE;
+}
