@@ -189,13 +189,13 @@
 		
 			// Default Data Source
 			if($parent == 'DataSource') {
-				$this->__parseSubsectionFields($context['datasource']->dsParamINCLUDEDELEMENTS, $context['datasource']->dsParamROOTELEMENT, $context['datasource']);
+				$this->__parseSubsectionFields($context['datasource']);
 			}
 			
 			// Union Data Source
 			elseif($parent == 'UnionDatasource') {
 				foreach($context['datasource']->datasources as $datasource) {
-					$this->__parseSubsectionFields($datasource['datasource']->dsParamINCLUDEDELEMENTS, $datasource['datasource']->dsParamROOTELEMENT, $datasource['datasource']);
+					$this->__parseSubsectionFields($datasource['datasource']);
 				}
 			}
 
@@ -209,28 +209,31 @@
 		 * @param DataSource $datasource
 		 *	The data source class to parse
 		 */
-		private function __parseSubsectionFields($fields, $context, $datasource = null) {
+		private function __parseSubsectionFields($datasource) {
+			$section = $datasource->getSource();
+			$fields = $datasource->dsParamINCLUDEDELEMENTS;
+			$context = $datasource->dsParamROOTELEMENT;
 
 			// Parse includes elements
-			foreach($fields as $index => $included) {
-				list($subsection, $field, $remainder) = explode(': ', $included, 3);
-				
-				// Fetch fields
-				if($field != 'formatted' && $field != 'unformatted') {
-
-					// Get field id and mode
-					if($remainder == 'formatted' || $remainder == 'unformatted' || empty($remainder)) {
-						$this->__fetchFields($context, $subsection, $field, $remainder);
-					}
-					else {
-						$this->__fetchFields($context, $subsection, $field);
-						$this->__parseSubsectionFields(array($field . ': ' . $remainder), $context);
-					}
-
-					// Set a single field call for subsection fields
-					if(isset($datasource)) {
+			if(!empty($fields)) {
+				foreach($fields as $index => $included) {
+					list($subsection, $field, $remainder) = explode(': ', $included, 3);
+					
+					// Fetch fields
+					if($field != 'formatted' && $field != 'unformatted') {
+	
+						// Get field id and mode
+						if($remainder == 'formatted' || $remainder == 'unformatted' || empty($remainder)) {
+							$this->__fetchFields($section, $context, $subsection, $field, $remainder);
+						}
+						else {
+							$this->__fetchFields($section, $context, $subsection, $field);
+							$this->__parseSubsectionFields(array($field . ': ' . $remainder), $context);
+						}
+	
+						// Set a single field call for subsection fields
 						unset($datasource->dsParamINCLUDEDELEMENTS[$index]);
-
+	
 						$storage = $subsection . ': ' . $context;
 						if(!in_array($storage, $datasource->dsParamINCLUDEDELEMENTS)) {
 							$datasource->dsParamINCLUDEDELEMENTS[$index] = $storage;
@@ -240,7 +243,7 @@
 			}
 		}
 		
-		private function __fetchFields($context, $subsection, $field, $mode = '') {
+		private function __fetchFields($section, $context, $subsection, $field, $mode = '') {
 			
 			// Get id
 			$id = Symphony::Database()->fetch( 
@@ -248,6 +251,7 @@
 					FROM `tbl_fields_subsectionmanager` AS t1 
 					INNER JOIN `tbl_fields` AS t2 
 					WHERE t2.`element_name` = '{$subsection}'
+					AND t2.`parent_section` = '{$section}'
 					AND t1.`field_id` = t2.`id`
 					LIMIT 1) 
 				UNION
@@ -255,6 +259,7 @@
 					FROM `tbl_fields_subsectiontabs` AS t1 
 					INNER JOIN `tbl_fields` AS t2 
 					WHERE t2.`element_name` = '{$subsection}'
+					AND t2.`parent_section` = '{$section}'
 					AND t1.`field_id` = t2.`id`
 					LIMIT 1) 
 				LIMIT 1"
