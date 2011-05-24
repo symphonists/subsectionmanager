@@ -325,8 +325,11 @@
 				
 					// Fetch entries
 					$entries = self::$entryManager->fetch($entry_id, $subsection_id);
-					foreach($entries as $entry) {
-						self::$storage['entries'][$entry->get('id')] = $entry;
+					
+					if(!empty($entries)) {
+						foreach($entries as $entry) {
+							self::$storage['entries'][$entry->get('id')] = $entry;
+						}
 					}
 				}
 			}

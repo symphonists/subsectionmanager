@@ -673,7 +673,7 @@
 				}
 				
 				// Process entry
-				if(!empty(extension_subsectionmanager::$storage['fields'][$context][$this->get('id')])) {
+				if(!empty($entry) && !empty(extension_subsectionmanager::$storage['fields'][$context][$this->get('id')])) {
 					foreach(extension_subsectionmanager::$storage['fields'][$context][$this->get('id')] as $field_id => $modes) {
 						$entry_data = $entry->getData($field_id);
 						$field = $entryManager->fieldManager->fetch($field_id);
