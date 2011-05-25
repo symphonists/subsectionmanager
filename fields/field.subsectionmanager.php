@@ -14,7 +14,7 @@
 	}
 
 	Class fieldSubsectionmanager extends Field {
-
+		
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#__construct
 		 */
@@ -528,7 +528,7 @@
 			$result = array();
 
 			foreach($data as $a => $value) {
-			  $result['relation_id'][] = $data[$a];
+				$result['relation_id'][] = $data[$a];
 			}
 
 			return $result;
@@ -605,7 +605,7 @@
 			
 			return $includable;
 		}
-
+		
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#buildDSRetrivalSQL
 		 */
@@ -650,13 +650,29 @@
 			// Create subsection element
 			$entryManager = new EntryManager(Symphony::Engine());
 			$subsection = new XMLElement($this->get('element_name'));
-			
-			for($i = 0; $i < count($data['relation_id']); $i++) {
-				$handle= $data['handle'][$i];
-				$entry_id = $data['relation_id'][$i];
+
+			// Get sort order
+			$sorted_id = array();
+			$order = Symphony::Database()->fetchVar('order', 0,
+				"SELECT `order`
+				FROM `tbl_fields_stage_sorting`
+				WHERE `entry_id` = " . $wrapper->getAttribute('id') . "
+				AND `field_id` = " . $this->get('id') . "
+				LIMIT 1"
+			);
+			if(!empty($order)) {
+				$sorted_id = explode(',', $order);
+			}
+				
+			// Append unsorted items
+			$unsorted_id = array_diff($data['relation_id'], $sorted_id);
+			$sorted_id = array_merge($sorted_id, $unsorted_id);
+
+			// Generate output			
+			foreach($sorted_id as $entry_id) {
 
 				// Create item
-				$item = new XMLElement('item', NULL, array('handle' => $handle));
+				$item = new XMLElement('item', NULL, array('id' => $entry_id));
 				$subsection->appendChild($item);
 
 				// Populate entry element

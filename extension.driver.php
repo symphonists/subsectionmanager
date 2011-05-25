@@ -65,7 +65,7 @@
 		public function getSubscribedDelegates(){
 			return array(
 				array(
-					'page' => '/administration/',
+					'page' => '/backend/',
 					'delegate' => 'AdminPagePreGenerate',
 					'callback' => '__appendAssets'
 				),
@@ -132,14 +132,18 @@
 				
 				// Add new sort order
 				foreach($context['fields']['sort_order'] as $field_id => $value) {
-					$entries = explode(',', $value);
 					$order = array();
-					foreach($entries as $entry) {
-						$order[] = intval($entry);
+					$entries = explode(',', $value);
+
+					// Valid sort order
+					if(!empty($entries[0])) {
+						foreach($entries as $entry) {
+							$order[] = intval($entry);
+						}
+						Symphony::Database()->query(
+							"INSERT INTO `tbl_fields_stage_sorting` (`entry_id`, `field_id`, `order`, `context`) VALUES ('$entry_id', '$field_id', '" . implode(',', $order) . "', 'subsectionmanager')"
+						);
 					}
-					Symphony::Database()->query(
-						"INSERT INTO `tbl_fields_stage_sorting` (`entry_id`, `field_id`, `order`) VALUES ('$entry_id', '$field_id', '" . implode(',', $order) . "')"
-					);
 				}
 			}
 		}
