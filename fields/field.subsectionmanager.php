@@ -738,13 +738,13 @@
 						// Append fields with modes
 						if($included[$field_id] !== NULL) {
 							foreach($included[$field_id] as $mode) {
-								$field->appendFormattedElement($item, $values, false, $mode);
+								$field->appendFormattedElement($item, $values, false, $mode, $item_id);
 							}					
 						}
 
 						// Append fields without modes
 						else {
-							$field->appendFormattedElement($item, $values, false, NULL);
+							$field->appendFormattedElement($item, $values, false, NULL, $item_id);
 						}
 					}
 				}
