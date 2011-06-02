@@ -182,7 +182,7 @@
 							$field_id = $field->get('id');
 
 							// Get value
-							$field_value = strip_tags($field->prepareTableValue($entry['data'][$field_id]));
+							$field_value = strip_tags($field->prepareTableValue($entry['data'][$field_id], null, $entry['id']));
 												
 							// Caption & Drop text
 							$caption = str_replace('{$' . $field_name . '}', $field_value, $caption);
