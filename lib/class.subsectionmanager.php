@@ -174,7 +174,9 @@
 					$caption = $caption_template;
 					$droptext = $droptext_template;
 					if(in_array($entry['id'], $this->_Items) || $full) {
-
+						$caption = str_replace('{$id}', $entry['id'], $caption);
+						$droptext = str_replace('{$id}', $entry['id'], $droptext);
+						
 						// Generate layout
 						$thumb = $type = $preview = $template = '';
 						foreach($fields as $field) {
