@@ -48,7 +48,7 @@
 			return array(
 				'name' => 'Subsection Manager',
 				'type' => 'Field, Interface',
-				'version' => '1.2dev',
+				'version' => '2.0dev',
 				'release-date' => false,
 				'author' => array(
 					'name' => 'Nils Hörrmann',
@@ -362,6 +362,7 @@
 					`included_fields` text,
 					`allow_multiple` tinyint(1) default '0',
 					`show_preview` tinyint(1) default '0',
+					`lock` tinyint(1) DEFAULT '0',
 			  		PRIMARY KEY  (`id`),
 			  		KEY `field_id` (`field_id`)
 				)"
@@ -493,7 +494,7 @@
 			
 		/*-----------------------------------------------------------------------*/
 			
-			if(version_compare($previousVersion, '2.0', '<')) {
+			if(version_compare($previousVersion, '1.2', '<')) {
 
 				// Add lock column
 				$lock = Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'lock'");
@@ -501,7 +502,12 @@
 					$status[] = Symphony::Database()->query(
 						"ALTER TABLE `tbl_fields_subsectionmanager` ADD `lock` tinyint(1) DEFAULT '0'"
 					);
-				}
+				}	
+			}
+			
+		/*-----------------------------------------------------------------------*/
+			
+			if(version_compare($previousVersion, '2.0', '<')) {
 				
 				// Add subsection tabs
 				$status[] = Symphony::Database()->query(

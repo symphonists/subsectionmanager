@@ -370,9 +370,10 @@
 			// Save new section association
 			$association = $this->createSectionAssociation(NULL, $this->get('subsection_id'), $id, $id, false);
 			
-			if ($settings && $association) {
+			if($settings && $association) {
 				return true;
-			} else {
+			}
+			else {
 				return false;
 			}
 			
@@ -557,7 +558,7 @@
 			if(empty($data['relation_id'])) return NULL;
 
 			// Single select
-			if($this->get('allow_multiple') == 0) {
+			if($this->get('allow_multiple') == 0 || count($data['relation_id']) === 1) {
 				$subsection = new SubsectionManager($this->_Parent);
 				$content = $subsection->generate(null, $this->get('id'), $this->get('subsection_id'), $data['relation_id'], true);
 				
