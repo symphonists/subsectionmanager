@@ -414,7 +414,9 @@
 					LIMIT 1"
 				);
 				$entry = $entryManager->fetch($data['relation_id'][0], $this->get('subsection_id'));
-				$title = $entry[0]->getData($field_id);
+				if(is_object($entry[0])){
+					$title = $entry[0]->getData($field_id);
+				}
 			}
 			
 			// Handle empty titles
