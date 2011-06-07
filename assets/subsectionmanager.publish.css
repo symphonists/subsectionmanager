@@ -81,6 +81,10 @@ div.field-subsectionmanager div.stage li {
 	cursor: pointer;
 }
 
+div.field-subsectionmanager div.stage.locked li {
+	cursor: auto;
+}
+
 div.field-subsectionmanager div.stage li.empty, div.field-subsectionmanager div.stage li.new {
 	cursor: auto;
 }
