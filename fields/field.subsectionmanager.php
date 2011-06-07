@@ -605,7 +605,7 @@
 			if(empty($data['relation_id'])) return NULL;
 
 			// Single select
-			if($this->get('allow_multiple') == 0) {
+			if($this->get('allow_multiple') == 0 || count($data['relation_id']) === 1) {
 				$subsection = new SubsectionManager($this->_Parent);
 				$content = $subsection->generate(null, $this->get('id'), $this->get('subsection_id'), $data['relation_id'], true);
 				
@@ -620,7 +620,7 @@
 				
 				return '<div class="subsectionmanager">' . $item . '</div>';
 			}
-						
+			
 			// Multiple select
 			else {
 				$count = count($data['relation_id']);
@@ -759,13 +759,13 @@
 						// Append fields with modes
 						if($included[$field_id] !== NULL) {
 							foreach($included[$field_id] as $mode) {
-								$field->appendFormattedElement($item, $values, false, $mode);
+								$field->appendFormattedElement($item, $values, false, $mode, $item_id);
 							}					
 						}
 
 						// Append fields without modes
 						else {
-							$field->appendFormattedElement($item, $values, false, NULL);
+							$field->appendFormattedElement($item, $values, false, NULL, $item_id);
 						}
 					}
 				}

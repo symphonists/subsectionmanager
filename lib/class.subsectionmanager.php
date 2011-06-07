@@ -174,15 +174,24 @@
 					$caption = $caption_template;
 					$droptext = $droptext_template;
 					if(in_array($entry['id'], $this->_Items) || $full) {
-
+						$caption = str_replace('{$id}', $entry['id'], $caption);
+						$droptext = str_replace('{$id}', $entry['id'], $droptext);
+						
 						// Generate layout
 						$thumb = $type = $preview = $template = '';
 						foreach($fields as $field) {
 							$field_name = $field->get('element_name');
 							$field_id = $field->get('id');
-
+							
+							// Allow extensions that need to provide a better value:
+							if (is_callable(array($field, 'preparePlainTextValue'))) {
+								$field_value = $field->preparePlainTextValue($entry['data'][$field_id], $entry['id']);
+							}
+							
 							// Get value
-							$field_value = strip_tags($field->prepareTableValue($entry['data'][$field_id]));
+							else {
+								$field_value = strip_tags($field->prepareTableValue($entry['data'][$field_id], null, $entry['id']));
+							}
 												
 							// Caption & Drop text
 							$caption = str_replace('{$' . $field_name . '}', $field_value, $caption);
