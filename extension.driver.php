@@ -171,6 +171,7 @@
 					`included_fields` text,
 					`allow_multiple` tinyint(1) default '0',
 					`show_preview` tinyint(1) default '0',
+					`lock` tinyint(1) DEFAULT '0',
 			  		PRIMARY KEY  (`id`),
 			  		KEY `field_id` (`field_id`)
 				)"
