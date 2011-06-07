@@ -136,6 +136,7 @@
 		}
 		
 		function __layoutSubsection($entries, $fields, $caption_template, $droptext_template, $mode, $full) {
+			$html = array();
 
 			// Templates
 			$templates = array(
@@ -174,28 +175,30 @@
 					$caption = $caption_template;
 					$droptext = $droptext_template;
 					if(in_array($entry['id'], $this->_Items) || $full) {
-						$caption = str_replace('{$id}', $entry['id'], $caption);
-						$droptext = str_replace('{$id}', $entry['id'], $droptext);
-						
+
 						// Generate layout
 						$thumb = $type = $preview = $template = '';
 						foreach($fields as $field) {
 							$field_name = $field->get('element_name');
 							$field_id = $field->get('id');
-							
-							// Allow extensions that need to provide a better value:
-							if (is_callable(array($field, 'preparePlainTextValue'))) {
+
+							// Get value
+							if(is_callable(array($field, 'preparePlainTextValue'))) {
 								$field_value = $field->preparePlainTextValue($entry['data'][$field_id], $entry['id']);
 							}
-							
-							// Get value
 							else {
-								$field_value = strip_tags($field->prepareTableValue($entry['data'][$field_id], null, $entry['id']));
+								$field_value = strip_tags($field->prepareTableValue($entry['data'][$field_id]));
 							}
-												
+
 							// Caption & Drop text
-							$caption = str_replace('{$' . $field_name . '}', $field_value, $caption);
-							$droptext = str_replace('{$' . $field_name . '}', $field_value, $droptext);
+							if(empty($field_value) || $field_value == __('None')) {
+								$caption = preg_replace('/{\$' . $field_name . '(:([^}]*))?}/U', '$2', $caption);
+								$droptext = preg_replace('/{\$' . $field_name . '(:([^}]*))?}/U', '$2', $droptext);
+							}
+							else {
+								$caption = preg_replace('/{\$' . $field_name . '(:[^}]*)?}/', $field_value, $caption);
+								$droptext = preg_replace('/{\$' . $field_name . '(:[^}]*)?}/', $field_value, $droptext);
+							}
 							
 							// Find upload fields
 							if(strpos($field->get('type'), 'upload') !== false && !empty($entry['data'][$field->get('id')]['file'])) {
@@ -218,7 +221,7 @@
 						}
 
 						// Populate select options
-						$options[] = array($entry['id'], in_array($entry['id'], $this->_Items), $caption);
+						$options[] = array($entry['id'], in_array($entry['id'], $this->_Items), strip_tags($caption));
 
 						// Create stage template
 						if($type == 'image') {
@@ -226,21 +229,24 @@
 							$template = str_replace('{$href}', $href, $template);
 							$template = str_replace('{$value}', $entry['id'], $template);
 							$template = str_replace('{$droptext}', htmlspecialchars($droptext), $template);
-							$html .= str_replace('{$caption}', $caption, $template);
+							$tmp = str_replace('{$caption}', $caption, $template);
 						}
 						elseif($type == 'file') {
 							$template = str_replace('{$type}', $preview, $templates[$mode]['file']);
 							$template = str_replace('{$href}', $href, $template);
 							$template = str_replace('{$value}', $entry['id'], $template);
 							$template = str_replace('{$droptext}', htmlspecialchars($droptext), $template);
-							$html .= str_replace('{$caption}', $caption, $template);
+							$tmp = str_replace('{$caption}', $caption, $template);
 						}
 						else {
 							$template = str_replace('{$preview}', $entry['id'], $templates[$mode]['text']);
 							$template = str_replace('{$value}', $entry['id'], $template);
 							$template = str_replace('{$droptext}', htmlspecialchars($droptext), $template);
-							$html .= str_replace('{$caption}', $caption, $template);
+							$tmp = str_replace('{$caption}', $caption, $template);
 						}
+						
+						// Remove empty drop texts
+						$html[strip_tags($tmp)] = str_replace(' data-drop=""', '', $tmp);
 						
 						// Create publish index template
 						if($type == 'image') {
@@ -253,13 +259,13 @@
 				}
 			}
 			
-			// Remove empty drop texts
-			$html = str_replace(' data-drop=""', '', $html);		
+			// Sort html
+			ksort($html);	
 						
 			// Return options and html
 			return array(
 				'options' => $options,
-				'html' => $html,
+				'html' => implode('', $html),
 				'preview' => $preview
 			);		
 		}
