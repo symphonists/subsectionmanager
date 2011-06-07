@@ -19,7 +19,7 @@ Subsection Manager is the successor of [Mediathek](http://github.com/nilshoerrma
 
 ## Compatibility
 
-Please note that Symphony 2.2 introduces new features that Subsection Manager 1.1 relies on. If you are using Symphony 2.1.x, please [download or checkout Subsection Manager 1.0.1](https://github.com/nilshoerrmann/subsectionmanager/tree/1.0.1) which does not have these dependencies.
+Please note that Symphony 2.2 introduces new features that Subsection Manager 1.1+ relies on. If you are using Symphony 2.1.x, please [download or checkout Subsection Manager 1.0.1](https://github.com/nilshoerrmann/subsectionmanager/tree/1.0.1) which does not have these dependencies.
 
 ## Installation
 
@@ -28,7 +28,7 @@ Subsection Manager contains two components:
 - The Subsection Manager itself which handles the section interactions,
 - [Stage](http://github.com/nilshoerrmann/stage/) which offers the interface for the inline section management and
 
-If you are working with Git, please clone the `development` branch of this extension which contains all additional components as submodules. Please don't forget to pull the submodules as well. If you are not using Git and want to install this extension using FTP, please just download a copy of the `master` branch which bundles all needed submodules. More information about [installing and updating extensions](http://symphony-cms.com/learn/tasks/view/install-an-extension/) can be found in the Symphony documentation at <http://symphony-cms.com/learn/>. 
+If you are working with Git, please clone the `1.x` branch of this extension which contains all additional components as submodules. Please don't forget to pull the submodules as well. If you are not using Git and want to install this extension using FTP, please just download a copy of the `master` branch which bundles all needed submodules. More information about [installing and updating extensions](http://symphony-cms.com/learn/tasks/view/install-an-extension/) can be found in the Symphony documentation at <http://symphony-cms.com/learn/>. 
 
 All interface related components of the Subsection Manager are JavaScript based. If you are upgrading from an earlier version, please make sure to clear your browser cache to avoid interface issues. If another extension or the Symphony core throws a JavaScript error, the Subsection Manager will stop working.
 
@@ -50,6 +50,9 @@ Be aware that this upgrade process will alter your database and will uninstall y
 
 **Version 1.2**
 
+- New setting to disable inline subsection editing
+- Better search performance
+- Dynamically adjust Stage height
 - Stability and compatibility update
 
 **Version 1.1**
