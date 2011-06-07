@@ -60,7 +60,7 @@ Be aware that this upgrade process will alter your database and will uninstall y
 - Updated Stage
 - Removed Draggable plugin
 - General improvements and code clean-up
-- Symphony 2.2. compability
+- Symphony 2.2. compatibility
 
 **Version 1.0.1**
 
