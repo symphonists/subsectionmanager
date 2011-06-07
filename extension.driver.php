@@ -370,7 +370,7 @@
 			
 			// Create Subsection Tabs
 			$status[] = Symphony::Database()->query(
-				"CREATE TABLE `sym_fields_subsectiontabs` (
+				"CREATE TABLE IF NOT EXISTS `sym_fields_subsectiontabs` (
 					`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 					`field_id` int(11) unsigned NOT NULL,
 					`subsection_id` varchar(255) NOT NULL,
@@ -511,7 +511,7 @@
 				
 				// Add subsection tabs
 				$status[] = Symphony::Database()->query(
-					"CREATE TABLE `sym_fields_subsectiontabs` (
+					"CREATE TABLE IF NOT EXISTS `sym_fields_subsectiontabs` (
 						`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 						`field_id` int(11) unsigned NOT NULL,
 						`subsection_id` varchar(255) NOT NULL,
