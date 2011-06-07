@@ -67,33 +67,35 @@
 			});
 			
 			// Editing
-			selection.delegate('li:not(.new, .drawer, .empty, .message)', 'click', function(event) {
-				var item = $(this),
-					target = $(event.target),
-					editor = item.next('.drawer');
-				
-				// Don't open editor for item that will be removed
-				if(target.is('.destructor')) {
-					return true;
-				}
-				
-				// Open editor
-				if(editor.size() == 0) {
-					item.addClass('active');
-					edit(item);
-				}
-				
-				// Close editor
-				else {
-					item.removeClass('active');
-					editor.slideUp('fast', function() {
-						$(this).remove();
-					});
-				}
-				
-				// Don't follow links
-				return false;
-			});
+			if(!stage.is('.locked')) {
+				selection.delegate('li:not(.new, .drawer, .empty, .message)', 'click', function(event) {
+					var item = $(this),
+						target = $(event.target),
+						editor = item.next('.drawer');
+					
+					// Don't open editor for item that will be removed
+					if(target.is('.destructor')) {
+						return true;
+					}
+					
+					// Open editor
+					if(editor.size() == 0) {
+						item.addClass('active');
+						edit(item);
+					}
+					
+					// Close editor
+					else {
+						item.removeClass('active');
+						editor.slideUp('fast', function() {
+							$(this).remove();
+						});
+					}
+					
+					// Don't follow links
+					return false;
+				});
+			}
 			
 			// Updating
 			stage.bind('edit', function(event, item, iframe) {
@@ -158,11 +160,24 @@
 			// Load subsection
 			var load = function(item, editor, iframe) {
 				var content = iframe.contents();
+				
+				// Handle Firefox flickering
+				editor.css('overflow', 'hidden');
 
 				// Adjust interface
 				content.find('body').addClass('inline subsection');
 				content.find('h1, h2, #nav, #notice:not(.error):not(.success), #notice a, #footer').remove();
 				content.find('fieldset input:first').focus();
+				
+				// Frame resizing
+				content.find('#contents').resize(function() {
+					var height = $(this).height(),
+						body = content.find('body');
+					iframe.height(height);
+					editor.animate({
+						'height': height
+					}, 'fast');
+				});
 			
 				// Delete item
 				if(item.is('.delete')) {
@@ -178,8 +193,7 @@
 					});
 					
 					// Remove item
-					item.trigger('destruct');
-										
+					item.trigger('destruct');									
 					stage.trigger('deletestop', [item]);
 				}
 				
@@ -188,8 +202,8 @@
 				
 					// Set height
 					var height = content.find('#wrapper').outerHeight() || iframe.height();
-					iframe.height(height).animate({
-						opacity: 1
+					iframe.height(height).css('visibility', 'visible').animate({
+						opacity: 1,
 					}, 'fast');
 					editor.animate({
 						height: height
@@ -206,7 +220,9 @@
 					content.find('div.actions input').click(function() {
 						iframe.animate({
 							opacity: 0.01
-						}, 'fast');
+						}, 'fast', function() {
+							iframe.css('visibility', 'hidden');
+						});
 					});
 					
 					// Trigger update 
@@ -345,6 +361,11 @@
 						// Get queue item
 						var queue_item = queue.find('li[data-value="' + item.attr('data-value') + '"]');
 						
+						// Add preview class
+						if(stage.is('.preview') && result.find('strong.file, img').size() > 0) {
+							result.addClass('preview');
+						}
+						
 						// New item
 						if(queue_item.size() == 0) {
 						
@@ -365,8 +386,8 @@
 						
 						// Existing item
 						else {
-							queue_item.html(result.html());
-							item.html(result.html()).attr('class', result.attr('class')).attr('data-value', result.attr('data-value')).append(destructor);
+							queue_item.html(result.html()).addClass(result.attr('class')).attr('data-value', result.attr('data-value'));
+							item.html(result.html()).addClass(result.attr('class')).attr('data-value', result.attr('data-value')).append(destructor);
 							stage.trigger('update');
 						}				
 					}
