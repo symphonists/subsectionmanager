@@ -148,9 +148,15 @@
 				$this->set('show_preview', 1);
 			}
 			
+			// Get settings
+			$div = $fieldset->getChildren();
+
 			// Setting: allow multiple
 			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][allow_multiple]" value="1" type="checkbox"' . ($this->get('allow_multiple') == 0 ? '' : ' checked="checked"') . '/> ' . __('Allow selection of multiple items') . ' <i>' . __('This will switch between single and multiple item lists') . '</i>');
-			$div = $fieldset->getChildren();
+			$div[0]->appendChild($setting);
+
+			// Setting: disallow editing
+			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][lock]" value="1" type="checkbox"' . ($this->get('lock') == 0 ? '' : ' checked="checked"') . '/> ' . __('Disallow item editing') . ' <i>' . __('This will lock items and disable the inline editor') . '</i>');
 			$div[0]->appendChild($setting);
 			
 			// Append behaviour settings
@@ -353,7 +359,8 @@
 			$fields['subsection_id'] = $this->get('subsection_id');
 			$fields['allow_multiple'] = ($this->get('allow_multiple') ? 1 : 0);
 			$fields['show_preview'] = ($this->get('show_preview') ? 1 : 0);
-			
+			$fields['lock'] = ($this->get('lock') ? 1 : 0);
+						
 			// Save new stage settings for this field
 			Stage::saveSettings($this->get('id'), $this->get('stage'), 'subsectionmanager');
 
@@ -464,16 +471,19 @@
 			// Houston, we have problem: we've been called out of context!
 			$callback = Administration::instance()->getPageCallback();
 			if($callback['context']['page'] != 'edit' && $callback['context']['page'] != 'new') {
-				$this->getDefaultPublishContent($wrapper);
+				$this->getDefaultPublishContent(&$wrapper);
 				return;
 			}
 
-			// Append assets
-			Symphony::Engine()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/lib/stage/stage.publish.js', 101, false);
-			Symphony::Engine()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/lib/stage/stage.publish.css', 'screen', 103, false);
-			Symphony::Engine()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.publish.js', 102, false);
-			Symphony::Engine()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.publish.css', 'screen', 104, false);
+			// Append styles
+			Symphony::Engine()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/lib/stage/stage.publish.css', 'screen', 101, false);
+			Symphony::Engine()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.publish.css', 'screen', 102, false);
 
+			// Append scripts
+			Symphony::Engine()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/lib/stage/stage.publish.js', 103, false);
+			Symphony::Engine()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.publish.js', 104, false);
+			Symphony::Engine()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/lib/resize/jquery.ba-resize.js', 105, false);
+			
 			// Get Subsection
 			$subsection = new SubsectionManager($this->_Parent);
 			$content = $subsection->generate($data['relation_id'], $this->get('id'), $this->get('subsection_id'), NULL, false);
@@ -520,7 +530,7 @@
 			$settings = ' ' . implode(' ', Stage::getComponents($this->get('id')));
 			
 			// Create stage
-			$stage = new XMLElement('div', NULL, array('class' => 'stage' . $settings . ($this->get('show_preview') == 1 ? ' preview' : '') . ($this->get('allow_multiple') == 1 ? ' multiple' : ' single')));
+			$stage = new XMLElement('div', NULL, array('class' => 'stage' . $settings . ($this->get('show_preview') == 1 ? ' preview' : '') . ($this->get('allow_multiple') == 1 ? ' multiple' : ' single') . ($this->get('lock') == 1 ? ' locked' : '')));
 			$content['empty'] = '<li class="empty message"><span>' . __('There are no selected items') . '</span></li>';
 			$selected = new XMLElement('ul', $content['empty'] . $content['html'], array('class' => 'selection'));
 			$stage->appendChild($selected);
@@ -576,7 +586,7 @@
 			$result = array();
 
 			foreach($data as $a => $value) {
-			  $result['relation_id'][] = $data[$a];
+				$result['relation_id'][] = $data[$a];
 			}
 
 			return $result;

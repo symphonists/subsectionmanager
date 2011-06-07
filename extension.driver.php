@@ -34,8 +34,8 @@
 			return array(
 				'name' => 'Subsection Manager',
 				'type' => 'Field, Interface',
-				'version' => '1.2RC1',
-				'release-date' => '2011-05-04',
+				'version' => '1.2RC2',
+				'release-date' => '2011-06-07',
 				'author' => array(
 					'name' => 'Nils Hörrmann',
 					'website' => 'http://nilshoerrmann.de',
@@ -285,7 +285,23 @@
 					}
 				}
 			}
+
+		/*-----------------------------------------------------------------------*/
 			
+			if(version_compare($previousVersion, '1.2', '<')) {
+
+				// Add lock column
+				$lock = Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'lock'");
+				if(!$lock) {
+					$status[] = Symphony::Database()->query(
+						"ALTER TABLE `tbl_fields_subsectionmanager` ADD `lock` tinyint(1) DEFAULT '0'"
+					);
+				}
+			}
+			
+			
+		/*-----------------------------------------------------------------------*/
+					
 			// Report status
 			if(in_array(false, $status, true)) {
 				return false;
