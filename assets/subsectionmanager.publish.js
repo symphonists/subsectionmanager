@@ -261,7 +261,7 @@
 			};
 			
 			// Browse queue
-			var browse = function() {
+			var browse = function(async) {
 				var list = queue.find('ul');
 
 				// Append queue if it's not present yet
@@ -270,7 +270,7 @@
 
 					// Get queue items
 					$.ajax({
-						async: false,
+						async: (async == true ? true : false),
 						type: 'GET',
 						dataType: 'html',
 						url: Symphony.Context.get('root') + '/symphony/extension/subsectionmanager/get/',
@@ -477,8 +477,8 @@
 								
 		/*-----------------------------------------------------------------------*/
 			
-			// Preload queue items
-			browse();
+			// Preload queue items asynchronously
+			browse(true);
 			
 		});
 
