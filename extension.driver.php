@@ -214,7 +214,16 @@
 		 *	The data source class to parse
 		 */
 		private function __parseSubsectionFields($datasource) {
-			$section = $datasource->getSource();
+
+			// Get source
+			if(method_exists($datasource, 'getSource')) {
+				$section = $datasource->getSource();
+			}
+			else {
+				$section = 0;
+			}
+			
+			// Get settings
 			$fields = $datasource->dsParamINCLUDEDELEMENTS;
 			$context = $datasource->dsParamROOTELEMENT;
 
