@@ -585,8 +585,9 @@
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#fetchIncludableElements
 		 */
 		public function fetchIncludableElements($break = false) {
+			static $cache = array();
 			$includable = array();
-		
+
 			// Check for recursive subsections
 			if($this->get('subsection_id') != $this->get('parent_section') || $break == false) {
 		
@@ -596,7 +597,14 @@
 				$fields = $section->fetchFields();
 				
 				foreach($fields as $field) {
-					$elements = $field->fetchIncludableElements(true);
+					$field_id = $field->get('id');
+					if (!isset($cache[$field_id])) {
+						$cache[$field_id] = array();
+						$elements = $cache[$field_id] = $field->fetchIncludableElements(true);
+					}
+					else {
+						$elements = $cache[$field_id];
+					}
 					
 					foreach($elements as $element) {
 						$includable[] = $this->get('element_name') . ': ' . $element;
