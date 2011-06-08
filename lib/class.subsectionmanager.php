@@ -136,6 +136,7 @@
 		}
 		
 		function __layoutSubsection($entries, $fields, $caption_template, $droptext_template, $mode, $full) {
+			static $cache = array();
 			$html = array();
 
 			// Templates
@@ -183,11 +184,16 @@
 							$field_id = $field->get('id');
 
 							// Get value
-							if(is_callable(array($field, 'preparePlainTextValue'))) {
-								$field_value = $field->preparePlainTextValue($entry['data'][$field_id], $entry['id']);
+							if (!isset($cache[$entry['id']][$field_id])) {
+								if(is_callable(array($field, 'preparePlainTextValue'))) {
+									$field_value = $field->preparePlainTextValue($entry['data'][$field_id], $entry['id']);
+								}
+								else {
+									$field_value = strip_tags($field->prepareTableValue($entry['data'][$field_id]));
+								}
 							}
 							else {
-								$field_value = strip_tags($field->prepareTableValue($entry['data'][$field_id]));
+								$field_value = $cache[$entry['id']][$field_id];
 							}
 
 							// Caption & Drop text
