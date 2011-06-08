@@ -185,11 +185,12 @@
 
 							// Get value
 							if (!isset($cache[$entry['id']][$field_id])) {
+								$cache[$entry['id']][$field_id] = '';
 								if(is_callable(array($field, 'preparePlainTextValue'))) {
-									$field_value = $field->preparePlainTextValue($entry['data'][$field_id], $entry['id']);
+									$field_value = $cache[$entry['id']][$field_id] = $field->preparePlainTextValue($entry['data'][$field_id], $entry['id']);
 								}
 								else {
-									$field_value = strip_tags($field->prepareTableValue($entry['data'][$field_id]));
+									$field_value = $cache[$entry['id']][$field_id] = strip_tags($field->prepareTableValue($entry['data'][$field_id]));
 								}
 							}
 							else {
