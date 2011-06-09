@@ -659,7 +659,7 @@
 			// Create subsection element
 			$entryManager = new EntryManager(Symphony::Engine());
 			$subsection = new XMLElement($this->get('element_name'));
-			$subsection->setAttribute('id', $this->get('id'));
+			$subsection->setAttribute('field-id', $this->get('id'));
 			$subsection->setAttribute('subsection-id', $this->get('subsection_id'));
 
 			// Get sort order
