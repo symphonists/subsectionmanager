@@ -214,10 +214,13 @@
 		 *	The data source class to parse
 		 */
 		private function __parseSubsectionFields($datasource) {
-
 			// Get source
 			if(method_exists($datasource, 'getSource')) {
 				$section = $datasource->getSource();
+			}
+			// Get source through our internal variable
+			else if (!empty($datasource->subsection_id)) {
+				$section = $datasource->subsection_id;
 			}
 			else {
 				$section = 0;
@@ -240,8 +243,10 @@
 							$this->__fetchFields($section, $context, $subsection, $field, $remainder);
 						}
 						else {
-							$this->__fetchFields($section, $context, $subsection, $field);
-							$this->__parseSubsectionFields(array($field . ': ' . $remainder), $context);
+							$subsection_id = $this->__fetchFields($section, $context, $subsection, $field);
+							// Internal, temporary, fake datasource, just for __parseSubsectionFields recursion
+							$temp = array('subsection_id' => $subsection_id, 'dsParamINCLUDEDELEMENTS' => array($field . ': ' . $remainder), 'dsParamROOTELEMENT' => $context);
+							$this->__parseSubsectionFields((object)$temp);
 						}
 	
 						// Set a single field call for subsection fields
@@ -286,6 +291,8 @@
 			if(!is_array(self::$storage['fields'][$context][$field_id][$subfield_id])) {
 				self::storeSubsectionFields($context, $field_id, $subfield_id, $mode);
 			}
+
+			return $id[0]['subsection_id'];
 		}
 		
 		/**
