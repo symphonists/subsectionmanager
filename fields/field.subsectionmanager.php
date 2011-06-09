@@ -455,7 +455,7 @@
 				$order = Symphony::Database()->fetchVar('order', 0,
 					"SELECT `order`
 					FROM `tbl_fields_stage_sorting`
-					WHERE `entry_id` = " . $entry_id . "
+					WHERE `entry_id` = " . intval($entry_id) . "
 					AND `field_id` = " . $this->get('id') . "
 					LIMIT 1"
 				);
@@ -655,7 +655,7 @@
 			// Unify data
 			if(empty($data['relation_id'])) $data['relation_id'] = array();
 			if(!is_array($data['relation_id'])) $data['relation_id'] = array($data['relation_id']);
-if ($_GET['debug']==2) var_dump("\n<br />\n<br/>*** appendFormattedElement(mode: {$context}, subsection: ".$this->get('element_name').")\n<br/>");
+
 			// Create subsection element
 			$entryManager = new EntryManager(Symphony::Engine());
 			$subsection = new XMLElement($this->get('element_name'));
@@ -667,7 +667,7 @@ if ($_GET['debug']==2) var_dump("\n<br />\n<br/>*** appendFormattedElement(mode:
 			$order = Symphony::Database()->fetchVar('order', 0,
 				"SELECT `order`
 				FROM `tbl_fields_stage_sorting`
-				WHERE `entry_id` = " . $wrapper->getAttribute('id') . "
+				WHERE `entry_id` = " . intval($wrapper->getAttribute('id')) . "
 				AND `field_id` = " . $this->get('id') . "
 				LIMIT 1"
 			);
@@ -747,7 +747,7 @@ if ($_GET['debug']==2) var_dump("\n<br />\n<br/>*** appendFormattedElement(mode:
 		 */
 		public function fetchAssociatedEntryCount($value){
 			if(isset($value)) {
-				return Symphony::Database()->fetchVar('count', 0, "SELECT count(*) AS `count` FROM `tbl_entries_data_".$this->get('id')."` WHERE `entry_id` = '$value'");
+				return Symphony::Database()->fetchVar('count', 0, "SELECT count(*) AS `count` FROM `tbl_entries_data_".$this->get('id')."` WHERE `entry_id` = '".intval($value)."'");
 			} 
 			else {
 				return 0;
