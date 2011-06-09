@@ -413,7 +413,7 @@
 			// Houston, we have problem: we've been called out of context!
 			$callback = Administration::instance()->getPageCallback();
 			if($callback['context']['page'] != 'edit' && $callback['context']['page'] != 'new') {
-				$this->getDefaultPublishContent(&$wrapper);
+				$this->getDefaultPublishContent($wrapper);
 				return;
 			}
 
@@ -643,7 +643,7 @@
 		 * @todo Sorting should be handled via system id
 		 */
 		public function appendFormattedElement(&$wrapper, $data, $encode = false, $context) {
-			
+
 			// Unify data
 			if(empty($data['relation_id'])) $data['relation_id'] = array();
 			if(!is_array($data['relation_id'])) $data['relation_id'] = array($data['relation_id']);
@@ -682,7 +682,7 @@
 				
 				// Fetch missing entries
 				if(empty($entry)) {
-					$entry = $entryManager->fetch($entry_id, $this->subsection_id);
+					$entry = $entryManager->fetch($entry_id, $this->get('subsection_id'));
 					
 					// Store entry
 					$entry = $entry[0];

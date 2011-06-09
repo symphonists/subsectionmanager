@@ -193,13 +193,21 @@
 		
 			// Default Data Source
 			if($parent == 'DataSource') {
-				$this->__parseSubsectionFields($context['datasource']);
+				$this->__parseSubsectionFields(
+					$context['datasource']->dsParamINCLUDEDELEMENTS, 
+					$context['datasource']->dsParamROOTELEMENT, 
+					$context['datasource']
+				);
 			}
 			
 			// Union Data Source
 			elseif($parent == 'UnionDatasource') {
 				foreach($context['datasource']->datasources as $datasource) {
-					$this->__parseSubsectionFields($datasource['datasource']);
+					$this->__parseSubsectionFields(
+						$datasource['datasource']->dsParamINCLUDEDELEMENTS, 
+						$datasource['datasource']->dsParamROOTELEMENT, 
+						$datasource['datasource']
+					);
 				}
 			}
 
@@ -213,19 +221,15 @@
 		 * @param DataSource $datasource
 		 *	The data source class to parse
 		 */
-		private function __parseSubsectionFields($datasource) {
+		private function __parseSubsectionFields($fields, $context, $datasource = null) {
 
 			// Get source
-			if(method_exists($datasource, 'getSource')) {
-				$section = $datasource->getSource();
+			$section = 0;
+			if(isset($datasource)) {
+				if(method_exists($datasource, 'getSource')) {
+					$section = $datasource->getSource();
+				}
 			}
-			else {
-				$section = 0;
-			}
-			
-			// Get settings
-			$fields = $datasource->dsParamINCLUDEDELEMENTS;
-			$context = $datasource->dsParamROOTELEMENT;
 
 			// Parse includes elements
 			if(!empty($fields)) {
@@ -245,11 +249,13 @@
 						}
 	
 						// Set a single field call for subsection fields
-						unset($datasource->dsParamINCLUDEDELEMENTS[$index]);
+						if(isset($datasource)) {
+							unset($datasource->dsParamINCLUDEDELEMENTS[$index]);
 	
-						$storage = $subsection . ': ' . $context;
-						if(!in_array($storage, $datasource->dsParamINCLUDEDELEMENTS)) {
-							$datasource->dsParamINCLUDEDELEMENTS[$index] = $storage;
+							$storage = $subsection . ': ' . $context;
+							if(!in_array($storage, $datasource->dsParamINCLUDEDELEMENTS)) {
+								$datasource->dsParamINCLUDEDELEMENTS[$index] = $storage;
+							}
 						}
 					}
 				}
@@ -257,6 +263,14 @@
 		}
 		
 		private function __fetchFields($section, $context, $subsection, $field, $mode = '') {
+		
+			// Section context
+			if($section !== 0) {
+				$section = " AND t2.`parent_section` = '{$section}' ";				
+			}
+			else {
+				$section = "";
+			}
 			
 			// Get id
 			$id = Symphony::Database()->fetch( 
@@ -264,7 +278,7 @@
 					FROM `tbl_fields_subsectionmanager` AS t1 
 					INNER JOIN `tbl_fields` AS t2 
 					WHERE t2.`element_name` = '{$subsection}'
-					AND t2.`parent_section` = '{$section}'
+					" . $section . "
 					AND t1.`field_id` = t2.`id`
 					LIMIT 1) 
 				UNION
@@ -272,7 +286,7 @@
 					FROM `tbl_fields_subsectiontabs` AS t1 
 					INNER JOIN `tbl_fields` AS t2 
 					WHERE t2.`element_name` = '{$subsection}'
-					AND t2.`parent_section` = '{$section}'
+					" . $section . "
 					AND t1.`field_id` = t2.`id`
 					LIMIT 1) 
 				LIMIT 1"
