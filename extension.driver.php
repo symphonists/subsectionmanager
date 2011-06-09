@@ -190,7 +190,7 @@
 			if(empty($this->entryManager)) {
 				self::$entryManager = new EntryManager(Symphony::Engine());
 			}
-		
+//var_dump("\n<br/>\n<br />*** ".$context['datasource']->dsParamROOTELEMENT."\n<br/>");
 			// Default Data Source
 			if($parent == 'DataSource') {
 				$this->__parseSubsectionFields(
@@ -235,7 +235,7 @@
 			if(!empty($fields)) {
 				foreach($fields as $index => $included) {
 					list($subsection, $field, $remainder) = explode(': ', $included, 3);
-					
+//var_dump("\n<br/>- context: {$context}, subsection: {$subsection}, field: {$field}, reminder: {$reminder}\n<br/>");
 					// Fetch fields
 					if($field != 'formatted' && $field != 'unformatted') {
 	
@@ -244,8 +244,8 @@
 							$this->__fetchFields($section, $context, $subsection, $field, $remainder);
 						}
 						else {
-							$this->__fetchFields($section, $context, $subsection, $field);
-							$this->__parseSubsectionFields(array($field . ': ' . $remainder), $context);
+							$this->__fetchFields($section, $context, $subsection, $field, $context.'/'.$field);
+							$this->__parseSubsectionFields(array($field . ': ' . $remainder), $context.'/'.$field);
 						}
 	
 						// Set a single field call for subsection fields
