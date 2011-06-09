@@ -651,6 +651,8 @@
 			// Create subsection element
 			$entryManager = new EntryManager(Symphony::Engine());
 			$subsection = new XMLElement($this->get('element_name'));
+			$subsection->setAttribute('id', $this->get('id'));
+			$subsection->setAttribute('subsection-id', $this->get('subsection_id'));
 
 			// Get sort order
 			$sorted_id = array();
@@ -678,7 +680,6 @@
 
 				// Populate entry element
 				$entry = extension_subsectionmanager::$storage['entries'][$entry_id];
-				$subsection->setAttribute('id', $entry_id);
 				
 				// Fetch missing entries
 				if(empty($entry)) {
