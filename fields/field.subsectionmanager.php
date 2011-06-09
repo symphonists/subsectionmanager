@@ -674,10 +674,6 @@
 			// Generate output			
 			foreach($sorted_id as $entry_id) {
 
-				// Create item
-				$item = new XMLElement('item', NULL, array('id' => $entry_id));
-				$subsection->appendChild($item);
-
 				// Populate entry element
 				$entry = extension_subsectionmanager::$storage['entries'][$entry_id];
 				
@@ -689,6 +685,17 @@
 					$entry = $entry[0];
 					extension_subsectionmanager::$storage['entries'][$entry_id] = $entry;
 				}
+
+				if(empty($entry)) {
+					// TODO: Here we could store deleted ID numbers, and update tbl_fields_stage_sorting later,
+					//       but that would slow things down. Sortorder should be updated whenever entry is deleted.
+					//       So this has to wait for new implementation of sortorder.
+					continue;
+				}
+
+				// Create item
+				$item = new XMLElement('item', NULL, array('id' => $entry_id));
+				$subsection->appendChild($item);
 				
 				// Process entry
 				if(!empty($entry) && !empty(extension_subsectionmanager::$storage['fields'][$context][$this->get('id')])) {
