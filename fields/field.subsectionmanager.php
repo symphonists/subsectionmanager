@@ -655,7 +655,7 @@
 			// Unify data
 			if(empty($data['relation_id'])) $data['relation_id'] = array();
 			if(!is_array($data['relation_id'])) $data['relation_id'] = array($data['relation_id']);
-
+if ($_GET['debug']==2) var_dump("\n<br />\n<br/>*** appendFormattedElement(mode: {$context}, subsection: ".$this->get('element_name').")\n<br/>");
 			// Create subsection element
 			$entryManager = new EntryManager(Symphony::Engine());
 			$subsection = new XMLElement($this->get('element_name'));

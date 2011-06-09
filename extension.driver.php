@@ -190,7 +190,7 @@
 			if(empty($this->entryManager)) {
 				self::$entryManager = new EntryManager(Symphony::Engine());
 			}
-//var_dump("\n<br/>\n<br />*** ".$context['datasource']->dsParamROOTELEMENT."\n<br/>");
+if ($_GET['debug']==2) var_dump("\n<br/>\n<br />*** ".$context['datasource']->dsParamROOTELEMENT."\n<br/>");
 			// Default Data Source
 			if($parent == 'DataSource') {
 				$this->__parseSubsectionFields(
@@ -226,7 +226,10 @@
 			// Get source
 			$section = 0;
 			if(isset($datasource)) {
-				if(method_exists($datasource, 'getSource')) {
+				if(is_numeric($datasource)) {
+					$section = $datasource;
+				}
+				else if(method_exists($datasource, 'getSource')) {
 					$section = $datasource->getSource();
 				}
 			}
@@ -235,21 +238,23 @@
 			if(!empty($fields)) {
 				foreach($fields as $index => $included) {
 					list($subsection, $field, $remainder) = explode(': ', $included, 3);
-//var_dump("\n<br/>- context: {$context}, subsection: {$subsection}, field: {$field}, reminder: {$reminder}\n<br/>");
+if ($_GET['debug']==2) var_dump("\n<br/>- context: {$context}, subsection: {$subsection}, field: {$field}, reminder: {$reminder}\n<br/>");
 					// Fetch fields
 					if($field != 'formatted' && $field != 'unformatted') {
 	
 						// Get field id and mode
 						if($remainder == 'formatted' || $remainder == 'unformatted' || empty($remainder)) {
+if ($_GET['debug']==2) var_dump("\n<br/>&nbsp;&nbsp;&nbsp;Last\n<br/>");
 							$this->__fetchFields($section, $context, $subsection, $field, $remainder);
 						}
 						else {
-							$this->__fetchFields($section, $context, $subsection, $field, $context.'/'.$field);
-							$this->__parseSubsectionFields(array($field . ': ' . $remainder), $context.'/'.$field);
+if ($_GET['debug']==2) var_dump("\n<br/>&nbsp;&nbsp;&nbsp;Continue\n<br/>");
+							$subsection_id = $this->__fetchFields($section, $context, $subsection, $field, "{$context}/{$subsection}");
+							$this->__parseSubsectionFields(array($field . ': ' . $remainder), "{$context}/{$subsection}", $subsection_id);
 						}
 	
 						// Set a single field call for subsection fields
-						if(isset($datasource)) {
+						if(is_object($datasource)) {
 							unset($datasource->dsParamINCLUDEDELEMENTS[$index]);
 	
 							$storage = $subsection . ': ' . $context;
@@ -300,6 +305,8 @@
 			if(!is_array(self::$storage['fields'][$context][$field_id][$subfield_id])) {
 				self::storeSubsectionFields($context, $field_id, $subfield_id, $mode);
 			}
+
+			return $id[0]['subsection_id'];
 		}
 		
 		/**
