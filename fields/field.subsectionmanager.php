@@ -196,6 +196,9 @@
 			$this->appendRequiredCheckbox($fieldset);
 			$wrapper->appendChild($fieldset);
 
+			// Compatibility with 1.x
+			$wrapper->appendChild(Widget::Input('fields[' . $this->get('sortorder') . '][included_fields]', $this->get('included_fields'), 'hidden'));
+
 		}
 		
 		/**
@@ -353,8 +356,11 @@
 			// Drop text
 			$fields['droptext'] = $this->get('droptext');
 
-			// Data source fields
-			$fields['included_fields'] = (is_null($this->get('included_fields')) ? NULL : implode(',', $this->get('included_fields')));
+			// Data source fields - keep them stored for compatibility with 1.x
+			$included_fields = $this->get('included_fields');
+			if (is_array($included_fields)) $included_fields = implode(',', $included_fields);
+			if (empty($included_fields)) $included_fields = NULL;
+			$fields['included_fields'] = $included_fields;
 
 			// Delete old field settings
 			Symphony::Database()->query(
