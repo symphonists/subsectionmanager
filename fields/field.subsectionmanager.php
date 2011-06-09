@@ -659,6 +659,8 @@
 			// Create subsection element
 			$entryManager = new EntryManager(Symphony::Engine());
 			$subsection = new XMLElement($this->get('element_name'));
+			$subsection->setAttribute('id', $this->get('id'));
+			$subsection->setAttribute('subsection-id', $this->get('subsection_id'));
 
 			// Get sort order
 			$sorted_id = array();
@@ -680,13 +682,8 @@
 			// Generate output			
 			foreach($sorted_id as $entry_id) {
 
-				// Create item
-				$item = new XMLElement('item', NULL, array('id' => $entry_id));
-				$subsection->appendChild($item);
-
 				// Populate entry element
 				$entry = extension_subsectionmanager::$storage['entries'][$entry_id];
-				$subsection->setAttribute('id', $entry_id);
 				
 				// Fetch missing entries
 				if(empty($entry)) {
@@ -696,6 +693,17 @@
 					$entry = $entry[0];
 					extension_subsectionmanager::$storage['entries'][$entry_id] = $entry;
 				}
+
+				if(empty($entry)) {
+					// TODO: Here we could store deleted ID numbers, and update tbl_fields_stage_sorting later,
+					//       but that would slow things down. Sortorder should be updated whenever entry is deleted.
+					//       So this has to wait for new implementation of sortorder.
+					continue;
+				}
+
+				// Create item
+				$item = new XMLElement('item', NULL, array('id' => $entry_id));
+				$subsection->appendChild($item);
 				
 				// Process entry
 				if(!empty($entry) && !empty(extension_subsectionmanager::$storage['fields'][$context][$this->get('id')])) {
