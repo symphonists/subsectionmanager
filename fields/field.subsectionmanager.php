@@ -196,6 +196,9 @@
 			$this->appendRequiredCheckbox($fieldset);
 			$wrapper->appendChild($fieldset);
 
+			// Compatibility with 1.x
+			$wrapper->appendChild(Widget::Input('fields[' . $this->get('sortorder') . '][included_fields]', $this->get('included_fields'), 'hidden'));
+
 		}
 		
 		/**
@@ -353,8 +356,11 @@
 			// Drop text
 			$fields['droptext'] = $this->get('droptext');
 
-			// Data source fields
-			$fields['included_fields'] = (is_null($this->get('included_fields')) ? NULL : implode(',', $this->get('included_fields')));
+			// Data source fields - keep them stored for compatibility with 1.x
+			$included_fields = $this->get('included_fields');
+			if (is_array($included_fields)) $included_fields = implode(',', $included_fields);
+			if (empty($included_fields)) $included_fields = NULL;
+			$fields['included_fields'] = $included_fields;
 
 			// Delete old field settings
 			Symphony::Database()->query(
@@ -455,7 +461,7 @@
 				$order = Symphony::Database()->fetchVar('order', 0,
 					"SELECT `order`
 					FROM `tbl_fields_stage_sorting`
-					WHERE `entry_id` = " . $entry_id . "
+					WHERE `entry_id` = " . intval($entry_id) . "
 					AND `field_id` = " . $this->get('id') . "
 					LIMIT 1"
 				);
@@ -659,7 +665,7 @@
 			// Create subsection element
 			$entryManager = new EntryManager(Symphony::Engine());
 			$subsection = new XMLElement($this->get('element_name'));
-			$subsection->setAttribute('id', $this->get('id'));
+			$subsection->setAttribute('field-id', $this->get('id'));
 			$subsection->setAttribute('subsection-id', $this->get('subsection_id'));
 
 			// Get sort order
@@ -667,7 +673,7 @@
 			$order = Symphony::Database()->fetchVar('order', 0,
 				"SELECT `order`
 				FROM `tbl_fields_stage_sorting`
-				WHERE `entry_id` = " . $wrapper->getAttribute('id') . "
+				WHERE `entry_id` = " . intval($wrapper->getAttribute('id')) . "
 				AND `field_id` = " . $this->get('id') . "
 				LIMIT 1"
 			);
@@ -747,7 +753,7 @@
 		 */
 		public function fetchAssociatedEntryCount($value){
 			if(isset($value)) {
-				return Symphony::Database()->fetchVar('count', 0, "SELECT count(*) AS `count` FROM `tbl_entries_data_".$this->get('id')."` WHERE `entry_id` = '$value'");
+				return Symphony::Database()->fetchVar('count', 0, "SELECT count(*) AS `count` FROM `tbl_entries_data_".$this->get('id')."` WHERE `entry_id` = '".intval($value)."'");
 			} 
 			else {
 				return 0;
