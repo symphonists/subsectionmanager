@@ -125,7 +125,7 @@
 			if(!is_null($context['fields']['sort_order'])) {
 			
 				// Delete current sort order
-				$entry_id = $context['entry']->get('id');
+				$entry_id = intval($context['entry']->get('id'));
 				Symphony::Database()->query(
 					"DELETE FROM `tbl_fields_stage_sorting` WHERE `entry_id` = '$entry_id'"
 				);
@@ -141,7 +141,7 @@
 							$order[] = intval($entry);
 						}
 						Symphony::Database()->query(
-							"INSERT INTO `tbl_fields_stage_sorting` (`entry_id`, `field_id`, `order`, `context`) VALUES ('$entry_id', '$field_id', '" . implode(',', $order) . "', 'subsectionmanager')"
+							"INSERT INTO `tbl_fields_stage_sorting` (`entry_id`, `field_id`, `order`, `context`) VALUES ('$entry_id', '".intval($field_id)."', '" . implode(',', $order) . "', 'subsectionmanager')"
 						);
 					}
 				}
@@ -190,7 +190,7 @@
 			if(empty($this->entryManager)) {
 				self::$entryManager = new EntryManager(Symphony::Engine());
 			}
-		
+
 			// Default Data Source
 			if($parent == 'DataSource') {
 				$this->__parseSubsectionFields(
@@ -226,7 +226,10 @@
 			// Get source
 			$section = 0;
 			if(isset($datasource)) {
-				if(method_exists($datasource, 'getSource')) {
+				if(is_numeric($datasource)) {
+					$section = $datasource;
+				}
+				else if(method_exists($datasource, 'getSource')) {
 					$section = $datasource->getSource();
 				}
 			}
@@ -235,7 +238,7 @@
 			if(!empty($fields)) {
 				foreach($fields as $index => $included) {
 					list($subsection, $field, $remainder) = explode(': ', $included, 3);
-					
+
 					// Fetch fields
 					if($field != 'formatted' && $field != 'unformatted') {
 	
@@ -244,12 +247,12 @@
 							$this->__fetchFields($section, $context, $subsection, $field, $remainder);
 						}
 						else {
-							$this->__fetchFields($section, $context, $subsection, $field);
-							$this->__parseSubsectionFields(array($field . ': ' . $remainder), $context);
+							$subsection_id = $this->__fetchFields($section, $context, $subsection, $field, "{$context}/{$subsection}");
+							$this->__parseSubsectionFields(array($field . ': ' . $remainder), "{$context}/{$subsection}", $subsection_id);
 						}
 	
 						// Set a single field call for subsection fields
-						if(isset($datasource)) {
+						if(is_object($datasource)) {
 							unset($datasource->dsParamINCLUDEDELEMENTS[$index]);
 	
 							$storage = $subsection . ': ' . $context;
@@ -266,11 +269,13 @@
 		
 			// Section context
 			if($section !== 0) {
-				$section = " AND t2.`parent_section` = '{$section}' ";				
+				$section = " AND t2.`parent_section` = '".intval($section)."' ";				
 			}
 			else {
-				$section = "";
+				$section = '';
 			}
+
+			$subsection = Symphony::Database()->cleanValue($subsection);
 			
 			// Get id
 			$id = Symphony::Database()->fetch( 
@@ -278,7 +283,7 @@
 					FROM `tbl_fields_subsectionmanager` AS t1 
 					INNER JOIN `tbl_fields` AS t2 
 					WHERE t2.`element_name` = '{$subsection}'
-					" . $section . "
+					{$section}
 					AND t1.`field_id` = t2.`id`
 					LIMIT 1) 
 				UNION
@@ -286,7 +291,7 @@
 					FROM `tbl_fields_subsectiontabs` AS t1 
 					INNER JOIN `tbl_fields` AS t2 
 					WHERE t2.`element_name` = '{$subsection}'
-					" . $section . "
+					{$section}
 					AND t1.`field_id` = t2.`id`
 					LIMIT 1) 
 				LIMIT 1"
@@ -300,6 +305,8 @@
 			if(!is_array(self::$storage['fields'][$context][$field_id][$subfield_id])) {
 				self::storeSubsectionFields($context, $field_id, $subfield_id, $mode);
 			}
+
+			return $id[0]['subsection_id'];
 		}
 		
 		/**
