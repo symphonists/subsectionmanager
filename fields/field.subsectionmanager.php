@@ -656,7 +656,7 @@
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#appendFormattedElement
 		 * @todo Sorting should be handled via system id
 		 */
-		public function appendFormattedElement(&$wrapper, $data, $encode = false, $context) {
+		public function appendFormattedElement(&$wrapper, $data, $encode = false, $context = null) {
 
 			// Unify data
 			if(empty($data['relation_id'])) $data['relation_id'] = array();
