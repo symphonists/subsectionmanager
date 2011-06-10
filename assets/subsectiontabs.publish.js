@@ -16,7 +16,8 @@
 	 * @source: http://github.com/nilshoerrmann/subsectionmanager
 	 */
 	$(document).ready(function() {
-		var field = $('div.field-subsectiontabs'),
+		var body = $('body'),
+			field = $('div.field-subsectiontabs'),
 			label = field.find('label'),
 			handle = label.attr('data-handle'),
 			title = $('h2:not(#documenter-title)').filter(':first'),
@@ -26,7 +27,7 @@
 			fragments, headline;
 			
 		// Set context
-		$('body').addClass('subsectiontabs');
+		body.addClass('subsectiontabs');
 			
 		// Switch display modes
 		if(location.search != '?debug') {
@@ -293,12 +294,14 @@
 				});
 				
 				// Resize frame
-				content.find('#contents').resize(function() {
-					var height = $(this).height();
-					subsection.height(height);
-					tabs.animate({
-						'height': height
-					}, 'fast');
+				content.find('#contents').resize(function(event) {
+					if(!body.is('.resizing')) {
+						var height = $(this).height();
+						subsection.height(height);
+						tabs.animate({
+							'height': height
+						}, 'fast');
+					}
 				});
 				
 				// Set height
@@ -494,12 +497,15 @@
 			var height, storage;
 			
 			// Resize tab
+			body.addClass('resizing');
 			subsection.show();
 			height = getHeight(subsection);
 			subsection.height(height);
 			tabs.animate({
 				'height': height
-			}, 'fast');
+			}, 'fast', function() {
+				body.removeClass('resizing');
+			});
 			
 			// Store current tab
 			remember(subsection, height);
