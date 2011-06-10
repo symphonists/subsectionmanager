@@ -19,7 +19,7 @@
 		var field = $('div.field-subsectiontabs'),
 			label = field.find('label'),
 			handle = label.attr('data-handle'),
-			title = $('h2:first'),
+			title = $('h2:not(#documenter-title)').filter(':first'),
 			storage = field.find('ul'),
 			references = field.find('a'),
 			state, controls, tabs,
