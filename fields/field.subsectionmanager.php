@@ -679,6 +679,7 @@
 		 * @todo Sorting should be handled via system id
 		 */
 		public function appendFormattedElement(&$wrapper, $data, $encode = false, $mode = null) {
+			static $done = array();
 
 			// Unify data
 			if(empty($data['relation_id'])) $data['relation_id'] = array();
@@ -733,8 +734,8 @@
 				$item = new XMLElement('item', NULL, array('id' => $entry_id));
 				$subsection->appendChild($item);
 				
-				// Process entry
-				if(!empty($entry) && !empty(extension_subsectionmanager::$storage['fields'][$mode][$this->get('id')])) {
+				// Process entry for Data Source
+				if(!empty(extension_subsectionmanager::$storage['fields'][$mode][$this->get('id')])) {
 					foreach(extension_subsectionmanager::$storage['fields'][$mode][$this->get('id')] as $field_id => $modes) {
 						$entry_data = $entry->getData($field_id);
 						$field = $entryManager->fieldManager->fetch($field_id);
@@ -751,6 +752,34 @@
 							}
 						}						
 					}
+				}
+				// Process entry for anyone else
+				else {
+					// Check for recursion first
+					$id = $this->get('parent_section');
+					if ($done[$id] >= $this->get('recursion_levels') + 1) return array();	
+					$done[$id] += 1;
+
+					// Now output data
+					$callback = Administration::instance()->getPageCallback();
+					if($callback['context']['page'] == 'edit' || $callback['context']['page'] != 'new') {
+						static $fieldManager = NULL;
+						if (empty($fieldManager)) {
+							$fieldManager = new FieldManager(Symphony::Engine());
+							if (empty($fieldManager)) return;
+						}
+
+						$data = $entry->getData();
+						// Add fields:
+						foreach ($data as $field_id => $values) {
+							if (empty($field_id)) continue;
+				
+							$field = $fieldManager->fetch($field_id);
+							$field->appendFormattedElement($item, $values, false, null, $entry_id);
+						}
+					}
+
+					$done[$id] -= 1;
 				}
 			}
 			
