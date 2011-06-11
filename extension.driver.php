@@ -48,7 +48,7 @@
 			return array(
 				'name' => 'Subsection Manager',
 				'type' => 'Field, Interface',
-				'version' => '2.0dev',
+				'version' => '2.0dev.1',
 				'release-date' => false,
 				'author' => array(
 					'name' => 'Nils Hörrmann',
@@ -393,6 +393,7 @@
 					`allow_multiple` tinyint(1) default '0',
 					`show_preview` tinyint(1) default '0',
 					`lock` tinyint(1) DEFAULT '0',
+					`recursion_levels` tinyint DEFAULT '0',
 			  		PRIMARY KEY  (`id`),
 			  		KEY `field_id` (`field_id`)
 				)"
@@ -551,9 +552,13 @@
 				  		KEY `field_id` (`field_id`)
 					)"
 				);
+
+				// Add recursion_levels column
+				$status[] = Symphony::Database()->query(
+					"ALTER TABLE `tbl_fields_subsectionmanager` ADD COLUMN `recursion_levels` tinyint DEFAULT '0'"
+				);
 			}
-			
-			
+
 		/*-----------------------------------------------------------------------*/
 			
 			// Report status
