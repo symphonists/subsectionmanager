@@ -656,7 +656,7 @@
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#appendFormattedElement
 		 * @todo Sorting should be handled via system id
 		 */
-		public function appendFormattedElement(&$wrapper, $data, $encode = false, $context = null) {
+		public function appendFormattedElement(&$wrapper, $data, $encode = false, $mode = null) {
 
 			// Unify data
 			if(empty($data['relation_id'])) $data['relation_id'] = array();
@@ -712,14 +712,14 @@
 				$subsection->appendChild($item);
 				
 				// Process entry
-				if(!empty($entry) && !empty(extension_subsectionmanager::$storage['fields'][$context][$this->get('id')])) {
-					foreach(extension_subsectionmanager::$storage['fields'][$context][$this->get('id')] as $field_id => $modes) {
+				if(!empty($entry) && !empty(extension_subsectionmanager::$storage['fields'][$mode][$this->get('id')])) {
+					foreach(extension_subsectionmanager::$storage['fields'][$mode][$this->get('id')] as $field_id => $modes) {
 						$entry_data = $entry->getData($field_id);
 						$field = $entryManager->fieldManager->fetch($field_id);
 						
 						// No modes
 						if(empty($modes)) {
-							$field->appendFormattedElement($item, $entry_data, $encode, $context, $entry_id);
+							$field->appendFormattedElement($item, $entry_data, $encode, $mode, $entry_id);
 						}
 						
 						// With modes
