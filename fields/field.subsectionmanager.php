@@ -746,8 +746,8 @@
 						
 						// With modes
 						else {
-							foreach($modes as $mode) {
-								$field->appendFormattedElement($item, $entry_data, $encode, $mode, $entry_id);
+							foreach($modes as $m) {
+								$field->appendFormattedElement($item, $entry_data, $encode, $m, $entry_id);
 							}
 						}						
 					}
