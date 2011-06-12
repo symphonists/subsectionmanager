@@ -234,14 +234,14 @@
 				}
 			}
 
-			// Parse includes elements
+			// Parse included elements
 			if(!empty($fields)) {
 				foreach($fields as $index => $included) {
 					list($subsection, $field, $remainder) = explode(': ', $included, 3);
 
 					// Fetch fields
-					if($field != 'formatted' && $field != 'unformatted') {
-	
+					if($field != 'formatted' && $field != 'unformatted' && !empty($field)) {
+
 						// Get field id and mode
 						if($remainder == 'formatted' || $remainder == 'unformatted' || empty($remainder)) {
 							$this->__fetchFields($section, $context, $subsection, $field, $remainder);
@@ -266,7 +266,6 @@
 		}
 		
 		private function __fetchFields($section, $context, $subsection, $field, $mode = '') {
-		
 			// Section context
 			if($section !== 0) {
 				$section = " AND t2.`parent_section` = '".intval($section)."' ";				
