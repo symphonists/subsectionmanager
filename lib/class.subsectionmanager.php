@@ -15,8 +15,11 @@
 			$this->_Parent = $parent;
 		}
 		
-		function generate($items, $subsection_field, $subsection_id, $entry_id=NULL, $full=false) {
-		
+		function generate($items, $subsection_field, $subsection_id, $entry_id=NULL, $full=false, $recurse=0) {
+			static $done = array();
+			if ($done[$subsection_field] >= $recurse + 1) return array('options' => array(), 'html' => '', 'preview' => '');	
+			$done[$subsection_field] += 1;
+
 			if(!is_array($items)) $items = array($items);
 			$this->_Items = $items;
 		
@@ -61,6 +64,8 @@
 		  	
 		  	// Layout subsection data
 		  	$data = $this->__layoutSubsection($entries, $fields, $caption, $droptext, $mode, $full);
+
+			$done[$subsection_field] -= 1;
 		  	return $data;
 		  	
 		}
@@ -136,7 +141,6 @@
 		}
 		
 		function __layoutSubsection($entries, $fields, $caption_template, $droptext_template, $mode, $full) {
-			static $cache = array();
 			$html = array();
 
 			// Templates
@@ -184,17 +188,11 @@
 							$field_id = $field->get('id');
 
 							// Get value
-							if (!isset($cache[$entry['id']][$field_id])) {
-								$cache[$entry['id']][$field_id] = '';
-								if(is_callable(array($field, 'preparePlainTextValue'))) {
-									$field_value = $cache[$entry['id']][$field_id] = $field->preparePlainTextValue($entry['data'][$field_id], $entry['id']);
-								}
-								else {
-									$field_value = $cache[$entry['id']][$field_id] = strip_tags($field->prepareTableValue($entry['data'][$field_id]));
-								}
+							if(is_callable(array($field, 'preparePlainTextValue'))) {
+								$field_value = $field->preparePlainTextValue($entry['data'][$field_id], $entry['id']);
 							}
 							else {
-								$field_value = $cache[$entry['id']][$field_id];
+								$field_value = strip_tags($field->prepareTableValue($entry['data'][$field_id]));
 							}
 
 							// Caption & Drop text

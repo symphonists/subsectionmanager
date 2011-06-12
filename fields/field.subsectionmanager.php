@@ -147,6 +147,7 @@
 			if(!$this->get('id') && $errors == NULL) {
 				$this->set('allow_multiple', 1);
 				$this->set('show_preview', 1);
+				$this->set('recursion_levels', 1);
 			}
 			
 			// Get settings
@@ -190,8 +191,27 @@
 
 		/*-----------------------------------------------------------------------*/
 
+			// XML Output
+			$fieldset = new XMLElement('fieldset', '<legend>' . __('XML Output') . '</legend>');
+
+			// Recursion levels
+			$label = new XMLElement('label');
+			$recursion_levels = $this->get('recursion_levels');
+			$select = Widget::Select('fields[' . $this->get('sortorder') . '][recursion_levels]', array(
+				array('0', ($recursion_levels == 0), __('no recursion')),
+				array('1', ($recursion_levels == 1), __('1 recursion level')),
+				array('2', ($recursion_levels == 2), __('2 recursion levels')),
+				array('3', ($recursion_levels == 3), __('3 recursion levels')),
+			));
+			$label->setValue(__('Allow for %s', array($select->generate())));
+			$fieldset->appendChild($label);
+
+			$wrapper->appendChild($fieldset);
+
+		/*-----------------------------------------------------------------------*/
+
 			// General
-			$fieldset = new XMLElement('fieldset');
+			$fieldset = new XMLElement('fieldset', '<legend>' . __('General') . '</legend>');
 			$this->appendShowColumnCheckbox($fieldset);
 			$this->appendRequiredCheckbox($fieldset);
 			$wrapper->appendChild($fieldset);
@@ -356,6 +376,10 @@
 			// Drop text
 			$fields['droptext'] = $this->get('droptext');
 
+			// XML Output
+			$fields['recursion_levels'] = intval($this->get('recursion_levels'));
+			if (empty($fields['recursion_levels'])) $fields['recursion_levels'] = 0; // Make sure it is 0, not NULL
+
 			// Data source fields - keep them stored for compatibility with 1.x
 			$included_fields = $this->get('included_fields');
 			if (is_array($included_fields)) $included_fields = implode(',', $included_fields);
@@ -434,7 +458,7 @@
 
 			// Get Subsection
 			$subsection = new SubsectionManager($this->_Parent);
-			$content = $subsection->generate($data['relation_id'], $this->get('id'), $this->get('subsection_id'), NULL, false);
+			$content = $subsection->generate($data['relation_id'], $this->get('id'), $this->get('subsection_id'), NULL, false, $this->get('recursion_levels'));
 
 			// Prepare select options
 			$options = $content['options'];
@@ -516,7 +540,7 @@
 			
 			// Get items
 			$subsection = new SubsectionManager($this->_Parent);
-			$content = $subsection->generate(null, $this->get('id'), $this->get('subsection_id'), NULL, true);
+			$content = $subsection->generate(null, $this->get('id'), $this->get('subsection_id'), NULL, true, $this->get('recursion_levels'));
 			
 			// Append items
 			$select = Widget::Select(null, $content['options']);
@@ -566,7 +590,7 @@
 			// Single select
 			if($this->get('allow_multiple') == 0 || count($data['relation_id']) === 1) {
 				$subsection = new SubsectionManager($this->_Parent);
-				$content = $subsection->generate(null, $this->get('id'), $this->get('subsection_id'), $data['relation_id'], true);
+				$content = $subsection->generate(null, $this->get('id'), $this->get('subsection_id'), $data['relation_id'], true, $this->get('recursion_levels'));
 				
 				// Link?
 				if($link) {
@@ -591,12 +615,15 @@
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#fetchIncludableElements
 		 */
 		public function fetchIncludableElements($break = false) {
-			static $cache = array();
+			static $done = array();
+
+			$id = $this->get('parent_section');
+			if ($done[$id] >= $this->get('recursion_levels') + 1) return array();	
+			$done[$id] += 1;
+
 			$includable = array();
 
-			// Check for recursive subsections
-			if($this->get('subsection_id') != $this->get('parent_section') || $break == false) {
-		
+
 				// Fetch subsection fields
 				$sectionManager = new SectionManager(Symphony::Engine());
 				$section = $sectionManager->fetch($this->get('subsection_id'));
@@ -604,20 +631,15 @@
 				
 				foreach($fields as $field) {
 					$field_id = $field->get('id');
-					if (!isset($cache[$field_id])) {
-						$cache[$field_id] = array();
-						$elements = $cache[$field_id] = $field->fetchIncludableElements(true);
-					}
-					else {
-						$elements = $cache[$field_id];
-					}
+
+						$elements = $field->fetchIncludableElements(true);
 					
 					foreach($elements as $element) {
 						$includable[] = $this->get('element_name') . ': ' . $element;
 					}
 				}
-			}
-			
+
+			$done[$id] -= 1;
 			return $includable;
 		}
 		
@@ -656,7 +678,8 @@
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#appendFormattedElement
 		 * @todo Sorting should be handled via system id
 		 */
-		public function appendFormattedElement(&$wrapper, $data, $encode = false, $context) {
+		public function appendFormattedElement(&$wrapper, $data, $encode = false, $mode = null) {
+			static $done = array();
 
 			// Unify data
 			if(empty($data['relation_id'])) $data['relation_id'] = array();
@@ -711,24 +734,52 @@
 				$item = new XMLElement('item', NULL, array('id' => $entry_id));
 				$subsection->appendChild($item);
 				
-				// Process entry
-				if(!empty($entry) && !empty(extension_subsectionmanager::$storage['fields'][$context][$this->get('id')])) {
-					foreach(extension_subsectionmanager::$storage['fields'][$context][$this->get('id')] as $field_id => $modes) {
+				// Process entry for Data Source
+				if(!empty(extension_subsectionmanager::$storage['fields'][$mode][$this->get('id')])) {
+					foreach(extension_subsectionmanager::$storage['fields'][$mode][$this->get('id')] as $field_id => $modes) {
 						$entry_data = $entry->getData($field_id);
 						$field = $entryManager->fieldManager->fetch($field_id);
 						
 						// No modes
 						if(empty($modes)) {
-							$field->appendFormattedElement($item, $entry_data, $encode, $context, $entry_id);
+							$field->appendFormattedElement($item, $entry_data, $encode, $mode, $entry_id);
 						}
 						
 						// With modes
 						else {
-							foreach($modes as $mode) {
-								$field->appendFormattedElement($item, $entry_data, $encode, $mode, $entry_id);
+							foreach($modes as $m) {
+								$field->appendFormattedElement($item, $entry_data, $encode, $m, $entry_id);
 							}
 						}						
 					}
+				}
+				// Process entry for anyone else
+				else {
+					// Check for recursion first
+					$id = $this->get('parent_section');
+					if ($done[$id] >= $this->get('recursion_levels') + 1) return array();	
+					$done[$id] += 1;
+
+					// Now output data
+					$callback = Administration::instance()->getPageCallback();
+					if($callback['context']['page'] == 'edit' || $callback['context']['page'] != 'new') {
+						static $fieldManager = NULL;
+						if (empty($fieldManager)) {
+							$fieldManager = new FieldManager(Symphony::Engine());
+							if (empty($fieldManager)) return;
+						}
+
+						$data = $entry->getData();
+						// Add fields:
+						foreach ($data as $field_id => $values) {
+							if (empty($field_id)) continue;
+				
+							$field = $fieldManager->fetch($field_id);
+							$field->appendFormattedElement($item, $values, false, null, $entry_id);
+						}
+					}
+
+					$done[$id] -= 1;
 				}
 			}
 			

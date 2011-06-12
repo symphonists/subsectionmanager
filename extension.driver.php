@@ -48,7 +48,7 @@
 			return array(
 				'name' => 'Subsection Manager',
 				'type' => 'Field, Interface',
-				'version' => '2.0dev',
+				'version' => '2.0dev.1',
 				'release-date' => false,
 				'author' => array(
 					'name' => 'Nils Hörrmann',
@@ -234,14 +234,14 @@
 				}
 			}
 
-			// Parse includes elements
+			// Parse included elements
 			if(!empty($fields)) {
 				foreach($fields as $index => $included) {
 					list($subsection, $field, $remainder) = explode(': ', $included, 3);
 
 					// Fetch fields
-					if($field != 'formatted' && $field != 'unformatted') {
-	
+					if($field != 'formatted' && $field != 'unformatted' && !empty($field)) {
+
 						// Get field id and mode
 						if($remainder == 'formatted' || $remainder == 'unformatted' || empty($remainder)) {
 							$this->__fetchFields($section, $context, $subsection, $field, $remainder);
@@ -266,7 +266,6 @@
 		}
 		
 		private function __fetchFields($section, $context, $subsection, $field, $mode = '') {
-		
 			// Section context
 			if($section !== 0) {
 				$section = " AND t2.`parent_section` = '".intval($section)."' ";				
@@ -393,6 +392,7 @@
 					`allow_multiple` tinyint(1) default '0',
 					`show_preview` tinyint(1) default '0',
 					`lock` tinyint(1) DEFAULT '0',
+					`recursion_levels` tinyint DEFAULT '0',
 			  		PRIMARY KEY  (`id`),
 			  		KEY `field_id` (`field_id`)
 				)"
@@ -551,9 +551,13 @@
 				  		KEY `field_id` (`field_id`)
 					)"
 				);
+
+				// Add recursion_levels column
+				$status[] = Symphony::Database()->query(
+					"ALTER TABLE `tbl_fields_subsectionmanager` ADD COLUMN `recursion_levels` tinyint DEFAULT '0'"
+				);
 			}
-			
-			
+
 		/*-----------------------------------------------------------------------*/
 			
 			// Report status
