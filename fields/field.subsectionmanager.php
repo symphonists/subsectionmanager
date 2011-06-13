@@ -755,27 +755,31 @@
 				}
 				// Process entry for anyone else
 				else {
-					// Check for recursion first
-					$id = $this->get('parent_section');
-					if ($done[$id] >= $this->get('recursion_levels') + 1) return array();	
-					$done[$id] += 1;
+					$engine = Symphony::Engine();
+					if ($engine instanceof Administration) {
+						// Check for recursion first
+						$id = $this->get('parent_section');
+						if ($done[$id] >= $this->get('recursion_levels') + 1) return array();	
+						$done[$id] += 1;
 
-					// Now output data
-					$callback = Administration::instance()->getPageCallback();
-					if($callback['context']['page'] == 'edit' || $callback['context']['page'] != 'new') {
-						static $fieldManager = NULL;
-						if (empty($fieldManager)) {
-							$fieldManager = new FieldManager(Symphony::Engine());
-							if (empty($fieldManager)) return;
-						}
+					
+						// Now output data
+						$callback = Administration::instance()->getPageCallback();
+						if($callback['context']['page'] == 'edit' || $callback['context']['page'] != 'new') {
+							static $fieldManager = NULL;
+							if (empty($fieldManager)) {
+								$fieldManager = new FieldManager(Symphony::Engine());
+								if (empty($fieldManager)) return;
+							}
 
-						$data = $entry->getData();
-						// Add fields:
-						foreach ($data as $field_id => $values) {
-							if (empty($field_id)) continue;
+							$data = $entry->getData();
+							// Add fields:
+							foreach ($data as $field_id => $values) {
+								if (empty($field_id)) continue;
 				
-							$field = $fieldManager->fetch($field_id);
-							$field->appendFormattedElement($item, $values, false, null, $entry_id);
+								$field = $fieldManager->fetch($field_id);
+								$field->appendFormattedElement($item, $values, false, null, $entry_id);
+							}
 						}
 					}
 
