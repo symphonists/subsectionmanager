@@ -148,6 +148,7 @@
 				$this->set('allow_multiple', 1);
 				$this->set('show_preview', 1);
 				$this->set('recursion_levels', 1);
+				$this->set('allow_nonunique', 0);
 			}
 			
 			// Get settings
@@ -159,6 +160,10 @@
 
 			// Setting: disallow editing
 			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][lock]" value="1" type="checkbox"' . ($this->get('lock') == 0 ? '' : ' checked="checked"') . '/> ' . __('Disallow item editing') . ' <i>' . __('This will lock items and disable the inline editor') . '</i>');
+			$div[0]->appendChild($setting);
+
+			// Setting: allow non unique (duplicated items)
+			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][allow_nonunique]" value="1" type="checkbox"' . ($this->get('allow_nonunique') == 0 ? '' : ' checked="checked"') . '/> ' . __('Allow selection of non unique items') . ' <i>' . __('This will allow or disallow selecting the same item multiple times') . '</i>');
 			$div[0]->appendChild($setting);
 			
 			// Append behaviour settings
@@ -322,9 +327,10 @@
 			$fields['field_id'] = $id;
 			$fields['subsection_id'] = $this->get('subsection_id');
 			$fields['allow_multiple'] = ($this->get('allow_multiple') ? 1 : 0);
+			$fields['allow_nonunique'] = ($this->get('allow_nonunique') ? 1 : 0);
 			$fields['show_preview'] = ($this->get('show_preview') ? 1 : 0);
 			$fields['lock'] = ($this->get('lock') ? 1 : 0);
-			
+
 			// Save new stage settings for this field
 			Stage::saveSettings($this->get('id'), $this->get('stage'), 'subsectionmanager');
 
@@ -463,33 +469,35 @@
 			// Prepare select options
 			$options = $content['options'];
 			
-			if($this->get('allow_multiple') == 0) {
-				$options[] = array(-1, false, __('None Selected'));
-			}
-			if(!is_array($data['relation_id'])) {
-				$data['relation_id'] = array($data['relation_id']);
-			}
-
 			// Setup field name
 			$fieldname = 'fields' . $fieldnamePrefix . '['. $this->get('element_name') . ']' . $fieldnamePostfix . '[]';
 
-			// Setup select
+			// Setup storage values
 			$label = Widget::Label($this->get('label'), $links);
-			$select = Widget::Select($fieldname, $options, ($this->get('allow_multiple') == 1 ? array('multiple' => 'multiple') : NULL));
-			$label->appendChild($select);
+			$label->appendChild(Widget::Input($fieldname, '', 'text', array('title' => '', 'class' => 'subsectionmanager storage template')));
+
+			$order = '';
+			if(is_array($data['relation_id'])) {
+
+				if($this->get('allow_nonunique')) {
+					$counters = array_count_values($data['relation_id']);
+				}
+				else {
+					$counters = array_fill_keys($data['relation_id'], 1);
+				}
+
+				$order = implode(',', array_keys($counters));
+
+				foreach($content['options'] as $option) {
+					if (empty($option[1])) continue;
+
+					for($i=0; $i<$counters[$option[0]]; $i++) {
+						$label->appendChild(Widget::Input($fieldname, $option[0], 'text', array('title' => $option[2], 'class' => 'subsectionmanager storage')));
+					}
+				}
+			}
 
 			// Setup sorting
-			$page = Symphony::Engine()->getPageCallback();
-			$entry_id = $page['context']['entry_id'];
-			if(!empty($entry_id)) {
-				$order = Symphony::Database()->fetchVar('order', 0,
-					"SELECT `order`
-					FROM `tbl_fields_stage_sorting`
-					WHERE `entry_id` = " . intval($entry_id) . "
-					AND `field_id` = " . $this->get('id') . "
-					LIMIT 1"
-				);
-			}
 			$input = Widget::Input('fields[sort_order][' . $this->get('id') . ']', $order, 'hidden');
 			$label->appendChild($input);
 
@@ -502,7 +510,7 @@
 			$settings = ' ' . implode(' ', Stage::getComponents($this->get('id')));
 			
 			// Create stage
-			$stage = new XMLElement('div', NULL, array('class' => 'stage' . $settings . ($this->get('show_preview') == 1 ? ' preview' : '') . ($this->get('allow_multiple') == 1 ? ' multiple' : ' single') . ($this->get('lock') == 1 ? ' locked' : '')));
+			$stage = new XMLElement('div', NULL, array('class' => 'stage' . $settings . ($this->get('show_preview') == 1 ? ' preview' : '') . ($this->get('allow_multiple') == 1 ? ' multiple' : ' single') . ($this->get('lock') == 1 ? ' locked' : '') . ($this->get('allow_nonunique') ? ' nonunique' : ' unique')));
 			$content['empty'] = '<li class="empty message"><span>' . __('There are no selected items') . '</span></li>';
 			$selected = new XMLElement('ul', $content['empty'] . $content['html'], array('class' => 'selection'));
 			$stage->appendChild($selected);
@@ -551,15 +559,25 @@
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#processRawFieldData
 		 */
 		function processRawFieldData($data, &$status, $simulate=false, $entry_id=NULL) {
-		
 			$status = self::__OK__;
 			if(!is_array($data) && !is_null($data)) return array('relation_id' => $data);
 			if(empty($data)) return NULL;
 
 			$result = array();
 
-			foreach($data as $a => $value) {
-				$result['relation_id'][] = $data[$a];
+			if($this->get('allow_nonunique')) {
+				foreach($data as $a => $value) {
+					if (empty($value)) continue;
+					$result['relation_id'][] = intval($data[$a]);
+				}
+			}
+			else {
+				$done = array();
+				foreach($data as $a => $value) {
+					if (empty($value) || !empty($done[$value])) continue;
+					$result['relation_id'][] = intval($data[$a]);
+					$done[$value] = true;
+				}
 			}
 
 			return $result;
@@ -753,28 +771,29 @@
 						}						
 					}
 				}
+
 				// Process entry for anyone else
 				else {
 					$engine = Symphony::Engine();
-					if ($engine instanceof Administration) {
+					if($engine instanceof Administration) {
 						// Check for recursion first
 						$id = $this->get('parent_section');
-						if ($done[$id] >= $this->get('recursion_levels') + 1) return array();	
+						if($done[$id] >= $this->get('recursion_levels') + 1) return array();	
 						$done[$id] += 1;
 					
 						// Now output data
 						$callback = Administration::instance()->getPageCallback();
 						if($callback['context']['page'] == 'edit' || $callback['context']['page'] != 'new') {
 							static $fieldManager = NULL;
-							if (empty($fieldManager)) {
+							if(empty($fieldManager)) {
 								$fieldManager = new FieldManager(Symphony::Engine());
-								if (empty($fieldManager)) return;
+								if(empty($fieldManager)) return;
 							}
 
 							$data = $entry->getData();
 							// Add fields:
-							foreach ($data as $field_id => $values) {
-								if (empty($field_id)) continue;
+							foreach($data as $field_id => $values) {
+								if(empty($field_id)) continue;
 				
 								$field = $fieldManager->fetch($field_id);
 								$field->appendFormattedElement($item, $values, false, null, $entry_id);

@@ -5,7 +5,7 @@
  * @source: http://github.com/nilshoerrmann/subsectionmanager
  */
 
-div.field-subsectionmanager select {
+div.field-subsectionmanager input.storage {
 	display: none;
 }
 

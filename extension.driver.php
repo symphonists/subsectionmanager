@@ -48,7 +48,7 @@
 			return array(
 				'name' => 'Subsection Manager',
 				'type' => 'Field, Interface',
-				'version' => '2.0dev.1',
+				'version' => '2.0dev.2',
 				'release-date' => false,
 				'author' => array(
 					'name' => 'Nils Hörrmann',
@@ -393,6 +393,7 @@
 					`show_preview` tinyint(1) default '0',
 					`lock` tinyint(1) DEFAULT '0',
 					`recursion_levels` tinyint DEFAULT '0',
+					`allow_nonunique` tinyint(1) default '0',
 			  		PRIMARY KEY  (`id`),
 			  		KEY `field_id` (`field_id`)
 				)"
@@ -556,6 +557,65 @@
 				$status[] = Symphony::Database()->query(
 					"ALTER TABLE `tbl_fields_subsectionmanager` ADD COLUMN `recursion_levels` tinyint DEFAULT '0'"
 				);
+
+				// Add allow_nonunique column
+				$status[] = Symphony::Database()->query(
+					"ALTER TABLE `tbl_fields_subsectionmanager` ADD COLUMN `allow_nonunique` tinyint(1) DEFAULT '0'"
+				);
+
+				// Reorder entries to the selected sortorder
+				$field_ids = Symphony::Database()->fetchCol('field_id', "
+					SELECT
+						f.field_id
+					FROM
+						`tbl_fields_subsectionmanager` AS f
+				");
+				if(!empty($field_ids) && is_array($field_ids)) {
+					$table = 'tbl_'.time();
+					Symphony::Database()->query(
+						"CREATE TABLE `{$table}` (
+							`entry_id` int(11) unsigned NOT NULL,
+							`relation_id` int(11) unsigned DEFAULT NULL,
+							`sorted` int(11) unsigned DEFAULT 0,
+					  		KEY `sorted` (`sorted`)
+						) TYPE=MyISAM;"
+					);
+					foreach($field_ids as $field_id) {
+						Symphony::Database()->query(
+							"TRUNCATE TABLE `{$table}`"
+						);
+						Symphony::Database()->query(
+							"INSERT INTO `{$table}` (`entry_id`, `relation_id`, `sorted`)
+								SELECT `d`.`entry_id`, `d`.`relation_id`, FIND_IN_SET(`d`.`relation_id`, `s`.`order`)
+								FROM `tbl_entries_data_{$field_id}` d
+								LEFT JOIN `tbl_fields_stage_sorting` s ON `d`.`entry_id` = `s`.`entry_id` AND `s`.`field_id` = {$field_id}
+							"
+						);
+						Symphony::Database()->query(
+							"TRUNCATE TABLE `tbl_entries_data_{$field_id}`"
+						);
+						$status[] = Symphony::Database()->query(
+							"INSERT INTO `tbl_entries_data_{$field_id}` (`entry_id`, `relation_id`)
+								SELECT `t`.`entry_id`, `t`.`relation_id`
+								FROM `{$table}` t
+								WHERE `t`.`sorted` IS NOT NULL AND `t`.`sorted` > 0
+								ORDER BY `t`.`entry_id` ASC, `t`.`sorted` ASC
+							"
+						);
+						// Unsorted entries should be after sorted ones
+						$status[] = Symphony::Database()->query(
+							"INSERT INTO `tbl_entries_data_{$field_id}` (`entry_id`, `relation_id`)
+								SELECT `t`.`entry_id`, `t`.`relation_id`
+								FROM `{$table}` t
+								WHERE `t`.`sorted` IS NULL OR `t`.`sorted` = 0
+								ORDER BY `t`.`entry_id` ASC, `t`.`sorted` ASC
+							"
+						);
+					}
+					Symphony::Database()->query(
+						"DROP TABLE IF EXISTS `{$table}`"
+					);
+				}
 			}
 
 		/*-----------------------------------------------------------------------*/

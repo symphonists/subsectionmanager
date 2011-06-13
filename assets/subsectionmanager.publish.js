@@ -20,7 +20,6 @@
 		// Initialize Subsection Manager
 		$('div.field-subsectionmanager').each(function() {
 			var manager = $(this),
-				storage = manager.find('select'),
 				stage = manager.find('div.stage'),
 				selection = stage.find('ul.selection'),
 				queue = stage.find('div.queue'),
@@ -153,7 +152,25 @@
 				selection.find('li.drawer').slideUp('fast', function() {
 					$(this).remove();
 				});
-			});			
+			});
+
+			selection.bind('orderstop.stage', function() {
+				var stock = manager.find('input.subsectionmanager.storage'),
+					last = stock.find('.template'),
+					storage = last.parent();
+
+				selection.find('li').not('.drawer').not('.new').not('.message').not('empty').each(function(index, item) {
+					var item = $(item),
+						id = item.attr('data-value'),
+						stored = stock.filter('[value="' + id + '"]');
+
+					// Existing item
+					if(stored.size() == 1) {
+						stored.insertAfter(last);
+						last = stored;
+					}
+				});
+			});
 								
 		/*-----------------------------------------------------------------------*/
 
@@ -396,7 +413,10 @@
 			
 			// Synchronize lists
 			var sync = function() {
-				var stock = storage.find('option').removeAttr('selected');
+				var stock = manager.find('input.subsectionmanager.storage').not('.template').addClass('removed'),
+					template = manager.find('input.subsectionmanager.storage.template'),
+					storage = template.parent(),
+					last = template;
 								
 				selection.find('li').not('.drawer').not('.new').not('.message').not('empty').each(function(index, item) {
 					var item = $(item),
@@ -404,18 +424,24 @@
 						stored = stock.filter('[value="' + id + '"]');
 
 					// Existing item
-					if(stored.size() == 1) {
-						stored.attr('selected', 'selected');
+					if(stored.length > 0) {
+						stored.removeClass('removed').insertAfter(last);
 					}
 					
 					// New item
 					else {
-						$('<option />').attr('selected', true).val(id).text(Symphony.Language.get('New item') + ' ' + id).appendTo(storage);
+						stored = template.clone();
+						stored.val(id).attr('title', Symphony.Language.get('New item') + ' ' + id).removeClass('template').insertAfter(last);
 					}
+
+					last = stored.last();
 				});
+
+				// Cleanup deselected items
+				stock.filter('.removed').remove();
 				
 				// Activate Storage
-				storage.removeAttr('disabled');
+				//storage.removeAttr('disabled');
 			};
 			
 			// Dropping items
