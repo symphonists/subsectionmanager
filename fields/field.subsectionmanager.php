@@ -761,7 +761,6 @@
 						$id = $this->get('parent_section');
 						if ($done[$id] >= $this->get('recursion_levels') + 1) return array();	
 						$done[$id] += 1;
-
 					
 						// Now output data
 						$callback = Administration::instance()->getPageCallback();
@@ -781,9 +780,9 @@
 								$field->appendFormattedElement($item, $values, false, null, $entry_id);
 							}
 						}
-					}
 
-					$done[$id] -= 1;
+						$done[$id] -= 1;
+					}
 				}
 			}
 			
