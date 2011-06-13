@@ -156,7 +156,8 @@
 					'file' => '<li data-value="{$value}" data-drop="{$droptext}" class="preview"><strong class="file">{$type}</strong><a href="{$href}" class="file handle">{$caption}</a></li>'					
 				)
 			);
-			
+
+			$options = array();
 			if(is_array($entries)) {
 				foreach($entries as $entry) {
 				
