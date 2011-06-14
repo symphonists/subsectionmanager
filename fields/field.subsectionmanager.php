@@ -556,6 +556,29 @@
 		}
 
 		/**
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#checkPostFieldData
+		 */
+		public function checkPostFieldData($data, &$message, $entry_id = null) {
+			$data = array_filter($data);
+
+			$status = parent::checkPostFieldData($data, $message, $entry_id);
+			if ($status != self::__OK__) return $status;
+
+			if(empty($data) || !is_array($data)) return self::__OK__;
+
+			if(!$this->get('allow_nonunique')) {
+				$unique = array_unique($data);
+
+				if(count($done) != count($unique)) {
+					$message = __("'%s' allows only unique values.", array($this->get('label')));
+					return self::__INVALID_FIELDS__;
+				}
+			}
+
+			return self::__OK__;
+		}
+
+		/**
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#processRawFieldData
 		 */
 		function processRawFieldData($data, &$status, $simulate=false, $entry_id=NULL) {

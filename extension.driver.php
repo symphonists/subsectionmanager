@@ -554,14 +554,18 @@
 				);
 
 				// Add recursion_levels column
-				$status[] = Symphony::Database()->query(
-					"ALTER TABLE `tbl_fields_subsectionmanager` ADD COLUMN `recursion_levels` tinyint DEFAULT '0'"
-				);
+				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'recursion_levels'") == false) {
+					$status[] = Symphony::Database()->query(
+						"ALTER TABLE `tbl_fields_subsectionmanager` ADD COLUMN `recursion_levels` tinyint DEFAULT '0'"
+					);
+				}
 
 				// Add allow_nonunique column
-				$status[] = Symphony::Database()->query(
-					"ALTER TABLE `tbl_fields_subsectionmanager` ADD COLUMN `allow_nonunique` tinyint(1) DEFAULT '0'"
-				);
+				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'allow_nonunique'") == false) {
+					$status[] = Symphony::Database()->query(
+						"ALTER TABLE `tbl_fields_subsectionmanager` ADD COLUMN `allow_nonunique` tinyint(1) DEFAULT '0'"
+					);
+				}
 
 				// Reorder entries to the selected sortorder
 				$field_ids = Symphony::Database()->fetchCol('field_id', "
