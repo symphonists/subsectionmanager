@@ -498,6 +498,7 @@
 			}
 
 			// Setup sorting
+			// TODO: not needed anymore, but Stage may depend on it. Shouldn't Stage create one when needed?
 			$input = Widget::Input('fields[sort_order][' . $this->get('id') . ']', $order, 'hidden');
 			$label->appendChild($input);
 
@@ -574,7 +575,7 @@
 			if($this->get('allow_nonunique') == 0) {
 				$unique = array_unique($data);
 
-				if(count($done) != count($unique)) {
+				if(count($data) != count($unique)) {
 					$message = __("'%s' allows only unique values.", array($this->get('label')));
 					return self::__INVALID_FIELDS__;
 				}
@@ -737,25 +738,8 @@
 			$subsection->setAttribute('field-id', $this->get('id'));
 			$subsection->setAttribute('subsection-id', $this->get('subsection_id'));
 
-			// Get sort order
-			$sorted_id = array();
-			$order = Symphony::Database()->fetchVar('order', 0,
-				"SELECT `order`
-				FROM `tbl_fields_stage_sorting`
-				WHERE `entry_id` = " . intval($wrapper->getAttribute('id')) . "
-				AND `field_id` = " . $this->get('id') . "
-				LIMIT 1"
-			);
-			if(!empty($order)) {
-				$sorted_id = explode(',', $order);
-			}
-				
-			// Append unsorted items
-			$unsorted_id = array_diff($data['relation_id'], $sorted_id);
-			$sorted_id = array_merge($sorted_id, $unsorted_id);
-
 			// Generate output			
-			foreach($sorted_id as $entry_id) {
+			foreach($data['relation_id'] as $entry_id) {
 
 				// Populate entry element
 				$entry = extension_subsectionmanager::$storage['entries'][$entry_id];
@@ -770,9 +754,9 @@
 				}
 
 				if(empty($entry)) {
-					// TODO: Here we could store deleted ID numbers, and update tbl_fields_stage_sorting later,
-					//       but that would slow things down. Sortorder should be updated whenever entry is deleted.
-					//       So this has to wait for new implementation of sortorder.
+					// TODO: Looks like related entry was deleted and data was not removed.
+					//       Should SubsectionManager gather deleted IDs and remove them from DB at exit?
+					//       Or register delegate to always delete them when entry is deleted?
 					continue;
 				}
 

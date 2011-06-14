@@ -48,7 +48,7 @@
 			return array(
 				'name' => 'Subsection Manager',
 				'type' => 'Field, Interface',
-				'version' => '2.0dev.2',
+				'version' => '2.0dev.3',
 				'release-date' => false,
 				'author' => array(
 					'name' => 'Nils Hörrmann',
@@ -68,16 +68,6 @@
 					'page' => '/backend/',
 					'delegate' => 'AdminPagePreGenerate',
 					'callback' => '__appendAssets'
-				),
-				array(
-					'page' => '/publish/new/',
-					'delegate' => 'EntryPostNew',
-					'callback' => '__saveSortOrder'
-				),
-				array(
-					'page' => '/publish/edit/',
-					'delegate' => 'EntryPostEdit',
-					'callback' => '__saveSortOrder'
 				),
 				array(
 					'page' => '/backend/',
@@ -113,38 +103,6 @@
 			// Append styles for subsection display
 			if($callback['driver'] == 'publish' && $callback['context']['page'] != 'index') {
 				Administration::instance()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/assets/subsection.publish.css', 'screen', 101, false);
-			}
-		}
-
-		/**
-		 * Save sort order
-		 *
-		 * @param object $context
-		 */
-		public function __saveSortOrder($context) {
-			if(!is_null($context['fields']['sort_order'])) {
-			
-				// Delete current sort order
-				$entry_id = intval($context['entry']->get('id'));
-				Symphony::Database()->query(
-					"DELETE FROM `tbl_fields_stage_sorting` WHERE `entry_id` = '$entry_id'"
-				);
-				
-				// Add new sort order
-				foreach($context['fields']['sort_order'] as $field_id => $value) {
-					$order = array();
-					$entries = explode(',', $value);
-
-					// Valid sort order
-					if(!empty($entries[0])) {
-						foreach($entries as $entry) {
-							$order[] = intval($entry);
-						}
-						Symphony::Database()->query(
-							"INSERT INTO `tbl_fields_stage_sorting` (`entry_id`, `field_id`, `order`, `context`) VALUES ('$entry_id', '".intval($field_id)."', '" . implode(',', $order) . "', 'subsectionmanager')"
-						);
-					}
-				}
 			}
 		}
 		
