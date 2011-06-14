@@ -566,7 +566,12 @@
 
 			if(empty($data) || !is_array($data)) return self::__OK__;
 
-			if(!$this->get('allow_nonunique')) {
+			if($this->get('allow_multiple') == 0 && count($data) > 1) {
+				$message = __("'%s' allows single item only.", array($this->get('label')));
+				return self::__INVALID_FIELDS__;
+			}
+
+			if($this->get('allow_nonunique') == 0) {
 				$unique = array_unique($data);
 
 				if(count($done) != count($unique)) {
