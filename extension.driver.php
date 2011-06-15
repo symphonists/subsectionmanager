@@ -48,7 +48,7 @@
 			return array(
 				'name' => 'Subsection Manager',
 				'type' => 'Field, Interface',
-				'version' => '2.0dev.3',
+				'version' => '2.0dev.4',
 				'release-date' => false,
 				'author' => array(
 					'name' => 'Nils Hörrmann',
@@ -557,6 +557,11 @@
 						Symphony::Database()->query(
 							"TRUNCATE TABLE `tbl_entries_data_{$field_id}`"
 						);
+						if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_entries_data_{$field_id}` LIKE 'quantity'") == false) {
+							$status[] = Symphony::Database()->query(
+								"ALTER TABLE `tbl_entries_data_{$field_id}` ADD COLUMN `quantity` int(11) unsigned DEFAULT '1'"
+							);
+						}
 						$status[] = Symphony::Database()->query(
 							"INSERT INTO `tbl_entries_data_{$field_id}` (`entry_id`, `relation_id`)
 								SELECT `t`.`entry_id`, `t`.`relation_id`
