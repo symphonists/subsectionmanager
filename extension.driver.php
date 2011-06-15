@@ -331,6 +331,7 @@
 		 *	Array of entry objects
 		 */
 		public static function preloadSubsectionEntries($parents) {
+			if (empty($parents) || !is_array($parents)) return;
 
 			// Get parent data
 			$fields = array();
