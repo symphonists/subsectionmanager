@@ -788,6 +788,7 @@
 				else {
 					$engine = Symphony::Engine();
 					if($engine instanceof Administration) {
+					
 						// Check for recursion first
 						$id = $this->get('parent_section');
 						if($done[$id] >= $this->get('recursion_levels') + 1) return array();	
@@ -803,6 +804,7 @@
 							}
 
 							$data = $entry->getData();
+							
 							// Add fields:
 							foreach($data as $field_id => $values) {
 								if(empty($field_id)) continue;
@@ -824,10 +826,11 @@
 
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#fetchAssociatedEntrySearchValue
+		 *
+		 * `$data` would contain the related entries, but is usually `null` when called from the frontend
+		 * (when the field is not included in the DS, and only then "associated entry count" makes sense)
 		 */
 		public function fetchAssociatedEntrySearchValue($data, $field_id = null, $parent_entry_id = null){
-			// $data would contain the related entries, but is usually `null` when called from the frontend
-			// (when the field is not included in the DS, and only then "associated entry count" makes sense)
 			if(!is_null($parent_entry_id)) {
 				return $parent_entry_id;
 			}

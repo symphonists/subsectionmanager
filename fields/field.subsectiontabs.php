@@ -360,7 +360,17 @@
 				// Populate entry element
 				$entry = extension_subsectionmanager::$storage['entries'][$entry_id];
 				$item->setAttribute('id', $entry_id);
-				
+
+				// Fetch missing entries
+				if(empty($entry)) {
+					$entry = $entryManager->fetch($entry_id, $this->get('subsection_id'));
+					
+					// Store entry
+					$entry = $entry[0];
+					extension_subsectionmanager::$storage['entries'][$entry_id] = $entry;
+				}
+
+				// Process entry for Data Source
 				if(!empty($entry) && !empty(extension_subsectionmanager::$storage['fields'][$context][$this->get('id')])) {
 					foreach(extension_subsectionmanager::$storage['fields'][$context][$this->get('id')] as $field_id => $modes) {
 						$entry_data = $entry->getData($field_id);
