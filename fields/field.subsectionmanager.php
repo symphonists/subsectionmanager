@@ -445,7 +445,6 @@
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#displayPublishPanel
 		 */
 		function displayPublishPanel(&$wrapper, $data=NULL, $flagWithError=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL) {
-		
 			// Houston, we have problem: we've been called out of context!
 			$callback = Administration::instance()->getPageCallback();
 			if($callback['context']['page'] != 'edit' && $callback['context']['page'] != 'new') {
@@ -462,6 +461,9 @@
 			Symphony::Engine()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.publish.js', 104, false);
 			Symphony::Engine()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/lib/resize/jquery.ba-resize.js', 105, false);
 
+			if(!is_array($data['relation_id'])) $data['relation_id'] = array($data['relation_id']);
+			if(!is_array($data['quantity'])) $data['quantity'] = array($data['quantity']);
+
 			// Get Subsection
 			$subsection = new SubsectionManager($this->_Parent);
 			$content = $subsection->generate($data['relation_id'], $this->get('id'), $this->get('subsection_id'), NULL, false, $this->get('recursion_levels'));
@@ -470,17 +472,16 @@
 			$options = $content['options'];
 			
 			// Setup field name
-			$fieldname = 'fields' . $fieldnamePrefix . '['. $this->get('element_name') . ']' . $fieldnamePostfix . '[]';
+			$fieldname = 'fields' . $fieldnamePrefix . '['. $this->get('element_name') . ']' . $fieldnamePostfix;
 
 			// Setup storage values
 			$label = Widget::Label($this->get('label'), $links);
-			$label->appendChild(Widget::Input($fieldname, '', 'text', array('title' => '', 'class' => 'subsectionmanager storage template')));
+			$label->appendChild(Widget::Input($fieldname . '[]', '', 'text', array('class' => 'subsectionmanager storage template')));
 
 			$order = '';
-			if(is_array($data['relation_id'])) {
-
+			if(!empty($data['relation_id'])) {
 				if($this->get('allow_nonunique')) {
-					$counters = array_count_values($data['relation_id']);
+					$counters = array_combine($data['relation_id'], $data['quantity']);
 				}
 				else {
 					$counters = array_fill_keys($data['relation_id'], 1);
@@ -491,9 +492,7 @@
 				foreach($content['options'] as $option) {
 					if (empty($option[1])) continue;
 
-					for($i=0; $i<$counters[$option[0]]; $i++) {
-						$label->appendChild(Widget::Input($fieldname, $option[0], 'text', array('title' => $option[2], 'class' => 'subsectionmanager storage')));
-					}
+					$label->appendChild(Widget::Input($fieldname . '[' . $option[0] . ']', $counters[$option[0]], 'text', array('title' => $option[2], 'class' => 'subsectionmanager storage')));
 				}
 			}
 
@@ -573,11 +572,11 @@
 			}
 
 			if($this->get('allow_nonunique') == 0) {
-				$unique = array_unique($data);
-
-				if(count($data) != count($unique)) {
-					$message = __("'%s' allows only unique values.", array($this->get('label')));
-					return self::__INVALID_FIELDS__;
+				foreach($data as $entry_id => $quantity) {
+					if($quantity > 1) {
+						$message = __("'%s' allows only unique values.", array($this->get('label')));
+						return self::__INVALID_FIELDS__;
+					}
 				}
 			}
 
@@ -593,20 +592,11 @@
 			if(empty($data)) return NULL;
 
 			$result = array();
-
-			if($this->get('allow_nonunique')) {
-				foreach($data as $a => $value) {
-					if (empty($value)) continue;
-					$result['relation_id'][] = intval($data[$a]);
-				}
-			}
-			else {
-				$done = array();
-				foreach($data as $a => $value) {
-					if (empty($value) || !empty($done[$value])) continue;
-					$result['relation_id'][] = intval($data[$a]);
-					$done[$value] = true;
-				}
+			$maxQuantity = ($this->get('allow_nonunique') == 0 ? 1 : 4294967295); // Maximum value of MySQL's unsigned INT type.
+			foreach($data as $entry_id => $quantity) {
+				if (empty($entry_id) || empty($quantity) || $quantity > $maxQuantity) continue;
+				$result['relation_id'][] = intval($entry_id);
+				$result['quantity'][] = intval($quantity);
 			}
 
 			return $result;
@@ -621,6 +611,7 @@
 				  `id` int(11) unsigned NOT NULL auto_increment,
 				  `entry_id` int(11) unsigned NOT NULL,
 				  `relation_id` int(11) unsigned DEFAULT NULL,
+				  `quantity` int(11) unsigned DEFAULT '1',
 				  PRIMARY KEY (`id`),
 				  KEY `entry_id` (`entry_id`),
 				  KEY `relation_id` (`relation_id`)
@@ -738,8 +729,8 @@
 			$subsection->setAttribute('field-id', $this->get('id'));
 			$subsection->setAttribute('subsection-id', $this->get('subsection_id'));
 
-			// Generate output			
-			foreach($data['relation_id'] as $entry_id) {
+			// Generate output
+			foreach($data['relation_id'] as $index => $entry_id) {
 
 				// Populate entry element
 				$entry = extension_subsectionmanager::$storage['entries'][$entry_id];
@@ -761,7 +752,7 @@
 				}
 
 				// Create item
-				$item = new XMLElement('item', NULL, array('id' => $entry_id));
+				$item = new XMLElement('item', NULL, array('id' => $entry_id, 'quantity' => $data['quantity'][$index]));
 				$subsection->appendChild($item);
 				
 				// Process entry for Data Source

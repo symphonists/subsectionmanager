@@ -5,7 +5,32 @@
  * @source: http://github.com/nilshoerrmann/subsectionmanager
  */
 
-div.field-subsectionmanager input.storage {
+
+div.field-subsectionmanager div.stage li input.storage {
+	float: right;
+	vertical-align: middle;
+	width: 50px;
+	height: 29px;
+	padding-right: 15px;
+	border: 0px none;
+	text-indent: 5px;
+	text-align: right;
+	line-height: 30px;
+	background: transparent;
+	cursor: pointer;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+}
+
+div.field-subsectionmanager div.stage li:hover input.storage, div.field-subsectionmanager div.stage li input.storage:focus {
+	background-color: #fff;
+	background-image: url('images/arrows.png');
+	background-repeat: no-repeat;
+	background-position: right center;
+}
+
+div.field-subsectionmanager input.storage.template {
 	display: none;
 }
 
