@@ -20,7 +20,6 @@
 		// Initialize Subsection Manager
 		$('div.field-subsectionmanager').each(function() {
 			var manager = $(this),
-				storage = manager.find('select'),
 				stage = manager.find('div.stage'),
 				selection = stage.find('ul.selection'),
 				queue = stage.find('div.queue'),
@@ -74,7 +73,7 @@
 						editor = item.next('.drawer');
 					
 					// Don't open editor for item that will be removed
-					if(target.is('.destructor')) {
+					if(target.is('.destructor, input')) {
 						return true;
 					}
 					
@@ -93,6 +92,48 @@
 					}
 					
 					// Don't follow links
+					return false;
+				});
+			}
+
+			// Add quantifiers
+			if(stage.is('.nonunique, .unique')) {
+				var field_id = manager.attr('id').replace('field-',''),
+					type = stage.is('.nonunique') ? 'inline' : 'none';
+
+				$('li:not(.new,.empty,.drawer,.message)', selection).each(function(index, item){
+					var value = $(this).attr('data-value'),
+						quantity = manager.find('input.subsectionmanager.storage[name$="\\[' + value + '\\]"]').css('display', type);
+
+					$(this).append(quantity);
+				});
+				
+				// It's possible that the empty message is a create template
+				if(empty.is('.template.create')) {
+					empty.append(quantifier.clone());
+				}
+
+				stage.delegate('input.storage', 'click', function(event){
+					var item = $(this),
+						width = item.innerWidth(),
+						halfheight = Math.ceil(item.innerHeight() / 2),
+						mod = 1;
+
+					if(event.offsetX >= width-15) {
+						if(event.offsetY > halfheight) {
+							mod = -1;
+						}
+						item.val(Math.max((item.val() * 1) + mod, 1));
+					}
+				}).delegate('input.storage', 'keydown', function(event){
+					if(event.which != 40 /* Up Arrow */ && event.which != 38 /* Down Arrow */) return true;
+
+					var item = $(this),
+						mod = 1;
+
+					if(event.which == 40) mod = -1;
+					item.val(Math.max((item.val() * 1) + mod, 1));
+
 					return false;
 				});
 			}
@@ -153,7 +194,25 @@
 				selection.find('li.drawer').slideUp('fast', function() {
 					$(this).remove();
 				});
-			});			
+			});
+
+			selection.bind('orderstop.stage', function() {
+				var stock = manager.find('input.subsectionmanager.storage'),
+					last = stock.find('.template'),
+					storage = last.parent();
+
+				selection.find('li').not('.drawer').not('.new').not('.message').not('empty').each(function(index, item) {
+					var item = $(item),
+						id = item.attr('data-value'),
+						stored = stock.filter('[value="' + id + '"]');
+
+					// Existing item
+					if(stored.size() == 1) {
+						stored.insertAfter(last);
+						last = stored;
+					}
+				});
+			});
 								
 		/*-----------------------------------------------------------------------*/
 
@@ -396,26 +455,29 @@
 			
 			// Synchronize lists
 			var sync = function() {
-				var stock = storage.find('option').removeAttr('selected');
-								
-				selection.find('li').not('.drawer').not('.new').not('.message').not('empty').each(function(index, item) {
+				var stock = manager.find('input.subsectionmanager.storage').not('.template'),
+					template = manager.find('input.subsectionmanager.storage.template'),
+					type = stage.is('.nonunique') ? 'inline' : 'none';
+
+				selection.find('li:not(.drawer,.new,.message,.empty)').each(function(index, item) {
 					var item = $(item),
 						id = item.attr('data-value'),
-						stored = stock.filter('[value="' + id + '"]');
+						stored = item.find('input[name$="\\[' + id + '\\]"]'),
+						itemname = '';
 
-					// Existing item
-					if(stored.size() == 1) {
-						stored.attr('selected', 'selected');
-					}
-					
 					// New item
-					else {
-						$('<option />').attr('selected', true).val(id).text(Symphony.Language.get('New item') + ' ' + id).appendTo(storage);
+					if(stored.length < 1) {
+						stored = template.clone();
+						itemname = stored.attr('name').replace(/\[\]$/, '['+id+']');
+						stored.val("1").attr('value', "1").attr('name', itemname).css('display', type).removeClass('template').appendTo(item);
 					}
 				});
+
+				// Cleanup deselected items
+				//stock.filter('.removed').remove();
 				
 				// Activate Storage
-				storage.removeAttr('disabled');
+				//storage.removeAttr('disabled');
 			};
 			
 			// Dropping items
