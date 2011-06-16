@@ -58,6 +58,19 @@
 		$('div.controls a').click(function() {
 			$('select.subsectionmanager:last').trigger('change');
 		});
+
+		// "Connect" allow_nonunique with allow_multiple
+		$('li[data-type="subsectionmanager"]').delegate('input[name*="allow_multiple"]:checkbox', 'click', function(){
+			var multiple = $(this),
+				allow = multiple.is(':checked'),
+				nonunique = multiple.parents('li').find('input[name*="allow_nonunique"]:checkbox').parents('label');
+
+				if(allow) nonunique.show();
+				else nonunique.hide();
+		});
+
+		// allow_nonunique setup disabled
+		$('input[name*="allow_multiple"]:checkbox:not(:checked)').parents('li').find('input[name*="allow_nonunique"]:checkbox').parents('label').hide();
 		
 	});
 
