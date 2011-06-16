@@ -9,6 +9,10 @@ div.field-subsectionmanager select {
 	display: none;
 }
 
+div.field-subsectionmanager div.stage li a {
+	padding: 7px 14px;
+}
+
 div.field-subsectionmanager div.stage li.preview a.file, div.dragger a.file {
 	display: inline-block;
 	margin: 0;
@@ -44,7 +48,7 @@ div.dragger a.file {
 
 div.field-subsectionmanager div.stage li.new {
 	padding-left: 52px;
-	height: 52px;
+	min-height: 52px;
 }
 
 div.field-subsectionmanager div.stage li.new span, div.field-subsectionmanager div.stage li.new span:hover,
@@ -52,12 +56,17 @@ div.field-subsectionmanager div.stage li.empty span, div.field-subsectionmanager
 	background: none;
 }
 
+div.field-subsectionmanager div.stage li.drawer {
+	background-image: url(images/loading.gif) !important;
+	background-position: center !important;
+	background-repeat: no-repeat !important;
+}
 
 div.field-subsectionmanager div.stage li.drawer.new {
 	padding: 0;
 }
 
-div.field-subsectionmanager div.stage.preview img, div.dragger img {
+div.field-subsectionmanager div.stage.preview img, div.field-subsectionmanager li.preview.new img, div.dragger img {
 	position: absolute;
 	border: 1px solid #ccc;
 	top: 5px;
@@ -70,6 +79,10 @@ div.field-subsectionmanager div.stage.preview img, div.dragger img {
 
 div.field-subsectionmanager div.stage li {
 	cursor: pointer;
+}
+
+div.field-subsectionmanager div.stage.locked li {
+	cursor: auto;
 }
 
 div.field-subsectionmanager div.stage li.empty, div.field-subsectionmanager div.stage li.new {

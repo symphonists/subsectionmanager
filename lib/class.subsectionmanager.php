@@ -136,6 +136,8 @@
 		}
 		
 		function __layoutSubsection($entries, $fields, $caption_template, $droptext_template, $mode, $full) {
+			static $cache = array();
+			$html = array();
 
 			// Templates
 			$templates = array(
@@ -175,44 +177,35 @@
 					$droptext = $droptext_template;
 					if(in_array($entry['id'], $this->_Items) || $full) {
 
-						// Populate select options
-						$options[] = array($entry['id'], in_array($entry['id'], $this->_Items), General::sanitize($field_value));
-
 						// Generate layout
 						$thumb = $type = $preview = $template = '';
 						foreach($fields as $field) {
 							$field_name = $field->get('element_name');
 							$field_id = $field->get('id');
-							$field_data = $entry['data'][$field_id]['value'];
-							
-							// Tags
-							if(is_array($field_data)) {
-								$field_value = implode(', ', $field_data);				
+
+							// Get value
+							if (!isset($cache[$entry['id']][$field_id])) {
+								$cache[$entry['id']][$field_id] = '';
+								if(is_callable(array($field, 'preparePlainTextValue'))) {
+									$field_value = $cache[$entry['id']][$field_id] = $field->preparePlainTextValue($entry['data'][$field_id], $entry['id']);
+								}
+								else {
+									$field_value = $cache[$entry['id']][$field_id] = strip_tags($field->prepareTableValue($entry['data'][$field_id]));
+								}
 							}
-							
-							// Files
-							elseif(empty($field_data) && $entry['data'][$field_id]['file']) {
-								$field_value = $entry['data'][$field_id]['file'];
-							}
-							
-							// Relations
-							elseif(empty($field_data) && ($entry['data'][$field_id]['relation_id'] || $entry['data'][$field_id]['related_field_id'])) {
-								$field_value = strip_tags($field->prepareTableValue($entry['data'][$field_id]));
-							}
-							
-							// Author
-							elseif(empty($field_data) && $entry['data'][$field_id]['author_id']) {
-								$field_value = $field->prepareTableValue($entry['data'][$field_id]);
-							}
-							
-							// Default
 							else {
-								$field_value = $field_data;				
+								$field_value = $cache[$entry['id']][$field_id];
 							}
-												
+
 							// Caption & Drop text
-							$caption = str_replace('{$' . $field_name . '}', $field_value, $caption);
-							$droptext = str_replace('{$' . $field_name . '}', $field_value, $droptext);
+							if(empty($field_value) || $field_value == __('None')) {
+								$caption = preg_replace('/{\$' . $field_name . '(:([^}]*))?}/U', '$2', $caption);
+								$droptext = preg_replace('/{\$' . $field_name . '(:([^}]*))?}/U', '$2', $droptext);
+							}
+							else {
+								$caption = preg_replace('/{\$' . $field_name . '(:[^}]*)?}/', $field_value, $caption);
+								$droptext = preg_replace('/{\$' . $field_name . '(:[^}]*)?}/', $field_value, $droptext);
+							}
 							
 							// Find upload fields
 							if(strpos($field->get('type'), 'upload') !== false && !empty($entry['data'][$field->get('id')]['file'])) {
@@ -234,27 +227,33 @@
 							}
 						}
 
+						// Populate select options
+						$options[] = array($entry['id'], in_array($entry['id'], $this->_Items), strip_tags($caption));
+
 						// Create stage template
 						if($type == 'image') {
 							$template = str_replace('{$preview}', $preview, $templates[$mode]['image']);
 							$template = str_replace('{$href}', $href, $template);
 							$template = str_replace('{$value}', $entry['id'], $template);
 							$template = str_replace('{$droptext}', htmlspecialchars($droptext), $template);
-							$html .= str_replace('{$caption}', $caption, $template);
+							$tmp = str_replace('{$caption}', $caption, $template);
 						}
 						elseif($type == 'file') {
 							$template = str_replace('{$type}', $preview, $templates[$mode]['file']);
 							$template = str_replace('{$href}', $href, $template);
 							$template = str_replace('{$value}', $entry['id'], $template);
 							$template = str_replace('{$droptext}', htmlspecialchars($droptext), $template);
-							$html .= str_replace('{$caption}', $caption, $template);
+							$tmp = str_replace('{$caption}', $caption, $template);
 						}
 						else {
 							$template = str_replace('{$preview}', $entry['id'], $templates[$mode]['text']);
 							$template = str_replace('{$value}', $entry['id'], $template);
 							$template = str_replace('{$droptext}', htmlspecialchars($droptext), $template);
-							$html .= str_replace('{$caption}', $caption, $template);
+							$tmp = str_replace('{$caption}', $caption, $template);
 						}
+						
+						// Remove empty drop texts
+						$html[strip_tags($tmp)] = str_replace(' data-drop=""', '', $tmp);
 						
 						// Create publish index template
 						if($type == 'image') {
@@ -267,13 +266,13 @@
 				}
 			}
 			
-			// Remove empty drop texts
-			$html = str_replace(' data-drop=""', '', $html);		
+			// Sort html
+			ksort($html);	
 						
 			// Return options and html
 			return array(
 				'options' => $options,
-				'html' => $html,
+				'html' => implode('', $html),
 				'preview' => $preview
 			);		
 		}

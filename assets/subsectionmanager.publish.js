@@ -31,7 +31,8 @@
 				subsectionmanager_id = context.attr('name').match(/\[subsection_id\]\[(.*)\]/)[1],
 				subsection_link = drawer.find('iframe').attr('target'),
 				dragger = $('div.dragger'),
-				empty = $('<li class="message"><span>' + Symphony.Language.get('There are currently no items available. Perhaps you want create one first?') + '</li>');
+				empty = $('<li class="message"><span>' + Symphony.Language.get('There are currently no items available. Perhaps you want create one first?') + '</li>'),
+				textarea = $('textarea');
 					
 		/*-----------------------------------------------------------------------*/
 
@@ -66,33 +67,35 @@
 			});
 			
 			// Editing
-			selection.delegate('li:not(.new, .drawer, .empty)', 'click', function(event) {
-				var item = $(this),
-					target = $(event.target),
-					editor = item.next('.drawer');
-				
-				// Don't open editor for item that will be removed
-				if(target.is('.destructor')) {
-					return true;
-				}
-				
-				// Open editor
-				if(editor.size() == 0) {
-					item.addClass('active');
-					edit(item);
-				}
-				
-				// Close editor
-				else {
-					item.removeClass('active');
-					editor.slideUp('fast', function() {
-						$(this).remove();
-					});
-				}
-				
-				// Don't follow links
-				return false;
-			});
+			if(!stage.is('.locked')) {
+				selection.delegate('li:not(.new, .drawer, .empty, .message)', 'click', function(event) {
+					var item = $(this),
+						target = $(event.target),
+						editor = item.next('.drawer');
+					
+					// Don't open editor for item that will be removed
+					if(target.is('.destructor')) {
+						return true;
+					}
+					
+					// Open editor
+					if(editor.size() == 0) {
+						item.addClass('active');
+						edit(item);
+					}
+					
+					// Close editor
+					else {
+						item.removeClass('active');
+						editor.slideUp('fast', function() {
+							$(this).remove();
+						});
+					}
+					
+					// Don't follow links
+					return false;
+				});
+			}
 			
 			// Updating
 			stage.bind('edit', function(event, item, iframe) {
@@ -131,14 +134,18 @@
 			});
 			
 			// Dropping
-			$('textarea').bind('drop.stage', function(event, item) {
-				var target = $(this);
-				
-				// Insert text
-				if(target.is('.droptarget')) {
-					drop(target, item);
+			if(textarea.size() > 0) {
+				if(!('drop' in textarea.data('events'))) {
+					textarea.bind('drop.stage', function(event, item) {
+						var target = $(this);
+					
+						// Insert text
+						if(target.is('.droptarget')) {
+							drop(target, item);
+						}
+					});
 				}
-			});
+			}
 			
 			// Sorting
 			selection.bind('orderstart.stage', function() {
@@ -153,11 +160,24 @@
 			// Load subsection
 			var load = function(item, editor, iframe) {
 				var content = iframe.contents();
+				
+				// Handle Firefox flickering
+				editor.css('overflow', 'hidden');
 
 				// Adjust interface
 				content.find('body').addClass('inline subsection');
 				content.find('h1, h2, #nav, #notice:not(.error):not(.success), #notice a, #footer').remove();
 				content.find('fieldset input:first').focus();
+				
+				// Frame resizing
+				content.find('#contents').resize(function() {
+					var height = $(this).height(),
+						body = content.find('body');
+					iframe.height(height);
+					editor.animate({
+						'height': height
+					}, 'fast');
+				});
 			
 				// Delete item
 				if(item.is('.delete')) {
@@ -173,8 +193,7 @@
 					});
 					
 					// Remove item
-					item.trigger('destruct');
-										
+					item.trigger('destruct');									
 					stage.trigger('deletestop', [item]);
 				}
 				
@@ -183,8 +202,8 @@
 				
 					// Set height
 					var height = content.find('#wrapper').outerHeight() || iframe.height();
-					iframe.height(height).animate({
-						opacity: 1
+					iframe.height(height).css('visibility', 'visible').animate({
+						opacity: 1,
 					}, 'fast');
 					editor.animate({
 						height: height
@@ -201,7 +220,9 @@
 					content.find('div.actions input').click(function() {
 						iframe.animate({
 							opacity: 0.01
-						}, 'fast');
+						}, 'fast', function() {
+							iframe.css('visibility', 'hidden');
+						});
 					});
 					
 					// Trigger update 
@@ -240,15 +261,16 @@
 			};
 			
 			// Browse queue
-			var browse = function() {
+			var browse = function(async) {
+				var list = queue.find('ul');
 
 				// Append queue if it's not present yet
-				if(queue_loaded == false) {
-					var list = queue.find('ul').addClass('loading').slideDown('fast');
+				if(queue_loaded == false && !list.is('.loading')) {
+					list.addClass('loading');
 
 					// Get queue items
 					$.ajax({
-						async: false,
+						async: (async == true ? true : false),
 						type: 'GET',
 						dataType: 'html',
 						url: Symphony.Context.get('root') + '/symphony/extension/subsectionmanager/get/',
@@ -265,18 +287,14 @@
 							
 							// Append queue items
 							else {
-								$(result).hide().appendTo(list);
+								$(result).appendTo(list);
 								
 								// Highlight selected items
 								stage.trigger('update');
 							}
-
-							// Slide queue
-							list.find('li').slideDown('fast', function() {
-								$(this).parent('ul').removeClass('loading');
-							});
 							
 							// Save status
+							list.removeClass('loading');
 							queue_loaded = true;
 						}
 					});
@@ -290,7 +308,10 @@
 				var editor = drawer.clone().hide().addClass('new');
 				
 				// Prepare iframe
-				editor.find('iframe').css('opacity', '0.01').attr('src', subsection_link + '/new/').load(function() {
+				editor.find('iframe').css({
+					'opacity': 0.01,
+					'height': 0					
+				}).attr('src', subsection_link + '/new/').load(function() {
 					iframe = $(this);
 					load(item, editor, iframe);
 				});
@@ -299,8 +320,7 @@
 				editor.insertAfter(item).slideDown('fast');			
 
 				stage.trigger('createstop', [item]);
-			};
-			
+			};			
 					
 			// Edit item
 			var edit = function(item) {
@@ -341,6 +361,11 @@
 						// Get queue item
 						var queue_item = queue.find('li[data-value="' + item.attr('data-value') + '"]');
 						
+						// Add preview class
+						if(stage.is('.preview') && result.find('strong.file, img').size() > 0) {
+							result.addClass('preview');
+						}
+						
 						// New item
 						if(queue_item.size() == 0) {
 						
@@ -361,8 +386,8 @@
 						
 						// Existing item
 						else {
-							queue_item.html(result.html());
-							item.html(result.html()).attr('class', result.attr('class')).attr('data-value', result.attr('data-value')).append(destructor);
+							queue_item.html(result.html()).addClass(result.attr('class')).attr('data-value', result.attr('data-value'));
+							item.html(result.html()).addClass(result.attr('class')).attr('data-value', result.attr('data-value')).append(destructor);
 							stage.trigger('update');
 						}				
 					}
@@ -449,6 +474,11 @@
 				target[0].selectionStart = start + text.length;
 				target[0].selectionEnd = start + text.length;
 			};
+								
+		/*-----------------------------------------------------------------------*/
+			
+			// Preload queue items asynchronously
+			browse(true);
 			
 		});
 
