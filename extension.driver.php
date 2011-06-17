@@ -549,6 +549,7 @@
 							`entry_id` int(11) unsigned NOT NULL,
 							`relation_id` int(11) unsigned DEFAULT NULL,
 							`sorted` int(11) unsigned DEFAULT 0,
+							`quantity` int(11) unsigned DEFAULT '1',
 					  		KEY `sorted` (`sorted`)
 						) TYPE=MyISAM;"
 					);
@@ -556,9 +557,10 @@
 						Symphony::Database()->query(
 							"TRUNCATE TABLE `{$table}`"
 						);
+						$has_quantity = (boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_entries_data_{$field_id}` LIKE 'quantity'");
 						Symphony::Database()->query(
-							"INSERT INTO `{$table}` (`entry_id`, `relation_id`, `sorted`)
-								SELECT `d`.`entry_id`, `d`.`relation_id`, FIND_IN_SET(`d`.`relation_id`, `s`.`order`)
+							"INSERT INTO `{$table}` (`entry_id`, `relation_id`, `sorted`, `quantity`)
+								SELECT `d`.`entry_id`, `d`.`relation_id`, FIND_IN_SET(`d`.`relation_id`, `s`.`order`)". ($has_quantity ? ', `d`.`quantity`' : '1') ."
 								FROM `tbl_entries_data_{$field_id}` d
 								LEFT JOIN `tbl_fields_stage_sorting` s ON `d`.`entry_id` = `s`.`entry_id` AND `s`.`context` = 'subsectionmanager' AND `s`.`field_id` = {$field_id}
 							"
@@ -566,14 +568,14 @@
 						Symphony::Database()->query(
 							"TRUNCATE TABLE `tbl_entries_data_{$field_id}`"
 						);
-						if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_entries_data_{$field_id}` LIKE 'quantity'") == false) {
+						if($has_quantity == false) {
 							$status[] = Symphony::Database()->query(
 								"ALTER TABLE `tbl_entries_data_{$field_id}` ADD COLUMN `quantity` int(11) unsigned DEFAULT '1'"
 							);
 						}
 						$status[] = Symphony::Database()->query(
-							"INSERT INTO `tbl_entries_data_{$field_id}` (`entry_id`, `relation_id`)
-								SELECT `t`.`entry_id`, `t`.`relation_id`
+							"INSERT INTO `tbl_entries_data_{$field_id}` (`entry_id`, `relation_id`, `quantity`)
+								SELECT `t`.`entry_id`, `t`.`relation_id`, `t`.`quantity`
 								FROM `{$table}` t
 								WHERE `t`.`sorted` IS NOT NULL AND `t`.`sorted` > 0
 								ORDER BY `t`.`entry_id` ASC, `t`.`sorted` ASC
@@ -581,8 +583,8 @@
 						);
 						// Unsorted entries should be after sorted ones
 						$status[] = Symphony::Database()->query(
-							"INSERT INTO `tbl_entries_data_{$field_id}` (`entry_id`, `relation_id`)
-								SELECT `t`.`entry_id`, `t`.`relation_id`
+							"INSERT INTO `tbl_entries_data_{$field_id}` (`entry_id`, `relation_id`, `quantity`)
+								SELECT `t`.`entry_id`, `t`.`relation_id`, `t`.`quantity`
 								FROM `{$table}` t
 								WHERE `t`.`sorted` IS NULL OR `t`.`sorted` = 0
 								ORDER BY `t`.`entry_id` ASC, `t`.`sorted` ASC
