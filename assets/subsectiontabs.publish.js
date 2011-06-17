@@ -295,7 +295,7 @@
 				
 				// Resize frame
 				content.find('#contents').resize(function(event) {
-					if(!body.is('.resizing')) {
+					if(!body.is('.resizing, .saving')) {
 						var height = $(this).height();
 						subsection.height(height);
 						tabs.animate({
@@ -419,6 +419,9 @@
 				button = tab.contents().find('div.actions input'),
 				name = $.trim(control.find('span').text())
 				post = tab.contents().find('form').serialize();
+				
+			// Set status
+			body.addClass('saving');
 			
 			// Tab loaded
 			if(tab.size() > 0 && post != tab.data('post') && !control.is('.delete')) {
