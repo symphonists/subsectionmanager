@@ -8,60 +8,60 @@
 	 * @source: http://github.com/nilshoerrmann/subsectionmanager
 	 */
 	$(document).ready(function() {
-		var manager = $('li[data-type="subsectionmanager"]');
+		var duplicator = $('#fields-duplicator');
 	
 		// Subsection setup on change
-		manager.delegate('select.subsectionmanager', 'change', function(event) {
+		duplicator.delegate('select.subsectionmanager', 'change', function(event) {
 			var select = $(event.target),
 				id = select.val(),
-				parent = select.parents('li').filter('li'),
-				groups = parent.find('select.datasource optgroup'),
-				filter = parent.find('ul.negation li[rel~=section' + id + ']');
+				manager = select.parents('li').filter('li'),
+				groups = manager.find('select.datasource optgroup'),
+				filter = manager.find('ul.negation li[rel~=section' + id + ']');
 	
 			// Reset subsectionmanager height
-			parent.css('height', 'auto');
+			manager.css('height', 'auto');
 	
 			// Show and hide filter and filter suggestions
 			if(filter.length > 0) {
-				parent.find('label.filter').show();
-				parent.find('ul.negation li').hide();
+				manager.find('label.filter').show();
+				manager.find('ul.negation li').hide();
 				filter.show();
 			}
 			else {
-				parent.find('label.filter').hide();
-				parent.find('ul.negation li').hide();
+				manager.find('label.filter').hide();
+				manager.find('ul.negation li').hide();
 			}
 	
 			// Show and hide caption suggestions
-			parent.find('ul.inline li').hide().filter('[rel~=section' + id + ']').show();
+			manager.find('ul.inline li').hide().filter('[rel~=section' + id + ']').show();
 	
 			// Show and hide data source sections
 			if(groups.length > 0) {
 				groups.each(function() {
-					parent.data(this.label, $(this).children());
+					manager.data(this.label, $(this).children());
 				});
 				groups.remove();
 			}
-			parent.find('select.datasource option').remove();
-			if(parent.data(id)) {
-				parent.find('select.datasource').length = parent.data(id).length;
-				parent.data(id).appendTo(parent.find('select.datasource'));
+			manager.find('select.datasource option').remove();
+			if(manager.data(id)) {
+				manager.find('select.datasource').length = manager.data(id).length;
+				manager.data(id).appendTo(manager.find('select.datasource'));
 			}
 		});
 		
 		// Subsection setup on start up
-		manager.find('select.subsectionmanager').trigger('change');
+		duplicator.find('select.subsectionmanager').trigger('change');
 
 		// Subsection setup on click			
 		$('div.controls a').click(function() {
-			manager.find('select.subsectionmanager').trigger('change');
+			duplicator.find('select.subsectionmanager').trigger('change');
 		});
 
 		// Setup dependencies
-		manager.delegate('input[name*="allow_multiple"]:checkbox', 'change', function() {
+		duplicator.delegate('li[data-type="subsectionmanager"] input[name*="allow_multiple"]:checkbox', 'change', function() {
 			var multiple = $(this),
-				parent = multiple.parents('li:first'),
-				related = parent.find('input[name*="draggable"], input[name*="allow_quantities"]');
+				manager = multiple.parents('li:first'),
+				related = manager.find('input[name*="draggable"], input[name*="allow_quantities"]');
 				
 			// Activate multiple selection
 			if(multiple.is(':checked')) {
@@ -95,7 +95,7 @@
 	});
 
 	// Add negation signs for all suggestions while alt key is pressed
-    $(window).keydown(function(event) {
+	$(window).keydown(function(event) {
 		if(event.altKey) {
 			$('ul.parentnegation li').each(function() {
 				var tag = $(this);
@@ -104,7 +104,7 @@
 				}
 			});
 		}
-    });
+	});
 
 	// Remove negation signs for all suggestions on keyup
 	$(window).keyup(function(event) {
