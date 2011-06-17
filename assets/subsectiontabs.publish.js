@@ -24,7 +24,7 @@
 			storage = field.find('ul'),
 			references = field.find('a'),
 			state, controls, tabs,
-			fragments, headline;
+			fragments, headline, chosen;
 			
 		// Set context
 		body.addClass('subsectiontabs');
@@ -571,7 +571,7 @@
 		}
 
 		// Add controls
-		storage.find('li').each(function(count) {
+		chosen = storage.find('li').each(function(count) {
 			var item = $(this),
 				name = item.find('input:eq(1)').val(),
 				id = item.find('input:eq(0)').val(),
@@ -606,7 +606,12 @@
 			
 			// Preload tab
 			load(control);
-		});
+		}).filter('.selected');
+		
+		// Select only one tab at a time
+		if(chosen.size() != 1) {
+			storage.find('li:first').click();
+		}
 		
 		// Allow dynamic controls
 		if(label.is('.allow_dynamic_tabs')) {
