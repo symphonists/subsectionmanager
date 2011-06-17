@@ -93,6 +93,7 @@
 			// Append skripts and styles for field settings pane
 			if($callback['driver'] == 'blueprintssections' && is_array($callback['context'])) {
 				Administration::instance()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.settings.js', 100, false);
+				Administration::instance()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.settings.css', 'screen', 101, false);
 			}
 
 			// Append styles for publish area
@@ -289,8 +290,8 @@
 		 *	Array of entry objects
 		 */
 		public static function preloadSubsectionEntries($parents) {
-			if (empty($parents) || !is_array($parents)) return;
-
+			if(empty($parents) || !is_array($parents)) return;
+			
 			// Get parent data
 			$fields = array();
 			foreach($parents as $entry) {
@@ -302,6 +303,7 @@
 						if(!is_array($settings['relation_id'])) $settings['relation_id'] = array($settings['relation_id']);
 					
 						foreach($settings['relation_id'] as $relation_id) {
+							if(empty($relation_id)) continue;
 							$fields[$field][] = $relation_id;
 						}
 					}

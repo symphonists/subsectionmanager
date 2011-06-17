@@ -162,8 +162,8 @@
 			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][lock]" value="1" type="checkbox"' . ($this->get('lock') == 0 ? '' : ' checked="checked"') . '/> ' . __('Disallow item editing') . ' <i>' . __('This will lock items and disable the inline editor') . '</i>');
 			$div[0]->appendChild($setting);
 
-			// Setting: allow non unique (duplicated items)
-			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][allow_nonunique]" value="1" type="checkbox"' . ($this->get('allow_nonunique') == 0 ? '' : ' checked="checked"') . '/> ' . __('Allow selection of non unique items') . ' <i>' . __('This will allow or disallow selecting the same item multiple times') . '</i>');
+			// Setting: allow quantities
+			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][allow_nonunique]" value="1" type="checkbox"' . ($this->get('allow_nonunique') == 0 ? '' : ' checked="checked"') . '/> ' . __('Allow item quantities') . ' <i>' . __('This will enable selecting the same item multiple times') . '</i>');
 			$div[0]->appendChild($setting);
 			
 			// Append behaviour settings
@@ -384,12 +384,12 @@
 
 			// XML Output
 			$fields['recursion_levels'] = intval($this->get('recursion_levels'));
-			if (empty($fields['recursion_levels'])) $fields['recursion_levels'] = 0; // Make sure it is 0, not NULL
+			if(empty($fields['recursion_levels'])) $fields['recursion_levels'] = 0; // Make sure it is 0, not NULL
 
 			// Data source fields - keep them stored for compatibility with 1.x
 			$included_fields = $this->get('included_fields');
-			if (is_array($included_fields)) $included_fields = implode(',', $included_fields);
-			if (empty($included_fields)) $included_fields = NULL;
+			if(is_array($included_fields)) $included_fields = implode(',', $included_fields);
+			if(empty($included_fields)) $included_fields = NULL;
 			$fields['included_fields'] = $included_fields;
 
 			// Delete old field settings
@@ -480,7 +480,7 @@
 
 			$order = '';
 			if(!empty($data['relation_id'])) {
-				if($this->get('allow_nonunique')) {
+				if($this->get('allow_nonunique') == 1) {
 					$counters = array_combine($data['relation_id'], $data['quantity']);
 				}
 				else {
@@ -490,7 +490,7 @@
 				$order = implode(',', array_keys($counters));
 
 				foreach($content['options'] as $option) {
-					if (empty($option[1])) continue;
+					if(empty($option[1])) continue;
 
 					$label->appendChild(Widget::Input($fieldname . '[' . $option[0] . ']', $counters[$option[0]], 'text', array('title' => $option[2], 'class' => 'subsectionmanager storage')));
 				}
@@ -562,7 +562,7 @@
 			$data = array_filter($data);
 
 			$status = parent::checkPostFieldData($data, $message, $entry_id);
-			if ($status != self::__OK__) return $status;
+			if($status != self::__OK__) return $status;
 
 			if(empty($data) || !is_array($data)) return self::__OK__;
 
@@ -594,7 +594,7 @@
 			$result = array();
 			$maxQuantity = ($this->get('allow_nonunique') == 0 ? 1 : 4294967295); // Maximum value of MySQL's unsigned INT type.
 			foreach($data as $entry_id => $quantity) {
-				if (empty($entry_id) || empty($quantity) || $quantity > $maxQuantity) continue;
+				if(empty($entry_id) || empty($quantity) || $quantity > $maxQuantity) continue;
 				$result['relation_id'][] = intval($entry_id);
 				$result['quantity'][] = intval($quantity);
 			}
@@ -656,7 +656,7 @@
 			static $done = array();
 
 			$id = $this->get('parent_section');
-			if ($done[$id] >= $this->get('recursion_levels') + 1) return array();	
+			if($done[$id] >= $this->get('recursion_levels') + 1) return array();	
 			$done[$id] += 1;
 
 			$includable = array();
