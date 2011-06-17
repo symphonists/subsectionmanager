@@ -61,7 +61,7 @@
 		manager.delegate('input[name*="allow_multiple"]:checkbox', 'change', function() {
 			var multiple = $(this),
 				parent = multiple.parents('li:first'),
-				related = parent.find('input[name*="draggable"], input[name*="allow_nonunique"]');
+				related = parent.find('input[name*="draggable"], input[name*="allow_quantities"]');
 				
 			// Activate multiple selection
 			if(multiple.is(':checked')) {

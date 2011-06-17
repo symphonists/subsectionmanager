@@ -148,7 +148,7 @@
 				$this->set('allow_multiple', 1);
 				$this->set('show_preview', 1);
 				$this->set('recursion_levels', 1);
-				$this->set('allow_nonunique', 0);
+				$this->set('allow_quantities', 0);
 			}
 			
 			// Get settings
@@ -163,7 +163,7 @@
 			$div[0]->appendChild($setting);
 
 			// Setting: allow quantities
-			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][allow_nonunique]" value="1" type="checkbox"' . ($this->get('allow_nonunique') == 0 ? '' : ' checked="checked"') . '/> ' . __('Allow item quantities') . ' <i>' . __('This will enable selecting the same item multiple times') . '</i>');
+			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][allow_quantities]" value="1" type="checkbox"' . ($this->get('allow_quantities') == 0 ? '' : ' checked="checked"') . '/> ' . __('Allow item quantities') . ' <i>' . __('This will enable selecting the same item multiple times') . '</i>');
 			$div[0]->appendChild($setting);
 			
 			// Append behaviour settings
@@ -327,7 +327,7 @@
 			$fields['field_id'] = $id;
 			$fields['subsection_id'] = $this->get('subsection_id');
 			$fields['allow_multiple'] = ($this->get('allow_multiple') ? 1 : 0);
-			$fields['allow_nonunique'] = ($this->get('allow_nonunique') ? 1 : 0);
+			$fields['allow_quantities'] = ($this->get('allow_quantities') ? 1 : 0);
 			$fields['show_preview'] = ($this->get('show_preview') ? 1 : 0);
 			$fields['lock'] = ($this->get('lock') ? 1 : 0);
 
@@ -480,7 +480,7 @@
 
 			$order = '';
 			if(!empty($data['relation_id'])) {
-				if($this->get('allow_nonunique') == 1) {
+				if($this->get('allow_quantities') == 1) {
 					$counters = array_combine($data['relation_id'], $data['quantity']);
 				}
 				else {
@@ -510,7 +510,7 @@
 			$settings = ' ' . implode(' ', Stage::getComponents($this->get('id')));
 			
 			// Create stage
-			$stage = new XMLElement('div', NULL, array('class' => 'stage' . $settings . ($this->get('show_preview') == 1 ? ' preview' : '') . ($this->get('allow_multiple') == 1 ? ' multiple' : ' single') . ($this->get('lock') == 1 ? ' locked' : '') . ($this->get('allow_nonunique') ? ' nonunique' : ' unique')));
+			$stage = new XMLElement('div', NULL, array('class' => 'stage' . $settings . ($this->get('show_preview') == 1 ? ' preview' : '') . ($this->get('allow_multiple') == 1 ? ' multiple' : ' single') . ($this->get('lock') == 1 ? ' locked' : '') . ($this->get('allow_quantities') ? ' nonunique' : ' unique')));
 			$content['empty'] = '<li class="empty message"><span>' . __('There are no selected items') . '</span></li>';
 			$selected = new XMLElement('ul', $content['empty'] . $content['html'], array('class' => 'selection'));
 			$stage->appendChild($selected);
@@ -571,7 +571,7 @@
 				return self::__INVALID_FIELDS__;
 			}
 
-			if($this->get('allow_nonunique') == 0) {
+			if($this->get('allow_quantities') == 0) {
 				foreach($data as $entry_id => $quantity) {
 					if($quantity > 1) {
 						$message = __("'%s' allows only unique values.", array($this->get('label')));
@@ -592,7 +592,7 @@
 			if(empty($data)) return NULL;
 
 			$result = array();
-			$maxQuantity = ($this->get('allow_nonunique') == 0 ? 1 : 4294967295); // Maximum value of MySQL's unsigned INT type.
+			$maxQuantity = ($this->get('allow_quantities') == 0 ? 1 : 4294967295); // Maximum value of MySQL's unsigned INT type.
 			foreach($data as $entry_id => $quantity) {
 				if(empty($entry_id) || empty($quantity) || $quantity > $maxQuantity) continue;
 				$result['relation_id'][] = intval($entry_id);

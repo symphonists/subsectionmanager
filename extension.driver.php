@@ -48,7 +48,7 @@
 			return array(
 				'name' => 'Subsection Manager',
 				'type' => 'Field, Interface',
-				'version' => '2.0dev.4',
+				'version' => '2.0dev.5',
 				'release-date' => false,
 				'author' => array(
 					'name' => 'Nils Hörrmann',
@@ -354,7 +354,7 @@
 					`show_preview` tinyint(1) default '0',
 					`lock` tinyint(1) DEFAULT '0',
 					`recursion_levels` tinyint DEFAULT '0',
-					`allow_nonunique` tinyint(1) default '0',
+					`allow_quantities` tinyint(1) default '0',
 			  		PRIMARY KEY  (`id`),
 			  		KEY `field_id` (`field_id`)
 				)"
@@ -514,17 +514,24 @@
 					)"
 				);
 
-				// Add recursion_levels column
+				// Add recursion levels
 				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'recursion_levels'") == false) {
 					$status[] = Symphony::Database()->query(
 						"ALTER TABLE `tbl_fields_subsectionmanager` ADD COLUMN `recursion_levels` tinyint DEFAULT '0'"
 					);
 				}
-
-				// Add allow_nonunique column
-				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'allow_nonunique'") == false) {
+				
+				// Maintenance
+				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'allow_nonunique'") == true) {
 					$status[] = Symphony::Database()->query(
-						"ALTER TABLE `tbl_fields_subsectionmanager` ADD COLUMN `allow_nonunique` tinyint(1) DEFAULT '0'"
+						"ALTER TABLE `tbl_fields_subsectionmanager` CHANGE `allow_nonunique` `allow_quantities` tinyint(1) DEFAULT '0'"
+					);
+				}
+
+				// Add quantities
+				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'allow_quantities'") == false) {
+					$status[] = Symphony::Database()->query(
+						"ALTER TABLE `tbl_fields_subsectionmanager` ADD COLUMN `allow_quantities` tinyint(1) DEFAULT '0'"
 					);
 				}
 
