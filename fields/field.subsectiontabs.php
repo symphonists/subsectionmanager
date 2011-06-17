@@ -235,7 +235,12 @@
 				
 				// Create relations
 				for($i = 0; $i < count($data['relation_id']); $i++) {
-					$tabs[$data['name'][$i]] = $data['relation_id'][$i];
+					if(is_array($data['relation_id'])) {
+						$tabs[$data['name'][$i]] = $data['relation_id'][$i];
+					}
+					else {
+						$tabs[$data['name']] = $data['relation_id'];
+					}
 				}
 			}
 			
