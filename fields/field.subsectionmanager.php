@@ -203,12 +203,12 @@
 			$label = new XMLElement('label');
 			$recursion_levels = $this->get('recursion_levels');
 			$select = Widget::Select('fields[' . $this->get('sortorder') . '][recursion_levels]', array(
-				array('0', ($recursion_levels == 0), __('no recursion')),
-				array('1', ($recursion_levels == 1), __('1 recursion level')),
-				array('2', ($recursion_levels == 2), __('2 recursion levels')),
-				array('3', ($recursion_levels == 3), __('3 recursion levels')),
+				array('0', ($recursion_levels == 0), __('Ignore')),
+				array('1', ($recursion_levels == 1), __('Output 1 level down')),
+				array('2', ($recursion_levels == 2), __('Output 2 levels down')),
+				array('3', ($recursion_levels == 3), __('Output 3 levels down')),
 			));
-			$label->setValue(__('Allow for %s', array($select->generate())));
+			$label->setValue(__('Nested subsections %s', array($select->generate())));
 			$fieldset->appendChild($label);
 
 			$wrapper->appendChild($fieldset);
