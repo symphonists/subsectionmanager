@@ -560,7 +560,7 @@
 							"INSERT INTO `{$table}` (`entry_id`, `relation_id`, `sorted`)
 								SELECT `d`.`entry_id`, `d`.`relation_id`, FIND_IN_SET(`d`.`relation_id`, `s`.`order`)
 								FROM `tbl_entries_data_{$field_id}` d
-								LEFT JOIN `tbl_fields_stage_sorting` s ON `d`.`entry_id` = `s`.`entry_id` AND `s`.`field_id` = {$field_id}
+								LEFT JOIN `tbl_fields_stage_sorting` s ON `d`.`entry_id` = `s`.`entry_id` AND `s`.`context` = 'subsectionmanager' AND `s`.`field_id` = {$field_id}
 							"
 						);
 						Symphony::Database()->query(
