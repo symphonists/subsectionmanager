@@ -149,7 +149,7 @@
 			);
 
 			// Fetch existing tabs
-			$existing_tabs = $this->__getExistingTabs($entry_id);
+			$existing_tabs = $this->__getExistingTabs($entry_id, $data);
 			
 			// Static tabs
 			if($this->get('static_tabs') != '') {
@@ -227,9 +227,20 @@
 		 * @return array
 		 *  Returns an array with tab names and their relation ids
 		 */
-		private function __getExistingTabs($entry_id) {
+		private function __getExistingTabs($entry_id, $data) {
 			$tabs = array();
-			if(isset($entry_id)) {
+
+			// Use given data
+			if(is_array($data) && !empty($data)) {
+				
+				// Create relations
+				for($i = 0; $i < count($data['relation_id']); $i++) {
+					$tabs[$data['name'][$i]] = $data['relation_id'][$i];
+				}
+			}
+			
+			// Load data
+			elseif(isset($entry_id)) {
 				$existing = Symphony::Database()->fetch(
 					"SELECT `relation_id`, `name`
 					FROM `tbl_entries_data_" . $this->get('id') . "`
