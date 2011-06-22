@@ -322,11 +322,13 @@
 			var resize = function(content, editor, iframe) {
 				var height = content.find('#contents').height() + content.find('#header .error').height(),
 					body = content.find('body');
-					
-				iframe.height(height);
-				editor.animate({
-					'height': height
-				}, 'fast');
+				
+				if(editor.data('height') != height) {	
+					iframe.height(height);
+					editor.data('height', height).animate({
+						'height': height
+					}, 'fast');
+				}
 			};
 			
 			// Browse queue
