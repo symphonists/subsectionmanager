@@ -118,6 +118,10 @@ body.inline.subsection form #error input[type="file"] {
 	border-color: #ed4a26 !important;
 }
 
+body.inline.subsection form #error span.frame {
+	border-color: #ed6142;
+}
+
 body.inline.subsection form input[type="checkbox"] {
 	width: auto;
 }
