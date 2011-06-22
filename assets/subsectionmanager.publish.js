@@ -471,6 +471,9 @@
 						itemname = stored.attr('name').replace(/\[\]$/, '['+id+']');
 						stored.val("1").attr('value', "1").attr('name', itemname).css('display', type).removeClass('template').appendTo(item);
 					}
+					else {
+						stored.css('display', type);
+					}
 				});
 
 				// Cleanup deselected items
