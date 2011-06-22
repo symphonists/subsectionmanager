@@ -230,13 +230,13 @@
 				
 				// Frame resizing
 				content.find('#contents').resize(function() {
-					var height = $(this).height(),
-						body = content.find('body');
-					iframe.height(height);
-					editor.animate({
-						'height': height
-					}, 'fast');
+					if(!iframe.is('.saving')) {
+						resize(content, editor, iframe);
+					}
 				});
+				
+				// Resize on load
+				resize(content, editor, iframe);
 			
 				// Delete item
 				if(item.is('.delete')) {
@@ -277,7 +277,7 @@
 								
 					// Fetch saving
 					content.find('div.actions input').click(function() {
-						iframe.animate({
+						iframe.addClass('saving').animate({
 							opacity: 0.01
 						}, 'fast', function() {
 							iframe.css('visibility', 'hidden');
@@ -317,6 +317,16 @@
 						}
 					});
 				}
+			};
+		
+			var resize = function(content, editor, iframe) {
+				var height = content.find('#contents').height() + content.find('#header .error').height(),
+					body = content.find('body');
+					
+				iframe.height(height);
+				editor.animate({
+					'height': height
+				}, 'fast');
 			};
 			
 			// Browse queue
