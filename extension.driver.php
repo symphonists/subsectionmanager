@@ -19,8 +19,14 @@
 		 */
 		public static $storage = array(
 			'fields' => array(),
-			'entries' => array()
+			'entries' => array(),
+			'elements' => array()
 		);
+
+		/**
+		 * Private flag set when cache is to be updated
+		 */		
+		private static $updateCache;
 
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/extension/#__construct
@@ -38,6 +44,11 @@
 				catch(Exception $e) {
 				    throw new SymphonyErrorPage(__('Please make sure that the Stage submodule is initialised and available at %s.', array('<code>' . EXTENSIONS . '/subsectionmanager/lib/stage/</code>')) . '<br/><br/>' . __('It\'s available at %s.', array('<a href="https://github.com/nilshoerrmann/stage">github.com/nilshoerrmann/stage</a>')), __('Stage not found'));
 				}
+			}
+
+			self::$updateCache = false;
+			if(!isset(self::$storage['cache']) && file_exists(MANIFEST . '/subsectionmanager-storage')) {
+				self::$storage = unserialize(file_get_contents(MANIFEST . '/subsectionmanager-storage'));
 			}
 		}
 
@@ -78,7 +89,12 @@
 					'page' => '/frontend/',
 					'delegate' => 'DataSourceEntriesBuilt', 
 					'callback' => '__prepareSubsection'
-				)
+				),
+				array(
+					'page' => '/blueprints/datasources/',
+					'delegate' => 'DatasourcePreDelete', 
+					'callback' => '__clearSubsectionCache'
+				),
 			);
 		}
 
@@ -104,6 +120,14 @@
 			// Append styles for subsection display
 			if($callback['driver'] == 'publish' && $callback['context']['page'] != 'index') {
 				Administration::instance()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/assets/subsection.publish.css', 'screen', 101, false);
+			}
+
+			// Update cache if Data Source was saved/created.
+			if($callback['driver'] == 'blueprintsdatasources' && is_array($callback['context']) && $callback['context'][0] == 'edit') {
+				if($callback['context'][2] == 'saved' || $callback['context'][2] == 'created') {
+					$classname = $callback['context'][1];
+					$this->__prepareSubsectionCache($classname);
+				}
 			}
 		}
 		
@@ -132,6 +156,84 @@
 						Alert::ERROR
 					);
 				}
+			}
+		}
+
+		/**
+		 * Fetch all subsection elements included in a data source and 
+		 * join modes into a single call to `appendFormattedElement()`.
+		 * Cache results, so `__prepareSubsection` can use it later.
+		 *
+		 * We cannot use DatasourcePostCreate and DatasourcePostEdit because when they are called,
+		 * Data Source class was not updated yet and Data Source Manager
+		 * will be using "old" version of Data Source class (with old list of elements, rootname, etc...).
+		 * @see http://symphony-cms.com/learn/api/2.2/delegates/#DatasourcePostCreate
+		 * @see http://symphony-cms.com/learn/api/2.2/delegates/#DatasourcePostEdit
+		 *
+		 * That is why we call this function from __appendAssets().
+		 */
+		public function __prepareSubsectionCache(&$context) {
+			$classname = (is_array($context) ? basename($context['file']) : $context);
+
+			$datasourceManager = new DatasourceManager(Symphony::Engine());
+			$handle = $datasourceManager->__getHandleFromFilename($classname);
+			$existing =& $datasourceManager->create($handle, NULL, false);
+
+			$context = array('datasource' => $existing);
+
+			self::$updateCache = true;
+			$this->__clearSubsectionCache($existing);
+			$this->__prepareSubsection($context);
+			self::$updateCache = false;
+
+			file_put_contents(MANIFEST . '/subsectionmanager-storage', serialize(self::$storage));
+		}
+
+		/**
+		 * Clear cache.
+		 * TODO: clear cache after field is removed from section.
+		 *
+		 * @see http://symphony-cms.com/learn/api/2.2/delegates/#DatasourcePreDelete
+		 */
+		public function __clearSubsectionCache(&$context) {
+			$existing = NULL;
+
+			// When called by Symphony
+			if(is_array($context)) {
+				$datasourceManager = new DatasourceManager(Symphony::Engine());
+				$handle = $datasourceManager->__getHandleFromFilename(basename($context['file']));
+				$existing =& $datasourceManager->create($handle, NULL, false);
+			}
+
+			// When called from __prepareSubsectionCache()
+			else if(!empty(self::$updateCache)) {
+				$existing = &$context;
+			}
+
+			$parent = get_parent_class($existing);
+
+			// Default Data Source
+			if($parent == 'DataSource') {
+				unset(self::$storage['elements'][$existing->dsParamROOTELEMENT]);
+				$regex = '%^'.preg_quote($existing->dsParamROOTELEMENT).'(/|$)%';
+				foreach(array_keys(self::$storage['fields']) as $ctx) {
+					if(preg_match($regex, $ctx)) unset(self::$storage['fields'][$ctx]);
+				}
+			}
+			
+			// Union Data Source
+			elseif($parent == 'UnionDatasource') {
+				foreach($existing->datasources as $datasource) {
+					unset(self::$storage['elements'][$datasource['datasource']->dsParamROOTELEMENT]);
+					$regex = '%^'.preg_quote($datasource['datasource']->dsParamROOTELEMENT).'(/|$)%';
+					foreach(array_keys(self::$storage['fields']) as $ctx) {
+						if(preg_match($regex, $ctx)) unset(self::$storage['fields'][$ctx]);
+					}
+				}
+			}
+
+			if(empty(self::$updateCache)) {
+				file_put_contents(MANIFEST . '/subsectionmanager-storage', serialize(self::$storage));
 			}
 		}
 		
@@ -184,12 +286,22 @@
 
 			// Get source
 			$section = 0;
+			$updateCache = false;
 			if(isset($datasource)) {
 				if(is_numeric($datasource)) {
 					$section = $datasource;
 				}
-				else if(method_exists($datasource, 'getSource')) {
-					$section = $datasource->getSource();
+				else if(is_object($datasource)) {
+					// Try cached version first
+					$updateCache = self::$updateCache;
+					if(empty($updateCache) && isset(self::$storage['elements'][$context])) {
+						$datasource->dsParamINCLUDEDELEMENTS = self::$storage['elements'][$context];
+						return;
+					}
+
+					if(method_exists($datasource, 'getSource')) {
+						$section = $datasource->getSource();
+					}
 				}
 			}
 
@@ -220,6 +332,16 @@
 							}
 						}
 					}
+				}
+			}
+
+			// Update cache
+			if($updateCache) {
+				if(is_array($datasource->dsParamINCLUDEDELEMENTS)) {
+					self::$storage['elements'][$context] = $datasource->dsParamINCLUDEDELEMENTS;
+				}
+				else {
+					unset(self::$storage['elements'][$context]);
 				}
 			}
 		}
@@ -503,7 +625,7 @@
 				
 				// Add subsection tabs
 				$status[] = Symphony::Database()->query(
-					"CREATE TABLE IF NOT EXISTS `sym_fields_subsectiontabs` (
+					"CREATE TABLE IF NOT EXISTS `tbl_fields_subsectiontabs` (
 						`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
 						`field_id` int(11) unsigned NOT NULL,
 						`subsection_id` varchar(255) NOT NULL,
