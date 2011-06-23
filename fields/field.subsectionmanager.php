@@ -445,10 +445,13 @@
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#displayPublishPanel
 		 */
 		function displayPublishPanel(&$wrapper, $data=NULL, $flagWithError=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL) {
+			if(!is_array($data['relation_id'])) $data['relation_id'] = array($data['relation_id']);
+			if(!is_array($data['quantity'])) $data['quantity'] = array($data['quantity']);
+
 			// Houston, we have problem: we've been called out of context!
 			$callback = Administration::instance()->getPageCallback();
 			if($callback['context']['page'] != 'edit' && $callback['context']['page'] != 'new') {
-				$this->getDefaultPublishContent($wrapper);
+				$this->getDefaultPublishContent($wrapper, $data);
 				return;
 			}
 
@@ -461,12 +464,9 @@
 			Symphony::Engine()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.publish.js', 104, false);
 			Symphony::Engine()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/lib/resize/jquery.ba-resize.js', 105, false);
 
-			if(!is_array($data['relation_id'])) $data['relation_id'] = array($data['relation_id']);
-			if(!is_array($data['quantity'])) $data['quantity'] = array($data['quantity']);
-
 			// Get Subsection
 			$subsection = new SubsectionManager($this->_Parent);
-			$content = $subsection->generate($data['relation_id'], $this->get('id'), $this->get('subsection_id'), $data['relation_id'], false, $this->get('recursion_levels'));
+			$content = $subsection->generate($this->get('id'), $this->get('subsection_id'), $data['relation_id'], false, $this->get('recursion_levels'));
 
 			// Setup field name
 			$fieldname = 'fields' . $fieldnamePrefix . '['. $this->get('element_name') . ']' . $fieldnamePostfix;
@@ -541,11 +541,11 @@
 		/**
 		 * Get default publish content
 		 */
-		function getDefaultPublishContent(&$wrapper) {
+		function getDefaultPublishContent(&$wrapper, $data = NULL) {
 			
 			// Get items
 			$subsection = new SubsectionManager($this->_Parent);
-			$content = $subsection->generate(null, $this->get('id'), $this->get('subsection_id'), NULL, true, $this->get('recursion_levels'));
+			$content = $subsection->generate($this->get('id'), $this->get('subsection_id'), $data['relation_id'], true, $this->get('recursion_levels'));
 			
 			// Append items
 			$select = Widget::Select(null, $content['options']);
@@ -626,7 +626,7 @@
 			// Single select
 			if($this->get('allow_multiple') == 0 || count($data['relation_id']) === 1) {
 				$subsection = new SubsectionManager($this->_Parent);
-				$content = $subsection->generate(null, $this->get('id'), $this->get('subsection_id'), $data['relation_id'], true, $this->get('recursion_levels'));
+				$content = $subsection->generate($this->get('id'), $this->get('subsection_id'), $data['relation_id'], false, $this->get('recursion_levels'));
 				
 				// Link?
 				if($link) {
