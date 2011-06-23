@@ -559,6 +559,7 @@
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#checkPostFieldData
 		 */
 		public function checkPostFieldData($data, &$message, $entry_id = null) {
+			if(!is_array($data)) $data = array($data);
 			$data = array_filter($data);
 
 			$status = parent::checkPostFieldData($data, $message, $entry_id);
