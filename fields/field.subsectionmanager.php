@@ -466,11 +466,8 @@
 
 			// Get Subsection
 			$subsection = new SubsectionManager($this->_Parent);
-			$content = $subsection->generate($data['relation_id'], $this->get('id'), $this->get('subsection_id'), NULL, false, $this->get('recursion_levels'));
+			$content = $subsection->generate($data['relation_id'], $this->get('id'), $this->get('subsection_id'), $data['relation_id'], false, $this->get('recursion_levels'));
 
-			// Prepare select options
-			$options = $content['options'];
-			
 			// Setup field name
 			$fieldname = 'fields' . $fieldnamePrefix . '['. $this->get('element_name') . ']' . $fieldnamePostfix;
 

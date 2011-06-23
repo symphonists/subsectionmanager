@@ -11,11 +11,11 @@
 		private $_Parent;
 		private $_Items;
 
-		function __construct(&$parent) {
+		public function __construct(&$parent) {
 			$this->_Parent = $parent;
 		}
 		
-		function generate($items, $subsection_field, $subsection_id, $entry_id=NULL, $full=false, $recurse=0) {
+		public function generate($items, $subsection_field, $subsection_id, $entry_id=NULL, $full=false, $recurse=0) {
 			static $done = array();
 			if ($done[$subsection_field] >= $recurse + 1) return array('options' => array(), 'html' => '', 'preview' => '');	
 			$done[$subsection_field] += 1;
@@ -27,7 +27,7 @@
 			$meta = Symphony::Database()->fetch(
 				"SELECT filter_tags, caption, droptext, show_preview
 				FROM tbl_fields_subsectionmanager
-				WHERE field_id = '$subsection_field'
+				WHERE field_id = '" . intval($subsection_field) . "'
 				LIMIT 1"
 			);
 			
@@ -54,7 +54,7 @@
 				$primary = Symphony::Database()->fetch(
 					"SELECT element_name
 					FROM tbl_fields
-					WHERE parent_section = '$subsection_id'
+					WHERE parent_section = '" . intval($subsection_id) . "'
 					AND sortorder = '0'
 					LIMIT 1"
 				);
@@ -70,7 +70,7 @@
 		  	
 		}
 		
-		function __filterEntries($subsection_id, $fields, $filter, $entry_id) {
+		private function __filterEntries($subsection_id, $fields, $filter, $entry_id) {
 		
 		  	// Fetch taglist, select and upload fields
 		  	$tag_fields = array();
@@ -140,7 +140,7 @@
 			return $entry_data;
 		}
 		
-		function __layoutSubsection($entries, $fields, $caption_template, $droptext_template, $mode, $full) {
+		private function __layoutSubsection($entries, $fields, $caption_template, $droptext_template, $mode, $full) {
 			$html = array();
 
 			// Templates
@@ -180,7 +180,8 @@
 					// Generate subsection values
 					$caption = $caption_template;
 					$droptext = $droptext_template;
-					if(in_array($entry['id'], $this->_Items) || $full) {
+					$selected = in_array($entry['id'], $this->_Items);
+					if($selected || $full) {
 
 						// Generate layout
 						$thumb = $type = $preview = $template = '';
@@ -227,7 +228,7 @@
 						}
 
 						// Populate select options
-						$options[] = array($entry['id'], in_array($entry['id'], $this->_Items), strip_tags($caption));
+						$options[] = array($entry['id'], $selected, strip_tags($caption));
 
 						// Create stage template
 						if($type == 'image') {
