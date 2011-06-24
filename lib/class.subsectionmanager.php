@@ -8,6 +8,20 @@
 	 */
 	class SubsectionManager {
 
+		// Templates
+		public static $templates = array(
+			'plain' => array(
+				'text' => '<li data-value="{$value}" data-drop="{$droptext}"><span>{$caption}</span></li>',
+				'image' => '<li data-value="{$value}" data-drop="{$droptext}"><a href="{$href}" class="image file handle">{$caption}</a></li>',
+				'file' => '<li data-value="{$value}" data-drop="{$droptext}"><a href="{$href}" class="file handle">{$caption}</a></li>'
+			),
+			'preview' => array(
+				'text' => '<li data-value="{$value}" data-drop="{$droptext}"><span>{$caption}</span></li>',
+				'image' => '<li data-value="{$value}" data-drop="{$droptext}" class="preview"><img src="{$url}/image/2/40/40/5{$preview}" width="40" height="40" /><a href="{$href}" class="image file handle">{$caption}</a></li>',
+				'file' => '<li data-value="{$value}" data-drop="{$droptext}" class="preview"><strong class="file">{$type}</strong><a href="{$href}" class="file handle">{$caption}</a></li>'					
+			)
+		);
+
 		public function generate($subsection_field, $subsection_id, $items=NULL, $full=false, $recurse=0) {
 			static $done = array();
 			if ($done[$subsection_field] >= $recurse + 1) return array('options' => array(), 'html' => '', 'preview' => '');	
@@ -60,7 +74,7 @@
 		  	
 		}
 		
-		private function __filterEntries($subsection_id, $fields, $filter, $items) {
+		private function __filterEntries($subsection_id, $fields, $filter = '', $items = NULL) {
 
 			// Fetch entry data
 			$entryManager = new EntryManager(Symphony::Engine());
@@ -146,128 +160,103 @@
 		}
 		
 		private function __layoutSubsection($entries, $fields, $caption_template, $droptext_template, $mode, $selected = NULL) {
+
+			// Return early if there is nothing to do
+			if(empty($entries) || !is_array($entries)) return array('options' => array(), 'html' => '', 'preview' => '');
+
+			// Defaults
 			$html = array();
-
-			// Templates
-			$templates = array(
-				'plain' => array(
-					'text' => '<li data-value="{$value}" data-drop="{$droptext}"><span>{$caption}</span></li>',
-					'image' => '<li data-value="{$value}" data-drop="{$droptext}"><a href="{$href}" class="image file handle">{$caption}</a></li>',
-					'file' => '<li data-value="{$value}" data-drop="{$droptext}"><a href="{$href}" class="file handle">{$caption}</a></li>'
-				),
-				'preview' => array(
-					'text' => '<li data-value="{$value}" data-drop="{$droptext}"><span>{$caption}</span></li>',
-					'image' => '<li data-value="{$value}" data-drop="{$droptext}" class="preview"><img src="' . URL . '/image/2/40/40/5{$preview}" width="40" height="40" /><a href="{$href}" class="image file handle">{$caption}</a></li>',
-					'file' => '<li data-value="{$value}" data-drop="{$droptext}" class="preview"><strong class="file">{$type}</strong><a href="{$href}" class="file handle">{$caption}</a></li>'					
-				)
-			);
-
 			$options = array();
-			if(is_array($entries)) {
-				foreach($entries as $index => $entry) {
-				
-					// Fetch primary field
-					$field_data = $entry['data'][$fields[0]->get('id')]['value'];
-					
-					// Fetch field value (string)
-					if(!empty($field_data)) {
-						if(is_array($field_data)) {
-							$field_value = implode(', ', $field_data);
-						}
-						else {
-							$field_value = $field_data;
-						}
+			$preview = '';
+
+			foreach($entries as $index => $entry) {
+
+				// Generate subsection values
+				$caption = $caption_template;
+				$droptext = $droptext_template;
+
+				// Generate layout
+				$type = $preview = $template = '';
+				foreach($fields as $field) {
+					$field_name = $field->get('element_name');
+					$field_id = $field->get('id');
+
+					// Get value
+					if(is_callable(array($field, 'preparePlainTextValue'))) {
+						$field_value = $field->preparePlainTextValue($entry['data'][$field_id], $entry['id']);
 					}
 					else {
-						$field_value = __('Untitled');
+						$field_value = strip_tags($field->prepareTableValue($entry['data'][$field_id]));
 					}
-								
-					// Generate subsection values
-					$caption = $caption_template;
-					$droptext = $droptext_template;
 
-					// Generate layout
-					$thumb = $type = $preview = $template = '';
-					foreach($fields as $field) {
-						$field_name = $field->get('element_name');
-						$field_id = $field->get('id');
-
-						// Get value
-						if(is_callable(array($field, 'preparePlainTextValue'))) {
-							$field_value = $field->preparePlainTextValue($entry['data'][$field_id], $entry['id']);
-						}
-						else {
-							$field_value = strip_tags($field->prepareTableValue($entry['data'][$field_id]));
-						}
-
-						// Caption & Drop text
-						if(empty($field_value) || $field_value == __('None')) {
-							$caption = preg_replace('/{\$' . $field_name . '(:([^}]*))?}/U', '$2', $caption);
-							$droptext = preg_replace('/{\$' . $field_name . '(:([^}]*))?}/U', '$2', $droptext);
-						}
-						else {
-							$caption = preg_replace('/{\$' . $field_name . '(:[^}]*)?}/', $field_value, $caption);
-							$droptext = preg_replace('/{\$' . $field_name . '(:[^}]*)?}/', $field_value, $droptext);
-						}
+					// Caption & Drop text
+					if(empty($field_value) || $field_value == __('None')) {
+						$caption = preg_replace('/{\$' . $field_name . '(:([^}]*))?}/U', '$2', $caption);
+						$droptext = preg_replace('/{\$' . $field_name . '(:([^}]*))?}/U', '$2', $droptext);
+					}
+					else {
+						$caption = preg_replace('/{\$' . $field_name . '(:[^}]*)?}/', $field_value, $caption);
+						$droptext = preg_replace('/{\$' . $field_name . '(:[^}]*)?}/', $field_value, $droptext);
+					}
 							
-						// Find upload fields
-						if(strpos($field->get('type'), 'upload') !== false && !empty($entry['data'][$field->get('id')]['file'])) {
+					// Find upload fields
+					if(strpos($field->get('type'), 'upload') !== false && !empty($entry['data'][$field->get('id')]['file'])) {
 							
-							// Image
-							if(strpos($entry['data'][$field->get('id')]['mimetype'], 'image') !== false) {
-								$type = 'image';
-								$preview = $entry['data'][$field->get('id')]['file'];
-								$href = URL . '/workspace' . $preview;
-							}
-								
-							// File
-							else {
-								$type = 'file';
-								$preview = pathinfo($entry['data'][$field->get('id')]['file'], PATHINFO_EXTENSION);
-								$href = $entry['data'][$field->get('id')]['file'];
-							}
-								
+						// Image
+						if(strpos($entry['data'][$field->get('id')]['mimetype'], 'image') !== false) {
+							$type = 'image';
+							$preview = $entry['data'][$field->get('id')]['file'];
+							$href = URL . '/workspace' . $preview;
 						}
-					}
-
-					// Populate select options
-					$options[] = array($entry['id'], (is_array($selected) ? in_array($entry['id'], $selected) : true), strip_tags($caption));
-
-					// Create stage template
-					if($type == 'image') {
-						$template = str_replace('{$preview}', $preview, $templates[$mode]['image']);
-						$template = str_replace('{$href}', $href, $template);
-						$template = str_replace('{$value}', $entry['id'], $template);
-						$template = str_replace('{$droptext}', htmlspecialchars($droptext), $template);
-						$tmp = str_replace('{$caption}', $caption, $template);
-					}
-					elseif($type == 'file') {
-						$template = str_replace('{$type}', $preview, $templates[$mode]['file']);
-						$template = str_replace('{$href}', $href, $template);
-						$template = str_replace('{$value}', $entry['id'], $template);
-						$template = str_replace('{$droptext}', htmlspecialchars($droptext), $template);
-						$tmp = str_replace('{$caption}', $caption, $template);
-					}
-					else {
-						$template = str_replace('{$preview}', $entry['id'], $templates[$mode]['text']);
-						$template = str_replace('{$value}', $entry['id'], $template);
-						$template = str_replace('{$droptext}', htmlspecialchars($droptext), $template);
-						$tmp = str_replace('{$caption}', $caption, $template);
-					}
-						
-					// Remove empty drop texts
-					$html[strip_tags($tmp)] = str_replace(' data-drop=""', '', $tmp);
-						
-					// Create publish index template
-					if($type == 'image') {
-						$preview = '<img src="' . URL . '/image/2/40/40/5' . $preview . '" width="40" height="40" /><span>' . $caption . '</span></a>';
-					}
-					else {
-						$preview = $caption;
+								
+						// File
+						else {
+							$type = 'file';
+							$preview = pathinfo($entry['data'][$field->get('id')]['file'], PATHINFO_EXTENSION);
+							$href = $entry['data'][$field->get('id')]['file'];
+						}
+								
 					}
 				}
+
+				// Populate select options
+				$options[$index] = array($entry['id'], (is_array($selected) ? in_array($entry['id'], $selected) : true), strip_tags($caption));
+
+				// Create stage template
+				if($type == 'image') {
+					$template = str_replace('{$url}', URL, self::$templates[$mode]['image']);
+					$template = str_replace('{$preview}', $preview, $template);
+					$template = str_replace('{$href}', $href, $template);
+					$template = str_replace('{$value}', $entry['id'], $template);
+					$template = str_replace('{$droptext}', htmlspecialchars($droptext), $template);
+					$tmp = str_replace('{$caption}', $caption, $template);
+				}
+				elseif($type == 'file') {
+					$template = str_replace('{$type}', $preview, self::$templates[$mode]['file']);
+					$template = str_replace('{$href}', $href, $template);
+					$template = str_replace('{$value}', $entry['id'], $template);
+					$template = str_replace('{$droptext}', htmlspecialchars($droptext), $template);
+					$tmp = str_replace('{$caption}', $caption, $template);
+				}
+				else {
+					$template = str_replace('{$preview}', $entry['id'], self::$templates[$mode]['text']);
+					$template = str_replace('{$value}', $entry['id'], $template);
+					$template = str_replace('{$droptext}', htmlspecialchars($droptext), $template);
+					$tmp = str_replace('{$caption}', $caption, $template);
+				}
+						
+				// Remove empty drop texts
+				$html[strip_tags($tmp)] = str_replace(' data-drop=""', '', $tmp);
+						
+				// Create publish index template
+				if($type == 'image') {
+					$preview = '<img src="' . URL . '/image/2/40/40/5' . $preview . '" width="40" height="40" /><span>' . $caption . '</span></a>';
+				}
+				else {
+					$preview = $caption;
+				}
 			}
-			
+
 			// Sort html
 			ksort($html);
 
