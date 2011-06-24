@@ -491,11 +491,19 @@
 			$help = new XMLElement('p', __('Use <code>title:</code> to filter by title or handle of an attached subsection entry.'), array('class' => 'help'));
 			$wrapper->appendChild($help);
 		}
-		
+
 		/**
+		 * Keep compatibility with Symphony pre 2.2.1 for a little longer.
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#buildDSRetrivalSQL
 		 */
-		public function buildDSRetrivalSQL($data, &$joins, &$where, $andOperation = false) {
+		public function buildDSRetrivalSQL($data, &$joins, &$where, $andOperation=false) {
+			return $this->buildDSRetrievalSQL($data, $joins, $where, $andOperation);
+		}
+
+		/**
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#buildDSRetrievalSQL
+		 */
+		public function buildDSRetrievalSQL($data, &$joins, &$where, $andOperation = false) {
 			$field_id = $this->get('id');
 
 			// Filter by regular expression

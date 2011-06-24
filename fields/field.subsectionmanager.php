@@ -465,7 +465,7 @@
 			Symphony::Engine()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/lib/resize/jquery.ba-resize.js', 105, false);
 
 			// Get Subsection
-			$subsection = new SubsectionManager($this->_Parent);
+			$subsection = new SubsectionManager();
 			$content = $subsection->generate($this->get('id'), $this->get('subsection_id'), $data['relation_id'], false, $this->get('recursion_levels'));
 
 			// Setup field name
@@ -544,11 +544,11 @@
 		function getDefaultPublishContent(&$wrapper, $data = NULL) {
 			
 			// Get items
-			$subsection = new SubsectionManager($this->_Parent);
+			$subsection = new SubsectionManager();
 			$content = $subsection->generate($this->get('id'), $this->get('subsection_id'), $data['relation_id'], true, $this->get('recursion_levels'));
-			
+
 			// Append items
-			$select = Widget::Select(null, $content['options']);
+			$select = Widget::Select(null, $content['options'], ($this->get('allow_multiple') == 0 ? array() : array('multiple' => 'multiple')));
 			$wrapper->appendChild($select);
 		}
 
@@ -625,7 +625,7 @@
 
 			// Single select
 			if($this->get('allow_multiple') == 0 || count($data['relation_id']) === 1) {
-				$subsection = new SubsectionManager($this->_Parent);
+				$subsection = new SubsectionManager();
 				$content = $subsection->generate($this->get('id'), $this->get('subsection_id'), $data['relation_id'], false, $this->get('recursion_levels'));
 				
 				// Link?
@@ -678,11 +678,19 @@
 			$done[$id] -= 1;
 			return $includable;
 		}
-		
+
 		/**
+		 * Keep compatibility with Symphony pre 2.2.1 for a little longer.
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#buildDSRetrivalSQL
 		 */
 		public function buildDSRetrivalSQL($data, &$joins, &$where, $andOperation=false) {
+			return $this->buildDSRetrievalSQL($data, $joins, $where, $andOperation);
+		}
+
+		/**
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#buildDSRetrievalSQL
+		 */
+		public function buildDSRetrievalSQL($data, &$joins, &$where, $andOperation=false) {
 
 		    // Current field id
 		    $field_id = $this->get('id');

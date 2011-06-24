@@ -11,7 +11,7 @@
 		
 		/**
 		 * Private instance of Entry Manager
-		 */		
+		 */
 		private static $entryManager;
 	
 		/**
@@ -25,7 +25,7 @@
 
 		/**
 		 * Private flag set when cache is to be updated
-		 */		
+		 */
 		private static $updateCache;
 
 		/**

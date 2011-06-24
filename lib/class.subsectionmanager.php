@@ -8,12 +8,6 @@
 	 */
 	class SubsectionManager {
 
-		private $_Parent;
-
-		public function __construct(&$parent) {
-			$this->_Parent = $parent;
-		}
-		
 		public function generate($subsection_field, $subsection_id, $items=NULL, $full=false, $recurse=0) {
 			static $done = array();
 			if ($done[$subsection_field] >= $recurse + 1) return array('options' => array(), 'html' => '', 'preview' => '');	
@@ -36,7 +30,7 @@
 			}
 
 			// Fetch entry data
-			$sectionManager = new SectionManager($this->_Parent);
+			$sectionManager = new SectionManager(Symphony::Engine());
 		  	$subsection = $sectionManager->fetch($subsection_id, 'ASC', 'name');
 		  	$fields = $subsection->fetchFields();
 		  	$entries = $this->__filterEntries($subsection_id, $fields, $meta[0]['filter_tags'], (!empty($full) ? NULL : $items));
@@ -79,7 +73,7 @@
 			}
 
 			// Fetch entry data
-			$entryManager = new EntryManager($this->_Parent);
+			$entryManager = new EntryManager(Symphony::Engine());
 			$entries = $entryManager->fetch($items, $subsection_id);
 
 			// Setup filter
@@ -124,7 +118,7 @@
 					// Filter entries
 					if(empty($filter_nonos) && (!empty($filter_gogoes) || empty($gogoes)) ) {
 						// Keep sort order of selected items
-						$index = (is_array($items) ? array_search($entry->get('id'), $items) : count($entry_data)+1);
+						$index = (is_array($items) ? array_search($entry->get('id'), $items) : $index+1);
 						$entry_data[$index] = array(
 							'data' => $entry->getData(),
 							'id' => $entry->get('id')	
@@ -135,7 +129,7 @@
 			}
 
 			// Keep sort order of selected items
-			ksort($entry_data, SORT_NUMERIC);
+			if(is_array($items)) ksort($entry_data, SORT_NUMERIC);
 
 			// Return filtered entry data
 			return $entry_data;
@@ -160,7 +154,7 @@
 
 			$options = array();
 			if(is_array($entries)) {
-				foreach($entries as $entry) {
+				foreach($entries as $index => $entry) {
 				
 					// Fetch primary field
 					$field_data = $entry['data'][$fields[0]->get('id')]['value'];
