@@ -480,19 +480,13 @@
 					// New item
 					if(stored.length < 1) {
 						stored = template.clone();
-						itemname = stored.attr('name').replace(/\[\]$/, '['+id+']');
+						itemname = stored.attr('name').replace(/\[quantity\]$/, '['+id+']');
 						stored.val("1").attr('value', "1").attr('name', itemname).css('display', type).removeClass('template').appendTo(item);
 					}
 					else {
 						stored.css('display', type);
 					}
 				});
-
-				// Cleanup deselected items
-				//stock.filter('.removed').remove();
-				
-				// Activate Storage
-				//storage.removeAttr('disabled');
 			};
 			
 			// Dropping items

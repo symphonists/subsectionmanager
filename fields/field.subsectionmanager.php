@@ -473,7 +473,7 @@
 
 			// Setup storage values
 			$label = Widget::Label($this->get('label'), $links);
-			$label->appendChild(Widget::Input($fieldname . '[]', '', 'text', array('class' => 'subsectionmanager storage template')));
+			$label->appendChild(Widget::Input($fieldname . '[quantity]', '', 'text', array('class' => 'subsectionmanager storage template')));
 
 			$order = '';
 			if(!empty($data['relation_id'])) {
@@ -569,10 +569,11 @@
 				return self::__INVALID_FIELDS__;
 			}
 
-			if($this->get('allow_quantities') == 0) {
+			if($this->get('allow_quantities') == 0 && isset($data['quantity'])) {
 				foreach($data as $entry_id => $quantity) {
+					if($entry_id == 'quantity') continue;
 					if($quantity > 1) {
-						$message = __("'%s' allows only unique values.", array($this->get('label')));
+						$message = __("'%s' does not allow quantity other other than 1.", array($this->get('label')));
 						return self::__INVALID_FIELDS__;
 					}
 				}
@@ -586,15 +587,26 @@
 		 */
 		function processRawFieldData($data, &$status, $simulate=false, $entry_id=NULL) {
 			$status = self::__OK__;
-			if(!is_array($data) && !is_null($data)) return array('relation_id' => $data);
+			if(!is_array($data) && !is_null($data)) return array('relation_id' => array($data), 'quantity' => array(1));
 			if(empty($data)) return NULL;
 
 			$result = array();
 			$maxQuantity = ($this->get('allow_quantities') == 0 ? 1 : 4294967295); // Maximum value of MySQL's unsigned INT type.
-			foreach($data as $entry_id => $quantity) {
-				if(empty($entry_id) || empty($quantity) || $quantity > $maxQuantity) continue;
-				$result['relation_id'][] = intval($entry_id);
-				$result['quantity'][] = intval($quantity);
+
+			// Handle data passed from SELECT (it does not contain 'quantity' key)
+			if(!isset($data['quantity'])) {
+				$result['relation_id'] = array_map('intval', $data);
+				$result['quantity'] = array_fill(0, count($result['relation_id']), 1);
+			}
+
+			// Handle data passed from INPUT
+			else {
+				unset($data['quantity']);
+				foreach($data as $entry_id => $quantity) {
+					if(empty($entry_id) || empty($quantity) || $quantity > $maxQuantity) continue;
+					$result['relation_id'][] = intval($entry_id);
+					$result['quantity'][] = intval($quantity);
+				}
 			}
 
 			return $result;
