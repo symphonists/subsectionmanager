@@ -97,13 +97,12 @@
 			}
 
 			// Add quantifiers
-			if(stage.is('.nonunique, .unique')) {
-				var field_id = manager.attr('id').replace('field-',''),
-					type = stage.is('.nonunique') ? 'inline' : 'none';
+			if(stage.is('.quantifiable, .nonquantifiable')) {
+				var field_id = manager.attr('id').replace('field-','');
 
 				$('li:not(.new,.empty,.drawer,.message)', selection).each(function(index, item){
 					var value = $(this).attr('data-value'),
-						quantity = manager.find('input.subsectionmanager.storage[name$="\\[' + value + '\\]"]').css('display', type);
+						quantity = manager.find('input.subsectionmanager.storage[name$="\\[' + value + '\\]"]');
 
 					$(this).append(quantity);
 				});
@@ -468,8 +467,7 @@
 			// Synchronize lists
 			var sync = function() {
 				var stock = manager.find('input.subsectionmanager.storage').not('.template'),
-					template = manager.find('input.subsectionmanager.storage.template'),
-					type = stage.is('.nonunique') ? 'inline' : 'none';
+					template = manager.find('input.subsectionmanager.storage.template');
 
 				selection.find('li:not(.drawer,.new,.message,.empty)').each(function(index, item) {
 					var item = $(item),
@@ -481,10 +479,7 @@
 					if(stored.length < 1) {
 						stored = template.clone();
 						itemname = stored.attr('name').replace(/\[quantity\]$/, '['+id+']');
-						stored.val("1").attr('value', "1").attr('name', itemname).css('display', type).removeClass('template').appendTo(item);
-					}
-					else {
-						stored.css('display', type);
+						stored.val("1").attr('value', "1").attr('name', itemname).removeClass('template').appendTo(item);
 					}
 				});
 			};

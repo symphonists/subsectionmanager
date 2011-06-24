@@ -30,7 +30,7 @@ div.field-subsectionmanager div.stage li:hover input.storage, div.field-subsecti
 	background-position: right center;
 }
 
-div.field-subsectionmanager input.storage.template {
+div.field-subsectionmanager div.stage.nonquantifiable input.storage, div.field-subsectionmanager input.storage.template {
 	display: none;
 }
 
