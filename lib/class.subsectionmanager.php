@@ -62,46 +62,50 @@
 		
 		private function __filterEntries($subsection_id, $fields, $filter, $items) {
 
-		  	// Fetch taglist, select and upload fields
-		  	$tag_fields = array();
-		  	if(is_array($fields)) {
-				foreach($fields as $field) {
-					if(in_array($field->get('type'), array('taglist', 'select'))) {
-						$tag_fields[] = $field->get('id');
-					}
-				}
-			}
-
 			// Fetch entry data
 			$entryManager = new EntryManager(Symphony::Engine());
 			$entries = $entryManager->fetch($items, $subsection_id);
 
+			// Return early if there were no $entries found
+			if(empty($entries) || !is_array($entries)) {
+				return array();
+			}
+
 			// Setup filter
+		  	$tag_fields = array();
 			$gogoes = array();
 			$nonos = array();
-			$filters = array();
-			if($filter != '') {
-				$filters = explode(', ', $filter);
-			}
-			foreach($filters as $filter) {
-				$operator = substr($filter, 0, 1);
-				if($operator == '-') {
-					$nonos[] = substr($filter, 1);
+			$filters = (empty($filter) ? array() : explode(', ', $filter));
+			if(!empty($filters)) {
+			  	// Fetch taglist, select and upload fields
+			  	if(is_array($fields)) {
+					foreach($fields as $field) {
+						if(in_array($field->get('type'), array('taglist', 'select'))) {
+							$tag_fields[] = $field->get('id');
+						}
+					}
 				}
-				else {
-					$gogoes[] = $filter;
+
+				foreach($filters as $filter) {
+					$operator = substr($filter, 0, 1);
+					if($operator == '-') {
+						$nonos[] = substr($filter, 1);
+					}
+					else {
+						$gogoes[] = $filter;
+					}
 				}
 			}
 
 			// Filter entries and add select options
 			$entry_data = array();
-			if(is_array($entries) && !empty($entries)) {
-				foreach($entries as $entry) {
-					
+			foreach($entries as $entry) {
+				$data = $entry->getData();
+
+				if(!empty($filters)) {
 					// Collect taglist and select field values
 					$tags = array();
 					foreach($tag_fields as $field_id) {
-						$data = $entry->getData();
 						$tag_values = $data[$field_id]['value'];
 						if(!is_array($tag_values)) {
 							$tag_values = array($tag_values);
@@ -114,18 +118,24 @@
 	
 					// Investigate entry inclusion
 					$filter_gogoes = array_intersect($tags, $gogoes);
-	
+
 					// Filter entries
-					if(empty($filter_nonos) && (!empty($filter_gogoes) || empty($gogoes)) ) {
-						// Keep sort order of selected items
-						$index = (is_array($items) ? array_search($entry->get('id'), $items) : $index+1);
-						$entry_data[$index] = array(
-							'data' => $entry->getData(),
-							'id' => $entry->get('id')	
-						);
+					if(!empty($filter_nonos) || (empty($filter_gogoes) && !empty($gogoes))) {
+						continue;
 					}
-	
 				}
+	
+				// Keep sort order of selected items
+				$index = (is_array($items) ? array_search($entry->get('id'), $items) : $index+1);
+
+				// array_search may return false. It should not happen, because all $items should
+				// exist in $entries, but... check that, just to be sure.
+				if($index === false) continue;
+
+				$entry_data[$index] = array(
+					'data' => $data,
+					'id' => $entry->get('id')	
+				);
 			}
 
 			// Keep sort order of selected items
