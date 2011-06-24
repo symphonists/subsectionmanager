@@ -19,6 +19,11 @@
 				'text' => '<li data-value="{$value}" data-drop="{$droptext}"><span>{$caption}</span></li>',
 				'image' => '<li data-value="{$value}" data-drop="{$droptext}" class="preview"><img src="{$url}/image/2/40/40/5{$preview}" width="40" height="40" /><a href="{$href}" class="image file handle">{$caption}</a></li>',
 				'file' => '<li data-value="{$value}" data-drop="{$droptext}" class="preview"><strong class="file">{$type}</strong><a href="{$href}" class="file handle">{$caption}</a></li>'					
+			),
+			'index' => array(
+				'text' => '{$caption}',
+				'image' => '<img src="{$url}/image/2/40/40/5{$preview}" width="40" height="40" /><span>{$caption}</span>',
+				'file' => '{$caption}'
 			)
 		);
 
@@ -167,7 +172,7 @@
 			// Defaults
 			$html = array();
 			$options = array();
-			$preview = '';
+			$preview = $caption = '';
 
 			foreach($entries as $index => $entry) {
 
@@ -247,14 +252,15 @@
 						
 				// Remove empty drop texts
 				$html[strip_tags($tmp)] = str_replace(' data-drop=""', '', $tmp);
-						
-				// Create publish index template
-				if($type == 'image') {
-					$preview = '<img src="' . URL . '/image/2/40/40/5' . $preview . '" width="40" height="40" /><span>' . $caption . '</span></a>';
-				}
-				else {
-					$preview = $caption;
-				}
+			}
+
+			// Create publish index preview for last item
+			// This has to be checked right after loop above, so nothing will invalidate $type, $preview and $caption variables
+			// that were last set inside the loop.
+			$template = str_replace('{$caption}', $caption, self::$templates['index'][($type == 'image' ? 'image' : 'text')]);
+			if($type == 'image') {
+				$template = str_replace('{$preview}', $preview, $template);
+				$template = str_replace('{$url}', URL, $template);
 			}
 
 			// Sort html
@@ -264,7 +270,7 @@
 			return array(
 				'options' => $options,
 				'html' => implode('', $html),
-				'preview' => $preview
+				'preview' => $template
 			);		
 		}
 		
