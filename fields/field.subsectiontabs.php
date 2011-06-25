@@ -577,14 +577,14 @@
 				if($andOperation) {
 					foreach($data as $key => $value) {
 						$joins .= " LEFT JOIN `tbl_entries_data_$field_id` AS `t$field_id$key` ON (`e`.`id` = `t$field_id$key`.entry_id) ";
-						$where .= " AND `t$field_id$key`.handle = '$value' ";
+						$where .= " AND `t$field_id$key`.handle = '". $this->cleanValue($value) ."' ";
 					}
 				}
 	
 				// Or
 				else {
 					$joins .= " LEFT JOIN `tbl_entries_data_$field_id` AS `t$field_id` ON (`e`.`id` = `t$field_id`.entry_id) ";
-					$where .= " AND `t$field_id`.handle IN ('" . @implode("', '", $data) . "') ";
+					$where .= " AND `t$field_id`.handle IN ('" . @implode("', '", array_map(array($this, 'cleanValue'), $data)) . "') ";
 				}
 			}
 
