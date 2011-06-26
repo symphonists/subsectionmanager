@@ -15,7 +15,9 @@
 		 */
 		public function __viewIndex() {
 			$subsection = new SubsectionManager();
-			$content = $subsection->generate(NULL, intval($_GET['id']), intval($_GET['section']), (intval($_GET['entry']) ? intval($_GET['entry']) : NULL), (isset($_GET['entry']) ? false : true));
+			$flags = SubsectionManager::GETHTML;
+			if(!isset($_GET['entry'])) $flags |= SubsectionManager::GETALLITEMS;
+			$content = $subsection->generate(intval($_GET['id']), intval($_GET['section']), (intval($_GET['entry']) ? intval($_GET['entry']) : NULL), 0, $flags);
 			echo $content['html'];
 			exit;
 		}

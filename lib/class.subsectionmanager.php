@@ -8,6 +8,14 @@
 	 */
 	class SubsectionManager {
 
+		// Flags used to control output of generate()
+		const GETOPTIONS    = 1;
+		const GETHTML       = 2; // This requires setting HTMLFieldName before calling generate()
+		const GETPREVIEW    = 4;
+		// 8, 32, 64 left for future use.
+		const GETALLITEMS   = 128; // Get all entries available instead of just those that were selected.
+		const GETEVERYTHING = 256;
+
 		// Templates
 		public static $templates = array(
 			'plain' => array(
@@ -27,7 +35,13 @@
 			)
 		);
 
-		public function generate($fieldname, $subsection_field, $subsection_id, $items=NULL, $full=false, $recurse=0) {
+		public $HTMLFieldName = '';
+
+		public function setHTMLFieldName($name = '') {
+			$this->HTMLFieldName = $name;
+		}
+
+		public function generate($subsection_field, $subsection_id, $items=NULL, $recurse=0, $flags=GETEVERYTHING) {
 			static $done = array();
 			if ($done[$subsection_field] >= $recurse + 1) return array('options' => array(), 'html' => '', 'preview' => '');	
 			$done[$subsection_field] += 1;
@@ -52,7 +66,7 @@
 			$sectionManager = new SectionManager(Symphony::Engine());
 		  	$subsection = $sectionManager->fetch($subsection_id, 'ASC', 'name');
 		  	$fields = $subsection->fetchFields();
-		  	$entries = $this->__filterEntries($subsection_id, $fields, $meta[0]['filter_tags'], $items, $full);
+		  	$entries = $this->__filterEntries($subsection_id, $fields, $meta[0]['filter_tags'], $items, ($flags & self::GETALLITEMS));
 		  	$droptext = $meta[0]['droptext'];
 		  	
 		  	// Check caption
@@ -72,7 +86,7 @@
 		  	}
 		  	
 		  	// Layout subsection data
-		  	$data = $this->__layoutSubsection($entries, $fields, $caption, $droptext, $mode, $fieldname);
+		  	$data = $this->__layoutSubsection($entries, $fields, $caption, $droptext, $mode, $flags);
 
 			$done[$subsection_field] -= 1;
 		  	return $data;
@@ -118,6 +132,8 @@
 
 			// Prepare sortorder array
 			$sortorder = array();
+
+
 			if(!empty($items)) {
 				if(!is_array($items)) {
 					$items = array('relation_id' => array($items), 'quantity' => array(1));
@@ -126,7 +142,7 @@
 					$items = array('relation_id' => $items, 'quantity' => array_fill(0, count($items), 1));
 				}
 				else if(!is_array($items['relation_id'])) {
-					$items = array('relation_id' => $items, 'quantity' => $items['quantity']);
+					$items = array('relation_id' => array($items['relation_id']), 'quantity' => array($items['quantity']));
 				}
 				$sortorder = array_flip($items['relation_id']);
 			}
@@ -187,7 +203,7 @@
 			return $entry_data;
 		}
 		
-		private function __layoutSubsection($entries, $fields, $caption_template, $droptext_template, $mode, $fieldname = NULL) {
+		private function __layoutSubsection($entries, $fields, $caption_template, $droptext_template, $mode, $flags = GETEVERYTHING) {
 
 			// Return early if there is nothing to do
 			if(empty($entries) || !is_array($entries)) return array('options' => array(), 'html' => '', 'preview' => '');
@@ -204,7 +220,7 @@
 				$droptext = $droptext_template;
 
 				// Generate layout
-				$type = $preview = $template = '';
+				$type = $preview = $href = $template = '';
 				foreach($fields as $field) {
 					$field_name = $field->get('element_name');
 					$field_id = $field->get('id');
@@ -226,7 +242,7 @@
 						$caption = preg_replace('/{\$' . $field_name . '(:[^}]*)?}/', $field_value, $caption);
 						$droptext = preg_replace('/{\$' . $field_name . '(:[^}]*)?}/', $field_value, $droptext);
 					}
-							
+
 					// Find upload fields
 					if(strpos($field->get('type'), 'upload') !== false && !empty($entry['data'][$field->get('id')]['file'])) {
 							
@@ -248,10 +264,13 @@
 				}
 
 				// Populate select options
-				$options[$index] = array($entry['id'], $entry['selected'], strip_tags($caption));
+				if($flags & self::GETOPTIONS) $options[$index] = array($entry['id'], $entry['selected'], strip_tags($caption));
+
+				// Generate HTML only when needed
+				if(!($flags & self::GETHTML)) continue;
 
 				// Quantity input field
-				$quantity = (empty($fieldname) ? '' : '<input name="'.$fieldname.'['.$entry['id'].']" value="'.$entry['quantity'].'" class="subsectionmanager storage"/>');
+				$quantity = (empty($this->HTMLFieldName) ? '' : '<input name="'.$this->HTMLFieldName.'['.$entry['id'].']" value="'.$entry['quantity'].'" class="subsectionmanager storage"/>');
 
 				// Create stage template
 				if($type == 'image') {
@@ -283,24 +302,34 @@
 				$html[strip_tags($tmp)] = str_replace(' data-drop=""', '', $tmp);
 			}
 
-			// Create publish index preview for last item
-			// This has to be checked right after loop above, so nothing will invalidate $type, $preview and $caption variables
-			// that were last set inside the loop.
-			$template = str_replace('{$caption}', $caption, self::$templates['index'][($type == 'image' ? 'image' : 'text')]);
-			if($type == 'image') {
-				$template = str_replace('{$preview}', $preview, $template);
-				$template = str_replace('{$url}', URL, $template);
+			// Set default result data
+			$result = array(
+				'options' => $options,
+				'html' => '',
+				'preview' => ''
+			);
+
+			// Generate preview
+			if($flags & self::GETPREVIEW) {
+				// Create publish index preview for last item
+				// This has to be checked right after loop above, so nothing will invalidate $type, $preview and $caption variables
+				// that were last set inside the loop.
+				$template = str_replace('{$caption}', $caption, self::$templates['index'][($type == 'image' ? 'image' : 'text')]);
+				if($type == 'image') {
+					$template = str_replace('{$preview}', $preview, $template);
+					$template = str_replace('{$url}', URL, $template);
+				}
+				$result['preview'] = $template;
 			}
 
-			// Sort html
-			ksort($html);
+			// Sort HTML and add it as a string
+			if($flags & self::GETHTML) {
+				ksort($html);
+				$result['html'] = implode('', $html);
+			}
 
 			// Return options and html
-			return array(
-				'options' => $options,
-				'html' => implode('', $html),
-				'preview' => $template
-			);		
+			return $result;	
 		}
 		
 	}

@@ -444,7 +444,7 @@
 		 *
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#displayPublishPanel
 		 */
-		function displayPublishPanel(&$wrapper, $data=NULL, $flagWithError=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL) {
+		function displayPublishPanel(&$wrapper, $data=NULL, $flagWithError=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL, $entry_id=NULL) {
 			if(!is_array($data['relation_id'])) $data['relation_id'] = array($data['relation_id']);
 			if(!is_array($data['quantity'])) $data['quantity'] = array($data['quantity']);
 
@@ -473,7 +473,8 @@
 
 			// Get Subsection
 			$subsection = new SubsectionManager();
-			$content = $subsection->generate($fieldname, $this->get('id'), $this->get('subsection_id'), $data, false, $this->get('recursion_levels'));
+			$subsection->setHTMLFieldName($fieldname);
+			$content = $subsection->generate($this->get('id'), $this->get('subsection_id'), $data, $this->get('recursion_levels'), SubsectionManager::GETHTML);
 
 			// Setup sorting
 			// TODO: not needed anymore, but Stage may depend on it. Shouldn't Stage create one when needed?
@@ -527,7 +528,7 @@
 			
 			// Get items
 			$subsection = new SubsectionManager();
-			$content = $subsection->generate(null, $this->get('id'), $this->get('subsection_id'), $data, true, $this->get('recursion_levels'));
+			$content = $subsection->generate($this->get('id'), $this->get('subsection_id'), $data, $this->get('recursion_levels'), SubsectionManager::GETOPTIONS | SubsectionManager::GETALLITEMS);
 
 			// Append items
 			$select = Widget::Select(null, $content['options'], ($this->get('allow_multiple') == 0 ? array() : array('multiple' => 'multiple')));
@@ -620,8 +621,8 @@
 			// Single select
 			if($this->get('allow_multiple') == 0 || count($data['relation_id']) === 1) {
 				$subsection = new SubsectionManager();
-				$content = $subsection->generate(null, $this->get('id'), $this->get('subsection_id'), $data, false, $this->get('recursion_levels'));
-				
+				$content = $subsection->generate($this->get('id'), $this->get('subsection_id'), $data, $this->get('recursion_levels'), SubsectionManager::GETPREVIEW);
+
 				// Link?
 				if($link) {
 					$href = $link->getAttribute('href');
