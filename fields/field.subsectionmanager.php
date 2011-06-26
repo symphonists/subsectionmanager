@@ -464,38 +464,20 @@
 			Symphony::Engine()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.publish.js', 104, false);
 			Symphony::Engine()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/lib/resize/jquery.ba-resize.js', 105, false);
 
-			// Get Subsection
-			$subsection = new SubsectionManager();
-			$content = $subsection->generate($this->get('id'), $this->get('subsection_id'), $data['relation_id'], false, $this->get('recursion_levels'));
-
 			// Setup field name
 			$fieldname = 'fields' . $fieldnamePrefix . '['. $this->get('element_name') . ']' . $fieldnamePostfix;
 
-			// Setup storage values
+			// Setup template for storage values
 			$label = Widget::Label($this->get('label'), $links);
 			$label->appendChild(Widget::Input($fieldname . '[quantity]', '', 'text', array('class' => 'subsectionmanager storage template')));
 
-			$order = '';
-			if(!empty($data['relation_id'])) {
-				if($this->get('allow_quantities') == 1) {
-					$counters = array_combine($data['relation_id'], $data['quantity']);
-				}
-				else {
-					$counters = array_fill_keys($data['relation_id'], 1);
-				}
-
-				$order = implode(',', array_keys($counters));
-
-				foreach($content['options'] as $option) {
-					if(empty($option[1])) continue;
-
-					$label->appendChild(Widget::Input($fieldname . '[' . $option[0] . ']', $counters[$option[0]], 'text', array('title' => $option[2], 'class' => 'subsectionmanager storage')));
-				}
-			}
+			// Get Subsection
+			$subsection = new SubsectionManager();
+			$content = $subsection->generate($fieldname, $this->get('id'), $this->get('subsection_id'), $data, false, $this->get('recursion_levels'));
 
 			// Setup sorting
 			// TODO: not needed anymore, but Stage may depend on it. Shouldn't Stage create one when needed?
-			$input = Widget::Input('fields[sort_order][' . $this->get('id') . ']', $order, 'hidden');
+			$input = Widget::Input('fields[sort_order][' . $this->get('id') . ']', implode(',', $data['relation_id']), 'hidden');
 			$label->appendChild($input);
 
 			// Setup relation id
@@ -545,7 +527,7 @@
 			
 			// Get items
 			$subsection = new SubsectionManager();
-			$content = $subsection->generate($this->get('id'), $this->get('subsection_id'), $data['relation_id'], true, $this->get('recursion_levels'));
+			$content = $subsection->generate(null, $this->get('id'), $this->get('subsection_id'), $data, true, $this->get('recursion_levels'));
 
 			// Append items
 			$select = Widget::Select(null, $content['options'], ($this->get('allow_multiple') == 0 ? array() : array('multiple' => 'multiple')));
@@ -638,7 +620,7 @@
 			// Single select
 			if($this->get('allow_multiple') == 0 || count($data['relation_id']) === 1) {
 				$subsection = new SubsectionManager();
-				$content = $subsection->generate($this->get('id'), $this->get('subsection_id'), $data['relation_id'], false, $this->get('recursion_levels'));
+				$content = $subsection->generate(null, $this->get('id'), $this->get('subsection_id'), $data, false, $this->get('recursion_levels'));
 				
 				// Link?
 				if($link) {

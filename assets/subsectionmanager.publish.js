@@ -98,6 +98,7 @@
 
 			// Add quantifiers
 			if(stage.is('.quantifiable, .nonquantifiable')) {
+/*
 				var field_id = manager.attr('id').replace('field-','');
 
 				$('li:not(.new,.empty,.drawer,.message)', selection).each(function(index, item){
@@ -111,7 +112,7 @@
 				if(empty.is('.template.create')) {
 					empty.append(quantifier.clone());
 				}
-
+*/
 				stage.delegate('input.storage', 'click', function(event){
 					var item = $(this),
 						width = item.innerWidth(),
@@ -481,6 +482,7 @@
 						itemname = stored.attr('name').replace(/\[quantity\]$/, '['+id+']');
 						stored.val("1").attr('value', "1").attr('name', itemname).removeClass('template').appendTo(item);
 					}
+
 				});
 			};
 			

@@ -11,14 +11,14 @@
 		// Templates
 		public static $templates = array(
 			'plain' => array(
-				'text' => '<li data-value="{$value}" data-drop="{$droptext}"><span>{$caption}</span></li>',
-				'image' => '<li data-value="{$value}" data-drop="{$droptext}"><a href="{$href}" class="image file handle">{$caption}</a></li>',
-				'file' => '<li data-value="{$value}" data-drop="{$droptext}"><a href="{$href}" class="file handle">{$caption}</a></li>'
+				'text' => '<li data-value="{$value}" data-drop="{$droptext}"><span>{$caption}</span>{$quantity}</li>',
+				'image' => '<li data-value="{$value}" data-drop="{$droptext}"><a href="{$href}" class="image file handle">{$caption}</a>{$quantity}</li>',
+				'file' => '<li data-value="{$value}" data-drop="{$droptext}"><a href="{$href}" class="file handle">{$caption}</a>{$quantity}</li>'
 			),
 			'preview' => array(
-				'text' => '<li data-value="{$value}" data-drop="{$droptext}"><span>{$caption}</span></li>',
-				'image' => '<li data-value="{$value}" data-drop="{$droptext}" class="preview"><img src="{$url}/image/2/40/40/5{$preview}" width="40" height="40" /><a href="{$href}" class="image file handle">{$caption}</a></li>',
-				'file' => '<li data-value="{$value}" data-drop="{$droptext}" class="preview"><strong class="file">{$type}</strong><a href="{$href}" class="file handle">{$caption}</a></li>'					
+				'text' => '<li data-value="{$value}" data-drop="{$droptext}"><span>{$caption}</span>{$quantity}</li>',
+				'image' => '<li data-value="{$value}" data-drop="{$droptext}" class="preview"><img src="{$url}/image/2/40/40/5{$preview}" width="40" height="40" /><a href="{$href}" class="image file handle">{$caption}</a>{$quantity}</li>',
+				'file' => '<li data-value="{$value}" data-drop="{$droptext}" class="preview"><strong class="file">{$type}</strong><a href="{$href}" class="file handle">{$caption}</a>{$quantity}</li>'					
 			),
 			'index' => array(
 				'text' => '{$caption}',
@@ -27,7 +27,7 @@
 			)
 		);
 
-		public function generate($subsection_field, $subsection_id, $items=NULL, $full=false, $recurse=0) {
+		public function generate($fieldname, $subsection_field, $subsection_id, $items=NULL, $full=false, $recurse=0) {
 			static $done = array();
 			if ($done[$subsection_field] >= $recurse + 1) return array('options' => array(), 'html' => '', 'preview' => '');	
 			$done[$subsection_field] += 1;
@@ -52,7 +52,7 @@
 			$sectionManager = new SectionManager(Symphony::Engine());
 		  	$subsection = $sectionManager->fetch($subsection_id, 'ASC', 'name');
 		  	$fields = $subsection->fetchFields();
-		  	$entries = $this->__filterEntries($subsection_id, $fields, $meta[0]['filter_tags'], (!empty($full) ? NULL : $items));
+		  	$entries = $this->__filterEntries($subsection_id, $fields, $meta[0]['filter_tags'], $items, $full);
 		  	$droptext = $meta[0]['droptext'];
 		  	
 		  	// Check caption
@@ -72,18 +72,18 @@
 		  	}
 		  	
 		  	// Layout subsection data
-		  	$data = $this->__layoutSubsection($entries, $fields, $caption, $droptext, $mode, ($full ? $items : NULL));
+		  	$data = $this->__layoutSubsection($entries, $fields, $caption, $droptext, $mode, $fieldname);
 
 			$done[$subsection_field] -= 1;
 		  	return $data;
 		  	
 		}
 		
-		private function __filterEntries($subsection_id, $fields, $filter = '', $items = NULL) {
+		private function __filterEntries($subsection_id, $fields, $filter = '', $items = NULL, $full = false) {
 
 			// Fetch entry data
 			$entryManager = new EntryManager(Symphony::Engine());
-			$entries = $entryManager->fetch($items, $subsection_id);
+			$entries = $entryManager->fetch(($full ? NULL : (isset($items['relation_id']) ? $items['relation_id'] : $items)), $subsection_id);
 
 			// Return early if there were no $entries found
 			if(empty($entries) || !is_array($entries)) {
@@ -116,8 +116,24 @@
 				}
 			}
 
+			// Prepare sortorder array
+			$sortorder = array();
+			if(!empty($items)) {
+				if(!is_array($items)) {
+					$items = array('relation_id' => array($items), 'quantity' => array(1));
+				}
+				else if(!isset($items['relation_id'])) {
+					$items = array('relation_id' => $items, 'quantity' => array_fill(0, count($items), 1));
+				}
+				else if(!is_array($items['relation_id'])) {
+					$items = array('relation_id' => $items, 'quantity' => $items['quantity']);
+				}
+				$sortorder = array_flip($items['relation_id']);
+			}
+
 			// Filter entries and add select options
 			$entry_data = array();
+			$notSelectedIndex = count($sortorder);
 			foreach($entries as $entry) {
 				$data = $entry->getData();
 
@@ -145,15 +161,22 @@
 				}
 	
 				// Keep sort order of selected items
-				$index = (is_array($items) ? array_search($entry->get('id'), $items) : $index+1);
-
-				// array_search may return false. It should not happen, because all $items should
-				// exist in $entries, but... check that, just to be sure.
-				if($index === false) continue;
+				$entry_id = $entry->get('id');
+				$selected = isset($sortorder[$entry_id]);
+				$quantity = 1;
+				if($selected) {
+					$index = $sortorder[$entry_id];
+					$quantity = $items['quantity'][$index];
+				}
+				else {
+					$index = $notSelectedIndex++;
+				}
 
 				$entry_data[$index] = array(
 					'data' => $data,
-					'id' => $entry->get('id')	
+					'id' => $entry_id,
+					'selected' => $selected,
+					'quantity' => $quantity	
 				);
 			}
 
@@ -164,7 +187,7 @@
 			return $entry_data;
 		}
 		
-		private function __layoutSubsection($entries, $fields, $caption_template, $droptext_template, $mode, $selected = NULL) {
+		private function __layoutSubsection($entries, $fields, $caption_template, $droptext_template, $mode, $fieldname = NULL) {
 
 			// Return early if there is nothing to do
 			if(empty($entries) || !is_array($entries)) return array('options' => array(), 'html' => '', 'preview' => '');
@@ -225,7 +248,10 @@
 				}
 
 				// Populate select options
-				$options[$index] = array($entry['id'], (is_array($selected) ? in_array($entry['id'], $selected) : true), strip_tags($caption));
+				$options[$index] = array($entry['id'], $entry['selected'], strip_tags($caption));
+
+				// Quantity input field
+				$quantity = (empty($fieldname) ? '' : '<input name="'.$fieldname.'['.$entry['id'].']" value="'.$entry['quantity'].'" class="subsectionmanager storage"/>');
 
 				// Create stage template
 				if($type == 'image') {
@@ -234,6 +260,7 @@
 					$template = str_replace('{$href}', $href, $template);
 					$template = str_replace('{$value}', $entry['id'], $template);
 					$template = str_replace('{$droptext}', htmlspecialchars($droptext), $template);
+					$template = str_replace('{$quantity}', $quantity, $template);
 					$tmp = str_replace('{$caption}', $caption, $template);
 				}
 				elseif($type == 'file') {
@@ -241,12 +268,14 @@
 					$template = str_replace('{$href}', $href, $template);
 					$template = str_replace('{$value}', $entry['id'], $template);
 					$template = str_replace('{$droptext}', htmlspecialchars($droptext), $template);
+					$template = str_replace('{$quantity}', $quantity, $template);
 					$tmp = str_replace('{$caption}', $caption, $template);
 				}
 				else {
 					$template = str_replace('{$preview}', $entry['id'], self::$templates[$mode]['text']);
 					$template = str_replace('{$value}', $entry['id'], $template);
 					$template = str_replace('{$droptext}', htmlspecialchars($droptext), $template);
+					$template = str_replace('{$quantity}', $quantity, $template);
 					$tmp = str_replace('{$caption}', $caption, $template);
 				}
 						
