@@ -6,7 +6,7 @@
  */
 
 
-div.field-subsectionmanager div.stage li input.storage {
+div.field-subsectionmanager input.subsectionmanager.storage {
 	float: right;
 	vertical-align: middle;
 	width: 50px;
@@ -23,15 +23,15 @@ div.field-subsectionmanager div.stage li input.storage {
 	border-radius: 5px;
 }
 
+div.field-subsectionmanager input.subsectionmanager.storage.template, div.field-subsectionmanager div.stage.nonquantifiable input.subsectionmanager.storage {
+	display: none;
+}
+
 div.field-subsectionmanager div.stage li:hover input.storage, div.field-subsectionmanager div.stage li input.storage:focus {
 	background-color: #fff;
 	background-image: url('images/arrows.png');
 	background-repeat: no-repeat;
 	background-position: right center;
-}
-
-div.field-subsectionmanager div.stage.nonquantifiable input.storage, div.field-subsectionmanager input.storage.template {
-	display: none;
 }
 
 div.field-subsectionmanager div.stage li a {

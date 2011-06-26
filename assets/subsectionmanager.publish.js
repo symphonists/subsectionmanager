@@ -468,7 +468,8 @@
 			// Synchronize lists
 			var sync = function() {
 				var stock = manager.find('input.subsectionmanager.storage').not('.template'),
-					template = manager.find('input.subsectionmanager.storage.template');
+					template = manager.find('input.subsectionmanager.storage.template'),
+					nonquantifiable = stage.is('.nonquantifiable');
 
 				selection.find('li:not(.drawer,.new,.message,.empty)').each(function(index, item) {
 					var item = $(item),
@@ -482,8 +483,11 @@
 						itemname = stored.attr('name').replace(/\[quantity\]$/, '['+id+']');
 						stored.val("1").attr('value', "1").attr('name', itemname).removeClass('template').appendTo(item);
 					}
-
 				});
+
+				// Something keeps adding "display: inline-block;" to input of newly created items,
+				// so we have to hide it manually :(.
+				if(nonquantifiable) stock.hide();
 			};
 			
 			// Dropping items

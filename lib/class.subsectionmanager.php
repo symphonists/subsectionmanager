@@ -41,7 +41,7 @@
 			$this->HTMLFieldName = $name;
 		}
 
-		public function generate($subsection_field, $subsection_id, $items=NULL, $recurse=0, $flags=GETEVERYTHING) {
+		public function generate($subsection_field, $subsection_id, $items=NULL, $recurse=0, $flags=self::GETEVERYTHING) {
 			static $done = array();
 			if ($done[$subsection_field] >= $recurse + 1) return array('options' => array(), 'html' => '', 'preview' => '');	
 			$done[$subsection_field] += 1;
@@ -57,6 +57,7 @@
 			// Get display mode
 			if($meta[0]['show_preview'] == 1) {
 				$mode = 'preview';
+				
 			}
 			else {
 				$mode = 'plain';			
@@ -203,65 +204,107 @@
 			return $entry_data;
 		}
 		
-		private function __layoutSubsection($entries, $fields, $caption_template, $droptext_template, $mode, $flags = GETEVERYTHING) {
-
+		private function __layoutSubsection($entries, $fields, $caption_template, $droptext_template, $mode, $flags = self::GETEVERYTHING) {
 			// Return early if there is nothing to do
 			if(empty($entries) || !is_array($entries)) return array('options' => array(), 'html' => '', 'preview' => '');
+
+			$token_fields = array();
+			$token_names = array();
+			$token_values = array();
+			if(!empty($fields)) {
+				// Check which fields we should handle. There is no point in looping through all of them for every entry,
+				// if caption and/or droptext template use only 1 or two of them (or none at all :).
+
+				// Get all field names used in templates
+				if(preg_match_all('@{\$([^}:]+)(:([^}]*))?}@U', $caption_template.$droptext_template, $m, PREG_PATTERN_ORDER)) {
+					// $m[0] is "context", i.e., {$field_name:default_value} and {$field_name:other_value}
+					// $m[1] is "field name"
+					// $m[2] is ":default value"
+					// $m[3] is "default value"
+					if(is_array($m[0])) {
+						foreach($m[0] as $index => $context) {
+							$token_fields[$m[1][$index]][$context] = true;
+							$token_names[$context] = $context;
+							$token_values[$context] = $m[3][$index];
+						}
+						// Keep'em sorted, so we can use only a single str_replace call.
+						ksort($token_names);
+						ksort($token_values);
+					}
+				}
+
+				$preview = ($flags & self::GETPREVIEW || $mode == 'preview');
+				foreach($fields as $index => &$field) {
+					$field_name = $field->get('element_name');
+					$field_id = $field->get('id');
+
+					$keep = false;
+					if(isset($token_fields[$field_name])) {
+						$field->ssm_tokens = $token_fields[$field_name];
+						$keep = true;
+					}
+
+					if($preview && strpos($field->get('type'), 'upload') !== false) {
+						$field->ssm_preview = $field_id;
+						$keep = true;
+					}
+
+					if(!$keep) unset($fields[$index]);
+				}
+			}
 
 			// Defaults
 			$html = array();
 			$options = array();
 			$preview = $caption = '';
 
-			foreach($entries as $index => $entry) {
+			$templates = array($caption_template, $droptext_template);
 
-				// Generate subsection values
-				$caption = $caption_template;
-				$droptext = $droptext_template;
+			foreach($entries as $index => $entry) {
 
 				// Generate layout
 				$type = $preview = $href = $template = '';
+				$values = $token_values;
 				foreach($fields as $field) {
-					$field_name = $field->get('element_name');
 					$field_id = $field->get('id');
 
-					// Get value
-					if(is_callable(array($field, 'preparePlainTextValue'))) {
-						$field_value = $field->preparePlainTextValue($entry['data'][$field_id], $entry['id']);
-					}
-					else {
-						$field_value = strip_tags($field->prepareTableValue($entry['data'][$field_id]));
-					}
+					if(isset($field->ssm_tokens)) {
+						// Get value
+						if(is_callable(array($field, 'preparePlainTextValue'))) {
+							$field_value = $field->preparePlainTextValue($entry['data'][$field_id], $entry['id']);
+						}
+						else {
+							$field_value = strip_tags($field->prepareTableValue($entry['data'][$field_id]));
+						}
 
-					// Caption & Drop text
-					if(empty($field_value) || $field_value == __('None')) {
-						$caption = preg_replace('/{\$' . $field_name . '(:([^}]*))?}/U', '$2', $caption);
-						$droptext = preg_replace('/{\$' . $field_name . '(:([^}]*))?}/U', '$2', $droptext);
-					}
-					else {
-						$caption = preg_replace('/{\$' . $field_name . '(:[^}]*)?}/', $field_value, $caption);
-						$droptext = preg_replace('/{\$' . $field_name . '(:[^}]*)?}/', $field_value, $droptext);
+						// Caption & Drop text
+						if(!empty($field_value) && $field_value != __('None')) {
+							foreach($field->ssm_tokens as $name => $value) {
+								$values[$name] = $field_value;
+							}
+						}
 					}
 
 					// Find upload fields
-					if(strpos($field->get('type'), 'upload') !== false && !empty($entry['data'][$field->get('id')]['file'])) {
-							
+					if(isset($field->ssm_preview) && !empty($entry['data'][$field_id]['file'])) {
 						// Image
-						if(strpos($entry['data'][$field->get('id')]['mimetype'], 'image') !== false) {
+						if(strpos($entry['data'][$field_id]['mimetype'], 'image') !== false) {
 							$type = 'image';
-							$preview = $entry['data'][$field->get('id')]['file'];
+							$preview = $entry['data'][$field_id]['file'];
 							$href = URL . '/workspace' . $preview;
 						}
 								
 						// File
 						else {
 							$type = 'file';
-							$preview = pathinfo($entry['data'][$field->get('id')]['file'], PATHINFO_EXTENSION);
-							$href = $entry['data'][$field->get('id')]['file'];
+							$preview = pathinfo($entry['data'][$field_id]['file'], PATHINFO_EXTENSION);
+							$href = $entry['data'][$field_id]['file'];
 						}
 								
 					}
 				}
+
+				list($caption, $droptext) = str_replace($token_names, $values, $templates);
 
 				// Populate select options
 				if($flags & self::GETOPTIONS) $options[$index] = array($entry['id'], $entry['selected'], strip_tags($caption));

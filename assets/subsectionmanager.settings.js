@@ -91,7 +91,7 @@
 		});
 
 		// Initialise dependencies
-		manager.find('input[name*="allow_multiple"]:checkbox').change();
+		$('li[data-type="subsectionmanager"] input[name*="allow_multiple"]:checkbox').change();
 	});
 
 	// Add negation signs for all suggestions while alt key is pressed
