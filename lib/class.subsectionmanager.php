@@ -57,7 +57,7 @@
 			// Get display mode
 			if($meta[0]['show_preview'] == 1) {
 				$mode = 'preview';
-				
+				$flags |= self::GETPREVIEW;
 			}
 			else {
 				$mode = 'plain';			
@@ -216,20 +216,16 @@
 				// if caption and/or droptext template use only 1 or two of them (or none at all :).
 
 				// Get all field names used in templates
-				if(preg_match_all('@{\$([^}:]+)(:([^}]*))?}@U', $caption_template.$droptext_template, $m, PREG_PATTERN_ORDER)) {
+				if(preg_match_all('@{\$([^}:]+)(:([^}]*))?}@U', $caption_template.$droptext_template, $m, PREG_PATTERN_ORDER) && is_array($m[0])) {
 					// $m[0] is "context", i.e., {$field_name:default_value} and {$field_name:other_value}
 					// $m[1] is "field name"
 					// $m[2] is ":default value"
 					// $m[3] is "default value"
-					if(is_array($m[0])) {
-						foreach($m[0] as $index => $context) {
-							$token_fields[$m[1][$index]][$context] = true;
-							$token_names[$context] = $context;
-							$token_values[$context] = $m[3][$index];
-						}
+					foreach($m[0] as $index => $context) {
+						$token_fields[$m[1][$index]][$context] = true;
 						// Keep'em sorted, so we can use only a single str_replace call.
-						ksort($token_names);
-						ksort($token_values);
+						$token_names[$context] = $context;
+						$token_values[$context] = $m[3][$index];
 					}
 				}
 
@@ -279,7 +275,7 @@
 
 						// Caption & Drop text
 						if(!empty($field_value) && $field_value != __('None')) {
-							foreach($field->ssm_tokens as $name => $value) {
+							foreach($field->ssm_tokens as $name => $dummy) {
 								$values[$name] = $field_value;
 							}
 						}
@@ -299,8 +295,7 @@
 							$type = 'file';
 							$preview = pathinfo($entry['data'][$field_id]['file'], PATHINFO_EXTENSION);
 							$href = $entry['data'][$field_id]['file'];
-						}
-								
+						}		
 					}
 				}
 

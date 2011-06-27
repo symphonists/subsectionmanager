@@ -474,9 +474,7 @@
 			// Get Subsection
 			$subsection = new SubsectionManager();
 			$subsection->setHTMLFieldName($fieldname);
-			$flags =  SubsectionManager::GETHTML;
-			if($this->get('show_preview') == 1) $flags |= SubsectionManager::GETPREVIEW;
-			$content = $subsection->generate($this->get('id'), $this->get('subsection_id'), $data, $this->get('recursion_levels'), $flags);
+			$content = $subsection->generate($this->get('id'), $this->get('subsection_id'), $data, $this->get('recursion_levels'), SubsectionManager::GETHTML);
 
 			// Setup sorting
 			// TODO: not needed anymore, but Stage may depend on it. Shouldn't Stage create one when needed?
