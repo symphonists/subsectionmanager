@@ -691,40 +691,44 @@
 		    $field_id = $this->get('id');
 
 			// Filter by quantity
-			if (preg_match('/^(?:equal to or )?(?:less than|more than|equal to) -?\d+(?:\.\d+)?$/i', $data[0])) {
+			if(preg_match('/^(?:equal to or )?(?:less than|more than|equal to) -?\d+(?:\.\d+)?$/i', $data[0])) {
 
 				$comparisons = array();
-				foreach ($data as $string) {
-					if (preg_match('/^(equal to or )?(less than|more than|equal to) (-?\d+(?:\.\d+)?)$/i', $string, $matches)) {
+				$ids = array();
+				foreach($data as $string) {
+					if(preg_match('/^(equal to or )?(less than|more than|equal to) (-?\d+(?:\.\d+)?)$/i', $string, $matches)) {
 						$number = trim($matches[3]);
-						if (!is_numeric($number) || $number === '') continue;
+						if(!is_numeric($number) || $number === '') continue;
 						$number = floatval($number);
 
 						$operator = '<';
-						switch ($matches[2]) {
+						switch($matches[2]) {
 							case 'more than': $operator = '>'; break;
 							case 'less than': $operator = '<'; break;
 							case 'equal to': $operator = '='; break;
 						}
 
-						if ($matches[1] == 'equal to or ' && $operator != '=') {
+						if($matches[1] == 'equal to or ' && $operator != '=') {
 							$operator .= '=';
 						}
 
 						$comparisons[] = "{$operator} {$number}";
 					}
+					else if(is_numeric($string)) {
+						$ids[] = intval($string);
+					}
 				}
 
-				if (!empty($comparisons)) {
+				if(!empty($comparisons)) {
 					$this->_key++;
-					$joins .= "
-						LEFT JOIN
-							`tbl_entries_data_{$field_id}` AS t{$field_id}_{$this->_key}
-							ON (e.id = t{$field_id}_{$this->_key}.entry_id)
-					";
+					$joins .= "LEFT JOIN `tbl_entries_data_{$field_id}` AS `t{$field_id}_{$this->_key}` ON (e.id = t{$field_id}_{$this->_key}.entry_id)";
 
-					$value = " t{$field_id}_{$this->_key}.value ";
+					$value = " `t{$field_id}_{$this->_key}`.`quantity` ";
 					$comparisons = $value . implode(' '.($andOperation ? 'AND' : 'OR').$value, $comparisons);
+
+					if(!empty($ids)) {
+						$comparisons .= " AND `t{$field_id}_{$this->_key}`.relation_id IN ('".implode("','", $ids)."')";
+					}
 
 					$where .= "
 						AND (
@@ -736,16 +740,18 @@
 
 		    // Filters connected with AND
 		    else if($andOperation) {
-		        foreach($data as $key => $value) {
-		            $joins .= " LEFT JOIN `tbl_entries_data_$field_id` AS `t$field_id$key` ON (`e`.`id` = `t$field_id$key`.entry_id) ";
-		            $where .= " AND `t$field_id$key`.relation_id = '". intval($value) ."' ";
+		        foreach($data as $value) {
+					$this->_key++;
+		            $joins .= " LEFT JOIN `tbl_entries_data_{$field_id}` AS `t{$field_id}_{$this->_key}` ON (`e`.`id` = `t{$field_id}_{$this->_key}`.entry_id) ";
+		            $where .= " AND `t{$field_id}_{$this->_key}`.relation_id = '". intval($value) ."' ";
 		        }
 		    }
 
 		    // Filters connected with OR
 		    else {
-		        $joins .= " LEFT JOIN `tbl_entries_data_$field_id` AS `t$field_id` ON (`e`.`id` = `t$field_id`.entry_id) ";
-		        $where .= " AND `t$field_id`.relation_id IN ('" . @implode("', '", array_map('intval', $data)) . "') ";
+				$this->_key++;
+		        $joins .= " LEFT JOIN `tbl_entries_data_$field_id` AS `t{$field_id}_{$this->_key}` ON (`e`.`id` = `t{$field_id}_{$this->_key}`.entry_id) ";
+		        $where .= " AND `t{$field_id}_{$this->_key}`.relation_id IN ('" . @implode("', '", array_map('intval', $data)) . "') ";
 		    }
 
 		    return true;
@@ -918,12 +924,17 @@
 				$optionlist->appendChild(new XMLElement('li', __('Equal to'), array('class' => 'equal to {$url-quantity}')));
 				$wrapper->appendChild($optionlist);
 
-				$text = new XMLElement('p', __('Use filter commands listed above to filter by quantity, e.g., "more than 2 + less than 5" to get entries with quantity between 2 and 5, or "more than 5, less than 2" to get entries with quantity above 5 or below 2.'), array('class' => 'help') );
+				$text = new XMLElement('p', __('Use filter commands listed above to filter by quantity, e.g., "more than 2 + less than 5" to get filtered entries that have associated entries quantity set between 2 and 5, or "more than 5, less than 2" to get filtered entries that have associated entries quantity above 5 or below 2.'), array('class' => 'help') );
 				$wrapper->appendChild($text);
 			}			
 
 			$text = new XMLElement('p', __('Use comma separated list of entry ids that has to be associated with filtered entries, e.g., "23,45,691".'), array('class' => 'help') );
 			$wrapper->appendChild($text);
+
+			if ($quantities) {
+				$text = new XMLElement('p', __('Use comma separated list of mixed commands and entry ids to filter by quantity and id, e.g., "more than 5,less than 2,653,125,45" to get filtered entries that have associated entries quantity above 5 or below 2 and id equal to 653, 125 or 45.'), array('class' => 'help') );
+				$wrapper->appendChild($text);
+			}
 		}
 
 		/**
