@@ -61,7 +61,7 @@
 		duplicator.delegate('li[data-type="subsectionmanager"] input[name*="allow_multiple"]:checkbox', 'change', function() {
 			var multiple = $(this),
 				manager = multiple.parents('li:first'),
-				related = manager.find('input[name*="draggable"], input[name*="allow_quantities"]');
+				related = manager.find('input[name*="draggable"]');
 				
 			// Activate multiple selection
 			if(multiple.is(':checked')) {
