@@ -715,14 +715,19 @@
 		 * to preload subsection entries.
 		 *
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#appendFormattedElement
-		 * @todo Sorting should be handled via system id
 		 */
 		public function appendFormattedElement(&$wrapper, $data, $encode = false, $mode = null) {
 			static $done = array();
 
 			// Unify data
-			if(empty($data['relation_id'])) $data['relation_id'] = array();
-			if(!is_array($data['relation_id'])) $data['relation_id'] = array($data['relation_id']);
+			if(empty($data) || empty($data['relation_id'])) {
+				$data['relation_id'] = array();
+				$data['quantity'] = array();
+			}
+			else if(!is_array($data['relation_id'])) {
+				$data['relation_id'] = array($data['relation_id']);
+				$data['quantity'] = array($data['quantity']);
+			}
 
 			// Create subsection element
 			$entryManager = new EntryManager(Symphony::Engine());
