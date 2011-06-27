@@ -690,8 +690,52 @@
 		    // Current field id
 		    $field_id = $this->get('id');
 
+			// Filter by quantity
+			if (preg_match('/^(?:equal to or )?(?:less than|more than|equal to) -?\d+(?:\.\d+)?$/i', $data[0])) {
+
+				$comparisons = array();
+				foreach ($data as $string) {
+					if (preg_match('/^(equal to or )?(less than|more than|equal to) (-?\d+(?:\.\d+)?)$/i', $string, $matches)) {
+						$number = trim($matches[3]);
+						if (!is_numeric($number) || $number === '') continue;
+						$number = floatval($number);
+
+						$operator = '<';
+						switch ($matches[2]) {
+							case 'more than': $operator = '>'; break;
+							case 'less than': $operator = '<'; break;
+							case 'equal to': $operator = '='; break;
+						}
+
+						if ($matches[1] == 'equal to or ' && $operator != '=') {
+							$operator .= '=';
+						}
+
+						$comparisons[] = "{$operator} {$number}";
+					}
+				}
+
+				if (!empty($comparisons)) {
+					$this->_key++;
+					$joins .= "
+						LEFT JOIN
+							`tbl_entries_data_{$field_id}` AS t{$field_id}_{$this->_key}
+							ON (e.id = t{$field_id}_{$this->_key}.entry_id)
+					";
+
+					$value = " t{$field_id}_{$this->_key}.value ";
+					$comparisons = $value . implode(' '.($andOperation ? 'AND' : 'OR').$value, $comparisons);
+
+					$where .= "
+						AND (
+							{$comparisons}
+						)
+					";
+				}
+			}
+
 		    // Filters connected with AND
-		    if($andOperation) {
+		    else if($andOperation) {
 		        foreach($data as $key => $value) {
 		            $joins .= " LEFT JOIN `tbl_entries_data_$field_id` AS `t$field_id$key` ON (`e`.`id` = `t$field_id$key`.entry_id) ";
 		            $where .= " AND `t$field_id$key`.relation_id = '". intval($value) ."' ";
@@ -861,11 +905,25 @@
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#displayDatasourceFilterPanel
 		 */
 		function displayDatasourceFilterPanel(&$wrapper, $data=NULL, $errors=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL) {
-
 			parent::displayDatasourceFilterPanel($wrapper, $data, $errors, $fieldnamePrefix, $fieldnamePostfix);
-			$text = new XMLElement('p', __('Use comma separated entry ids for filtering.'), array('class' => 'help') );
-			$wrapper->appendChild($text);
 
+			$quantities = ($this->get('allow_quantities') == 0 ? false : true);
+			if ($quantities) {
+				$optionlist = new XMLElement('ul');
+				$optionlist->setAttribute('class', 'tags inline');
+				$optionlist->appendChild(new XMLElement('li', __('Equal to or less than'), array('class' => 'equal to or less than {$url-quantity}')));
+				$optionlist->appendChild(new XMLElement('li', __('Equal to or more than'), array('class' => 'equal to or more than {$url-quantity}')));
+				$optionlist->appendChild(new XMLElement('li', __('Less than'), array('class' => 'less than {$url-quantity}')));
+				$optionlist->appendChild(new XMLElement('li', __('More than'), array('class' => 'more than {$url-quantity}')));
+				$optionlist->appendChild(new XMLElement('li', __('Equal to'), array('class' => 'equal to {$url-quantity}')));
+				$wrapper->appendChild($optionlist);
+
+				$text = new XMLElement('p', __('Use filter commands listed above to filter by quantity, e.g., "more than 2 + less than 5" to get entries with quantity between 2 and 5, or "more than 5, less than 2" to get entries with quantity above 5 or below 2.'), array('class' => 'help') );
+				$wrapper->appendChild($text);
+			}			
+
+			$text = new XMLElement('p', __('Use comma separated list of entry ids that has to be associated with filtered entries, e.g., "23,45,691".'), array('class' => 'help') );
+			$wrapper->appendChild($text);
 		}
 
 		/**
