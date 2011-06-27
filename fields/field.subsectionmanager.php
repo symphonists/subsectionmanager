@@ -41,7 +41,15 @@
 		 */
 		public function isSortable(){
 			// Sorting by quantity makes sense only when multiple selection is disabled
-			return ($this->get('allow_quantities') != 0 && $this->get('allow_multiple') == 0);
+			return ($this->get('allow_quantities') != 0 && $this->get('allow_multiple') == 0 ? true : false);
+		}
+
+		/**
+		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#allowDatasourceOutputGrouping
+		 */
+		public function allowDatasourceOutputGrouping(){
+			// Grouping makes sense only when multiple selection is disabled
+			return ($this->get('allow_multiple') == 0 ? true : false);
 		}
 
 		/**
@@ -994,6 +1002,32 @@
 					($order == 'ASC' ? 'ASC' : 'DESC')
 				);
 			}
+		}
+
+
+	/*-------------------------------------------------------------------------
+		Grouping:
+	-------------------------------------------------------------------------*/
+
+		public function groupRecords($records){
+			if(!is_array($records) || empty($records)) return;
+
+			$groups = array($this->get('element_name') => array());
+
+			$field_id = $this->get('id');
+			foreach($records as $r){
+				$data = $r->getData($field_id);
+				$entry_id = $data['relation_id'];
+
+				if(!isset($groups[$this->get('element_name')][$entry_id])){
+					$groups[$this->get('element_name')][$entry_id] = array('attr' => array('id' => $entry_id),
+																		 'records' => array(), 'groups' => array());
+				}
+
+				$groups[$this->get('element_name')][$entry_id]['records'][] = $r;
+			}
+
+			return $groups;
 		}
 
 
