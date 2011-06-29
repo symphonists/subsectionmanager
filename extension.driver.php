@@ -680,7 +680,7 @@
 						$has_quantity = (boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_entries_data_{$field_id}` LIKE 'quantity'");
 						Symphony::Database()->query(
 							"INSERT INTO `{$table}` (`entry_id`, `relation_id`, `sorted`, `quantity`)
-								SELECT `d`.`entry_id`, `d`.`relation_id`, FIND_IN_SET(`d`.`relation_id`, `s`.`order`)". ($has_quantity ? ', `d`.`quantity`' : '1') ."
+								SELECT `d`.`entry_id`, `d`.`relation_id`, FIND_IN_SET(`d`.`relation_id`, `s`.`order`)". ($has_quantity ? ', `d`.`quantity`' : ', 1') ."
 								FROM `tbl_entries_data_{$field_id}` d
 								LEFT JOIN `tbl_fields_stage_sorting` s ON `d`.`entry_id` = `s`.`entry_id` AND `s`.`context` = 'subsectionmanager' AND `s`.`field_id` = {$field_id}
 							"
