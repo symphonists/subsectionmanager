@@ -172,18 +172,16 @@
 		 *
 		 * That is why we call this function from __appendAssets().
 		 */
-		public function __prepareSubsectionCache(&$context) {
-			$classname = (is_array($context) ? basename($context['file']) : $context);
-
+		public function __prepareSubsectionCache($classname) {
 			$datasourceManager = new DatasourceManager(Symphony::Engine());
 			$handle = $datasourceManager->__getHandleFromFilename($classname);
 			$existing =& $datasourceManager->create($handle, NULL, false);
 
-			$context = array('datasource' => $existing);
+			$ctx = array('datasource' => $existing);
 
 			self::$updateCache = true;
 			$this->__clearSubsectionCache($existing);
-			$this->__prepareSubsection($context);
+			$this->__prepareSubsection($ctx);
 			self::$updateCache = false;
 
 			file_put_contents(MANIFEST . '/subsectionmanager-storage', serialize(self::$storage));
