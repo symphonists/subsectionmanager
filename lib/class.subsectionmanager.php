@@ -230,18 +230,18 @@
 				}
 
 				$preview = ($flags & self::GETPREVIEW || $mode == 'preview');
-				foreach($fields as $index => &$field) {
+				foreach($fields as $index => $field) {
 					$field_name = $field->get('element_name');
 					$field_id = $field->get('id');
 
 					$keep = false;
 					if(isset($token_fields[$field_name])) {
-						$field->ssm_tokens = $token_fields[$field_name];
+						$fields[$index]->ssm_tokens = $token_fields[$field_name];
 						$keep = true;
 					}
 
 					if($preview && strpos($field->get('type'), 'upload') !== false) {
-						$field->ssm_preview = $field_id;
+						$fields[$index]->ssm_preview = $field_id;
 						$keep = true;
 					}
 
