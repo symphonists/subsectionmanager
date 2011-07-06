@@ -134,7 +134,6 @@
 			// Prepare sortorder array
 			$sortorder = array();
 
-
 			if(!empty($items)) {
 				if(!is_array($items)) {
 					$items = array('relation_id' => array($items), 'quantity' => array(1));

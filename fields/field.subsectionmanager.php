@@ -659,9 +659,9 @@
 			$result = array();
 			$maxQuantity = ($this->get('allow_quantities') == 0 ? 1 : 4294967295); // Maximum value of MySQL's unsigned INT type.
 
-			// Handle data passed from SELECT (it does not contain 'quantity' key)
+			// Handle data passed from SELECT (which does not contain 'quantity' key)
 			if(!isset($data['quantity'])) {
-				$result['relation_id'] = array_map('intval', $data);
+				$result['relation_id'] = array_filter(array_map('intval', $data));
 				$result['quantity'] = array_fill(0, count($result['relation_id']), 1);
 			}
 
@@ -669,9 +669,13 @@
 			else {
 				unset($data['quantity']);
 				foreach($data as $entry_id => $quantity) {
+					$entry_id = intval($entry_id);
+					$quantity = intval($quantity);
+
 					if(empty($entry_id) || empty($quantity) || $quantity > $maxQuantity) continue;
-					$result['relation_id'][] = intval($entry_id);
-					$result['quantity'][] = intval($quantity);
+
+					$result['relation_id'][] = $entry_id;
+					$result['quantity'][] = $quantity;
 				}
 			}
 
