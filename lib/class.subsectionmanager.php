@@ -144,7 +144,7 @@
 				else if(!is_array($items['relation_id'])) {
 					$items = array('relation_id' => array($items['relation_id']), 'quantity' => array($items['quantity']));
 				}
-				$sortorder = array_flip($items['relation_id']);
+				$sortorder = array_flip(array_filter($items['relation_id']));
 			}
 
 			// Filter entries and add select options
