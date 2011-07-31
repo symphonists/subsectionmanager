@@ -830,6 +830,21 @@
 				return parent::prepareTableValue(array('value' => ($count > 1) ? $count . ' ' . __('items') : $count . ' ' . __('item')), $link);
 			}
 		}
+		
+		/**
+		 * Used by the XML Importer when importing
+		 *
+		 * @param mixed $value
+		 * @param integer $entry_id
+		 * @return array
+		 */
+		public function prepareImportValue($value, $entry_id = null) {
+			if ($this->get('allow_multiple_selection') == 'no') {
+				$value = array(implode('', $value));
+			}
+
+			return $value;
+		}
 
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#getParameterPoolValue
