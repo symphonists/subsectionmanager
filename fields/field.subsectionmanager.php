@@ -710,7 +710,6 @@
 			}
 
 			// Create subsection element
-			$entryManager = new EntryManager(Symphony::Engine());
 			$subsection = new XMLElement($this->get('element_name'));
 			$subsection->setAttribute('field-id', $this->get('id'));
 			$subsection->setAttribute('subsection-id', $this->get('subsection_id'));
@@ -723,7 +722,7 @@
 				
 				// Fetch missing entries
 				if(empty($entry)) {
-					$entry = $entryManager->fetch($entry_id, $this->get('subsection_id'));
+					$entry = extension_subsectionmanager::$entryManager->fetch($entry_id, $this->get('subsection_id'));
 					
 					// Store entry
 					$entry = $entry[0];
@@ -745,7 +744,7 @@
 				if(!empty(extension_subsectionmanager::$storage['fields'][$mode][$this->get('id')])) {
 					foreach(extension_subsectionmanager::$storage['fields'][$mode][$this->get('id')] as $field_id => $modes) {
 						$entry_data = $entry->getData($field_id);
-						$field = $entryManager->fieldManager->fetch($field_id);
+						$field =extension_subsectionmanager::$entryManager->fieldManager->fetch($field_id);
 						
 						// No modes
 						if(empty($modes)) {
@@ -757,7 +756,7 @@
 							foreach($modes as $m) {
 								$field->appendFormattedElement($item, $entry_data, $encode, $m, $entry_id);
 							}
-						}						
+						}
 					}
 				}
 
@@ -765,28 +764,21 @@
 				else {
 					$engine = Symphony::Engine();
 					if($engine instanceof Administration) {
-					
 						// Check for recursion first
 						$id = $this->get('parent_section');
-						if($done[$id] >= $this->get('recursion_levels') + 1) return array();	
+						if($done[$id] >= $this->get('recursion_levels') + 1) return array();
 						$done[$id] += 1;
-					
+
 						// Now output data
 						$callback = Administration::instance()->getPageCallback();
 						if($callback['context']['page'] == 'edit' || $callback['context']['page'] != 'new') {
-							static $fieldManager = NULL;
-							if(empty($fieldManager)) {
-								$fieldManager = new FieldManager(Symphony::Engine());
-								if(empty($fieldManager)) return;
-							}
-
 							$data = $entry->getData();
 							
 							// Add fields:
 							foreach($data as $field_id => $values) {
 								if(empty($field_id)) continue;
 				
-								$field = $fieldManager->fetch($field_id);
+								$field = extension_subsectionmanager::$entryManager->$fieldManager->fetch($field_id);
 								$field->appendFormattedElement($item, $values, false, null, $entry_id);
 							}
 						}
@@ -795,7 +787,7 @@
 					}
 				}
 			}
-			
+
 			// Append subsection
 			$subsection->setAttribute('items', count($data['relation_id']));
 			$wrapper->appendChild($subsection);

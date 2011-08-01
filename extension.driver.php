@@ -10,9 +10,9 @@
 	Class extension_subsectionmanager extends Extension {
 		
 		/**
-		 * Private instance of Entry Manager
+		 * Public instance of EntryManager
 		 */
-		private static $entryManager;
+		public static $entryManager = null;
 	
 		/**
 		 * Storage for subsection entries
