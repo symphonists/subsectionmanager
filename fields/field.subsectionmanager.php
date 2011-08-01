@@ -817,12 +817,7 @@
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#getParameterPoolValue
 		 */
 		public function getParameterPoolValue($data) {
-			if(is_array($data['relation_id'])) {
-				return implode(", ", $data['relation_id']);
-			}
-			else {
-				return $data['relation_id'];
-			}
+			return $data['relation_id'];
 		}
 
 		/**
