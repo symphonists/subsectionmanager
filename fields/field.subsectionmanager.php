@@ -4,7 +4,7 @@
 	 * @package subsectionmanager
 	 */
 	/**
-	 * This field provides inline subsection management. 
+	 * This field provides inline subsection management.
 	 */
 	if(!defined('__IN_SYMPHONY__')) die('<h2>Symphony Error</h2><p>You cannot directly access this file</p>');
 
@@ -14,7 +14,7 @@
 	}
 
 	Class fieldSubsectionmanager extends Field {
-		
+
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#__construct
 		 */
@@ -104,7 +104,7 @@
 		public function fetchAssociatedEntryCount($value){
 			if(isset($value)) {
 				return Symphony::Database()->fetchVar('count', 0, "SELECT count(*) AS `count` FROM `tbl_entries_data_".$this->get('id')."` WHERE `entry_id` = '".intval($value)."'");
-			} 
+			}
 			else {
 				return 0;
 			}
@@ -132,7 +132,7 @@
 			// Related section
 			$label = new XMLElement('label', __('Subsection'));
 			$sectionManager = new SectionManager(Symphony::Engine());
-		  	$sections = $sectionManager->fetch(NULL, 'ASC', 'name');
+			$sections = $sectionManager->fetch(NULL, 'ASC', 'name');
 			$options = array(
 				array('', false, __('None Selected')),
 			);
@@ -158,49 +158,49 @@
 
 			// Filter suggestions
 			if(is_array($sections) && !empty($sections)) {
-				
+
 				// Get values
 				$values = array();
 				foreach($sections as $section) {
-				
+
 					// Don't include the current section
 					if($section->get('id') != $section_id) {
 						$fields = $section->fetchFields();
-						
+
 						// Continue if fields exist
 						if(is_array($fields)) {
 							foreach($fields as $field) {
-								
+
 								// Fetch only taglist or select boxes
 								if($field->get('type') == 'taglist' || $field->get('type') == 'select' ) {
-									
+
 									// Fetch dynamic filter values
 									$dynamic = Symphony::Database()->fetchCol(
 										'value',
 										"SELECT DISTINCT `value` FROM `tbl_entries_data_" . $field->get('id') . "` LIMIT 100"
-									);						
-									
+									);
+
 									// Fetch static filter values
 									$static = explode(', ', $field->get('static_options'));
 
 									// Merge dynamic and static values
 									$filters = array_unique(array_merge($dynamic, $static));
-									
+
 									$relation = 'section' . $section->get('id');
 									foreach($filters as $value) {
 										if(!empty($value)) {
 											$values[$value][] = $relation;
 										}
-									}				
+									}
 
 								}
 							}
-							
+
 						}
-						
+
 					}
 				}
-				
+
 				// Generate list
 				if(!empty($values)) {
 					$filter = new XMLElement('ul', NULL, array('class' => 'tags negation subsectionmanager'));
@@ -209,15 +209,15 @@
 					}
 					$wrapper->appendChild($filter);
 				}
-					
+
 			}
 
 		/*-----------------------------------------------------------------------*/
 
 			// Behaviour
 			$fieldset = Stage::displaySettings(
-				$this->get('id'), 
-				$this->get('sortorder'), 
+				$this->get('id'),
+				$this->get('sortorder'),
 				__('Behaviour')
 			);
 
@@ -228,7 +228,7 @@
 				$this->set('recursion_levels', 1);
 				$this->set('allow_quantities', 0);
 			}
-			
+
 			// Get settings
 			$div = $fieldset->getChildren();
 
@@ -243,7 +243,7 @@
 			// Setting: allow quantities
 			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][allow_quantities]" value="1" type="checkbox"' . ($this->get('allow_quantities') == 0 ? '' : ' checked="checked"') . '/> ' . __('Allow item quantities') . ' <i>' . __('This will enable setting quantity of selected items') . '</i>');
 			$div[0]->appendChild($setting);
-			
+
 			// Append behaviour settings
 			$wrapper->appendChild($fieldset);
 
@@ -253,10 +253,10 @@
 			$fieldset = new XMLElement('fieldset', '<legend>' . __('Display') . '</legend>');
 
 			$div = new XMLElement('div', NULL, array('class' => 'group'));
-			
+
 			// Caption input
 			$div->appendChild($this->__groupContentGenerator('caption', __('Caption'), $sections, $errors));
-			
+
 			// Custom drop text
 			$div->appendChild($this->__groupContentGenerator('droptext', __('Drop text'), $sections, $errors));
 
@@ -269,7 +269,7 @@
 				$input->setAttribute('checked', 'checked');
 			}
 			$label->setValue(__('%s Show thumbnail images', array($input->generate())));
-			$fieldset->appendChild($label);			
+			$fieldset->appendChild($label);
 			$wrapper->appendChild($fieldset);
 
 		/*-----------------------------------------------------------------------*/
@@ -303,15 +303,15 @@
 			$wrapper->appendChild(Widget::Input('fields[' . $this->get('sortorder') . '][included_fields]', $this->get('included_fields'), 'hidden'));
 
 		}
-		
+
 		/**
-		 * 
+		 *
 		 */
 		private function __groupContentGenerator($name, $title, $sections, $errors) {
 			$container = new XMLElement('div');
 			$label = new XMLElement('label', $title);
 			$label->appendChild(Widget::Input('fields[' . $this->get('sortorder') . '][' . $name . ']', htmlspecialchars($this->get($name))));
-			
+
 			// Append Caption
 			if(isset($errors[$name])) {
 				$container->appendChild(Widget::wrapFormElementWithError($label, $errors[$name]));
@@ -319,28 +319,28 @@
 			else {
 				$container->appendChild($label);
 			}
-			
-			// Caption suggestions		
+
+			// Caption suggestions
 			if(is_array($sections) && !empty($sections) && !isset($errors[$name])) {
-				
+
 				// Get values
 				$values = array();
 				foreach($sections as $section) {
-				
+
 					// Don't include the current section
 					if($section->get('id') != $section_id) {
 						$fields = $section->fetchFields();
-						
+
 						// Continue if fields exist
 						if(is_array($fields)) {
 							foreach($fields as $field) {
 								$values[$field->get('element_name')][] = 'section' . $section->get('id');
 							}
 						}
-						
+
 					}
 				}
-				
+
 				// Generate list
 				if(is_array($values)) {
 					$filter = new XMLElement('ul', NULL, array('class' => 'tags inline'));
@@ -349,9 +349,9 @@
 					}
 					$container->appendChild($filter);
 				}
-				
+
 			}
-			
+
 			return $container;
 		}
 
@@ -425,8 +425,8 @@
 			// Item caption
 			$fields['caption'] = $this->get('caption');
 			if($this->get('caption') == '') {
-			
-		  		// Fetch fields in subsection
+
+				// Fetch fields in subsection
 				$subsection_fields = Symphony::Database()->fetch(
 					"SELECT element_name, type
 					FROM tbl_fields
@@ -434,7 +434,7 @@
 					ORDER BY sortorder ASC
 					LIMIT 10"
 				);
-				
+
 				// Generate default caption
 				$text = $file = '';
 				foreach($subsection_fields as $subfield) {
@@ -443,10 +443,10 @@
 						if($text == '') $text = '{$' . $subfield['element_name'] . '}';
 					}
 					else {
-						if($file == '') $file = '{$' . $subfield['element_name'] . '}';				
+						if($file == '') $file = '{$' . $subfield['element_name'] . '}';
 					}
 				}
-				
+
 				// Caption markup
 				if($text != '' && $file != '') {
 					$fields['caption'] = $text . '<br /> <em>' . $file . '</em>';
@@ -454,9 +454,9 @@
 				else {
 					$fields['caption'] = $text . $file;
 				}
-								
+
 			}
-			
+
 			// Drop text
 			$fields['droptext'] = $this->get('droptext');
 
@@ -483,14 +483,14 @@
 
 			// Save new section association
 			$association = $this->createSectionAssociation(NULL, $this->get('subsection_id'), $id, $id, false);
-			
+
 			if($settings && $association) {
 				return true;
 			}
 			else {
 				return false;
 			}
-			
+
 		}
 
 		/**
@@ -571,18 +571,18 @@
 
 			// Get stage settings
 			$settings = ' ' . implode(' ', Stage::getComponents($this->get('id')));
-			
+
 			// Create stage
 			$stage = new XMLElement('div', NULL, array('class' => 'stage' . $settings . ($this->get('show_preview') == 1 ? ' preview' : '') . ($this->get('allow_multiple') == 1 ? ' multiple' : ' single') . ($this->get('lock') == 1 ? ' locked' : '') . ($this->get('allow_quantities') ? ' quantifiable' : ' nonquantifiable')));
 			$content['empty'] = '<li class="empty message"><span>' . __('There are no selected items') . '</span></li>';
 			$selected = new XMLElement('ul', $content['empty'] . $content['html'], array('class' => 'selection'));
 			$stage->appendChild($selected);
-			
+
 			// Append item template
 			$thumb = '<img src="' . URL . '/extensions/subsectionmanager/assets/images/new.gif" width="40" height="40" class="thumb" />';
 			$item = new XMLElement('li', $thumb . '<span>' . __('New item') . '<br /><em>' . __('Please fill out the form below.') . '</em></span><a class="destructor">&#215;</a>', array('class' => 'template create preview'));
 			$selected->appendChild($item);
-			
+
 			// Append drawer template
 			$subsection_handle = Symphony::Database()->fetchVar('handle', 0,
 				"SELECT `handle`
@@ -603,12 +603,12 @@
 			}
 
 		}
-		
+
 		/**
 		 * Get default publish content
 		 */
 		function getDefaultPublishContent(&$wrapper, $data = NULL) {
-			
+
 			// Get items
 			$subsection = new SubsectionManager();
 			$content = $subsection->generate($this->get('id'), $this->get('subsection_id'), $data, $this->get('recursion_levels'), SubsectionManager::GETOPTIONS | SubsectionManager::GETALLITEMS);
@@ -688,10 +688,10 @@
 	-------------------------------------------------------------------------*/
 
 		/**
-		 * Subsection entries are pre-processed in the extension driver and stored in 
-		 * extension_subsectionmanager::$storage with other helpful data. If you are building 
-		 * custom data sources, please use extension_subsectionmanager::storeSubsectionFields() 
-		 * to store subsection fields and extension_subsectionmanager::preloadSubsectionEntries() 
+		 * Subsection entries are pre-processed in the extension driver and stored in
+		 * extension_subsectionmanager::$storage with other helpful data. If you are building
+		 * custom data sources, please use extension_subsectionmanager::storeSubsectionFields()
+		 * to store subsection fields and extension_subsectionmanager::preloadSubsectionEntries()
 		 * to preload subsection entries.
 		 *
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#appendFormattedElement
@@ -719,11 +719,11 @@
 
 				// Populate entry element
 				$entry = extension_subsectionmanager::$storage['entries'][$entry_id];
-				
+
 				// Fetch missing entries
 				if(empty($entry)) {
 					$entry = extension_subsectionmanager::$entryManager->fetch($entry_id, $this->get('subsection_id'));
-					
+
 					// Store entry
 					$entry = $entry[0];
 					extension_subsectionmanager::$storage['entries'][$entry_id] = $entry;
@@ -731,26 +731,26 @@
 
 				if(empty($entry)) {
 					// TODO: Looks like related entry was deleted and data was not removed.
-					//       Should SubsectionManager gather deleted IDs and remove them from DB at exit?
-					//       Or register delegate to always delete them when entry is deleted?
+					//		 Should SubsectionManager gather deleted IDs and remove them from DB at exit?
+					//		 Or register delegate to always delete them when entry is deleted?
 					continue;
 				}
 
 				// Create item
 				$item = new XMLElement('item', NULL, array('id' => $entry_id, 'quantity' => $data['quantity'][$index]));
 				$subsection->appendChild($item);
-				
+
 				// Process entry for Data Source
 				if(!empty(extension_subsectionmanager::$storage['fields'][$mode][$this->get('id')])) {
 					foreach(extension_subsectionmanager::$storage['fields'][$mode][$this->get('id')] as $field_id => $modes) {
 						$entry_data = $entry->getData($field_id);
 						$field =extension_subsectionmanager::$entryManager->fieldManager->fetch($field_id);
-						
+
 						// No modes
 						if(empty($modes)) {
 							$field->appendFormattedElement($item, $entry_data, $encode, $mode, $entry_id);
 						}
-						
+
 						// With modes
 						else {
 							foreach($modes as $m) {
@@ -773,11 +773,11 @@
 						$callback = Administration::instance()->getPageCallback();
 						if($callback['context']['page'] == 'edit' || $callback['context']['page'] != 'new') {
 							$data = $entry->getData();
-							
+
 							// Add fields:
 							foreach($data as $field_id => $values) {
 								if(empty($field_id)) continue;
-				
+
 								$field = extension_subsectionmanager::$entryManager->$fieldManager->fetch($field_id);
 								$field->appendFormattedElement($item, $values, false, null, $entry_id);
 							}
@@ -812,17 +812,17 @@
 				else {
 					$item = $content['preview'];
 				}
-				
+
 				return '<div class="subsectionmanager">' . $item . '</div>';
 			}
-						
+
 			// Multiple select
 			else {
 				$count = count($data['relation_id']);
 				return parent::prepareTableValue(array('value' => ($count > 1) ? $count . ' ' . __('items') : $count . ' ' . __('item')), $link);
 			}
 		}
-		
+
 		/**
 		 * Used by the XML Importer when importing
 		 *
@@ -852,26 +852,25 @@
 			static $done = array();
 
 			$id = $this->get('parent_section');
-			if($done[$id] >= $this->get('recursion_levels') + 1) return array();	
+			if($done[$id] >= $this->get('recursion_levels') + 1) return array();
 			$done[$id] += 1;
 
 			$includable = array();
 
+			// Fetch subsection fields
+			$sectionManager = new SectionManager(Symphony::Engine());
+			$section = $sectionManager->fetch($this->get('subsection_id'));
+			$fields = $section->fetchFields();
 
-				// Fetch subsection fields
-				$sectionManager = new SectionManager(Symphony::Engine());
-				$section = $sectionManager->fetch($this->get('subsection_id'));
-				$fields = $section->fetchFields();
-				
-				foreach($fields as $field) {
-					$field_id = $field->get('id');
+			foreach($fields as $field) {
+				$field_id = $field->get('id');
 
-						$elements = $field->fetchIncludableElements(true);
-					
-					foreach($elements as $element) {
-						$includable[] = $this->get('element_name') . ': ' . $element;
-					}
+					$elements = $field->fetchIncludableElements(true);
+
+				foreach($elements as $element) {
+					$includable[] = $this->get('element_name') . ': ' . $element;
 				}
+			}
 
 			$done[$id] -= 1;
 			return $includable;
@@ -901,7 +900,7 @@
 
 				$text = new XMLElement('p', __('Use filter commands listed above to filter by quantity, e.g., "more than 2 + less than 5" to get filtered entries that have associated entries quantity set between 2 and 5, or "more than 5, less than 2" to get filtered entries that have associated entries quantity above 5 or below 2.'), array('class' => 'help') );
 				$wrapper->appendChild($text);
-			}			
+			}
 
 			$text = new XMLElement('p', __('Use comma separated list of entry ids that has to be associated with filtered entries, e.g., "23,45,691".'), array('class' => 'help') );
 			$wrapper->appendChild($text);
@@ -917,8 +916,8 @@
 		 */
 		public function buildDSRetrievalSQL($data, &$joins, &$where, $andOperation=false) {
 
-		    // Current field id
-		    $field_id = $this->get('id');
+			// Current field id
+			$field_id = $this->get('id');
 
 			// Filter by quantity
 			if(preg_match('/^(?:equal to or )?(?:less than|more than|equal to) -?\d+(?:\.\d+)?$/i', $data[0])) {
@@ -968,23 +967,23 @@
 				}
 			}
 
-		    // Filters connected with AND
-		    else if($andOperation) {
-		        foreach($data as $value) {
+			// Filters connected with AND
+			else if($andOperation) {
+				foreach($data as $value) {
 					$this->_key++;
-		            $joins .= " LEFT JOIN `tbl_entries_data_{$field_id}` AS `t{$field_id}_{$this->_key}` ON (`e`.`id` = `t{$field_id}_{$this->_key}`.entry_id) ";
-		            $where .= " AND `t{$field_id}_{$this->_key}`.relation_id = '". intval($value) ."' ";
-		        }
-		    }
+					$joins .= " LEFT JOIN `tbl_entries_data_{$field_id}` AS `t{$field_id}_{$this->_key}` ON (`e`.`id` = `t{$field_id}_{$this->_key}`.entry_id) ";
+					$where .= " AND `t{$field_id}_{$this->_key}`.relation_id = '". intval($value) ."' ";
+				}
+			}
 
-		    // Filters connected with OR
-		    else {
+			// Filters connected with OR
+			else {
 				$this->_key++;
-		        $joins .= " LEFT JOIN `tbl_entries_data_$field_id` AS `t{$field_id}_{$this->_key}` ON (`e`.`id` = `t{$field_id}_{$this->_key}`.entry_id) ";
-		        $where .= " AND `t{$field_id}_{$this->_key}`.relation_id IN ('" . @implode("', '", array_map('intval', $data)) . "') ";
-		    }
+				$joins .= " LEFT JOIN `tbl_entries_data_$field_id` AS `t{$field_id}_{$this->_key}` ON (`e`.`id` = `t{$field_id}_{$this->_key}`.entry_id) ";
+				$where .= " AND `t{$field_id}_{$this->_key}`.relation_id IN ('" . @implode("', '", array_map('intval', $data)) . "') ";
+			}
 
-		    return true;
+			return true;
 		}
 
 
@@ -999,7 +998,7 @@
 			else {
 				$sort = sprintf(
 					'ORDER BY (
-						SELECT %s 
+						SELECT %s
 						FROM `tbl_entries_data_%d` AS `ed`
 						WHERE entry_id = e.id
 					) %s',

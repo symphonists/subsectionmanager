@@ -4,7 +4,7 @@
 	 * @package subsectionmanager
 	 */
 	/**
-	 * This field provides a tabbed subsection management. 
+	 * This field provides a tabbed subsection management.
 	 */
 	Class fieldSubsectiontabs extends Field {
 
@@ -16,14 +16,14 @@
 			$this->_name = __('Subsection Tabs');
 			$this->_required = true;
 		}
-		
+
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#mustBeUnique
 		 */
 		public function mustBeUnique(){
 			return true;
 		}
-		
+
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#canFilter
 		 */
@@ -35,37 +35,37 @@
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#displaySettingsPanel
 		 */
 		public function displaySettingsPanel(&$wrapper, $errors=NULL) {
-		
+
 			// Basics
 			parent::displaySettingsPanel($wrapper, $errors);
-								
+
 			// Subsection
 			$sectionManager = new SectionManager(Symphony::Engine());
-		  	$sections = $sectionManager->fetch(NULL, 'ASC', 'name');
-		  	$options = array();
+			$sections = $sectionManager->fetch(NULL, 'ASC', 'name');
+			$options = array();
 
-			// Options			
+			// Options
 			if(is_array($sections) && !empty($sections)) {
 				foreach($sections as $section) {
 					$options[] = array(
-						$section->get('id'), 
-						($section->get('id') == $this->get('subsection_id')), 
+						$section->get('id'),
+						($section->get('id') == $this->get('subsection_id')),
 						$section->get('name')
 					);
 				}
 			}
-			
+
 			$label = new XMLElement('label', __('Subsection'));
 			$selection = Widget::Select('fields[' . $this->get('sortorder') . '][subsection_id]', $options);
 			$label->appendChild($selection);
 			$wrapper->appendChild($label);
-			
+
 			// Static tab names
 			$label = new XMLElement('label', __('Static tab names') . '<i>' . __('List of comma-separated predefined tabs') . '</i>');
 			$tabs = Widget::Input('fields['.$this->get('sortorder').'][static_tabs]', $this->get('static_tabs'));
 			$label->appendChild($tabs);
 			$wrapper->appendChild($label);
-			
+
 			// Allow dynamic tabs
 			$checkbox = Widget::Input('fields['.$this->get('sortorder').'][allow_dynamic_tabs]', 1, 'checkbox');
 			if($this->get('allow_dynamic_tabs') == 1) {
@@ -109,23 +109,23 @@
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#displayPublishPanel
 		 */
 		function displayPublishPanel(&$wrapper, $data=NULL, $flagWithError=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL, $entry_id=NULL) {
-		
+
 			// Houston, we have problem: we've been called out of context!
 			$callback = Administration::instance()->getPageCallback();
 			if($callback['context']['page'] != 'edit' && $callback['context']['page'] != 'new') {
 				return;
 			}
-		
+
 			// Append assets
 			Administration::instance()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/assets/subsectiontabs.publish.js', 101, false);
 			Administration::instance()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/assets/subsectiontabs.publish.css', 'screen', 102, false);
 			Administration::instance()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/lib/resize/jquery.ba-resize.js', 105, false);
-			
+
 			// Store settings
 			if($this->get('allow_dynamic_tabs') == 1) {
 				$settings = 'allow_dynamic_tabs';
 			}
-			
+
 			// Label
 			$label = Widget::Label($this->get('label'), NULL, $settings, NULL, array('data-handle' => $this->get('element_name')));
 			$wrapper->appendChild($label);
@@ -135,14 +135,14 @@
 			$list = new XMLElement('ul');
 			$container->appendChild($list);
 			$label->appendChild($container);
-			
+
 			// Get entry ID
 			$page = Symphony::Engine()->getPageCallback();
 			$entry_id = $page['context']['entry_id'];
-			
+
 			// Get subsection name
-			$subsection = Symphony::Database()->fetchVar('handle', 0, 
-				"SELECT `handle` 
+			$subsection = Symphony::Database()->fetchVar('handle', 0,
+				"SELECT `handle`
 				FROM `tbl_sections`
 				WHERE `id`= " . $this->get('subsection_id') . "
 				LIMIT 1"
@@ -150,89 +150,89 @@
 
 			// Fetch existing tabs
 			$existing_tabs = $this->__getExistingTabs($entry_id, $data);
-			
+
 			// Static tabs
 			if($this->get('static_tabs') != '') {
 				$static_tabs = preg_split('/,( )?/', $this->get('static_tabs'));
-				
-				// Create tab				
+
+				// Create tab
 				foreach($static_tabs as $tab) {
 
 					// Existing tab
 					if(array_key_exists($tab, $existing_tabs) && $existing_tabs[$tab] !== NULL) {
 						$list->appendChild($this->__createTab(
-							$tab, 
+							$tab,
 							URL . '/symphony/publish/' . $subsection . '/edit/' . $existing_tabs[$tab],
 							$existing_tabs[$tab],
 							true
 						));
 					}
-					
+
 					// New tab
 					else {
 						$list->appendChild($this->__createTab(
-							$tab, 
+							$tab,
 							URL . '/symphony/publish/' . $subsection . '/new/',
 							NULL,
 							true
 						));
 					}
-						
+
 					// Unset
 					unset($existing_tabs[$tab]);
 				}
 			}
-			
+
 			// Dynamic tabs
 			if($this->get('allow_dynamic_tabs') == 1) {
 				foreach($existing_tabs as $tab => $id) {
-					
+
 					// Get mode
 					if(empty($id)) {
 						$mode = 'new';
 					}
 					else {
 						$mode = 'edit';
-					}					
-					
+					}
+
 					// Append tab
 					$list->appendChild($this->__createTab(
-						$tab, 
+						$tab,
 						URL . '/symphony/publish/' . $subsection . '/' . $mode . '/' . $id,
 						$id
 					));
 				}
 			}
-			
+
 			// No tabs yet
 			if($this->get('static_tabs') == '' && empty($existing_tabs)) {
 				$list->appendChild($this->__createTab(
-					__('Untitled'), 
+					__('Untitled'),
 					URL . '/symphony/publish/' . $subsection . '/new/'
-				));				
+				));
 			}
-			
+
 			// Field ID
 			$input = Widget::Input('field[' . $this->get('element_name') . '][new]', URL . '/symphony/publish/' . $subsection . '/new/', 'hidden');
 			$wrapper->appendChild($input);
 
 			return $wrapper;
 		}
-		
+
 		/**
 		 * Fetch names and relation ids from all existing tabs in the selected entry
 		 *
 		 * @param number $entry_id
-		 *  The identifier of this field entry instance
+		 *	The identifier of this field entry instance
 		 * @return array
-		 *  Returns an array with tab names and their relation ids
+		 *	Returns an array with tab names and their relation ids
 		 */
 		private function __getExistingTabs($entry_id, $data) {
 			$tabs = array();
 
 			// Use given data
 			if(is_array($data) && !empty($data)) {
-				
+
 				// Create relations
 				for($i = 0; $i < count($data['relation_id']); $i++) {
 					if(is_array($data['relation_id'])) {
@@ -243,7 +243,7 @@
 					}
 				}
 			}
-			
+
 			// Load data
 			elseif(isset($entry_id)) {
 				$existing = Symphony::Database()->fetch(
@@ -253,14 +253,14 @@
 					ORDER BY `id`
 					LIMIT 100"
 				);
-				
+
 				// Create relations
 				foreach($existing as $tab) {
 					$tabs[$tab['name']] = $tab['relation_id'];
 				}
 			}
-			
-			return $tabs;	
+
+			return $tabs;
 		}
 
 		/**
@@ -273,102 +273,102 @@
 		 * @param number $id
 		 *	Relation id of the subsection entry
 		 * @return XMLElement
-		 *  Returns a list item with all attached data
+		 *	Returns a list item with all attached data
 		 */
 		private function __createTab($name, $link, $id=NULL, $static=false) {
 			$item = new XMLElement('li');
-			
+
 			// Static tabs
 			if($static) {
 				$item->setAttribute('class', 'static');
 			}
-			
+
 			// Relation ID
 			$storage = Widget::Input('fields[' . $this->get('element_name') . '][relation_id][]', $id, 'hidden');
 			$item->appendChild($storage);
-			
+
 			// Relation ID
 			$storage = Widget::Input('fields[' . $this->get('element_name') . '][name][]', trim($name), 'hidden');
 			$item->appendChild($storage);
-			
+
 			// Link to subentry
 			$link = new XMLElement('a', trim($name), array('href' => $link));
 			$item->appendChild($link);
-			
+
 			// Return tab
 			return $item;
 		}
-		
+
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#processRawFieldData
 		 */
 		public function processRawFieldData($data, &$status, $simulate=false, $entry_id=NULL) {
 			$status = self::__OK__;
 			if(empty($data)) return NULL;
-			
+
 			// Create handles
 			foreach($data['name'] as $name) {
 				$data['handle'][] = Lang::createHandle($name);
 			}
-			
+
 			// Delete removed tab entries
 			if(is_array($data['delete'])) {
 				$entryManager = new EntryManager(Symphony::Engine());
 				$entryManager->delete($data['delete']);
 				unset($data['delete']);
 			}
-			
+
 			// Return processed data
 			return $data;
 		}
-		
+
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#fetchIncludableElements
 		 */
 		public function fetchIncludableElements() {
 			$includable = array();
-		
+
 			// Fetch subsection fields
 			$sectionManager = new SectionManager(Symphony::Engine());
 			$section = $sectionManager->fetch($this->get('subsection_id'));
 			$fields = $section->fetchFields();
-			
+
 			foreach($fields as $field) {
 				$elements = $field->fetchIncludableElements();
-				
+
 				foreach($elements as $element) {
 					$includable[] = $this->get('element_name') . ': ' . $element;
 				}
 			}
-			
+
 			return $includable;
 		}
-		
+
 		/**
-		 * Subsection entries are pre-processed in the extension driver and stored in 
-		 * extension_subsectionmanager::$storage with other helpful data. If you are building 
-		 * custom data sources, please use extension_subsectionmanager::storeSubsectionFields() 
-		 * to store subsection fields and extension_subsectionmanager::preloadSubsectionEntries() 
+		 * Subsection entries are pre-processed in the extension driver and stored in
+		 * extension_subsectionmanager::$storage with other helpful data. If you are building
+		 * custom data sources, please use extension_subsectionmanager::storeSubsectionFields()
+		 * to store subsection fields and extension_subsectionmanager::preloadSubsectionEntries()
 		 * to preload subsection entries.
 		 *
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#appendFormattedElement
-		 */		
+		 */
 		public function appendFormattedElement(XMLElement &$wrapper, $data, $encode = false, $context) {
-		
+
 			// Prepare data
 			if(!is_array($data['name'])) $data['name'] = array($data['name']);
 			if(!is_array($data['handle'])) $data['handle'] = array($data['handle']);
 			if(!is_array($data['relation_id'])) $data['relation_id'] = array($data['relation_id']);
-		
+
 			// Create tabs
 			$entryManager = new EntryManager(Symphony::Engine());
 			$subsection = new XMLElement($this->get('element_name'));
-			
+
 			for($i = 0; $i < count($data['name']); $i++) {
 				$name = $data['name'][$i];
 				$handle= $data['handle'][$i];
 				$entry_id = $data['relation_id'][$i];
-			
+
 				// Create item
 				$item = new XMLElement('item', NULL, array('name' => $name, 'handle' => $handle));
 				$subsection->appendChild($item);
@@ -380,7 +380,7 @@
 				// Fetch missing entries
 				if(empty($entry)) {
 					$entry = $entryManager->fetch($entry_id, $this->get('subsection_id'));
-					
+
 					// Store entry
 					$entry = $entry[0];
 					extension_subsectionmanager::$storage['entries'][$entry_id] = $entry;
@@ -391,18 +391,18 @@
 					foreach(extension_subsectionmanager::$storage['fields'][$context][$this->get('id')] as $field_id => $modes) {
 						$entry_data = $entry->getData($field_id);
 						$field = $entryManager->fieldManager->fetch($field_id);
-						
+
 						// No modes
 						if(empty($modes) || empty($modes[0])) {
 							$field->appendFormattedElement($item, $entry_data, $encode, $context, $entry_id);
 						}
-						
+
 						// With modes
 						else {
 							foreach($modes as $mode) {
 								$field->appendFormattedElement($item, $entry_data, $encode, $mode, $entry_id);
 							}
-						}						
+						}
 					}
 				}
 			}
@@ -425,18 +425,18 @@
 				if($i > 0) $tabs .= ', ';
 				$tabs .= $data['name'][$i];
 			}
-			
+
 			if(!empty($tabs)) {
-				$tabs =  ' <span class="inactive">(' . $tabs . ')</span>';
+				$tabs =	 ' <span class="inactive">(' . $tabs . ')</span>';
 			}
-			
+
 			// Get first title
 			if(isset($data['relation_id'])) {
-				$field_id = Symphony::Database()->fetchVar('id', 0, 
-					"SELECT `id` 
-					FROM `tbl_fields` 
-					WHERE `parent_section` = '" . $this->get('subsection_id') . "' 
-					ORDER BY `sortorder` 
+				$field_id = Symphony::Database()->fetchVar('id', 0,
+					"SELECT `id`
+					FROM `tbl_fields`
+					WHERE `parent_section` = '" . $this->get('subsection_id') . "'
+					ORDER BY `sortorder`
 					LIMIT 1"
 				);
 				$entry = $entryManager->fetch($data['relation_id'][0], $this->get('subsection_id'));
@@ -444,10 +444,10 @@
 					$title = $entry[0]->getData($field_id);
 				}
 			}
-			
+
 			// Handle empty titles
 			if(empty($title['value'])) {
-				$title['value'] = __('Untitled');		
+				$title['value'] = __('Untitled');
 			}
 
 			// Link or plain text?
@@ -456,10 +456,10 @@
 				return $link->generate() . $tabs;
 			}
 			else {
-				return $title['value'] . $tabs;		
+				return $title['value'] . $tabs;
 			}
 		}
-		
+
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#displayDatasourceFilterPanel
 		 */
@@ -468,17 +468,17 @@
 			$label = Widget::Label(__('Name'));
 			$label->appendChild(Widget::Input('fields[filter]' . ($fieldnamePrefix ? '['.$fieldnamePrefix.']' : '') . '[' . $this->get('id') . ']' . ($fieldnamePostfix ? '['.$fieldnamePostfix.']' : ''), ($data ? General::sanitize($data) : null)));
 			$wrapper->appendChild($label);
-			
+
 			// Existing tab names
 			$suggestions = Symphony::Database()->fetchCol('name',
 				"SELECT DISTINCT `name`
 				FROM `tbl_entries_data_" . $this->get('id') . "`
 				LIMIT 100"
 			);
-			
+
 			// Create suggestions
 			if(!empty($suggestions)) {
-				$tabs = new XMLElement('ul', NULL, array('class' => 'tags'));			
+				$tabs = new XMLElement('ul', NULL, array('class' => 'tags'));
 				foreach($suggestions as $suggestion) {
 					$tabs->appendChild(
 						new XMLElement('li', $suggestion)
@@ -486,7 +486,7 @@
 				}
 				$wrapper->appendChild($tabs);
 			}
-			
+
 			// Append help for title or handle filtering
 			$help = new XMLElement('p', __('Use <code>title:</code> to filter by title or handle of an attached subsection entry.'), array('class' => 'help'));
 			$wrapper->appendChild($help);
@@ -513,28 +513,28 @@
 				if(preg_match('/^regexp:/i', $data[0])) {
 					$pattern = preg_replace('/regexp:/i', null, $this->cleanValue($data[0]));
 					$regex = 'REGEXP';
-				} 
+				}
 				else {
 					$pattern = preg_replace('/not-?regexp:/i', null, $this->cleanValue($data[0]));
 					$regex = 'NOT REGEXP';
 				}
-			
+
 				// Get first field
 				$subfield_id = Symphony::Database()->fetchVar('id', 0,
 					"SELECT `id`
-					FROM `tbl_fields` 
-					WHERE `parent_section` = '" . $this->get('subsection_id') . "' 
+					FROM `tbl_fields`
+					WHERE `parent_section` = '" . $this->get('subsection_id') . "'
 					AND `sortorder` = '0'
 					LIMIT 1"
 				);
-				
+
 				// Get entry ids
 				$entry_id = Symphony::Database()->fetchCol('entry_id',
-					"SELECT `entry_id` 
-					FROM `tbl_entries_data_" . $subfield_id . "` 
-					WHERE `handle` {$regex} '{$pattern}'" 
+					"SELECT `entry_id`
+					FROM `tbl_entries_data_" . $subfield_id . "`
+					WHERE `handle` {$regex} '{$pattern}'"
 				);
-				
+
 				// Query
 				$joins .= " LEFT JOIN `tbl_entries_data_$field_id` AS `t$field_id$key` ON (`e`.`id` = `t$field_id$key`.entry_id) ";
 				$where .= " AND `t$field_id`.relation_id IN ('" . @implode("', '", $entry_id) . "') OR `t$field_id`.name {$regex} '{$pattern}' ";
@@ -543,31 +543,31 @@
 			// Filter by subsection entry title or handle
 			elseif(preg_match('/^title:\s*/', $data[0], $matches)) {
 				$data = Lang::createHandle(trim(array_pop(explode(':', $data[0], 2))));
-							
+
 				// Get first field
 				$subfield_id = Symphony::Database()->fetchVar('id', 0,
 					"SELECT `id`
-					FROM `tbl_fields` 
-					WHERE `parent_section` = '" . $this->get('subsection_id') . "' 
+					FROM `tbl_fields`
+					WHERE `parent_section` = '" . $this->get('subsection_id') . "'
 					AND `sortorder` = '0'
 					LIMIT 1"
 				);
-				
+
 				// Get entry ids
 				$entry_id = Symphony::Database()->fetchCol('entry_id',
-					"SELECT `entry_id` 
-					FROM `tbl_entries_data_" . $subfield_id . "` 
-					WHERE `handle` = '" . $data . "'" 
+					"SELECT `entry_id`
+					FROM `tbl_entries_data_" . $subfield_id . "`
+					WHERE `handle` = '" . $data . "'"
 				);
-				
+
 				// Query
 				$joins .= " LEFT JOIN `tbl_entries_data_$field_id` AS `t$field_id$key` ON (`e`.`id` = `t$field_id$key`.entry_id) ";
 				$where .= " AND `t$field_id`.relation_id IN ('" . @implode("', '", $entry_id) . "') ";
 			}
-			
+
 			// Filter by tab name or handle
 			else {
-			
+
 				// Get handles
 				for($i = 0; $i < count($data); $i++) {
 					$data[$i] = Lang::createHandle($data[$i]);
@@ -580,7 +580,7 @@
 						$where .= " AND `t$field_id$key`.handle = '". $this->cleanValue($value) ."' ";
 					}
 				}
-	
+
 				// Or
 				else {
 					$joins .= " LEFT JOIN `tbl_entries_data_$field_id` AS `t$field_id` ON (`e`.`id` = `t$field_id`.entry_id) ";
@@ -589,8 +589,8 @@
 			}
 
 			return true;
-		}			
-		
+		}
+
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#createTable
 		 */
