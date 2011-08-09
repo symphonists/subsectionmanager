@@ -970,7 +970,7 @@
 			// Filters connected with AND
 			else if($andOperation) {
 				$op = '=';
-				if (preg_match('/^not\s/i', $data[0], $m)) {
+				if (preg_match('/^not:\s*/i', $data[0], $m)) {
 					$data[0] = str_replace($m[0], '', $data[0]);
 					$op = '!=';
 				}
@@ -985,7 +985,7 @@
 			// Filters connected with OR
 			else {
 				$op = 'IN';
-				if (preg_match('/^not\s/i', $data[0], $m)) {
+				if (preg_match('/^not:\s*/i', $data[0], $m)) {
 					$data[0] = str_replace($m[0], '', $data[0]);
 					$op = 'NOT IN';
 				}
