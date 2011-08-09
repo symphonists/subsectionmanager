@@ -902,7 +902,7 @@
 				$wrapper->appendChild($text);
 			}
 
-			$text = new XMLElement('p', __('Use comma separated list of entry ids that has to be associated with filtered entries, e.g., "23,45,691".'), array('class' => 'help') );
+			$text = new XMLElement('p', __('Use comma separated list of entry ids that has to be associated with filtered entries, e.g., "23,45,691" or "not 23,45,691".'), array('class' => 'help') );
 			$wrapper->appendChild($text);
 
 			if ($quantities) {
@@ -969,18 +969,30 @@
 
 			// Filters connected with AND
 			else if($andOperation) {
+				$op = '=';
+				if (preg_match('/^not\s/i', $data[0], $m)) {
+					$data[0] = str_replace($m[0], '', $data[0]);
+					$op = '!=';
+				}
+
 				foreach($data as $value) {
 					$this->_key++;
 					$joins .= " LEFT JOIN `tbl_entries_data_{$field_id}` AS `t{$field_id}_{$this->_key}` ON (`e`.`id` = `t{$field_id}_{$this->_key}`.entry_id) ";
-					$where .= " AND `t{$field_id}_{$this->_key}`.relation_id = '". intval($value) ."' ";
+					$where .= " AND `t{$field_id}_{$this->_key}`.relation_id {$op} '". intval($value) ."' ";
 				}
 			}
 
 			// Filters connected with OR
 			else {
+				$op = 'IN';
+				if (preg_match('/^not\s/i', $data[0], $m)) {
+					$data[0] = str_replace($m[0], '', $data[0]);
+					$op = 'NOT IN';
+				}
+
 				$this->_key++;
 				$joins .= " LEFT JOIN `tbl_entries_data_$field_id` AS `t{$field_id}_{$this->_key}` ON (`e`.`id` = `t{$field_id}_{$this->_key}`.entry_id) ";
-				$where .= " AND `t{$field_id}_{$this->_key}`.relation_id IN ('" . @implode("', '", array_map('intval', $data)) . "') ";
+				$where .= " AND `t{$field_id}_{$this->_key}`.relation_id {$op} ('" . @implode("', '", array_map('intval', $data)) . "') ";
 			}
 
 			return true;
