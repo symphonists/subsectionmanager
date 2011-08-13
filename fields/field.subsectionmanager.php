@@ -77,7 +77,7 @@
 				  PRIMARY KEY (`id`),
 				  KEY `entry_id` (`entry_id`),
 				  KEY `relation_id` (`relation_id`)
-				) TYPE=MyISAM;"
+				) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;"
 			);
 		}
 
