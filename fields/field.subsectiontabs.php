@@ -162,7 +162,7 @@
 					if(array_key_exists($tab, $existing_tabs) && $existing_tabs[$tab] !== NULL) {
 						$list->appendChild($this->__createTab(
 							$tab,
-							URL . '/symphony/publish/' . $subsection . '/edit/' . $existing_tabs[$tab],
+							SYMPHONY_URL . '/publish/' . $subsection . '/edit/' . $existing_tabs[$tab],
 							$existing_tabs[$tab],
 							true
 						));
@@ -172,7 +172,7 @@
 					else {
 						$list->appendChild($this->__createTab(
 							$tab,
-							URL . '/symphony/publish/' . $subsection . '/new/',
+							SYMPHONY_URL . '/publish/' . $subsection . '/new/',
 							NULL,
 							true
 						));
@@ -198,7 +198,7 @@
 					// Append tab
 					$list->appendChild($this->__createTab(
 						$tab,
-						URL . '/symphony/publish/' . $subsection . '/' . $mode . '/' . $id,
+						SYMPHONY_URL . '/publish/' . $subsection . '/' . $mode . '/' . $id,
 						$id
 					));
 				}
@@ -208,12 +208,12 @@
 			if($this->get('static_tabs') == '' && empty($existing_tabs)) {
 				$list->appendChild($this->__createTab(
 					__('Untitled'),
-					URL . '/symphony/publish/' . $subsection . '/new/'
+					SYMPHONY_URL . '/publish/' . $subsection . '/new/'
 				));
 			}
 
 			// Field ID
-			$input = Widget::Input('field[' . $this->get('element_name') . '][new]', URL . '/symphony/publish/' . $subsection . '/new/', 'hidden');
+			$input = Widget::Input('field[' . $this->get('element_name') . '][new]', SYMPHONY_URL . '/publish/' . $subsection . '/new/', 'hidden');
 			$wrapper->appendChild($input);
 
 			return $wrapper;
