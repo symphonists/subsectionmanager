@@ -50,6 +50,11 @@
 			if(!isset(self::$storage['cache']) && file_exists(MANIFEST . '/subsectionmanager-storage')) {
 				self::$storage = unserialize(file_get_contents(MANIFEST . '/subsectionmanager-storage'));
 			}
+
+			// Initialise Entry Manager
+			if(empty(self::$entryManager)) {
+				self::$entryManager = new EntryManager(Symphony::Engine());
+			}
 		}
 
 		/**
@@ -246,7 +251,7 @@
 			$parent = get_parent_class($context['datasource']);
 
 			// Initialise Entry Manager
-			if(empty($this->entryManager)) {
+			if(empty(self::$entryManager)) {
 				self::$entryManager = new EntryManager(Symphony::Engine());
 			}
 

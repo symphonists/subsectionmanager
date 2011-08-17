@@ -744,7 +744,7 @@
 				if(!empty(extension_subsectionmanager::$storage['fields'][$mode][$this->get('id')])) {
 					foreach(extension_subsectionmanager::$storage['fields'][$mode][$this->get('id')] as $field_id => $modes) {
 						$entry_data = $entry->getData($field_id);
-						$field =extension_subsectionmanager::$entryManager->fieldManager->fetch($field_id);
+						$field = extension_subsectionmanager::$entryManager->fieldManager->fetch($field_id);
 
 						// No modes
 						if(empty($modes)) {
@@ -778,7 +778,7 @@
 							foreach($data as $field_id => $values) {
 								if(empty($field_id)) continue;
 
-								$field = extension_subsectionmanager::$entryManager->$fieldManager->fetch($field_id);
+								$field = extension_subsectionmanager::$entryManager->fieldManager->fetch($field_id);
 								$field->appendFormattedElement($item, $values, false, null, $entry_id);
 							}
 						}
