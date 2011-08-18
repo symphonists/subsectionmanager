@@ -53,6 +53,7 @@
 
 			// Initialise Entry Manager
 			if(empty(self::$entryManager)) {
+				require_once(TOOLKIT . '/class.entrymanager.php');
 				self::$entryManager = new EntryManager(Symphony::Engine());
 			}
 		}
