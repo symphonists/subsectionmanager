@@ -314,11 +314,14 @@
 				foreach($fields as $index => $included) {
 					list($subsection, $field, $remainder) = explode(': ', $included, 3);
 
+					// TODO: depending on hardcoded mode names is highly error-prone. We should check each field type and
+					//       work only on fields that we know about, i.e., SubsectionManager and SubsectionTabs.
+
 					// Fetch fields
-					if($field != 'formatted' && $field != 'unformatted' && !empty($field)) {
+					if($field != 'formatted' && $field != 'unformatted' && $field != 'increment' && !empty($field)) {
 
 						// Get field id and mode
-						if($remainder == 'formatted' || $remainder == 'unformatted' || empty($remainder)) {
+						if($remainder == 'formatted' || $remainder == 'unformatted' || $reminder == 'increment' || empty($remainder)) {
 							$this->__fetchFields($section, $context, $subsection, $field, $remainder);
 						}
 						else {
