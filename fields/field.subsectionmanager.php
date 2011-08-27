@@ -721,6 +721,9 @@
 			}
 
 			// Fetch field data
+			if (!class_exists('EntryManager')) {
+				require_once(TOOLKIT . '/class.entrymanager.php');
+			}
 			$entryManager = new EntryManager(Symphony::Engine());
 			$entryManager->setFetchSortingField($this->get('id'));
 
