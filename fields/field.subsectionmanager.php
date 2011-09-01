@@ -771,7 +771,7 @@
 
 						// Now output data
 						$callback = Administration::instance()->getPageCallback();
-						if($callback['context']['page'] == 'edit' || $callback['context']['page'] != 'new') {
+						if(!empty($callback['context']['page'])) {
 							$data = $entry->getData();
 
 							// Add fields:
