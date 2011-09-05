@@ -783,6 +783,8 @@
 								if(empty($field_id)) continue;
 
 								$field = extension_subsectionmanager::$entryManager->fieldManager->fetch($field_id);
+								if (empty($field)) continue;
+
 								$field->appendFormattedElement($item, $values, false, null, $entry_id);
 							}
 						}
