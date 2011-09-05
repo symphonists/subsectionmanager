@@ -743,8 +743,12 @@
 				// Process entry for Data Source
 				if(!empty(extension_subsectionmanager::$storage['fields'][$mode][$this->get('id')])) {
 					foreach(extension_subsectionmanager::$storage['fields'][$mode][$this->get('id')] as $field_id => $modes) {
-						$entry_data = $entry->getData($field_id);
 						$field = extension_subsectionmanager::$entryManager->fieldManager->fetch($field_id);
+
+						// Omit fields that were removed in meantime
+						if (empty($field)) continue;
+
+						$entry_data = $entry->getData($field_id);
 
 						// No modes
 						if(empty($modes)) {
