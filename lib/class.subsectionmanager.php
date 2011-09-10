@@ -336,7 +336,10 @@
 				}
 						
 				// Remove empty drop texts
-				$html[strip_tags($tmp)] = str_replace(' data-drop=""', '', $tmp);
+				// Use "z" to make sure that empty captions/texts are sorted last.
+				// Use ID to make sure that they are not removed from the list.
+				// Use str_pad to make sure that same caption/text is sorted by ID in correct order (numerically).
+				$html[strip_tags($tmp).'z'.str_pad($entry['id'], 6, '0', STR_PAD_LEFT)] = str_replace(' data-drop=""', '', $tmp);
 			}
 
 			// Set default result data
