@@ -743,8 +743,12 @@
 				// Process entry for Data Source
 				if(!empty(extension_subsectionmanager::$storage['fields'][$mode][$this->get('id')])) {
 					foreach(extension_subsectionmanager::$storage['fields'][$mode][$this->get('id')] as $field_id => $modes) {
-						$entry_data = $entry->getData($field_id);
 						$field = extension_subsectionmanager::$entryManager->fieldManager->fetch($field_id);
+
+						// Omit fields that were removed in meantime
+						if (empty($field)) continue;
+
+						$entry_data = $entry->getData($field_id);
 
 						// No modes
 						if(empty($modes)) {
@@ -771,7 +775,7 @@
 
 						// Now output data
 						$callback = Administration::instance()->getPageCallback();
-						if($callback['context']['page'] == 'edit' || $callback['context']['page'] != 'new') {
+						if(!empty($callback['context']['page'])) {
 							$data = $entry->getData();
 
 							// Add fields:
@@ -779,6 +783,8 @@
 								if(empty($field_id)) continue;
 
 								$field = extension_subsectionmanager::$entryManager->fieldManager->fetch($field_id);
+								if (empty($field)) continue;
+
 								$field->appendFormattedElement($item, $values, false, null, $entry_id);
 							}
 						}
