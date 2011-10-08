@@ -485,7 +485,7 @@
 			Symphony::Engine()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/lib/resize/jquery.ba-resize.js', 105, false);
 			
 			// Get Subsection
-			$subsection = new SubsectionManager($this->_Parent);
+			$subsection = new SubsectionManager;
 			$content = $subsection->generate($data['relation_id'], $this->get('id'), $this->get('subsection_id'), NULL, false);
 
 			// Prepare select options
@@ -566,7 +566,7 @@
 		function getDefaultPublishContent(&$wrapper) {
 			
 			// Get items
-			$subsection = new SubsectionManager($this->_Parent);
+			$subsection = new SubsectionManager;
 			$content = $subsection->generate(null, $this->get('id'), $this->get('subsection_id'), NULL, true);
 			
 			// Append items
@@ -616,7 +616,7 @@
 
 			// Single select
 			if($this->get('allow_multiple') == 0 || count($data['relation_id']) === 1) {
-				$subsection = new SubsectionManager($this->_Parent);
+				$subsection = new SubsectionManager;
 				$content = $subsection->generate(null, $this->get('id'), $this->get('subsection_id'), $data['relation_id'], true);
 				
 				// Link?
