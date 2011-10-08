@@ -26,7 +26,7 @@
 			}
 			
 			// Return to extension overview
-			redirect(URL . '/symphony/system/extensions/');
+			redirect(SYMPHONY_URL . '/system/extensions/');
 			
 		}
 
