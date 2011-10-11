@@ -49,6 +49,7 @@ Be aware that this upgrade process will alter your database and will uninstall y
 ## Release Notes
 
 **Version 1.3**
+
 - Reflect latest Symphony core changes (Thanks, Brendan!)
 - Updates Stage to 1.3 (Thanks, Brendan!)
 - Field now correctly outputs parameters (Thanks, Brendan!)
