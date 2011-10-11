@@ -2,12 +2,12 @@
 
 Subsection management for Symphony.  
 
-- Version: 1.2
-- Date: 16th June 2011
+- Version: 1.3
+- Date: 11th October 2011
 - Requirements: Symphony 2.2 or newer, <http://github.com/symphonycms/symphony-2/>
 - Optional Requirement: JIT Image Manipulation (for image previews), <http://github.com/symphonycms/jit_image_manipulation/>
 - Author: Nils Hörrmann, post@nilshoerrmann.de
-- Constributors: [A list of contributors can be found in the commit history](http://github.com/nilshoerrmann/subsectionmanager/commits/development/)
+- Contributors: [A list of contributors can be found in the commit history](http://github.com/nilshoerrmann/subsectionmanager/commits/development/)
 - GitHub Repository: <http://github.com/nilshoerrmann/subsectionmanager/>
 - Available languages: English (default), German, Italian
 
@@ -47,6 +47,16 @@ If you have Mediathek and Subsection Manager installed simultaneously, the inter
 Be aware that this upgrade process will alter your database and will uninstall your Mediathek extension. Make sure that you have an up-to-date backup of your site, containing all files and folders, and a copy of your database before you proceed with the upgrade. The upgrade cannot be undone.
 
 ## Release Notes
+
+**Version 1.3**
+- Reflect latest Symphony core changes (Thanks, Brendan!)
+- Updates Stage to 1.3 (Thanks, Brendan!)
+- Field now correctly outputs parameters (Thanks, Brendan!)
+- Improve compatibility with Reflection Field (Thanks, Marcin!)
+- Fix potential SQL Injection vulnerability (Thanks, Marcin!)
+- Fix bug where only the latest linked entry will be remembered (Thanks, Marcin!)
+- Fix potential encoding issue (Thanks, Marcin!)
+- Fix Call-time pass-by-reference warning that appeared in some environments (Thanks, Marcin!)
 
 **Version 1.2**
 

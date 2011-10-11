@@ -83,20 +83,20 @@ div.stage li a.destructor:hover {
 	border-color: #a59e9e;
 }
 
-div.stage.draggable ul.selection li span, div.stage.draggable ul.selection li .handle {
+div.stage.draggable ul.selection li > span, div.stage.draggable ul.selection li .handle {
 	cursor: move;
 	background: url(images/draggable.gif) 4px center no-repeat;
 }
 
-div.stage.draggable ul.selection li span:hover {
+div.stage.draggable ul.selection li > span:hover {
 	background: url(images/dragging.gif) 4px center no-repeat;
 }
 
-div.stage.droppable ul.selection li span, div.stage.droppable ul.selection li .handle {
+div.stage.droppable ul.selection li > span, div.stage.droppable ul.selection li .handle {
 	cursor: move;
 }
 
-div.stage ul li span {
+div.stage ul li > span {
 	display: inline-block;
 	margin: 0;
 	padding: 7px 14px;
@@ -200,7 +200,7 @@ div.stage div.browser div.counter {
 	text-shadow: 1px 1px #f5f5f5;
 }
 
-div.stage div.browser div.counter span {
+div.stage div.browser div.counter > span {
 	color: #fff;
 	padding: 0 0 0 6px;
 	text-shadow: 0 0 3px #A59E9E;

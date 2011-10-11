@@ -8,12 +8,7 @@
 	 */
 	class SubsectionManager {
 
-		private $_Parent;
 		private $_Items;
-
-		function __construct(&$parent) {
-			$this->_Parent = $parent;
-		}
 		
 		function generate($items, $subsection_field, $subsection_id, $entry_id=NULL, $full=false) {
 		
@@ -37,7 +32,7 @@
 			}
 		
 			// Fetch entry data
-			$sectionManager = new SectionManager($this->_Parent);
+			$sectionManager = new SectionManager(Symphony::Engine());
 		  	$subsection = $sectionManager->fetch($subsection_id, 'ASC', 'name');
 		  	$fields = $subsection->fetchFields();
 		  	$entries = $this->__filterEntries($subsection_id, $fields, $meta[0]['filter_tags'], $entry_id);
@@ -78,7 +73,7 @@
 			}
 
 			// Fetch entry data
-			$entryManager = new EntryManager($this->_Parent);
+			$entryManager = new EntryManager(Symphony::Engine());
 			$entries = $entryManager->fetch($entry_id, $subsection_id);
 
 			// Setup filter
@@ -253,7 +248,10 @@
 						}
 						
 						// Remove empty drop texts
-						$html[strip_tags($tmp)] = str_replace(' data-drop=""', '', $tmp);
+						// Use "z" to make sure that empty captions/texts are sorted last.
+						// Use ID to make sure that they are not removed from the list.
+						// Use str_pad to make sure that same caption/text is sorted by ID in correct order (numerically).
+						$html[strip_tags($tmp).'z'.str_pad($entry['id'], 6, '0', STR_PAD_LEFT)] = str_replace(' data-drop=""', '', $tmp);
 						
 						// Create publish index template
 						if($type == 'image') {

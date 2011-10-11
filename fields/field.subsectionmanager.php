@@ -471,7 +471,7 @@
 			// Houston, we have problem: we've been called out of context!
 			$callback = Administration::instance()->getPageCallback();
 			if($callback['context']['page'] != 'edit' && $callback['context']['page'] != 'new') {
-				$this->getDefaultPublishContent(&$wrapper);
+				$this->getDefaultPublishContent($wrapper);
 				return;
 			}
 
@@ -485,7 +485,7 @@
 			Symphony::Engine()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/lib/resize/jquery.ba-resize.js', 105, false);
 			
 			// Get Subsection
-			$subsection = new SubsectionManager($this->_Parent);
+			$subsection = new SubsectionManager;
 			$content = $subsection->generate($data['relation_id'], $this->get('id'), $this->get('subsection_id'), NULL, false);
 
 			// Prepare select options
@@ -547,7 +547,7 @@
 				WHERE `id` = '" . $this->get('subsection_id') . "'
 				LIMIT 1"
 			);
-			$create_new = URL . '/symphony/publish/' . $subsection_handle;
+			$create_new = SYMPHONY_URL . '/publish/' . $subsection_handle;
 			$item = new XMLElement('li', '<iframe name="subsection-' . $this->get('element_name') . '" src="about:blank" target="' . $create_new . '"  frameborder="0"></iframe>', array('class' => 'drawer template'));
 			$selected->appendChild($item);
 
@@ -566,7 +566,7 @@
 		function getDefaultPublishContent(&$wrapper) {
 			
 			// Get items
-			$subsection = new SubsectionManager($this->_Parent);
+			$subsection = new SubsectionManager;
 			$content = $subsection->generate(null, $this->get('id'), $this->get('subsection_id'), NULL, true);
 			
 			// Append items
@@ -616,7 +616,7 @@
 
 			// Single select
 			if($this->get('allow_multiple') == 0 || count($data['relation_id']) === 1) {
-				$subsection = new SubsectionManager($this->_Parent);
+				$subsection = new SubsectionManager;
 				$content = $subsection->generate(null, $this->get('id'), $this->get('subsection_id'), $data['relation_id'], true);
 				
 				// Link?
@@ -686,14 +686,14 @@
 		    if($andOperation) {
 		        foreach($data as $key => $value) {
 		            $joins .= " LEFT JOIN `tbl_entries_data_$field_id` AS `t$field_id$key` ON (`e`.`id` = `t$field_id$key`.entry_id) ";
-		            $where .= " AND `t$field_id$key`.relation_id = '$value' ";
+		            $where .= " AND `t$field_id$key`.relation_id = '" . intval($value) . "' ";
 		        }
 		    }
 
 		    // Filters connected with OR
 		    else {
 		        $joins .= " LEFT JOIN `tbl_entries_data_$field_id` AS `t$field_id` ON (`e`.`id` = `t$field_id`.entry_id) ";
-		        $where .= " AND `t$field_id`.relation_id IN ('" . @implode("', '", $data) . "') ";
+		        $where .= " AND `t$field_id`.relation_id IN ('" . @implode("', '", array_map('intval', $data)) . "') ";
 		    }
 
 		    return true;
@@ -721,6 +721,9 @@
 			}
 
 			// Fetch field data
+			if (!class_exists('EntryManager')) {
+				require_once(TOOLKIT . '/class.entrymanager.php');
+			}
 			$entryManager = new EntryManager(Symphony::Engine());
 			$entryManager->setFetchSortingField($this->get('id'));
 
@@ -769,13 +772,13 @@
 						// Append fields with modes
 						if($included[$field_id] !== NULL) {
 							foreach($included[$field_id] as $mode) {
-								$field->appendFormattedElement($item, $values, false, $mode, $item_id);
+								$field->appendFormattedElement($item, $values, $encode, $mode, $item_id);
 							}					
 						}
 
 						// Append fields without modes
 						else {
-							$field->appendFormattedElement($item, $values, false, NULL, $item_id);
+							$field->appendFormattedElement($item, $values, $encode, NULL, $item_id);
 						}
 					}
 				}
@@ -817,12 +820,7 @@
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#getParameterPoolValue
 		 */
 		public function getParameterPoolValue($data) {
-			if(is_array($data['relation_id'])) {
-				return implode(", ", $data['relation_id']);
-			}
-			else {
-				return $data['relation_id'];
-			}
+			return $data['relation_id'];
 		}
 
 		/**

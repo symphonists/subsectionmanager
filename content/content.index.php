@@ -15,7 +15,7 @@
 			$this->setTitle(__('%1$s &ndash; %2$s', array(__('Symphony'), __('Subsection Manager Upgrade'))));
 			$this->addScriptToHead(URL . '/extensions/subsectionmanager/assets/mediathek.upgrade.js', 100, false);
 			$this->appendSubheading(__('Subsection Manager Upgrade'));
-			$this->Form->setAttribute('action', $this->_Parent->getCurrentPageURL() . 'upgrade/');
+			$this->Form->setAttribute('action', Administration::instance()->getCurrentPageURL() . 'upgrade/');
 			
 			// Introduction
 			$introduction = new XMLElement(
