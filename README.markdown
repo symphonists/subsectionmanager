@@ -2,8 +2,8 @@
 
 Subsection management for Symphony.  
 
-- Version: 1.3RC1
-- Date: 8th October 2011
+- Version: 1.3
+- Date: 11th October 2011
 - Requirements: Symphony 2.2 or newer, <http://github.com/symphonycms/symphony-2/>
 - Optional Requirement: JIT Image Manipulation (for image previews), <http://github.com/symphonycms/jit_image_manipulation/>
 - Author: Nils Hörrmann, post@nilshoerrmann.de
@@ -49,13 +49,14 @@ Be aware that this upgrade process will alter your database and will uninstall y
 ## Release Notes
 
 **Version 1.3**
-- Updates Stage to 1.3
-- Field now correctly outputs parameters
-- Improve compatibility with Reflection Field
-- Fix potential SQL Injection vulnerability
-- Fix bug where only the latest linked entry will be remembered
-- Fix potential encoding issue
-- Fix Call-time pass-by-reference warning that appeared in some environments
+- Reflect latest Symphony core changes (Thanks, Brendan!)
+- Updates Stage to 1.3 (Thanks, Brendan!)
+- Field now correctly outputs parameters (Thanks, Brendan!)
+- Improve compatibility with Reflection Field (Thanks, Marcin!)
+- Fix potential SQL Injection vulnerability (Thanks, Marcin!)
+- Fix bug where only the latest linked entry will be remembered (Thanks, Marcin!)
+- Fix potential encoding issue (Thanks, Marcin!)
+- Fix Call-time pass-by-reference warning that appeared in some environments (Thanks, Marcin!)
 
 **Version 1.2**
 
