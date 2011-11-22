@@ -1,7 +1,7 @@
 <?php
 
 	$about = array(
-		'name' => 'Russian',
+		'name' => 'Русский',
 		'author' => array(
 			'name' => 'Alexander Isaev',
 			'email' => 'almix13@gmail.com',
@@ -16,198 +16,198 @@
 	$dictionary = array(
 
 		'%s Show thumbnail images' => 
-		'%s Mostra l\'anteprima delle immagini',
+		'%s Показывать превью, если изображения',
 
 		'%s has to be well-formed. Please check opening and closing tags.' => 
-		'Il campo %s deve essere ben formato. Controlla i tag di apertura e chiusura.',
+		'Поле %s должно быть верно сформировано. Пожалуйста, проверьте правильность открытия и закрытия тегов.',
 
 		'1 result' => 
-		'1 risultato',
+		'1 результат',
 
 		'Allow creation of new items' => 
-		'Consenti la creazione di nuove voci',
+		'Разрешить создание новых элементов',
 
 		'Allow deselection of items' => 
-		'Consenti la deselezione delle voci',
+		'Разрешить отмену выбранных элементов',
 
 		'Allow dropping of items' => 
-		'Consenti il rilascio delle voci',
+		'Разрешить перетаскивание элементов',
 
 		'Allow selection of items from a list of existing items' => 
-		'Consenti la selezione di voci pre-esistenti',
+		'Разрешить выбор элементов из списка существующих элементов',
 
 		'Allow selection of multiple items' => 
-		'Consenti la selezione di pi&#249; voci',
+		'Разрешить выбор нескольких элементов',
 
 		'Allow sorting of items' => 
-		'Consenti il trascinamento delle voci',
+		'Разрешить сортировку элементов',
 
 		'Are you sure you want to delete {$item}? It will be removed from all entries. This step cannot be undone.' => 
-		'Sei sicuro di voler procedere alla cancellazione? Questa operazione non pu&#242; essere annullata.',
+		'Вы уверены, что хотите удалить {$item}? Он будет безвозвратно удалён из всех записей.',
 
 		'Before you proceed' => 
-		'Prima di procedere',
+		'Перед тем, как двигаться дальше',
 
 		'Behaviour' => 
-		'Comportamento',
+		'Поведение',
 
 		'Browse' => 
-		'Esplora tutte le voci',
+		'Поиск',
 
 		'Caption' => 
-		'Nei risultati',
+		'Название',
 
 		'Comma separated, alt+click for negation' => 
-		'Separati da virgola, <code>alt+click</code> per la negazione',
+		'Через запятую, <code>alt+click</code> для отмены',
 
 		'Data Source XML' => 
-		'XML per la sorgente dati',
+		'Источник данных XML (Data Source XML)',
 
 		'Display' => 
-		'Scelta dei campi da mostrare',
+		'Показывать поля',
 
 		'Don&#8217;t forget to include the Subsection Manager field in your Data Source' => 
-		'Non dimenticare di includere il campo Subsection Manager nella tua sorgente dati',
+		'Не забудьте подключить ваше поле Subsection Manager, выделив его название в источниках данных',
 
 		'Drop text' => 
-		'Al rilascio',
+		'Drop text',
 
 		'Filter items by tags or categories' => 
-		'Filtra le voci per tag',
+		'Фильтровать элементы по тегам или категориям',
 
 		'Go back to the extension overview.' => 
-		'Torna alla pagina delle estensioni',
+		'Вернуться назад к странице расширений',
 
 		'I have a working backup of my site including files and database and like to upgrade all my Mediathek fields to Subsection Manager fields.' => 
-		'Possiedo una copia di backup del mio sito, inclusi file e database, e voglio procedere all\'aggiornamento dei campi Mediathek.',
+		'У меня имеется рабочий бэкап сайта со всеми файлами и БД и я хочу заменить все поля моей Mediathek на поля Subsection Manager.',
 
 		'If you don&#8217;t have a backup, create one now!' => 
-		'Se non possiedi una copia di backup del tuo sito, creane una ora!',
+		'Если у вас нет бэкапа, сделайте его сейчас!',
 
 		'Included elements' => 
-		'Elementi inclusi',
+		'Содержащиеся элементы',
 
 		'Introduction' => 
-		'Introduzione',
+		'Вступление',
 
 		'New item' => 
-		'Nuova voce',
+		'Новый элемент',
 
 		'No items found.' => 
-		'Nessuna voce trovata.',
+		'Не найдено никаких элементов.',
 
 		'None Selected' => 
-		'Nessuna sezione selezionata',
+		'Ничего не выделено',
 
 		'Please delete the old Mediathek folder from your <code>extensions</code> folder.' => 
-		'Elimina la vecchia cartella Mediathek dalla cartella <code>extensions</code>.',
+		'Пожалуйста, удалите старую папку Mediathek из папки <code>extensions</code>.',
 
 		'Please fill out the form below.' => 
-		'Compila il modulo sottostante.',
+		'Пожалуйста, заполните форму ниже.',
 
 		'Please make sure that the Stage submodule is initialised and available at %s.' => 
-		'Per favore assicurati che il modulo mancante compaia all\'interno della cartella %s.',
+		'Пожалуйста, убедитесь, что подмодуль инициализован и доступен в %s.',
 
 		'Please make sure that you have an up-to-date backup of your site, containing all files and folders, and a copy of your database.' => 
-		'Assicurati di avere una copia di backup aggiornata del tuo sito e del tuo database con tutti i file e le cartelle.',
+		'Пожалуйста, убедитесь, что у вас последний бекап сайта и он содержит все файлы и папки, а также вашу базу данных.',
 
 		'Replace all Mediathek fields with the Subsection Manager, copying all attached information to the new fields.' => 
-		'Sostituzione di tutti i campi Mediathek con nuovi campi Subsection Manager, assieme a tutte le informazioni associate a questi campi.',
+		'Замените все поля Mediathek на поля Subsection Manager, копируя всю дополнительную информацию из них в новые поля.',
 
 		'Stage not found' => 
-		'Modulo Stage mancante',
+		'Модуль Stage не найден',
 
 		'Subsection' => 
-		'Attingi da',
+		'Subsection',
 
 		'Subsection Manager' => 
 		'Subsection Manager',
 
 		'Subsection Manager Upgrade' => 
-		'Aggiornamento a Subsection Manager',
+		'Обновление Subsection Manager',
 
 		'Subsection Manager is a replacement of the Mediathek field, introducing a new interface and an improved feature set. Subsection Manager requires Symphony 2.1 and should not be used side-by-side with Mediathek. This page will help you upgrading your fields from Mediathek to Subsection Manager.' => 
-		'Subsection Manager subentra a Mediathek introducendo una nuova interfaccia e nuove funzionalit&#224;. Questa estensione richiede Symphony 2.1 e non dovrebbe essere usata in congiunzione a Mediathek. Attraverso questa pagina potrai aggiornare tutti i campi Mediathek trasformandoli in campi Subsection Manager.',
+		'Subsection Manager это замена поля Mediathek, он представляет новый интерфейс и улучшенную функциональность. Subsection Manager требует Symphony 2.1 и не должен использоваться вместе с Mediathek. Эта страница поможет вам обновить ваши поля с Mediathek на Subsection Manager.',
 
 		'The Mediathek folder will stay intact in your extension folder. You will have to delete it manually.' => 
-		'La cartella <code>mediathek</code> rimarr&#224; intatta e dovr&#224; essere eliminata manualmente.',
+		'Папка <code>mediathek</code> не удалится автоматически. Вам нужно будет удалить её вручную.',
 
 		'The Subsection Manager Upgrade will automatically perform the following actions:' => 
-		'L\'aggiornamento eseguir&#224; automaticamente le seguenti operazioni:',
+		'В процессе обновления Subsection Manager будут выполнены следующие действия:',
 
 		'There are currently no items available. Perhaps you want create one first?' => 
-		'Non &#232; stato possibile trovare alcuna voce.',
+		'Сейчас нет доступных элементов. Хотите сначала создать элемент?',
 
 		'There are no selected items' => 
-		'Non &#232; stata selezionata alcuna voce',
+		'Нет выбранных элементов',
 
 		'This process cannot be undone!' => 
-		'L\'operazione non pu&#242; essere annullata!',
+		'Это действие необратимое!',
 
 		'This will add a <code>Create New</code> button to the interface' => 
-		'Nell\'interfaccia apparir&#224; un nuovo pulsante <code>Nuova voce</code>',
+		'Это добавит в интерфейс кнопку <code>Создать новый</code> элемент',
 
 		'This will add a <code>Remove</code> button to the interface' => 
-		'Nell\'interfaccia apparir&#224; un nuovo pulsante <code>Elimina</code>',
+		'Это добавит в интерфейс кнопку <code>Удалить</code> элемент',
 
 		'This will add a search field to the interface' => 
-		'Nell\'interfaccia apparir&#224; un nuovo campo di ricerca',
+		'Это добавит в интерфейс поле поиска элементов',
 
 		'This will enable item dragging and reordering' => 
-		'Verr&#224; abilitato il trascinamento e il riordinamento delle voci',
+		'Это добавит возможность перетаскивания элементов',
 
 		'This will enable item dropping on textareas' => 
-		'Verr&#224; abilitata la possibilit&#224; di rilasciare le voci all\'interno dei campi di tipo textarea',
+		'Это добавит возможность перетаскивания элемента на поля типа textarea',
 
 		'This will switch between single and multiple item lists' => 
-		'Verr&#224; abilitata la possibilit&#224; di selezionare pi&#249; voci',
+		'Это переключает на выбор больше, чем одного элемента',
 
 		'Uninstall Mediathek' => 
-		'Disinstalla Mediathek',
+		'Удалить Mediathek',
 
 		'Uninstall Subsection Manager' => 
-		'Disinstalla Subsection Manager',
+		'Удалить Subsection Manager',
 
 		'Uninstall the Mediathek extension removing all references in the database.' => 
-		'Disinstallazione di Mediathek e rimozione di tutti i riferimenti nel database.',
+		'Удалить расширение Mediathek, удаляя все его упоминания из базы данных.',
 
 		'Upgrade' => 
-		'Aggiornamento',
+		'Обновить',
 
 		'Upgrade all Mediathek fields' => 
-		'Procedi con l\'aggiornamento',
+		'Обновить все поля Mediathek',
 
 		'Upgrade successful' => 
-		'Aggiornamento riuscito',
+		'Обновление прошло успешно',
 
 		'Upgrading your Mediathek' => 
-		'Aggiornamento dei campi Mediathek',
+		'Обновление вашей Mediathek',
 
 		'Upgrading your Mediathek fields to Subsection Manager will alter your database.' => 
-		'L\'aggiornamento dei campi Mediathek a Subsection Manager modificher&#224; la struttura del tuo database.',
+		'Обновление ваших полей Mediathek на Subsection Manager повлечёт изменения в вашей базе данных.',
 
 		'Use comma separated entry ids for filtering.' => 
-		'Per il filtraggio separa gli id con le virgole.',
+		'Перечисляйте entry ids через запятую для фильтрации.',
 
 		'You are using Mediathek and Subsection Manager simultaneously.' => 
-		'L\'utilizzo contemporaneo di Mediathek e Subsection Manager &#232; altamente sconsigliato.',
+		'Вы используете Mediathek и Subsection Manager вместе.',
 
 		'Your Mediathek fields have successfully been upgrade to Subsection Manager.' => 
-		'I campi Mediathek sono stati aggiornati con successo.',
+		'Ваши поля Mediathek были успешно заменены на поля Subsection Manager.',
 
 		'item' => 
-		'voce',
+		'элемент',
 
 		'items' => 
-		'voci',
+		'элементы',
 
 		'no results' => 
-		'nessun risultato',
+		'нет результатов',
 
 		'{$count} results' => 
-		'{$count} risultati',
+		'{$count} результатов',
 
 		'It\'s available at %s.' => 
-		'Puoi scaricare Stage da qui: %s.',
+		'Доступно: %s.',
 
 	);
