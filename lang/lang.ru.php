@@ -1,7 +1,7 @@
 <?php
 
 	$about = array(
-		'name' => 'ђусский',
+		'name' => 'Р СѓСЃСЃРєРёР№',
 		'author' => array(
 			'name' => 'Alexander Isaev',
 			'email' => 'almix13@gmail.com',
@@ -16,106 +16,106 @@
 	$dictionary = array(
 
 		'%s Show thumbnail images' => 
-		'%s Џоказывать превью, если изображениЯ',
+		'%s РџРѕРєР°Р·С‹РІР°С‚СЊ РїСЂРµРІСЊСЋ, РµСЃР»Рё РёР·РѕР±СЂР°Р¶РµРЅРёСЏ',
 
 		'%s has to be well-formed. Please check opening and closing tags.' => 
-		'Џоле %s должно быть верно сформировано. Џожалуйста, проверьте правильность открытиЯ и закрытиЯ тегов.',
+		'РџРѕР»Рµ %s РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РІРµСЂРЅРѕ СЃС„РѕСЂРјРёСЂРѕРІР°РЅРѕ. РџРѕР¶Р°Р»СѓР№СЃС‚Р°, РїСЂРѕРІРµСЂСЊС‚Рµ РїСЂР°РІРёР»СЊРЅРѕСЃС‚СЊ РѕС‚РєСЂС‹С‚РёСЏ Рё Р·Р°РєСЂС‹С‚РёСЏ С‚РµРіРѕРІ.',
 
 		'1 result' => 
-		'1 результат',
+		'1 СЂРµР·СѓР»СЊС‚Р°С‚',
 
 		'Allow creation of new items' => 
-		'ђазрешить создание новых элементов',
+		'Р Р°Р·СЂРµС€РёС‚СЊ СЃРѕР·РґР°РЅРёРµ РЅРѕРІС‹С… СЌР»РµРјРµРЅС‚РѕРІ',
 
 		'Allow deselection of items' => 
-		'ђазрешить отмену выбранных элементов',
+		'Р Р°Р·СЂРµС€РёС‚СЊ РѕС‚РјРµРЅСѓ РІС‹Р±СЂР°РЅРЅС‹С… СЌР»РµРјРµРЅС‚РѕРІ',
 
 		'Allow dropping of items' => 
-		'ђазрешить перетаскивание элементов',
+		'Р Р°Р·СЂРµС€РёС‚СЊ РїРµСЂРµС‚Р°СЃРєРёРІР°РЅРёРµ СЌР»РµРјРµРЅС‚РѕРІ',
 
 		'Allow selection of items from a list of existing items' => 
-		'ђазрешить выбор элементов из списка существующих элементов',
+		'Р Р°Р·СЂРµС€РёС‚СЊ РІС‹Р±РѕСЂ СЌР»РµРјРµРЅС‚РѕРІ РёР· СЃРїРёСЃРєР° СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёС… СЌР»РµРјРµРЅС‚РѕРІ',
 
 		'Allow selection of multiple items' => 
-		'ђазрешить выбор нескольких элементов',
+		'Р Р°Р·СЂРµС€РёС‚СЊ РІС‹Р±РѕСЂ РЅРµСЃРєРѕР»СЊРєРёС… СЌР»РµРјРµРЅС‚РѕРІ',
 
 		'Allow sorting of items' => 
-		'ђазрешить сортировку элементов',
+		'Р Р°Р·СЂРµС€РёС‚СЊ СЃРѕСЂС‚РёСЂРѕРІРєСѓ СЌР»РµРјРµРЅС‚РѕРІ',
 
 		'Are you sure you want to delete {$item}? It will be removed from all entries. This step cannot be undone.' => 
-		'‚ы уверены, что хотите удалить {$item}? Ћн будет безвозвратно удалЮн из всех записей.',
+		'Р’С‹ СѓРІРµСЂРµРЅС‹, С‡С‚Рѕ С…РѕС‚РёС‚Рµ СѓРґР°Р»РёС‚СЊ {$item}? РћРЅ Р±СѓРґРµС‚ Р±РµР·РІРѕР·РІСЂР°С‚РЅРѕ СѓРґР°Р»С‘РЅ РёР· РІСЃРµС… Р·Р°РїРёСЃРµР№.',
 
 		'Before you proceed' => 
-		'Џеред тем, как двигатьсЯ дальше',
+		'РџРµСЂРµРґ С‚РµРј, РєР°Рє РґРІРёРіР°С‚СЊСЃСЏ РґР°Р»СЊС€Рµ',
 
 		'Behaviour' => 
-		'Џоведение',
+		'РџРѕРІРµРґРµРЅРёРµ',
 
 		'Browse' => 
-		'Џоиск',
+		'РџРѕРёСЃРє',
 
 		'Caption' => 
-		'Ќазвание',
+		'РќР°Р·РІР°РЅРёРµ',
 
 		'Comma separated, alt+click for negation' => 
-		'—ерез запЯтую, <code>alt+click</code> длЯ отмены',
+		'Р§РµСЂРµР· Р·Р°РїСЏС‚СѓСЋ, <code>alt+click</code> РґР»СЏ РѕС‚РјРµРЅС‹',
 
 		'Data Source XML' => 
-		'€сточник данных XML (Data Source XML)',
+		'РСЃС‚РѕС‡РЅРёРє РґР°РЅРЅС‹С… XML (Data Source XML)',
 
 		'Display' => 
-		'Џоказывать полЯ',
+		'РџРѕРєР°Р·С‹РІР°С‚СЊ РїРѕР»СЏ',
 
 		'Don&#8217;t forget to include the Subsection Manager field in your Data Source' => 
-		'Ќе забудьте подключить ваше поле Subsection Manager, выделив его название в источниках данных',
+		'РќРµ Р·Р°Р±СѓРґСЊС‚Рµ РїРѕРґРєР»СЋС‡РёС‚СЊ РІР°С€Рµ РїРѕР»Рµ Subsection Manager, РІС‹РґРµР»РёРІ РµРіРѕ РЅР°Р·РІР°РЅРёРµ РІ РёСЃС‚РѕС‡РЅРёРєР°С… РґР°РЅРЅС‹С…',
 
 		'Drop text' => 
 		'Drop text',
 
 		'Filter items by tags or categories' => 
-		'”ильтровать элементы по тегам или категориЯм',
+		'Р¤РёР»СЊС‚СЂРѕРІР°С‚СЊ СЌР»РµРјРµРЅС‚С‹ РїРѕ С‚РµРіР°Рј РёР»Рё РєР°С‚РµРіРѕСЂРёСЏРј',
 
 		'Go back to the extension overview.' => 
-		'‚ернутьсЯ назад к странице расширений',
+		'Р’РµСЂРЅСѓС‚СЊСЃСЏ РЅР°Р·Р°Рґ Рє СЃС‚СЂР°РЅРёС†Рµ СЂР°СЃС€РёСЂРµРЅРёР№',
 
 		'I have a working backup of my site including files and database and like to upgrade all my Mediathek fields to Subsection Manager fields.' => 
-		'“ менЯ имеетсЯ рабочий бэкап сайта со всеми файлами и Ѓ„ и Я хочу заменить все полЯ моей Mediathek на полЯ Subsection Manager.',
+		'РЈ РјРµРЅСЏ РёРјРµРµС‚СЃСЏ СЂР°Р±РѕС‡РёР№ Р±СЌРєР°Рї СЃР°Р№С‚Р° СЃРѕ РІСЃРµРјРё С„Р°Р№Р»Р°РјРё Рё Р‘Р” Рё СЏ С…РѕС‡Сѓ Р·Р°РјРµРЅРёС‚СЊ РІСЃРµ РїРѕР»СЏ РјРѕРµР№ Mediathek РЅР° РїРѕР»СЏ Subsection Manager.',
 
 		'If you don&#8217;t have a backup, create one now!' => 
-		'…сли у вас нет бэкапа, сделайте его сейчас!',
+		'Р•СЃР»Рё Сѓ РІР°СЃ РЅРµС‚ Р±СЌРєР°РїР°, СЃРґРµР»Р°Р№С‚Рµ РµРіРѕ СЃРµР№С‡Р°СЃ!',
 
 		'Included elements' => 
-		'‘одержащиесЯ элементы',
+		'РЎРѕРґРµСЂР¶Р°С‰РёРµСЃСЏ СЌР»РµРјРµРЅС‚С‹',
 
 		'Introduction' => 
-		'‚ступление',
+		'Р’СЃС‚СѓРїР»РµРЅРёРµ',
 
 		'New item' => 
-		'Ќовый элемент',
+		'РќРѕРІС‹Р№ СЌР»РµРјРµРЅС‚',
 
 		'No items found.' => 
-		'Ќе найдено никаких элементов.',
+		'РќРµ РЅР°Р№РґРµРЅРѕ РЅРёРєР°РєРёС… СЌР»РµРјРµРЅС‚РѕРІ.',
 
 		'None Selected' => 
-		'Ќичего не выделено',
+		'РќРёС‡РµРіРѕ РЅРµ РІС‹РґРµР»РµРЅРѕ',
 
 		'Please delete the old Mediathek folder from your <code>extensions</code> folder.' => 
-		'Џожалуйста, удалите старую папку Mediathek из папки <code>extensions</code>.',
+		'РџРѕР¶Р°Р»СѓР№СЃС‚Р°, СѓРґР°Р»РёС‚Рµ СЃС‚Р°СЂСѓСЋ РїР°РїРєСѓ Mediathek РёР· РїР°РїРєРё <code>extensions</code>.',
 
 		'Please fill out the form below.' => 
-		'Џожалуйста, заполните форму ниже.',
+		'РџРѕР¶Р°Р»СѓР№СЃС‚Р°, Р·Р°РїРѕР»РЅРёС‚Рµ С„РѕСЂРјСѓ РЅРёР¶Рµ.',
 
 		'Please make sure that the Stage submodule is initialised and available at %s.' => 
-		'Џожалуйста, убедитесь, что подмодуль инициализован и доступен в %s.',
+		'РџРѕР¶Р°Р»СѓР№СЃС‚Р°, СѓР±РµРґРёС‚РµСЃСЊ, С‡С‚Рѕ РїРѕРґРјРѕРґСѓР»СЊ РёРЅРёС†РёР°Р»РёР·РѕРІР°РЅ Рё РґРѕСЃС‚СѓРїРµРЅ РІ %s.',
 
 		'Please make sure that you have an up-to-date backup of your site, containing all files and folders, and a copy of your database.' => 
-		'Џожалуйста, убедитесь, что у вас последний бекап сайта и он содержит все файлы и папки, а также вашу базу данных.',
+		'РџРѕР¶Р°Р»СѓР№СЃС‚Р°, СѓР±РµРґРёС‚РµСЃСЊ, С‡С‚Рѕ Сѓ РІР°СЃ РїРѕСЃР»РµРґРЅРёР№ Р±РµРєР°Рї СЃР°Р№С‚Р° Рё РѕРЅ СЃРѕРґРµСЂР¶РёС‚ РІСЃРµ С„Р°Р№Р»С‹ Рё РїР°РїРєРё, Р° С‚Р°РєР¶Рµ РІР°С€Сѓ Р±Р°Р·Сѓ РґР°РЅРЅС‹С….',
 
 		'Replace all Mediathek fields with the Subsection Manager, copying all attached information to the new fields.' => 
-		'‡амените все полЯ Mediathek на полЯ Subsection Manager, копируЯ всю дополнительную информацию из них в новые полЯ.',
+		'Р—Р°РјРµРЅРёС‚Рµ РІСЃРµ РїРѕР»СЏ Mediathek РЅР° РїРѕР»СЏ Subsection Manager, РєРѕРїРёСЂСѓСЏ РІСЃСЋ РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅСѓСЋ РёРЅС„РѕСЂРјР°С†РёСЋ РёР· РЅРёС… РІ РЅРѕРІС‹Рµ РїРѕР»СЏ.',
 
 		'Stage not found' => 
-		'Њодуль Stage не найден',
+		'РњРѕРґСѓР»СЊ Stage РЅРµ РЅР°Р№РґРµРЅ',
 
 		'Subsection' => 
 		'Subsection',
@@ -124,90 +124,90 @@
 		'Subsection Manager',
 
 		'Subsection Manager Upgrade' => 
-		'Ћбновление Subsection Manager',
+		'РћР±РЅРѕРІР»РµРЅРёРµ Subsection Manager',
 
 		'Subsection Manager is a replacement of the Mediathek field, introducing a new interface and an improved feature set. Subsection Manager requires Symphony 2.1 and should not be used side-by-side with Mediathek. This page will help you upgrading your fields from Mediathek to Subsection Manager.' => 
-		'Subsection Manager это замена полЯ Mediathek, он представлЯет новый интерфейс и улучшенную функциональность. Subsection Manager требует Symphony 2.1 и не должен использоватьсЯ вместе с Mediathek. ќта страница поможет вам обновить ваши полЯ с Mediathek на Subsection Manager.',
+		'Subsection Manager СЌС‚Рѕ Р·Р°РјРµРЅР° РїРѕР»СЏ Mediathek, РѕРЅ РїСЂРµРґСЃС‚Р°РІР»СЏРµС‚ РЅРѕРІС‹Р№ РёРЅС‚РµСЂС„РµР№СЃ Рё СѓР»СѓС‡С€РµРЅРЅСѓСЋ С„СѓРЅРєС†РёРѕРЅР°Р»СЊРЅРѕСЃС‚СЊ. Subsection Manager С‚СЂРµР±СѓРµС‚ Symphony 2.1 Рё РЅРµ РґРѕР»Р¶РµРЅ РёСЃРїРѕР»СЊР·РѕРІР°С‚СЊСЃСЏ РІРјРµСЃС‚Рµ СЃ Mediathek. Р­С‚Р° СЃС‚СЂР°РЅРёС†Р° РїРѕРјРѕР¶РµС‚ РІР°Рј РѕР±РЅРѕРІРёС‚СЊ РІР°С€Рё РїРѕР»СЏ СЃ Mediathek РЅР° Subsection Manager.',
 
 		'The Mediathek folder will stay intact in your extension folder. You will have to delete it manually.' => 
-		'Џапка <code>mediathek</code> не удалитсЯ автоматически. ‚ам нужно будет удалить еЮ вручную.',
+		'РџР°РїРєР° <code>mediathek</code> РЅРµ СѓРґР°Р»РёС‚СЃСЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё. Р’Р°Рј РЅСѓР¶РЅРѕ Р±СѓРґРµС‚ СѓРґР°Р»РёС‚СЊ РµС‘ РІСЂСѓС‡РЅСѓСЋ.',
 
 		'The Subsection Manager Upgrade will automatically perform the following actions:' => 
-		'‚ процессе обновлениЯ Subsection Manager будут выполнены следующие действиЯ:',
+		'Р’ РїСЂРѕС†РµСЃСЃРµ РѕР±РЅРѕРІР»РµРЅРёСЏ Subsection Manager Р±СѓРґСѓС‚ РІС‹РїРѕР»РЅРµРЅС‹ СЃР»РµРґСѓСЋС‰РёРµ РґРµР№СЃС‚РІРёСЏ:',
 
 		'There are currently no items available. Perhaps you want create one first?' => 
-		'‘ейчас нет доступных элементов. •отите сначала создать элемент?',
+		'РЎРµР№С‡Р°СЃ РЅРµС‚ РґРѕСЃС‚СѓРїРЅС‹С… СЌР»РµРјРµРЅС‚РѕРІ. РҐРѕС‚РёС‚Рµ СЃРЅР°С‡Р°Р»Р° СЃРѕР·РґР°С‚СЊ СЌР»РµРјРµРЅС‚?',
 
 		'There are no selected items' => 
-		'Ќет выбранных элементов',
+		'РќРµС‚ РІС‹Р±СЂР°РЅРЅС‹С… СЌР»РµРјРµРЅС‚РѕРІ',
 
 		'This process cannot be undone!' => 
-		'ќто действие необратимое!',
+		'Р­С‚Рѕ РґРµР№СЃС‚РІРёРµ РЅРµРѕР±СЂР°С‚РёРјРѕРµ!',
 
 		'This will add a <code>Create New</code> button to the interface' => 
-		'ќто добавит в интерфейс кнопку <code>‘оздать новый</code> элемент',
+		'Р­С‚Рѕ РґРѕР±Р°РІРёС‚ РІ РёРЅС‚РµСЂС„РµР№СЃ РєРЅРѕРїРєСѓ <code>РЎРѕР·РґР°С‚СЊ РЅРѕРІС‹Р№</code> СЌР»РµРјРµРЅС‚',
 
 		'This will add a <code>Remove</code> button to the interface' => 
-		'ќто добавит в интерфейс кнопку <code>“далить</code> элемент',
+		'Р­С‚Рѕ РґРѕР±Р°РІРёС‚ РІ РёРЅС‚РµСЂС„РµР№СЃ РєРЅРѕРїРєСѓ <code>РЈРґР°Р»РёС‚СЊ</code> СЌР»РµРјРµРЅС‚',
 
 		'This will add a search field to the interface' => 
-		'ќто добавит в интерфейс поле поиска элементов',
+		'Р­С‚Рѕ РґРѕР±Р°РІРёС‚ РІ РёРЅС‚РµСЂС„РµР№СЃ РїРѕР»Рµ РїРѕРёСЃРєР° СЌР»РµРјРµРЅС‚РѕРІ',
 
 		'This will enable item dragging and reordering' => 
-		'ќто добавит возможность перетаскиваниЯ элементов',
+		'Р­С‚Рѕ РґРѕР±Р°РІРёС‚ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ РїРµСЂРµС‚Р°СЃРєРёРІР°РЅРёСЏ СЌР»РµРјРµРЅС‚РѕРІ',
 
 		'This will enable item dropping on textareas' => 
-		'ќто добавит возможность перетаскиваниЯ элемента на полЯ типа textarea',
+		'Р­С‚Рѕ РґРѕР±Р°РІРёС‚ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ РїРµСЂРµС‚Р°СЃРєРёРІР°РЅРёСЏ СЌР»РµРјРµРЅС‚Р° РЅР° РїРѕР»СЏ С‚РёРїР° textarea',
 
 		'This will switch between single and multiple item lists' => 
-		'ќто переключает на выбор больше, чем одного элемента',
+		'Р­С‚Рѕ РїРµСЂРµРєР»СЋС‡Р°РµС‚ РЅР° РІС‹Р±РѕСЂ Р±РѕР»СЊС€Рµ, С‡РµРј РѕРґРЅРѕРіРѕ СЌР»РµРјРµРЅС‚Р°',
 
 		'Uninstall Mediathek' => 
-		'“далить Mediathek',
+		'РЈРґР°Р»РёС‚СЊ Mediathek',
 
 		'Uninstall Subsection Manager' => 
-		'“далить Subsection Manager',
+		'РЈРґР°Р»РёС‚СЊ Subsection Manager',
 
 		'Uninstall the Mediathek extension removing all references in the database.' => 
-		'“далить расширение Mediathek, удалЯЯ все его упоминаниЯ из базы данных.',
+		'РЈРґР°Р»РёС‚СЊ СЂР°СЃС€РёСЂРµРЅРёРµ Mediathek, СѓРґР°Р»СЏСЏ РІСЃРµ РµРіРѕ СѓРїРѕРјРёРЅР°РЅРёСЏ РёР· Р±Р°Р·С‹ РґР°РЅРЅС‹С….',
 
 		'Upgrade' => 
-		'Ћбновить',
+		'РћР±РЅРѕРІРёС‚СЊ',
 
 		'Upgrade all Mediathek fields' => 
-		'Ћбновить все полЯ Mediathek',
+		'РћР±РЅРѕРІРёС‚СЊ РІСЃРµ РїРѕР»СЏ Mediathek',
 
 		'Upgrade successful' => 
-		'Ћбновление прошло успешно',
+		'РћР±РЅРѕРІР»РµРЅРёРµ РїСЂРѕС€Р»Рѕ СѓСЃРїРµС€РЅРѕ',
 
 		'Upgrading your Mediathek' => 
-		'Ћбновление вашей Mediathek',
+		'РћР±РЅРѕРІР»РµРЅРёРµ РІР°С€РµР№ Mediathek',
 
 		'Upgrading your Mediathek fields to Subsection Manager will alter your database.' => 
-		'Ћбновление ваших полей Mediathek на Subsection Manager повлечЮт изменениЯ в вашей базе данных.',
+		'РћР±РЅРѕРІР»РµРЅРёРµ РІР°С€РёС… РїРѕР»РµР№ Mediathek РЅР° Subsection Manager РїРѕРІР»РµС‡С‘С‚ РёР·РјРµРЅРµРЅРёСЏ РІ РІР°С€РµР№ Р±Р°Р·Рµ РґР°РЅРЅС‹С….',
 
 		'Use comma separated entry ids for filtering.' => 
-		'ЏеречислЯйте entry ids через запЯтую длЯ фильтрации.',
+		'РџРµСЂРµС‡РёСЃР»СЏР№С‚Рµ entry ids С‡РµСЂРµР· Р·Р°РїСЏС‚СѓСЋ РґР»СЏ С„РёР»СЊС‚СЂР°С†РёРё.',
 
 		'You are using Mediathek and Subsection Manager simultaneously.' => 
-		'‚ы используете Mediathek и Subsection Manager вместе.',
+		'Р’С‹ РёСЃРїРѕР»СЊР·СѓРµС‚Рµ Mediathek Рё Subsection Manager РІРјРµСЃС‚Рµ.',
 
 		'Your Mediathek fields have successfully been upgrade to Subsection Manager.' => 
-		'‚аши полЯ Mediathek были успешно заменены на полЯ Subsection Manager.',
+		'Р’Р°С€Рё РїРѕР»СЏ Mediathek Р±С‹Р»Рё СѓСЃРїРµС€РЅРѕ Р·Р°РјРµРЅРµРЅС‹ РЅР° РїРѕР»СЏ Subsection Manager.',
 
 		'item' => 
-		'элемент',
+		'СЌР»РµРјРµРЅС‚',
 
 		'items' => 
-		'элементы',
+		'СЌР»РµРјРµРЅС‚С‹',
 
 		'no results' => 
-		'нет результатов',
+		'РЅРµС‚ СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ',
 
 		'{$count} results' => 
-		'{$count} результатов',
+		'{$count} СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ',
 
 		'It\'s available at %s.' => 
-		'„оступно: %s.',
+		'Р”РѕСЃС‚СѓРїРЅРѕ: %s.',
 
 	);
