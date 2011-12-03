@@ -2,8 +2,8 @@
 
 Subsection management for Symphony.  
 
-- Version: 1.3
-- Date: 11th October 2011
+- Version: 1.3.1
+- Date: 3rd December 2011
 - Requirements: Symphony 2.2 or newer, <http://github.com/symphonycms/symphony-2/>
 - Optional Requirement: JIT Image Manipulation (for image previews), <http://github.com/symphonycms/jit_image_manipulation/>
 - Author: Nils Hörrmann, post@nilshoerrmann.de
@@ -47,6 +47,10 @@ If you have Mediathek and Subsection Manager installed simultaneously, the inter
 Be aware that this upgrade process will alter your database and will uninstall your Mediathek extension. Make sure that you have an up-to-date backup of your site, containing all files and folders, and a copy of your database before you proceed with the upgrade. The upgrade cannot be undone.
 
 ## Release Notes
+
+**Version 1.3.1**
+
+- Added `extension.meta.xml` file
 
 **Version 1.3**
 
