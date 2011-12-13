@@ -1,6 +1,6 @@
-# Subsection Manager
+# Subsection Manager 1.3
 
-![Subsection Manager](http://projekte.nilshoerrmann.de/screenshots/extensions/subsectionmanager/sym_subsectionmanager.png)
+![Subsection Manager](http://projekte.nilshoerrmann.de/extensions/subsectionmanager/sym_subsectionmanager.png)
 
 Symphony offers an easy way to [create sections](http://symphony-cms.com/learn/concepts/view/sections/) and [model the fields](http://symphony-cms.com/learn/concepts/view/fields/) the way you like. Nevertheless, from time to time you need to connect the content of two sections: you might have an articles section you'd like to link images to, or you are building a books section you'd like to connect with authors. With a default Symphony install, you can use select boxes or selectbox links to create these connections, but you will not be able to see and manage all your content at once. The Subsection Manager tries to solve this problem by providing an inline management of another section's content. By adding the Subsection Manager field to your parent section, you can integrate another section as a subsection. The subsection's entries can be managed  through the inline interface as well as the regular Symphony section entry list. You can opt for inline editing only by simply hiding the specified section from the menu. 
 
