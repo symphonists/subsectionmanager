@@ -1,17 +1,6 @@
 # Subsection Manager
 
-Subsection management for Symphony.  
-
-- Version: 1.3.1
-- Date: 3rd December 2011
-- Requirements: Symphony 2.2 or newer, <http://github.com/symphonycms/symphony-2/>
-- Optional Requirement: JIT Image Manipulation (for image previews), <http://github.com/symphonycms/jit_image_manipulation/>
-- Author: Nils Hörrmann, post@nilshoerrmann.de
-- Contributors: [A list of contributors can be found in the commit history](http://github.com/nilshoerrmann/subsectionmanager/commits/development/)
-- GitHub Repository: <http://github.com/nilshoerrmann/subsectionmanager/>
-- Available languages: English (default), German, Italian
-
-## Synopsis
+![Subsection Manager](http://projekte.nilshoerrmann.de/screenshots/extensions/subsectionmanager/sym_subsectionmanager.png)
 
 Symphony offers an easy way to [create sections](http://symphony-cms.com/learn/concepts/view/sections/) and [model the fields](http://symphony-cms.com/learn/concepts/view/fields/) the way you like. Nevertheless, from time to time you need to connect the content of two sections: you might have an articles section you'd like to link images to, or you are building a books section you'd like to connect with authors. With a default Symphony install, you can use select boxes or selectbox links to create these connections, but you will not be able to see and manage all your content at once. The Subsection Manager tries to solve this problem by providing an inline management of another section's content. By adding the Subsection Manager field to your parent section, you can integrate another section as a subsection. The subsection's entries can be managed  through the inline interface as well as the regular Symphony section entry list. You can opt for inline editing only by simply hiding the specified section from the menu. 
 
@@ -45,46 +34,6 @@ To update Subsection Manager to a newer version perform the following steps:
 If you have Mediathek and Subsection Manager installed simultaneously, the interface of both extensions will be broken. While Mediathek is built to work with Symphony 2.0, Subsection Manager relies on the improved features of Symphony 2.1. If you have both extensions installed, the system will show a message in the extension overview which will help you to upgrade all your Mediathek fields to Subsection Manager.
 
 Be aware that this upgrade process will alter your database and will uninstall your Mediathek extension. Make sure that you have an up-to-date backup of your site, containing all files and folders, and a copy of your database before you proceed with the upgrade. The upgrade cannot be undone.
-
-## Release Notes
-
-**Version 1.3.1**
-
-- Added `extension.meta.xml` file
-
-**Version 1.3**
-
-- Reflect latest Symphony core changes (Thanks, Brendan!)
-- Updates Stage to 1.3 (Thanks, Brendan!)
-- Field now correctly outputs parameters (Thanks, Brendan!)
-- Improve compatibility with Reflection Field (Thanks, Marcin!)
-- Fix potential SQL Injection vulnerability (Thanks, Marcin!)
-- Fix bug where only the latest linked entry will be remembered (Thanks, Marcin!)
-- Fix potential encoding issue (Thanks, Marcin!)
-- Fix Call-time pass-by-reference warning that appeared in some environments (Thanks, Marcin!)
-
-**Version 1.2**
-
-- New setting to disable inline subsection editing
-- Better search performance
-- Dynamically adjust Stage height
-- Stability and compatibility update
-
-**Version 1.1**
-
-- Updated Stage
-- Removed Draggable plugin
-- General improvements and code clean-up
-- Symphony 2.2. compatibility
-
-**Version 1.0.1**
-
-- Fixed issue with the section editor display
-- Fixed issues with updates from beta versions
-
-**Version 1.0** 
-
-- Initial release
 
 ## Acknowledgement
 
