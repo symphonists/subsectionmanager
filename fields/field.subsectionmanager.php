@@ -559,11 +559,6 @@
 			$subsection->setHTMLFieldName($fieldname);
 			$content = $subsection->generate($this->get('id'), $this->get('subsection_id'), $data, $this->get('recursion_levels'), SubsectionManager::GETHTML);
 
-			// Setup sorting
-			// TODO: not needed anymore, but Stage may depend on it. Shouldn't Stage create one when needed?
-			$input = Widget::Input('fields[sort_order][' . $this->get('id') . ']', implode(',', $data['relation_id']), 'hidden');
-			$label->appendChild($input);
-
 			// Setup relation id
 			$input = Widget::Input('fields[subsection_id][' . $this->get('id') . ']', $this->get('subsection_id'), 'hidden');
 			$label->appendChild($input);
@@ -583,16 +578,15 @@
 			$item = new XMLElement('li', $thumb . '<span>' . __('New item') . '<br /><em>' . __('Please fill out the form below.') . '</em></span><a class="destructor">&#215;</a>', array('class' => 'template create preview'));
 			$selected->appendChild($item);
 
-			// Append drawer template
+			// Append subsection information
 			$subsection_handle = Symphony::Database()->fetchVar('handle', 0,
 				"SELECT `handle`
 				FROM `tbl_sections`
 				WHERE `id` = '" . $this->get('subsection_id') . "'
 				LIMIT 1"
 			);
-			$create_new = SYMPHONY_URL . '/publish/' . $subsection_handle;
-			$item = new XMLElement('li', '<iframe name="subsection-' . $this->get('element_name') . '" src="about:blank" target="' . $create_new . '"  frameborder="0"></iframe>', array('class' => 'drawer template'));
-			$selected->appendChild($item);
+			$wrapper->setAttribute('data-subsection-id', $this->get('subsection_id'));
+			$wrapper->setAttribute('data-subsection-new', SYMPHONY_URL . '/publish/' . $subsection_handle);
 
 			// Error handling
 			if($flagWithError != NULL) {

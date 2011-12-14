@@ -24,11 +24,11 @@
 				selection = stage.find('ul.selection'),
 				queue = stage.find('div.queue'),
 				queue_loaded = false,
-				drawer = stage.data('templates.stage').templates.filter('.drawer').removeClass('template'),
+				drawer = $('<div class="drawer"><iframe name="subsection-' + manager.attr('data-subsection-id') + '" src="about:blank" frameborder="0"></iframe></div>'),
 				context = manager.find('input[name*=subsection_id]'),
 				subsection = context.val(),
 				subsectionmanager_id = context.attr('name').match(/\[subsection_id\]\[(.*)\]/)[1],
-				subsection_link = drawer.find('iframe').attr('target'),
+				subsection_link = manager.attr('data-subsection-new'),
 				dragger = $('div.dragger'),
 				empty = $('<li class="message"><span>' + Symphony.Language.get('There are currently no items available. Perhaps you want create one first?') + '</li>'),
 				textarea = $('textarea');
@@ -48,7 +48,7 @@
 			stage.bind('destructstart', function(event, item) {
 			
 				// Hide drawer
-				item.next('li.drawer').slideUp('fast', function() {
+				item.find('div.drawer').slideUp('fast', function() {
 					$(this).remove();
 				});
 			});
@@ -67,10 +67,10 @@
 			
 			// Editing
 			if(!stage.is('.locked')) {
-				selection.delegate('li:not(.new, .drawer, .empty, .message)', 'click', function(event) {
+				selection.delegate('li:not(.new, .empty, .message)', 'click', function(event) {
 					var item = $(this),
 						target = $(event.target),
-						editor = item.next('.drawer');
+						editor = item.find('div.drawer');
 					
 					// Don't open editor for item that will be removed
 					if(target.is('.destructor, input')) {
@@ -101,7 +101,7 @@
 /*
 				var field_id = manager.attr('id').replace('field-','');
 
-				$('li:not(.new,.empty,.drawer,.message)', selection).each(function(index, item){
+				$('li:not(.new,.empty,.message)', selection).each(function(index, item){
 					var value = $(this).attr('data-value'),
 						quantity = manager.find('input.subsectionmanager.storage[name$="\\[' + value + '\\]"]');
 
@@ -191,9 +191,6 @@
 			// Sorting
 			selection.bind('orderstart.stage', function() {
 				selection.find('li.active').removeClass('active');
-				selection.find('li.drawer').slideUp('fast', function() {
-					$(this).remove();
-				});
 			});
 
 			selection.bind('orderstop.stage', function() {
@@ -201,7 +198,7 @@
 					last = stock.find('.template'),
 					storage = last.parent();
 
-				selection.find('li').not('.drawer').not('.new').not('.message').not('empty').each(function(index, item) {
+				selection.find('li').not('.new').not('.message').not('empty').each(function(index, item) {
 					var item = $(item),
 						id = item.attr('data-value'),
 						stored = stock.filter('[value="' + id + '"]');
@@ -261,9 +258,13 @@
 				
 					// Set height
 					var height = content.find('#wrapper').outerHeight() || iframe.height();
-					iframe.height(height).css('visibility', 'visible').animate({
-						opacity: 1,
-					}, 'fast');
+					iframe.css('visibility', 'visible').height(height).animate({
+						opacity: 1
+					}, 'fast', function() {
+					
+						// Make sure iframe is defenitly visible
+						$(this).css('visibility', 'visible');
+					});
 					editor.animate({
 						height: height
 					}, 'fast');
@@ -388,7 +389,7 @@
 				});
 				
 				// Show subsection editor
-				editor.insertAfter(item).slideDown('fast');			
+				editor.appendTo(item).slideDown('fast');			
 
 				stage.trigger('createstop', [item]);
 			};			
@@ -406,7 +407,7 @@
 				});
 
 				// Show subsection editor
-				editor.insertAfter(item).slideDown('fast');			
+				editor.appendTo(item).slideDown('fast');			
 		
 				stage.trigger('editstop', [item]);
 			};
@@ -444,7 +445,7 @@
 							stage.find('div.queue ul').prepend(result.clone());
 							
 							// Update selected item
-							item.children(':not(.destructor)').fadeOut('fast', function() {
+							item.children(':not(.destructor), :not(div.drawer)').fadeOut('fast', function() {
 								$(this).remove();
 								result.children().hide().prependTo(item);
 								item.attr('class', result.attr('class')).attr('data-value', result.attr('data-value')).children().fadeIn();
@@ -458,7 +459,8 @@
 						// Existing item
 						else {
 							queue_item.html(result.html()).addClass(result.attr('class')).attr('data-value', result.attr('data-value'));
-							item.html(result.html()).addClass(result.attr('class')).attr('data-value', result.attr('data-value')).append(destructor);
+							item.find('div.drawer').siblings().remove();
+							item.prepend(result.children()).addClass(result.attr('class')).attr('data-value', result.attr('data-value')).append(destructor);
 							stage.trigger('update');
 						}				
 					}
@@ -471,7 +473,7 @@
 					template = manager.find('input.subsectionmanager.storage.template'),
 					nonquantifiable = stage.is('.nonquantifiable');
 
-				selection.find('li:not(.drawer,.new,.message,.empty)').each(function(index, item) {
+				selection.find('li:not(.new, .message, .empty)').each(function(index, item) {
 					var item = $(item),
 						id = item.attr('data-value'),
 						stored = item.find('input[name$="\\[' + id + '\\]"]'),
