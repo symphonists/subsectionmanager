@@ -59,6 +59,15 @@
 			return true;
 		}
 
+		/** 
+		 * Test whether this field requires grouping. If this function returns true
+		 * SQL statements generated in the `EntryManager` will include the `DISTINCT` keyword
+		 * to only return a single row for an entry regardless of how many 'matches' it
+		 * might have. This default implementation returns false.
+		 */
+		public function requiresSQLGrouping(){
+			return ($this->get('allow_multiple') == 1 ? true : false);
+		}
 
 	/*-------------------------------------------------------------------------
 		Setup:
