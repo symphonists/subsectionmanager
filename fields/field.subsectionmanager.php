@@ -585,6 +585,7 @@
 				WHERE `id` = '" . $this->get('subsection_id') . "'
 				LIMIT 1"
 			);
+			$wrapper->setAttribute('data-field-id', $this->get('id'));
 			$wrapper->setAttribute('data-subsection-id', $this->get('subsection_id'));
 			$wrapper->setAttribute('data-subsection-new', SYMPHONY_URL . '/publish/' . $subsection_handle);
 
