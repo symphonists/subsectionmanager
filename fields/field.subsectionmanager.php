@@ -562,16 +562,12 @@
 			// Setup template for storage values
 			$label = Widget::Label($this->get('label'), $links);
 			$label->appendChild(Widget::Input($fieldname . '[quantity]', '', 'text', array('class' => 'subsectionmanager storage template')));
+			$wrapper->appendChild($label);
 
 			// Get Subsection
 			$subsection = new SubsectionManager();
 			$subsection->setHTMLFieldName($fieldname);
 			$content = $subsection->generate($this->get('id'), $this->get('subsection_id'), $data, $this->get('recursion_levels'), SubsectionManager::GETHTML);
-
-			// Setup relation id
-			$input = Widget::Input('fields[subsection_id][' . $this->get('id') . ']', $this->get('subsection_id'), 'hidden');
-			$label->appendChild($input);
-			$wrapper->appendChild($label);
 
 			// Get stage settings
 			$settings = ' ' . implode(' ', Stage::getComponents($this->get('id')));
