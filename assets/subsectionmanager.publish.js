@@ -25,9 +25,8 @@
 				queue = stage.find('div.queue'),
 				queue_loaded = false,
 				drawer = $('<div class="drawer"><iframe name="subsection-' + manager.attr('data-subsection-id') + '" src="about:blank" frameborder="0"></iframe></div>'),
-				context = manager.find('input[name*=subsection_id]'),
-				subsection = context.val(),
-				subsectionmanager_id = context.attr('name').match(/\[subsection_id\]\[(.*)\]/)[1],
+				subsectionmanager_id = manager.attr('data-field-id'),
+				subsection = manager.attr('data-subsection-id'),
 				subsection_link = manager.attr('data-subsection-new'),
 				dragger = $('div.dragger'),
 				empty = $('<li class="message"><span>' + Symphony.Language.get('There are currently no items available. Perhaps you want create one first?') + '</li>'),
@@ -480,7 +479,7 @@
 						itemname = '';
 
 					// New item
-					if(stored.length < 1) {
+					if(stored.length < 1 &&  stored.attr('name')) {
 						stored = template.clone();
 						itemname = stored.attr('name').replace(/\[quantity\]$/, '['+id+']');
 						stored.val("1").attr('value', "1").attr('name', itemname).removeClass('template').appendTo(item);
