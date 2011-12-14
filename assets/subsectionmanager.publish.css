@@ -152,3 +152,22 @@ div.field-subsectionmanager div.stage div.queue li.selected em {
 div.field-subsectionmanager div.stage div.queue li.selected img, div.field-subsectionmanager div.stage div.queue li.selected strong.file {
 	border-color: #335e9e;
 }
+
+/* Field error */
+
+div.field-subsectionmanager #error {
+	margin: -1.5em 0 1.5em;
+	padding: 1em 1em 0.75em;
+	background-color: #D42;
+	border: 1px solid #C31;
+	border-bottom-color: #B21;
+}
+
+div.field-subsectionmanager #error > p {
+	padding: 0;
+	border: none;
+}
+
+div.field-subsectionmanager #error div.stage {
+	margin: 0 0 0.75em !important;
+}
