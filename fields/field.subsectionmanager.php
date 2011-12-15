@@ -249,10 +249,6 @@
 			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][lock]" value="1" type="checkbox"' . ($this->get('lock') == 0 ? '' : ' checked="checked"') . '/> ' . __('Disallow item editing') . ' <i>' . __('This will lock items and disable the inline editor') . '</i>');
 			$div[0]->appendChild($setting);
 
-			// Setting: allow quantities
-			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][allow_quantities]" value="1" type="checkbox"' . ($this->get('allow_quantities') == 0 ? '' : ' checked="checked"') . '/> ' . __('Allow item quantities') . ' <i>' . __('This will enable setting quantity of selected items') . '</i>');
-			$div[0]->appendChild($setting);
-
 			// Append behaviour settings
 			$wrapper->appendChild($fieldset);
 
@@ -414,7 +410,6 @@
 			$fields['field_id'] = $id;
 			$fields['subsection_id'] = $this->get('subsection_id');
 			$fields['allow_multiple'] = ($this->get('allow_multiple') ? 1 : 0);
-			$fields['allow_quantities'] = ($this->get('allow_quantities') ? 1 : 0);
 			$fields['show_preview'] = ($this->get('show_preview') ? 1 : 0);
 			$fields['lock'] = ($this->get('lock') ? 1 : 0);
 
