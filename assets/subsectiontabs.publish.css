@@ -96,12 +96,12 @@ body.subsectiontabs iframe.subsectiontab {
 	text-shadow: 1px 1px 1px rgba(187, 34, 17, 1);
 }
 
-#subsectiontabs.destructable li {
+#subsectiontabs li {
 	padding-right: 20px;
 	position: relative;
 }
 
-#subsectiontabs.destructable li a, #subsectiontabs.destructable li.selected:hover a {
+#subsectiontabs li a.destructor, #subsectiontabs.destructable li.selected:hover a.destructor {
 	position: absolute;
 	top: 3px;
 	right: 4px;
@@ -112,11 +112,11 @@ body.subsectiontabs iframe.subsectiontab {
 	padding: 3px;
 }
 
-#subsectiontabs.destructable li:hover a {
+#subsectiontabs li:hover a.destructor {
 	color: rgba(0, 0, 0, 0.2);
 }
 
-#subsectiontabs.destructable li a:hover, #subsectiontabs.destructable li.selected a:hover {
+#subsectiontabs li a.destructor:hover, #subsectiontabs li.selected a.destructor:hover {
 	color: rgba(0, 0, 0, 0.5);
 }
 

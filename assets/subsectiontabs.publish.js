@@ -4,9 +4,7 @@
 	Symphony.Language.add({
 		'Some errors were encountered while attempting to save.': false,
 		'Untitled': false,
-		'You just removed the tab "{$tab}". It will be deleted when you save this entry.': false,
-		'Undo?': false,
-		'An error occured while restoring the tab.': false
+		'Would you like to clear this tab?': false
 	});
 	
 	/**
@@ -78,12 +76,6 @@
 			if(target.is('a')) {
 				return false;
 			}
-				
-			// Close tab editors:
-			// Set timeout to not interfer with doubleclick actions
-			setTimeout(function() {
-				$('body').trigger('click', [control]);		
-			}, 200);
 
 			// Don't load tab while editing
 			if(target.is('input')) {
@@ -109,108 +101,12 @@
 			}
 		});
 
-		// Dynamic tabs
-		if(field.find('label').is('.allow_dynamic_tabs')) {
+		// Clear tab
+		controls.delegate('a.destructor', 'click', function() {
+			var control = $(this).parent();
 			
-			// Create tab
-			controls.delegate('li.new', 'click.subsectiontabs', function(event) {
-				var creator = $(this),
-					name = getName(Symphony.Language.get('Untitled')),
-					control = create(name, 'new', field.find('input[name="field[' + handle + '][new]"]').val(), false, true),
-					subsection = tabs.find('iframe');
-
-				// Deselect other tabs
-				controls.find('li').removeClass('selected');
-				subsection.hide();
-
-				// Load new tab
-				control.hide().insertBefore(creator);
-				insert(control);
-				load(control);
-			});
-
-			// Edit tab name
-			controls.delegate('li', 'dblclick.subsectiontabs', function(event) {
-				var tab = $(this).addClass('selected'),
-					label = tab.find('span'),
-					value = label.text(),
-					input = $('<input type="text" />').val(value);
-					
-				// Replace text with input
-				label.replaceWith(input);
-				
-				// Store name and focus
-				input.attr('data-name', value).focus();
-			});
-			
-			// Fetch keys
-			controls.delegate('input', 'keyup.subsectiontabs', function(event) {
-				var input = $(this);
-
-				// Enter = apply
-				if(event.which == 13) {
-					$('body').click();
-				}
-				
-				// Escape = undo
-				if(event.which == 27) {
-				
-					// Restore old name
-					input.val(input.attr('data-name'));
-					$('body').click();
-				}				
-			});
-			
-			// Stop editing tab names
-			$('body').bind('click.subsectiontabs', function(event, tab) {
-				if($(event.target).parents('#subsectiontabs li').size() > 0) return false;
-			
-				controls.find('li:has(input)').not($(tab)).each(function() {
-					var control = $(this),
-						subsection = tabs.find('iframe:visible'),
-						input = control.find('input'),
-						value = $.trim(input.val()),
-						name = getName(value);
-															
-					// Save tab name
-					input.replaceWith('<span>' + name + '</span>');
-					
-					// Rename iframe if no identifier has been set
-					if(!control.attr('data-id') || control.attr('data-id') == 'new') {
-						subsection.attr('name', name);
-						remember(subsection);
-					}
-				});
-			});
-			
-			// Remove tab
-			controls.delegate('a', 'click', function() {
-				var control = $(this).parent();
-				
-				remove(control);
-			});
-			
-			// Undo removal
-			$('#header').delegate('a.undo', 'click', function() {
-				var undo = $(this),
-					id = undo.attr('name'),
-					control = controls.find('li[data-id="' + id + '"]');
-					
-				// Restore				
-				if(control.size() > 0) {
-					Symphony.Message.clear('notice');
-					insert(control);
-				}
-				
-				// Error
-				else {
-					Symphony.Message.post(
-						Symphony.Language.get('An error occured while restoring the tab.'),
-						'error'
-					);
-				}				
-			});
-		}
+			clear(control);
+		});
 		
 		// Save tab
 		$('body.subsectiontabs form div.actions input').click(function(event, validated) {
@@ -239,25 +135,15 @@
 	/*-----------------------------------------------------------------------*/
 	
 		// Create control
-		var create = function(name, id, link, static, selected) {
+		var create = function(name, id, link, selected) {
 			var control = $('<li />');
 		
 			// Set values
-			control.append('<span>' + name + '</span>').attr({
+			control.addClass('static').append('<span>' + name + '</span><a class="destructor">×</a>').attr({
 				'data-id': id,
 				'data-link': link
 			});
-			
-			// Set mode
-			if(static === true) {
-				control.addClass('static');
-			}
-						
-			// Add destructor
-			else {
-				control.append('<a class="destructor">×</a>');
-			}
-			
+
 			// Select
 			if(selected === true) {
 				control.addClass('selected');
@@ -329,50 +215,24 @@
 		}
 		
 		// Delete a tab
-		var remove = function(control) {
-			var width = control.width(),
-				name = control.find('span').text(),
+		var clear = function(control) {
+			var name = control.find('span').text(),
 				id = control.attr('data-id') || name,
-				prev = control.prev('li:visible').filter(':not(.delete)'),
-				next = control.next('li:visible').filter(':not(.new, .delete)');
-			
-			// Switch tab
-			if(control.is('.selected')) {
-				if(prev.size() > 0) {
-					prev.click();
-				}
-				else if(next.size() > 0) {
-					next.click();
-				}
-			}
+				message = Symphony.Language.get('Would you like to clear this tab?');
 
-			// Hide tab
-			control.animate({
-				'opacity': 0
-			}, 'fast', function() {
-			
-				// Create empty tab if needed
-				if(prev.size() == 0 && next.size() == 0) {
-					controls.find('li.new').click();
-				}
+			if(confirm(message)) {
+				tabs.find('[name="' + id + '"]').fadeOut('fast', function() {
+					var	link = field.find('input[name*="[new]"]').val();
 					
-				// Shrink tab
-				control.find('span, a').hide();
-				control.addClass('delete').css('width', control.outerWidth()).attr('data-width', width).animate({
-					'width': 0,
-				}, 'fast', function() {
-				
-					// Reset styles
-					control.removeAttr('style').hide();
-										
-					// Show undo message
-					Symphony.Message.post(
-						Symphony.Language.get('You just removed the tab "{$tab}". It will be deleted when you save this entry.', { 'tab': name }) + 
-						' <a class="undo" name="' + id + '">' + Symphony.Language.get('Undo?') + '</a>',
-						'notice'
-					);
-				});
-			});
+					// Mark old tab for deletion on next save
+					control.clone().hide().addClass('delete').appendTo(controls);
+					
+					// Switch to empty tab
+					control.attr('data-id', name);
+					control.attr('data-link', link);
+					load(control);
+				});				
+			}			
 		}
 		
 		// Get name, making sure there are no duplicates
@@ -571,10 +431,10 @@
 		}
 
 		// Add controls
-		chosen = storage.find('li').each(function(count) {
+		storage.find('li').each(function(count) {
 			var item = $(this),
 				name = item.find('input:eq(1)').val(),
-				id = item.find('input:eq(0)').val(),
+				id = item.find('input:eq(0)').val() || name,
 				link = item.find('a').attr('href'),
 				static = false,
 				selected = false,
@@ -584,41 +444,20 @@
 			if(state.height) {
 				tabs.height(state.height);
 			}
-				
-			// Fallback id
-			if(!id) {
-				id = name;
-			}
-			
-			// Static tabs
-			if(item.is('.static')) {
-				static = true;
-			}
 			
 			// Selection
-			if((Symphony.Context.get('env').page == 'new' && count == 0) || (state.tab == -1 && count == 0) || id == state.tab) {
+			console.log(state.tab);
+			if((Symphony.Context.get('env').page == 'new' && count == 0) || (state.tab < 1 && count == 0) || id == state.tab) {
 				selected = true;
 			}
 
 			// Create control
-			control = create(name, id, link, static, selected);
+			control = create(name, id, link, selected);
 			controls.append(control);
 			
 			// Preload tab
 			load(control);
-		}).filter('.selected');
-		
-		// Select only one tab at a time
-		if(chosen.size() != 1) {
-			storage.find('li:first').click();
-		}
-		
-		// Allow dynamic controls
-		if(label.is('.allow_dynamic_tabs')) {
-			controls.addClass('destructable');
-			$('<li class="new"><span>+</span></li>').appendTo(controls);
-		}
-
+		});
 	});
 	
 })(jQuery.noConflict());

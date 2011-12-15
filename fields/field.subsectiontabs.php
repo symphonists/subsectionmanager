@@ -286,8 +286,10 @@
 			if(empty($data)) return NULL;
 
 			// Create handles
-			foreach($data['name'] as $name) {
-				$data['handle'][] = Lang::createHandle($name);
+			if(isset($data['name'])) {
+				foreach($data['name'] as $name) {
+					$data['handle'][] = Lang::createHandle($name);
+				}
 			}
 
 			// Delete removed tab entries
