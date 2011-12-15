@@ -183,27 +183,6 @@
 				}
 			}
 
-			// Dynamic tabs
-			if($this->get('allow_dynamic_tabs') == 1) {
-				foreach($existing_tabs as $tab => $id) {
-
-					// Get mode
-					if(empty($id)) {
-						$mode = 'new';
-					}
-					else {
-						$mode = 'edit';
-					}
-
-					// Append tab
-					$list->appendChild($this->__createTab(
-						$tab,
-						SYMPHONY_URL . '/publish/' . $subsection . '/' . $mode . '/' . $id,
-						$id
-					));
-				}
-			}
-
 			// No tabs yet
 			if($this->get('static_tabs') == '' && empty($existing_tabs)) {
 				$list->appendChild($this->__createTab(
