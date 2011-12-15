@@ -45,6 +45,7 @@
 
 			// Basics
 			parent::displaySettingsPanel($wrapper, $errors);
+			$div = new XMLElement('div', NULL, array('class' => 'group'));
 
 			// Subsection
 			$sectionManager = new SectionManager(Symphony::Engine());
@@ -65,25 +66,18 @@
 			$label = new XMLElement('label', __('Subsection'));
 			$selection = Widget::Select('fields[' . $this->get('sortorder') . '][subsection_id]', $options);
 			$label->appendChild($selection);
-			$wrapper->appendChild($label);
+			$div->appendChild($label);
 
-			// Static tab names
-			$label = new XMLElement('label', __('Static tab names') . '<i>' . __('List of comma-separated predefined tabs') . '</i>');
+			// Tab names
+			$label = new XMLElement('label', __('Tab names') . '<i>' . __('List of comma-separated tabs') . '</i>');
 			$tabs = Widget::Input('fields['.$this->get('sortorder').'][static_tabs]', $this->get('static_tabs'));
 			$label->appendChild($tabs);
-			$wrapper->appendChild($label);
-
-			// Allow dynamic tabs
-			$checkbox = Widget::Input('fields['.$this->get('sortorder').'][allow_dynamic_tabs]', 1, 'checkbox');
-			if($this->get('allow_dynamic_tabs') == 1) {
-				$checkbox->setAttribute('checked', 'checked');
-			}
-			$label = new XMLElement('label', $checkbox->generate() . ' ' . __('Allow creation of dynamic tabs'), array('class' => 'meta'));
-			$wrapper->appendChild($label);
+			$div->appendChild($label);
 
 			// General
 			$fieldset = new XMLElement('fieldset');
 			$this->appendShowColumnCheckbox($fieldset);
+			$wrapper->appendChild($div);
 			$wrapper->appendChild($fieldset);
 		}
 
@@ -101,7 +95,6 @@
 			$fields['field_id'] = $this->get('id');
 			$fields['subsection_id'] = $this->get('subsection_id');
 			$fields['static_tabs'] = $this->get('static_tabs');
-			$fields['allow_dynamic_tabs'] = ($this->get('allow_dynamic_tabs') ? 1 : 0);
 
 			// Delete old field settings
 			Symphony::Database()->query(
