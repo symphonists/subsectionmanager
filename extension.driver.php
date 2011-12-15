@@ -101,6 +101,11 @@
 					'callback' => '__upgradeMediathek'
 				),
 				array(
+					'page' => '/publish/',
+					'delegate' => 'Delete',
+					'callback' => '__deleteTabs'
+				),
+				array(
 					'page' => '/frontend/',
 					'delegate' => 'DataSourceEntriesBuilt',
 					'callback' => '__prepareSubsection'
@@ -170,6 +175,38 @@
 						__('You are using Mediathek and Subsection Manager simultaneously.') . ' <a href="http://' . DOMAIN . '/symphony/extension/subsectionmanager/">' . __('Upgrade') . '?</a> <a href="http://' . DOMAIN . '/symphony/extension/subsectionmanager/uninstall/mediathek">' . __('Uninstall Mediathek') . '</a> <a href="http://' . DOMAIN . '/symphony/extension/subsectionmanager/uninstall/subsectionmanager">' . __('Uninstall Subsection Manager') . '</a>',
 						Alert::ERROR
 					);
+				}
+			}
+		}
+		
+		/**
+		 * Delete tab entries, when parent entry is deleted
+		 */
+		public function __deleteTabs($context) {
+		
+			// Get Subsection Tab field
+			$callback = Symphony::Engine()->getPageCallback();	
+			$sectionManager = new SectionManager(Symphony::Engine());
+			$section_id = $sectionManager->fetchIDFromHandle($callback['context']['section_handle']);
+			$field_id = Symphony::Database()->fetchCol('id', "
+				SELECT `id`  
+				FROM `tbl_fields` 
+				WHERE `type` = 'subsectiontabs' 
+				AND `parent_section` = '$section_id'
+			");
+			
+			// Section with Tabs
+			if($field_id) {
+				$relation_id = Symphony::Database()->fetchCol('relation_id', "
+					SELECT `relation_id` 
+					FROM sym_entries_data_" . $field_id[0] . "
+					WHERE `entry_id` IN(" . implode(',', $context['entry_id']) . ")
+				");
+			
+				// Delete existing tabs
+				if(!empty($relation_id)) {
+					$entryManager = new EntryManager(Symphony::Engine());
+					$entryManager->delete($relation_id);
 				}
 			}
 		}
