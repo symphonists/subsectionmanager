@@ -26,7 +26,7 @@
 		/**
 		 * Private flag set when cache is to be updated
 		 */
-		private static $updateCache;
+		private static $updateCache = true;
 
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/extension/#__construct
@@ -45,10 +45,19 @@
 					throw new SymphonyErrorPage(__('Please make sure that the Stage submodule is initialised and available at %s.', array('<code>' . EXTENSIONS . '/subsectionmanager/lib/stage/</code>')) . '<br/><br/>' . __('It\'s available at %s.', array('<a href="https://github.com/nilshoerrmann/stage">github.com/nilshoerrmann/stage</a>')), __('Stage not found'));
 				}
 			}
-
-			self::$updateCache = false;
-			if(!isset(self::$storage['cache']) && file_exists(MANIFEST . '/subsectionmanager-storage')) {
-				self::$storage = unserialize(file_get_contents(MANIFEST . '/subsectionmanager-storage'));
+			
+			// Prepare cache
+			if(file_exists(MANIFEST . '/subsectionmanager-storage')) {
+				
+				// Data Source files have not been changed
+				if(filemtime(DATASOURCES) < filemtime(MANIFEST . '/subsectionmanager-storage')) {
+					self::$updateCache = false;
+				}
+				
+				// Get cache
+				elseif(!isset(self::$storage['cache'])) {
+					self::$storage = unserialize(file_get_contents(MANIFEST . '/subsectionmanager-storage'));
+				}
 			}
 
 			// Initialise Entry Manager
@@ -195,7 +204,6 @@
 
 		/**
 		 * Clear cache.
-		 * TODO: clear cache after field is removed from section.
 		 *
 		 * @see http://symphony-cms.com/learn/api/2.2/delegates/#DatasourcePreDelete
 		 */
@@ -276,6 +284,12 @@
 				}
 			}
 
+			// Update field cache
+			if(self::$updateCache == true) {
+				file_put_contents(MANIFEST . '/subsectionmanager-storage', serialize(self::$storage));
+				self::$updateCache = false;
+			}
+
 			// Preload entries
 			self::preloadSubsectionEntries($context['entries']['records']);
 		}
@@ -287,7 +301,7 @@
 		 *	The data source class to parse
 		 */
 		private function __parseSubsectionFields($fields, $context, $datasource = null) {
-
+		
 			// Get source
 			$section = 0;
 			$updateCache = false;
@@ -296,9 +310,10 @@
 					$section = $datasource;
 				}
 				else if(is_object($datasource)) {
+
 					// Try cached version first
 					$updateCache = self::$updateCache;
-					if(empty($updateCache) && isset(self::$storage['elements'][$context])) {
+					if($updateCache == true && isset(self::$storage['elements'][$context])) {
 						$datasource->dsParamINCLUDEDELEMENTS = self::$storage['elements'][$context];
 						return;
 					}
