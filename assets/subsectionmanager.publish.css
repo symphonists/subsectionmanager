@@ -71,6 +71,10 @@ div.dragger a.file {
 	padding: 0 0 0 52px;
 }
 
+div.dragger div.drawer {
+	display: none !important;
+}
+
 div.field-subsectionmanager div.stage li.new {
 	padding-left: 52px;
 	min-height: 52px;
