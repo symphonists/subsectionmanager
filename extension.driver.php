@@ -65,7 +65,7 @@
 			return array(
 				'name' => 'Subsection Manager',
 				'type' => 'Field, Interface',
-				'version' => '2.0dev.5',
+				'version' => '2.0alpha',
 				'release-date' => false,
 				'author' => array(
 					'name' => 'Nils Hörrmann',
@@ -483,7 +483,6 @@
 					`show_preview` tinyint(1) default '0',
 					`lock` tinyint(1) DEFAULT '0',
 					`recursion_levels` tinyint DEFAULT '0',
-					`allow_quantities` tinyint(1) default '0',
 					PRIMARY KEY	 (`id`),
 					KEY `field_id` (`field_id`)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;"
@@ -496,7 +495,6 @@
 					`field_id` int(11) unsigned NOT NULL,
 					`subsection_id` varchar(255) NOT NULL,
 					`static_tabs` varchar(255) DEFAULT NULL,
-					`allow_dynamic_tabs` tinyint(1) NOT NULL DEFAULT '1',
 					PRIMARY KEY (`id`),
 					KEY `field_id` (`field_id`)
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;"
@@ -526,8 +524,7 @@
 				$this->install();
 
 				// Add context row and return status
-				$context = Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'context'");
-				if(!$context) {
+				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'context'") == false) {
 					$status[] = Symphony::Database()->query(
 						"ALTER TABLE `tbl_fields_stage` ADD `context` varchar(255) default NULL"
 					);
@@ -540,8 +537,7 @@
 			if(version_compare($previousVersion, '1.1', '<')) {
 
 				// Add droptext column
-				$droptext = Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'droptext'");
-				if(!$droptext) {
+				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'droptext'") == false) {
 					$status[] = Symphony::Database()->query(
 						"ALTER TABLE `tbl_fields_subsectionmanager` ADD `droptext` text default NULL"
 					);
@@ -558,9 +554,10 @@
 					// Move sort orders to stage table
 					if(is_array($sortings)) {
 						foreach($sortings as $sorting) {
-							$status[] = Symphony::Database()->query(
-								"INSERT INTO tbl_fields_stage_sorting (`entry_id`, `field_id`, `order`, `context`) VALUES (" . $sorting['entry_id'] . ", " . $sorting['field_id'] . ", '" . $sorting['order'] . "', 'subsectionmanager')"
-							);
+							$status[] = Symphony::Database()->query("
+								INSERT INTO tbl_fields_stage_sorting (`entry_id`, `field_id`, `order`, `context`) 
+								VALUES (" . $sorting['entry_id'] . ", " . $sorting['field_id'] . ", '" . $sorting['order'] . "', 'subsectionmanager')
+							");
 						}
 					}
 
@@ -572,29 +569,21 @@
 				$field_ids = array();
 				$associations = array();
 				$field_ids = Symphony::Database()->fetchCol('field_id', "
-					SELECT
-						f.field_id
-					FROM
-						`tbl_fields_subsectionmanager` AS f
+					SELECT f.field_id
+					FROM `tbl_fields_subsectionmanager` AS f
 				");
 				if(!empty($field_ids)) {
-					foreach ($field_ids as $id) {
+					foreach($field_ids as $id) {
 						$parent_section_id = Symphony::Database()->fetchVar('parent_section', 0, "
-							SELECT
-								f.parent_section
-							FROM
-								`tbl_fields` AS f
-							WHERE
-								f.id = '{$id}'
+							SELECT f.parent_section
+							FROM `tbl_fields` AS f
+							WHERE f.id = '{$id}'
 							LIMIT 1
 						");
 						$child_section_id = Symphony::Database()->fetchVar('subsection_id', 0, "
-							SELECT
-								f.subsection_id
-							FROM
-								`tbl_fields_subsectionmanager` AS f
-							WHERE
-								f.field_id = '{$id}'
+							SELECT f.subsection_id
+							FROM `tbl_fields_subsectionmanager` AS f
+							WHERE f.field_id = '{$id}'
 							LIMIT 1
 						");
 						$associations[] = array(
@@ -618,8 +607,7 @@
 			if(version_compare($previousVersion, '1.2', '<')) {
 
 				// Add lock column
-				$lock = Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'lock'");
-				if(!$lock) {
+				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'lock'") == false) {
 					$status[] = Symphony::Database()->query(
 						"ALTER TABLE `tbl_fields_subsectionmanager` ADD `lock` tinyint(1) DEFAULT '0'"
 					);
@@ -637,11 +625,19 @@
 						`field_id` int(11) unsigned NOT NULL,
 						`subsection_id` varchar(255) NOT NULL,
 						`static_tabs` varchar(255) DEFAULT NULL,
-						`allow_dynamic_tabs` tinyint(1) NOT NULL DEFAULT '1',
 						PRIMARY KEY (`id`),
 						KEY `field_id` (`field_id`)
 					)"
 				);
+
+				// Remove dynamic tabs available in early development versions
+				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectiontabs` LIKE 'allow_dynamic_tabs'") == true) {
+					$status[] = Symphony::Database()->query(
+						"ALTER TABLE `tbl_fields_subsectiontabs` DROP `allow_dynamic_tabs`"
+					);
+				}
+
+			/*-------------------------------------------------------------------*/
 
 				// Add recursion levels
 				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'recursion_levels'") == false) {
@@ -649,79 +645,18 @@
 						"ALTER TABLE `tbl_fields_subsectionmanager` ADD COLUMN `recursion_levels` tinyint DEFAULT '0'"
 					);
 				}
-
-				// Maintenance
+				
+				// Remove nonunique setting available in early development versions
 				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'allow_nonunique'") == true) {
 					$status[] = Symphony::Database()->query(
-						"ALTER TABLE `tbl_fields_subsectionmanager` CHANGE `allow_nonunique` `allow_quantities` tinyint(1) DEFAULT '0'"
+						"ALTER TABLE `tbl_fields_subsectionmanager` DROP `allow_nonunique`"
 					);
 				}
-
-				// Add quantities
-				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'allow_quantities'") == false) {
+				
+				// Remove quantities setting available in early development versions
+				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'allow_quantities'") == true) {
 					$status[] = Symphony::Database()->query(
-						"ALTER TABLE `tbl_fields_subsectionmanager` ADD COLUMN `allow_quantities` tinyint(1) DEFAULT '0'"
-					);
-				}
-
-				// Reorder entries to the selected sortorder
-				$field_ids = Symphony::Database()->fetchCol('field_id', "
-					SELECT
-						f.field_id
-					FROM
-						`tbl_fields_subsectionmanager` AS f
-				");
-				if(!empty($field_ids) && is_array($field_ids)) {
-					$table = 'tbl_'.time();
-					Symphony::Database()->query(
-						"CREATE TABLE `{$table}` (
-							`entry_id` int(11) unsigned NOT NULL,
-							`relation_id` int(11) unsigned DEFAULT NULL,
-							`sorted` int(11) unsigned DEFAULT 0,
-							`quantity` int(11) unsigned DEFAULT '1',
-							KEY `sorted` (`sorted`)
-						) TYPE=MyISAM;"
-					);
-					foreach($field_ids as $field_id) {
-						Symphony::Database()->query(
-							"TRUNCATE TABLE `{$table}`"
-						);
-						$has_quantity = (boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_entries_data_{$field_id}` LIKE 'quantity'");
-						Symphony::Database()->query(
-							"INSERT INTO `{$table}` (`entry_id`, `relation_id`, `sorted`, `quantity`)
-								SELECT `d`.`entry_id`, `d`.`relation_id`, FIND_IN_SET(`d`.`relation_id`, `s`.`order`)". ($has_quantity ? ', `d`.`quantity`' : ', 1') ."
-								FROM `tbl_entries_data_{$field_id}` d
-								LEFT JOIN `tbl_fields_stage_sorting` s ON `d`.`entry_id` = `s`.`entry_id` AND `s`.`context` = 'subsectionmanager' AND `s`.`field_id` = {$field_id}
-							"
-						);
-						Symphony::Database()->query(
-							"TRUNCATE TABLE `tbl_entries_data_{$field_id}`"
-						);
-						if($has_quantity == false) {
-							$status[] = Symphony::Database()->query(
-								"ALTER TABLE `tbl_entries_data_{$field_id}` ADD COLUMN `quantity` int(11) unsigned DEFAULT '1'"
-							);
-						}
-						$status[] = Symphony::Database()->query(
-							"INSERT INTO `tbl_entries_data_{$field_id}` (`entry_id`, `relation_id`, `quantity`)
-								SELECT `t`.`entry_id`, `t`.`relation_id`, `t`.`quantity`
-								FROM `{$table}` t
-								WHERE `t`.`sorted` IS NOT NULL AND `t`.`sorted` > 0
-								ORDER BY `t`.`entry_id` ASC, `t`.`sorted` ASC
-							"
-						);
-						// Unsorted entries should be after sorted ones
-						$status[] = Symphony::Database()->query(
-							"INSERT INTO `tbl_entries_data_{$field_id}` (`entry_id`, `relation_id`, `quantity`)
-								SELECT `t`.`entry_id`, `t`.`relation_id`, `t`.`quantity`
-								FROM `{$table}` t
-								WHERE `t`.`sorted` IS NULL OR `t`.`sorted` = 0
-								ORDER BY `t`.`entry_id` ASC, `t`.`sorted` ASC
-							"
-						);
-					}
-					Symphony::Database()->query(
-						"DROP TABLE IF EXISTS `{$table}`"
+						"ALTER TABLE `tbl_fields_subsectionmanager` DROP `allow_quantities`"
 					);
 				}
 			}
@@ -744,13 +679,14 @@
 
 			// Drop related entries from stage tables
 			Symphony::Database()->query("DELETE FROM `tbl_fields_stage` WHERE `context` = 'subsectionmanager'");
-			Symphony::Database()->query("DELETE FROM `tbl_fields_stage_sorting` WHERE `context` = 'subsectionmanager'");
 
 			// Drop tables
 			Symphony::Database()->query("DROP TABLE IF EXISTS `tbl_fields_subsectionmanager`");
+			Symphony::Database()->query("DROP TABLE IF EXISTS `tbl_fields_subsectiontabs`");
 
 			// Maintenance
 			Symphony::Database()->query("DROP TABLE IF EXISTS `tbl_fields_subsectionmanager_sorting`");
+			Symphony::Database()->query("DELETE FROM `tbl_fields_stage_sorting` WHERE `context` = 'subsectionmanager'");
 		}
 
 	}
