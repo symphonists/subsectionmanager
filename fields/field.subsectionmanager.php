@@ -16,7 +16,7 @@
 	Class fieldSubsectionmanager extends Field {
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#__construct
+		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#__construct
 		 */
 		function __construct(&$parent) {
 			parent::__construct($parent);
@@ -30,30 +30,28 @@
 	-------------------------------------------------------------------------*/
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#canFilter
+		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#canFilter
 		 */
 		function canFilter(){
 			return true;
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#isSortable
+		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#isSortable
 		 */
 		public function isSortable(){
-			// Sorting by quantity makes sense only when multiple selection is disabled
-			return ($this->get('allow_quantities') != 0 && $this->get('allow_multiple') == 0 ? true : false);
+			return false;
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#allowDatasourceOutputGrouping
+		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#allowDatasourceOutputGrouping
 		 */
 		public function allowDatasourceOutputGrouping(){
-			// Grouping makes sense only when multiple selection is disabled
 			return ($this->get('allow_multiple') == 0 ? true : false);
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#allowDatasourceParamOutput
+		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#allowDatasourceParamOutput
 		 */
 		function allowDatasourceParamOutput(){
 			return true;
@@ -74,7 +72,7 @@
 	-------------------------------------------------------------------------*/
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#createTable
+		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#createTable
 		 */
 		function createTable(){
 			return Symphony::Database()->query(
@@ -82,7 +80,6 @@
 				  `id` int(11) unsigned NOT NULL auto_increment,
 				  `entry_id` int(11) unsigned NOT NULL,
 				  `relation_id` int(11) unsigned DEFAULT NULL,
-				  `quantity` int(11) unsigned DEFAULT '1',
 				  PRIMARY KEY (`id`),
 				  KEY `entry_id` (`entry_id`),
 				  KEY `relation_id` (`relation_id`)
@@ -96,7 +93,7 @@
 	-------------------------------------------------------------------------*/
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#fetchAssociatedEntrySearchValue
+		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#fetchAssociatedEntrySearchValue
 		 *
 		 * `$data` would contain the related entries, but is usually `null` when called from the frontend
 		 * (when the field is not included in the DS, and only then "associated entry count" makes sense)
@@ -108,7 +105,7 @@
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#fetchAssociatedEntryCount
+		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#fetchAssociatedEntryCount
 		 */
 		public function fetchAssociatedEntryCount($value){
 			if(isset($value)) {
@@ -126,7 +123,7 @@
 
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#displaySettingsPanel
+		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#displaySettingsPanel
 		 */
 		function displaySettingsPanel(&$wrapper, $errors=NULL) {
 
@@ -235,7 +232,6 @@
 				$this->set('allow_multiple', 1);
 				$this->set('show_preview', 1);
 				$this->set('recursion_levels', 1);
-				$this->set('allow_quantities', 0);
 			}
 
 			// Get settings
@@ -361,7 +357,7 @@
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#checkFields
+		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#checkFields
 		 */
 		function checkFields(&$errors, $checkForDuplicates=true) {
 
@@ -396,7 +392,7 @@
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#commit
+		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#commit
 		 */
 		function commit() {
 
@@ -498,7 +494,7 @@
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#createSectionAssociation
+		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#createSectionAssociation
 		 */
 		public function createSectionAssociation($parent_section_id = null, $child_section_id = null, $child_field_id = null, $parent_field_id = null, $show_association = false){
 
@@ -529,11 +525,10 @@
 		/**
 		 * If you need to fetch the pure data this field returns, please use getDefaultPublishContent()
 		 *
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#displayPublishPanel
+		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#displayPublishPanel
 		 */
 		function displayPublishPanel(&$wrapper, $data=NULL, $flagWithError=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL, $entry_id=NULL) {
 			if(!is_array($data['relation_id'])) $data['relation_id'] = array($data['relation_id']);
-			if(!is_array($data['quantity'])) $data['quantity'] = array($data['quantity']);
 
 			// Houston, we have problem: we've been called out of context!
 			$callback = Administration::instance()->getPageCallback();
@@ -554,21 +549,15 @@
 			// Setup field name
 			$fieldname = 'fields' . $fieldnamePrefix . '['. $this->get('element_name') . ']' . $fieldnamePostfix;
 
-			// Setup template for storage values
-			$label = Widget::Label($this->get('label'), $links);
-			$label->appendChild(Widget::Input($fieldname . '[quantity]', '', 'text', array('class' => 'subsectionmanager storage template')));
-			$wrapper->appendChild($label);
-
 			// Get Subsection
 			$subsection = new SubsectionManager();
-			$subsection->setHTMLFieldName($fieldname);
 			$content = $subsection->generate($this->get('id'), $this->get('subsection_id'), $data, $this->get('recursion_levels'), SubsectionManager::GETHTML);
 
 			// Get stage settings
 			$settings = ' ' . implode(' ', Stage::getComponents($this->get('id')));
 
 			// Create stage
-			$stage = new XMLElement('div', NULL, array('class' => 'stage' . $settings . ($this->get('show_preview') == 1 ? ' preview' : '') . ($this->get('allow_multiple') == 1 ? ' multiple' : ' single') . ($this->get('lock') == 1 ? ' locked' : '') . ($this->get('allow_quantities') ? ' quantifiable' : ' nonquantifiable')));
+			$stage = new XMLElement('div', NULL, array('class' => 'stage' . $settings . ($this->get('show_preview') == 1 ? ' preview' : '') . ($this->get('allow_multiple') == 1 ? ' multiple' : ' single') . ($this->get('lock') == 1 ? ' locked' : '')));
 			$content['empty'] = '<li class="empty message"><span>' . __('There are no selected items') . '</span></li>';
 			$selected = new XMLElement('ul', $content['empty'] . $content['html'], array('class' => 'selection'));
 			$stage->appendChild($selected);
@@ -586,6 +575,7 @@
 				LIMIT 1"
 			);
 			$wrapper->setAttribute('data-field-id', $this->get('id'));
+			$wrapper->setAttribute('data-field-name', $fieldname);
 			$wrapper->setAttribute('data-subsection-id', $this->get('subsection_id'));
 			$wrapper->setAttribute('data-subsection-new', SYMPHONY_URL . '/publish/' . $subsection_handle);
 
@@ -614,7 +604,7 @@
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#checkPostFieldData
+		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#checkPostFieldData
 		 */
 		public function checkPostFieldData($data, &$message, $entry_id = null) {
 			if(!is_array($data)) $data = array($data);
@@ -630,51 +620,18 @@
 				return self::__INVALID_FIELDS__;
 			}
 
-			if($this->get('allow_quantities') == 0 && isset($data['quantity'])) {
-				foreach($data as $entry_id => $quantity) {
-					if($entry_id == 'quantity') continue;
-					if($quantity > 1) {
-						$message = __("'%s' does not allow quantity other other than 1.", array($this->get('label')));
-						return self::__INVALID_FIELDS__;
-					}
-				}
-			}
-
 			return self::__OK__;
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#processRawFieldData
+		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#processRawFieldData
 		 */
 		function processRawFieldData($data, &$status, $simulate=false, $entry_id=NULL) {
 			$status = self::__OK__;
-			if(!is_array($data) && !is_null($data)) return array('relation_id' => array($data), 'quantity' => array(1));
+			if(!is_array($data)) $data = array($data);
 			if(empty($data)) return NULL;
 
-			$result = array();
-			$maxQuantity = ($this->get('allow_quantities') == 0 ? 1 : 4294967295); // Maximum value of MySQL's unsigned INT type.
-
-			// Handle data passed from SELECT (which does not contain 'quantity' key)
-			if(!isset($data['quantity'])) {
-				$result['relation_id'] = array_filter(array_map('intval', $data));
-				$result['quantity'] = array_fill(0, count($result['relation_id']), 1);
-			}
-
-			// Handle data passed from INPUT
-			else {
-				unset($data['quantity']);
-				foreach($data as $entry_id => $quantity) {
-					$entry_id = intval($entry_id);
-					$quantity = intval($quantity);
-
-					if(empty($entry_id) || empty($quantity) || $quantity > $maxQuantity) continue;
-
-					$result['relation_id'][] = $entry_id;
-					$result['quantity'][] = $quantity;
-				}
-			}
-
-			return $result;
+			return array('relation_id' => $data);
 		}
 
 
@@ -689,7 +646,7 @@
 		 * to store subsection fields and extension_subsectionmanager::preloadSubsectionEntries()
 		 * to preload subsection entries.
 		 *
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#appendFormattedElement
+		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#appendFormattedElement
 		 */
 		public function appendFormattedElement(&$wrapper, $data, $encode = false, $mode = null) {
 			static $done = array();
@@ -697,11 +654,9 @@
 			// Unify data
 			if(empty($data) || empty($data['relation_id'])) {
 				$data['relation_id'] = array();
-				$data['quantity'] = array();
 			}
 			else if(!is_array($data['relation_id'])) {
 				$data['relation_id'] = array($data['relation_id']);
-				$data['quantity'] = array($data['quantity']);
 			}
 
 			// Create subsection element
@@ -732,7 +687,7 @@
 				}
 
 				// Create item
-				$item = new XMLElement('item', NULL, array('id' => $entry_id, 'quantity' => $data['quantity'][$index]));
+				$item = new XMLElement('item', NULL, array('id' => $entry_id));
 				$subsection->appendChild($item);
 
 				// Process entry for Data Source
@@ -795,7 +750,7 @@
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#prepareTableValue
+		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#prepareTableValue
 		 */
 		function prepareTableValue($data, XMLElement $link=NULL) {
 			if(empty($data['relation_id'])) return NULL;
@@ -840,14 +795,14 @@
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#getParameterPoolValue
+		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#getParameterPoolValue
 		 */
 		public function getParameterPoolValue($data) {
 			return $data['relation_id'];
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#fetchIncludableElements
+		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#fetchIncludableElements
 		 */
 		public function fetchIncludableElements($break = false) {
 			static $done = array();
@@ -883,93 +838,25 @@
 	-------------------------------------------------------------------------*/
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#displayDatasourceFilterPanel
+		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#displayDatasourceFilterPanel
 		 */
 		function displayDatasourceFilterPanel(&$wrapper, $data=NULL, $errors=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL) {
 			parent::displayDatasourceFilterPanel($wrapper, $data, $errors, $fieldnamePrefix, $fieldnamePostfix);
 
-			$quantities = ($this->get('allow_quantities') == 0 ? false : true);
-			if ($quantities) {
-				$optionlist = new XMLElement('ul');
-				$optionlist->setAttribute('class', 'tags inline');
-				$optionlist->appendChild(new XMLElement('li', __('Equal to or less than'), array('class' => 'equal to or less than {$url-quantity}')));
-				$optionlist->appendChild(new XMLElement('li', __('Equal to or more than'), array('class' => 'equal to or more than {$url-quantity}')));
-				$optionlist->appendChild(new XMLElement('li', __('Less than'), array('class' => 'less than {$url-quantity}')));
-				$optionlist->appendChild(new XMLElement('li', __('More than'), array('class' => 'more than {$url-quantity}')));
-				$optionlist->appendChild(new XMLElement('li', __('Equal to'), array('class' => 'equal to {$url-quantity}')));
-				$wrapper->appendChild($optionlist);
-
-				$text = new XMLElement('p', __('Use filter commands listed above to filter by quantity, e.g., "more than 2 + less than 5" to get filtered entries that have associated entries quantity set between 2 and 5, or "more than 5, less than 2" to get filtered entries that have associated entries quantity above 5 or below 2.'), array('class' => 'help') );
-				$wrapper->appendChild($text);
-			}
-
-			$text = new XMLElement('p', __('Use comma separated list of entry ids that has to be associated with filtered entries, e.g., "23,45,691" or "not 23,45,691".'), array('class' => 'help') );
+			$text = new XMLElement('p', __('Use comma separated list of entry ids that has to be associated with filtered entries, e.g., "23, 45, 691" or "not: 23, 45, 691".'), array('class' => 'help') );
 			$wrapper->appendChild($text);
-
-			if ($quantities) {
-				$text = new XMLElement('p', __('Use comma separated list of mixed commands and entry ids to filter by quantity and id, e.g., "more than 5,less than 2,653,125,45" to get filtered entries that have associated entries quantity above 5 or below 2 and id equal to 653, 125 or 45.'), array('class' => 'help') );
-				$wrapper->appendChild($text);
-			}
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#buildDSRetrievalSQL
+		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#buildDSRetrievalSQL
 		 */
 		public function buildDSRetrievalSQL($data, &$joins, &$where, $andOperation=false) {
 
 			// Current field id
 			$field_id = $this->get('id');
 
-			// Filter by quantity
-			if(preg_match('/^(?:equal to or )?(?:less than|more than|equal to) -?\d+(?:\.\d+)?$/i', $data[0])) {
-
-				$comparisons = array();
-				$ids = array();
-				foreach($data as $string) {
-					if(preg_match('/^(equal to or )?(less than|more than|equal to) (-?\d+(?:\.\d+)?)$/i', $string, $matches)) {
-						$number = trim($matches[3]);
-						if(!is_numeric($number) || $number === '') continue;
-						$number = floatval($number);
-
-						$operator = '<';
-						switch($matches[2]) {
-							case 'more than': $operator = '>'; break;
-							case 'less than': $operator = '<'; break;
-							case 'equal to': $operator = '='; break;
-						}
-
-						if($matches[1] == 'equal to or ' && $operator != '=') {
-							$operator .= '=';
-						}
-
-						$comparisons[] = "{$operator} {$number}";
-					}
-					else if(is_numeric($string)) {
-						$ids[] = intval($string);
-					}
-				}
-
-				if(!empty($comparisons)) {
-					$this->_key++;
-					$joins .= "LEFT JOIN `tbl_entries_data_{$field_id}` AS `t{$field_id}_{$this->_key}` ON (e.id = t{$field_id}_{$this->_key}.entry_id)";
-
-					$value = " `t{$field_id}_{$this->_key}`.`quantity` ";
-					$comparisons = $value . implode(' '.($andOperation ? 'AND' : 'OR').$value, $comparisons);
-
-					if(!empty($ids)) {
-						$comparisons .= " AND `t{$field_id}_{$this->_key}`.relation_id IN ('".implode("','", $ids)."')";
-					}
-
-					$where .= "
-						AND (
-							{$comparisons}
-						)
-					";
-				}
-			}
-
 			// Filters connected with AND
-			else if($andOperation) {
+			if($andOperation) {
 				$op = '=';
 				if (preg_match('/^not:\s*/i', $data[0], $m)) {
 					$data[0] = str_replace($m[0], '', $data[0]);
@@ -998,30 +885,7 @@
 
 			return true;
 		}
-
-
-	/*-------------------------------------------------------------------------
-		Sorting:
-	-------------------------------------------------------------------------*/
-
-		public function buildSortingSQL(&$joins, &$where, &$sort, $order='ASC'){
-			if(in_array(strtolower($order), array('random', 'rand'))) {
-				$sort = 'ORDER BY RAND()';
-			}
-			else {
-				$sort = sprintf(
-					'ORDER BY (
-						SELECT %s
-						FROM `tbl_entries_data_%d` AS `ed`
-						WHERE entry_id = e.id
-					) %s',
-					'`ed`.quantity',
-					$this->get('id'),
-					($order == 'ASC' ? 'ASC' : 'DESC')
-				);
-			}
-		}
-
+		
 
 	/*-------------------------------------------------------------------------
 		Grouping:
@@ -1054,7 +918,7 @@
 	-------------------------------------------------------------------------*/
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#getExampleFormMarkup
+		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#getExampleFormMarkup
 		 */
 		public function getExampleFormMarkup() {
 			return Widget::Select('fields['.$this->get('element_name').']', array(array('...')));
@@ -1067,7 +931,7 @@
 
 		/**
 		 * Keep compatibility with Symphony pre 2.2.1 for a little longer.
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#buildDSRetrivalSQL
+		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#buildDSRetrivalSQL
 		 */
 		public function buildDSRetrivalSQL($data, &$joins, &$where, $andOperation=false) {
 			return $this->buildDSRetrievalSQL($data, $joins, $where, $andOperation);

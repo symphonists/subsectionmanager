@@ -446,7 +446,6 @@
 			}
 			
 			// Selection
-			console.log(state.tab);
 			if((Symphony.Context.get('env').page == 'new' && count == 0) || (state.tab < 1 && count == 0) || id == state.tab) {
 				selected = true;
 			}

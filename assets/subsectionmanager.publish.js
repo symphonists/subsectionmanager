@@ -25,7 +25,8 @@
 				queue = stage.find('div.queue'),
 				queue_loaded = false,
 				drawer = $('<div class="drawer"><iframe name="subsection-' + manager.attr('data-subsection-id') + '" src="about:blank" frameborder="0"></iframe></div>'),
-				subsectionmanager_id = manager.attr('data-field-id'),
+				manager_id = manager.attr('data-field-id'),
+				manager_name = manager.attr('data-field-name'),
 				subsection = manager.attr('data-subsection-id'),
 				subsection_link = manager.attr('data-subsection-new'),
 				dragger = $('div.dragger'),
@@ -36,6 +37,9 @@
 
 			// Constructing
 			stage.bind('constructstop', function(event, item) {
+			
+				// Set name
+				item.find('input:hidden').attr('name', manager_name + '[]');
 				
 				// New item
 				if(item.is('.new')) {
@@ -51,12 +55,7 @@
 					$(this).remove();
 				});
 			});
-			
-			// Synchronizing
-			stage.bind('constructstop destructstop update', function(event) {
-				sync();
-			});
-			
+		
 			// Queuing
 			stage.delegate('li.preview a.file', 'click', function() {
 				
@@ -71,7 +70,7 @@
 						target = $(event.target),
 						editor = item.find('div.drawer');
 					
-					// Don't open editor for item that will be removed
+					// Don't open editor for item that will be removed 
 					if(target.is('.destructor, input')) {
 						return true;
 					}
@@ -91,48 +90,6 @@
 					}
 					
 					// Don't follow links
-					return false;
-				});
-			}
-
-			// Add quantifiers
-			if(stage.is('.quantifiable, .nonquantifiable')) {
-/*
-				var field_id = manager.attr('id').replace('field-','');
-
-				$('li:not(.new,.empty,.message)', selection).each(function(index, item){
-					var value = $(this).attr('data-value'),
-						quantity = manager.find('input.subsectionmanager.storage[name$="\\[' + value + '\\]"]');
-
-					$(this).append(quantity);
-				});
-				
-				// It's possible that the empty message is a create template
-				if(empty.is('.template.create')) {
-					empty.append(quantifier.clone());
-				}
-*/
-				stage.delegate('input.storage', 'click', function(event){
-					var item = $(this),
-						width = item.innerWidth(),
-						halfheight = Math.ceil(item.innerHeight() / 2),
-						mod = 1;
-
-					if(event.offsetX >= width-15) {
-						if(event.offsetY > halfheight) {
-							mod = -1;
-						}
-						item.val(Math.max((item.val() * 1) + mod, 1));
-					}
-				}).delegate('input.storage', 'keydown', function(event){
-					if(event.which != 40 /* Up Arrow */ && event.which != 38 /* Down Arrow */) return true;
-
-					var item = $(this),
-						mod = 1;
-
-					if(event.which == 40) mod = -1;
-					item.val(Math.max((item.val() * 1) + mod, 1));
-
 					return false;
 				});
 			}
@@ -186,30 +143,7 @@
 					});
 				}
 			}
-			
-			// Sorting
-			selection.bind('orderstart.stage', function() {
-				selection.find('li.active').removeClass('active');
-			});
 
-			selection.bind('orderstop.stage', function() {
-				var stock = manager.find('input.subsectionmanager.storage'),
-					last = stock.find('.template'),
-					storage = last.parent();
-
-				selection.find('li').not('.new').not('.message').not('empty').each(function(index, item) {
-					var item = $(item),
-						id = item.attr('data-value'),
-						stored = stock.filter('[value="' + id + '"]');
-
-					// Existing item
-					if(stored.size() == 1) {
-						stored.insertAfter(last);
-						last = stored;
-					}
-				});
-			});
-								
 		/*-----------------------------------------------------------------------*/
 
 			// Load subsection
@@ -319,6 +253,7 @@
 				}
 			};
 		
+			// Resize editor
 			var resize = function(content, editor, iframe) {
 				var height = content.find('#contents').height() + content.find('#header .error').height(),
 					body = content.find('body');
@@ -346,8 +281,8 @@
 						dataType: 'html',
 						url: Symphony.Context.get('root') + '/symphony/extension/subsectionmanager/get/',
 						data: { 
-							id: subsectionmanager_id, 
-							section: subsection 
+							id: manager_id,
+							section: subsection
 						},
 						success: function(result) {
 
@@ -420,7 +355,7 @@
 					type: 'GET',
 					url: Symphony.Context.get('root') + '/symphony/extension/subsectionmanager/get/',
 					data: { 
-						id: subsectionmanager_id, 
+						id: manager_id, 
 						section: subsection,
 						entry: id
 					},
@@ -464,31 +399,6 @@
 						}				
 					}
 				});
-			};
-			
-			// Synchronize lists
-			var sync = function() {
-				var stock = manager.find('input.subsectionmanager.storage').not('.template'),
-					template = manager.find('input.subsectionmanager.storage.template'),
-					nonquantifiable = stage.is('.nonquantifiable');
-
-				selection.find('li:not(.new, .message, .empty)').each(function(index, item) {
-					var item = $(item),
-						id = item.attr('data-value'),
-						stored = item.find('input[name$="\\[' + id + '\\]"]'),
-						itemname = '';
-
-					// New item
-					if(stored.length < 1 &&  stored.attr('name')) {
-						stored = template.clone();
-						itemname = stored.attr('name').replace(/\[quantity\]$/, '['+id+']');
-						stored.val("1").attr('value', "1").attr('name', itemname).removeClass('template').appendTo(item);
-					}
-				});
-
-				// Something keeps adding "display: inline-block;" to input of newly created items,
-				// so we have to hide it manually :(.
-				if(nonquantifiable) stock.hide();
 			};
 			
 			// Dropping items
@@ -551,8 +461,12 @@
 		/*-----------------------------------------------------------------------*/
 			
 			// Preload queue items
-			browse(true);
+			if(stage.is('.searchable')) {
+				browse(true);
+			}
 			
+			// Name existing items
+			selection.find('input:hidden').attr('name', manager_name + '[]');
 		});
 
 	});

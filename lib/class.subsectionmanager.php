@@ -10,40 +10,56 @@
 
 		// Flags used to control output of generate()
 		const GETOPTIONS    = 1;
-		const GETHTML       = 2; // This requires setting HTMLFieldName before calling generate()
+		const GETHTML       = 2;
 		const GETPREVIEW    = 4;
-		// 8, 32, 64 left for future use.
 		const GETALLITEMS   = 128; // Get all entries available instead of just those that were selected.
 		const GETEVERYTHING = 256;
 
 		// Templates
 		public static $templates = array(
 			'plain' => array(
-				'text' => '<li data-value="{$value}" data-drop="{$droptext}"><span>{$caption}</span>{$quantity}</li>',
-				'image' => '<li data-value="{$value}" data-drop="{$droptext}"><a href="{$href}" class="image file handle">{$caption}</a>{$quantity}</li>',
-				'file' => '<li data-value="{$value}" data-drop="{$droptext}"><a href="{$href}" class="file handle">{$caption}</a>{$quantity}</li>'
+				'text' =>	'<li data-value="{$value}" data-drop="{$droptext}">
+								<input type="hidden" value="{$value}" />
+								<span>{$caption}</span>
+							 </li>',
+				'image' =>	'<li data-value="{$value}" data-drop="{$droptext}">
+								<input type="hidden" value="{$value}" />
+								<a href="{$href}" class="image file handle">{$caption}</a>
+							 </li>',
+				'file' =>	'<li data-value="{$value}" data-drop="{$droptext}">
+								<input type="hidden" value="{$value}" />
+								<a href="{$href}" class="file handle">{$caption}</a>
+							 </li>'
 			),
 			'preview' => array(
-				'text' => '<li data-value="{$value}" data-drop="{$droptext}"><span>{$caption}</span>{$quantity}</li>',
-				'image' => '<li data-value="{$value}" data-drop="{$droptext}" class="preview"><img src="{$url}/image/2/40/40/5{$preview}" width="40" height="40" /><a href="{$href}" class="image file handle">{$caption}</a>{$quantity}</li>',
-				'file' => '<li data-value="{$value}" data-drop="{$droptext}" class="preview"><strong class="file">{$type}</strong><a href="{$href}" class="file handle">{$caption}</a>{$quantity}</li>'					
+				'text' =>	'<li data-value="{$value}" data-drop="{$droptext}">
+								<input type="hidden" value="{$value}" />
+								<span>{$caption}</span>
+							 </li>',
+				'image' =>	'<li data-value="{$value}" data-drop="{$droptext}" class="preview">
+								<input type="hidden" value="{$value}" />
+								<img src="{$url}/image/2/40/40/5{$preview}" width="40" height="40" class="handle" />
+								<a href="{$href}" class="image file handle">{$caption}</a>
+							 </li>',
+				'file' =>	'<li data-value="{$value}" data-drop="{$droptext}" class="preview">
+								<input type="hidden" value="{$value}" />
+								<strong class="file">{$type}</strong>
+								<a href="{$href}" class="file handle">{$caption}</a>
+							 </li>'					
 			),
 			'index' => array(
-				'text' => '{$caption}',
-				'image' => '<img src="{$url}/image/2/40/40/5{$preview}" width="40" height="40" /><span>{$caption}</span>',
-				'file' => '{$caption}'
+				'text' =>	'{$caption}',
+				'image' =>	'<img src="{$url}/image/2/40/40/5{$preview}" width="40" height="40" /><span>{$caption}</span>',
+				'file' =>	'{$caption}'
 			)
 		);
 
-		public $HTMLFieldName = '';
-
-		public function setHTMLFieldName($name = '') {
-			$this->HTMLFieldName = $name;
-		}
-
 		public function generate($subsection_field, $subsection_id, $items=NULL, $recurse=0, $flags=self::GETEVERYTHING) {
 			static $done = array();
-			if ($done[$subsection_field] >= $recurse + 1) return array('options' => array(), 'html' => '', 'preview' => '');	
+			
+			if($done[$subsection_field] >= $recurse + 1) {
+				return array('options' => array(), 'html' => '', 'preview' => '');
+			}
 			$done[$subsection_field] += 1;
 
 			// Fetch subsection meta data
@@ -91,7 +107,6 @@
 
 			$done[$subsection_field] -= 1;
 		  	return $data;
-		  	
 		}
 		
 		private function __filterEntries($subsection_id, $fields, $filter = '', $items = NULL, $full = false) {
@@ -111,6 +126,7 @@
 			$nonos = array();
 			$filters = (empty($filter) ? array() : explode(', ', $filter));
 			if(!empty($filters)) {
+			
 			  	// Fetch taglist, select and upload fields
 			  	if(is_array($fields)) {
 					foreach($fields as $field) {
@@ -131,29 +147,13 @@
 				}
 			}
 
-			// Prepare sortorder array
-			$sortorder = array();
-
-			if(!empty($items)) {
-				if(!is_array($items)) {
-					$items = array('relation_id' => array($items), 'quantity' => array(1));
-				}
-				else if(!isset($items['relation_id'])) {
-					$items = array('relation_id' => $items, 'quantity' => array_fill(0, count($items), 1));
-				}
-				else if(!is_array($items['relation_id'])) {
-					$items = array('relation_id' => array($items['relation_id']), 'quantity' => array($items['quantity']));
-				}
-				$sortorder = array_flip(array_filter($items['relation_id']));
-			}
-
 			// Filter entries and add select options
 			$entry_data = array();
-			$notSelectedIndex = count($sortorder);
 			foreach($entries as $entry) {
 				$data = $entry->getData();
 
 				if(!empty($filters)) {
+				
 					// Collect taglist and select field values
 					$tags = array();
 					foreach($tag_fields as $field_id) {
@@ -175,35 +175,29 @@
 						continue;
 					}
 				}
-	
-				// Keep sort order of selected items
-				$entry_id = $entry->get('id');
-				$selected = isset($sortorder[$entry_id]);
-				$quantity = 1;
-				if($selected) {
-					$index = $sortorder[$entry_id];
-					$quantity = $items['quantity'][$index];
-				}
-				else {
-					$index = $notSelectedIndex++;
-				}
 
-				$entry_data[$index] = array(
+				// Entry data
+				$entry_data[$entry->get('id')] = array(
 					'data' => $data,
-					'id' => $entry_id,
-					'selected' => $selected,
-					'quantity' => $quantity	
+					'id' => $entry->get('id')
 				);
 			}
-
-			// Keep sort order of selected items
-			if(is_array($items)) ksort($entry_data, SORT_NUMERIC);
+			
+			// Keep custom sort order if items given
+			if(is_array($items)) {
+			    $ordered = array();
+			    foreach($items['relation_id'] as $id) {
+	                $ordered[] = $entry_data[$id];
+			    }
+			    $entry_data = $ordered;
+			}
 
 			// Return filtered entry data
 			return $entry_data;
 		}
 		
 		private function __layoutSubsection($entries, $fields, $caption_template, $droptext_template, $mode, $flags = self::GETEVERYTHING) {
+		
 			// Return early if there is nothing to do
 			if(empty($entries) || !is_array($entries)) return array('options' => array(), 'html' => '', 'preview' => '');
 
@@ -215,7 +209,8 @@
 				// if caption and/or droptext template use only 1 or two of them (or none at all :).
 
 				// Get all field names used in templates
-				if(preg_match_all('@{\$([^}:]+)(:([^}]*))?}@U', $caption_template.$droptext_template, $m, PREG_PATTERN_ORDER) && is_array($m[0])) {
+				if(preg_match_all('@{\$([^}:]+)(:([^}]*))?}@U', $caption_template . $droptext_template, $m, PREG_PATTERN_ORDER) && is_array($m[0])) {
+				
 					// $m[0] is "context", i.e., {$field_name:default_value} and {$field_name:other_value}
 					// $m[1] is "field name"
 					// $m[2] is ":default value"
@@ -301,13 +296,10 @@
 				list($caption, $droptext) = str_replace($token_names, $values, $templates);
 
 				// Populate select options
-				if($flags & self::GETOPTIONS) $options[$index] = array($entry['id'], $entry['selected'], strip_tags($caption));
+				if($flags & self::GETOPTIONS) $options[$index] = array($entry['id'], false, strip_tags($caption));
 
 				// Generate HTML only when needed
 				if(!($flags & self::GETHTML)) continue;
-
-				// Quantity input field
-				$quantity = (empty($this->HTMLFieldName) ? '' : '<input name="'.$this->HTMLFieldName.'['.$entry['id'].']" value="'.$entry['quantity'].'" class="subsectionmanager storage"/>');
 
 				// Create stage template
 				if($type == 'image') {
@@ -316,7 +308,6 @@
 					$template = str_replace('{$href}', $href, $template);
 					$template = str_replace('{$value}', $entry['id'], $template);
 					$template = str_replace('{$droptext}', htmlspecialchars($droptext), $template);
-					$template = str_replace('{$quantity}', $quantity, $template);
 					$tmp = str_replace('{$caption}', $caption, $template);
 				}
 				elseif($type == 'file') {
@@ -324,14 +315,12 @@
 					$template = str_replace('{$href}', $href, $template);
 					$template = str_replace('{$value}', $entry['id'], $template);
 					$template = str_replace('{$droptext}', htmlspecialchars($droptext), $template);
-					$template = str_replace('{$quantity}', $quantity, $template);
 					$tmp = str_replace('{$caption}', $caption, $template);
 				}
 				else {
 					$template = str_replace('{$preview}', $entry['id'], self::$templates[$mode]['text']);
 					$template = str_replace('{$value}', $entry['id'], $template);
 					$template = str_replace('{$droptext}', htmlspecialchars($droptext), $template);
-					$template = str_replace('{$quantity}', $quantity, $template);
 					$tmp = str_replace('{$caption}', $caption, $template);
 				}
 						
@@ -362,13 +351,18 @@
 				$result['preview'] = $template;
 			}
 
-			// Sort HTML and add it as a string
+			// Get HTML
 			if($flags & self::GETHTML) {
-				ksort($html);
+				
+				// Sort items
+				if($flags & self::GETALLITEMS) {
+					ksort($html);
+				}
+				
 				$result['html'] = implode('', $html);
 			}
 
-			// Return options and html
+			// Return result
 			return $result;	
 		}
 		
