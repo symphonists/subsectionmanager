@@ -549,6 +549,14 @@
 			// Setup field name
 			$fieldname = 'fields' . $fieldnamePrefix . '['. $this->get('element_name') . ']' . $fieldnamePostfix;
 
+			// Label
+			$label = Widget::Label($this->get('label'));
+			if($this->get('required') == 'no') {
+				$optional = new XMLElement('i', __('Optional'));
+				$label->appendChild($optional);
+			}
+			$wrapper->appendChild($label);
+
 			// Get Subsection
 			$subsection = new SubsectionManager();
 			$content = $subsection->generate($this->get('id'), $this->get('subsection_id'), $data, $this->get('recursion_levels'), SubsectionManager::GETHTML);
