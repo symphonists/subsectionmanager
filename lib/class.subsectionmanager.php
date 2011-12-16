@@ -185,6 +185,7 @@
 			
 			// Keep custom sort order if items given
 			if(is_array($items)) {
+				if(!is_array($items['relation_id'])) $items['relation_id'] = array($items['relation_id']);
 			    $ordered = array();
 			    foreach($items['relation_id'] as $id) {
 	                $ordered[] = $entry_data[$id];
