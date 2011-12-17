@@ -90,31 +90,42 @@
 		 */
 		public function getSubscribedDelegates(){
 			return array(
+				
+				// Subsection Manager
 				array(
 					'page' => '/backend/',
 					'delegate' => 'AdminPagePreGenerate',
 					'callback' => '__appendAssets'
 				),
 				array(
-					'page' => '/backend/',
-					'delegate' => 'AppendPageAlert',
-					'callback' => '__upgradeMediathek'
+					'page' => '/blueprints/datasources/',
+					'delegate' => 'DatasourcePreDelete',
+					'callback' => '__clearSubsectionCache'
 				),
 				array(
-					'page' => '/publish/',
-					'delegate' => 'Delete',
-					'callback' => '__deleteTabs'
+					'page' => '/backend/',
+					'delegate' => 'AdminPagePreGenerate',
+					'callback' => '__updateSubsectionCache'
 				),
 				array(
 					'page' => '/frontend/',
 					'delegate' => 'DataSourceEntriesBuilt',
 					'callback' => '__prepareSubsection'
 				),
+				
+				// Subsection Tabs
 				array(
-					'page' => '/blueprints/datasources/',
-					'delegate' => 'DatasourcePreDelete',
-					'callback' => '__clearSubsectionCache'
+					'page' => '/publish/',
+					'delegate' => 'Delete',
+					'callback' => '__deleteTabs'
 				),
+				
+				// Mediathek
+				array(
+					'page' => '/backend/',
+					'delegate' => 'AppendPageAlert',
+					'callback' => '__upgradeMediathek'
+				)
 			);
 		}
 
@@ -141,6 +152,15 @@
 			if($callback['driver'] == 'publish' && $callback['context']['page'] != 'index') {
 				Administration::instance()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/assets/subsection.publish.css', 'screen', 101, false);
 			}
+		}
+
+		/**
+		 * Update Cache
+		 *
+		 * @param object $context
+		 */
+		public function __updateSubsectionCache($context) {
+			$callback = Symphony::Engine()->getPageCallback();
 
 			// Update cache if Data Source was saved/created.
 			if($callback['driver'] == 'blueprintsdatasources' && is_array($callback['context']) && $callback['context'][0] == 'edit') {
@@ -150,79 +170,19 @@
 				}
 			}
 		}
-
-		/**
-		 * Upgrade Mediathek fields to make use of this extension
-		 */
-		public function __upgradeMediathek() {
-
-			// Do not use Administration::instance() in this context, see:
-			// http://github.com/nilshoerrmann/subsectionmanager/issues#issue/27
-			$callback = $this->_Parent->getPageCallback();
-
-			// Append upgrade notice
-			if($callback['driver'] == 'systemextensions') {
-
-				require_once(TOOLKIT . '/class.extensionmanager.php');
-				$ExtensionManager = new ExtensionManager(Administration::instance());
-
-				// Check if Mediathek field is installed
-				$mediathek = $ExtensionManager->fetchStatus('mediathek');
-				if($mediathek == EXTENSION_ENABLED || $mediathek == EXTENSION_DISABLED) {
-
-					// Append upgrade notice to page
-					Symphony::Engine()->Page->Alert = new Alert(
-						__('You are using Mediathek and Subsection Manager simultaneously.') . ' <a href="http://' . DOMAIN . '/symphony/extension/subsectionmanager/">' . __('Upgrade') . '?</a> <a href="http://' . DOMAIN . '/symphony/extension/subsectionmanager/uninstall/mediathek">' . __('Uninstall Mediathek') . '</a> <a href="http://' . DOMAIN . '/symphony/extension/subsectionmanager/uninstall/subsectionmanager">' . __('Uninstall Subsection Manager') . '</a>',
-						Alert::ERROR
-					);
-				}
-			}
-		}
 		
-		/**
-		 * Delete tab entries, when parent entry is deleted
-		 */
-		public function __deleteTabs($context) {
-		
-			// Get Subsection Tab field
-			$callback = Symphony::Engine()->getPageCallback();	
-			$sectionManager = new SectionManager(Symphony::Engine());
-			$section_id = $sectionManager->fetchIDFromHandle($callback['context']['section_handle']);
-			$field_id = Symphony::Database()->fetchCol('id', "
-				SELECT `id`  
-				FROM `tbl_fields` 
-				WHERE `type` = 'subsectiontabs' 
-				AND `parent_section` = '$section_id'
-			");
-			
-			// Section with Tabs
-			if($field_id) {
-				$relation_id = Symphony::Database()->fetchCol('relation_id', "
-					SELECT `relation_id` 
-					FROM sym_entries_data_" . $field_id[0] . "
-					WHERE `entry_id` IN(" . implode(',', $context['entry_id']) . ")
-				");
-			
-				// Delete existing tabs
-				if(!empty($relation_id)) {
-					$entryManager = new EntryManager(Symphony::Engine());
-					$entryManager->delete($relation_id);
-				}
-			}
-		}
-
 		/**
 		 * Fetch all subsection elements included in a data source and
 		 * join modes into a single call to `appendFormattedElement()`.
 		 * Cache results, so `__prepareSubsection` can use it later.
 		 *
-		 * We cannot use DatasourcePostCreate and DatasourcePostEdit because when they are called,
-		 * Data Source class was not updated yet and Data Source Manager
-		 * will be using "old" version of Data Source class (with old list of elements, rootname, etc...).
+		 * We cannot use DatasourcePostCreate and DatasourcePostEdit because 
+		 * when they are called, Data Source class was not updated yet and 
+		 * Data Source Manager will be using "old" version of Data Source class 
+		 * (with old list of elements, rootname, etc.).
+		 *
 		 * @see http://symphony-cms.com/learn/api/2.2/delegates/#DatasourcePostCreate
 		 * @see http://symphony-cms.com/learn/api/2.2/delegates/#DatasourcePostEdit
-		 *
-		 * That is why we call this function from __appendAssets().
 		 */
 		public function __prepareSubsectionCache($classname) {
 			$datasourceManager = new DatasourceManager(Symphony::Engine());
@@ -514,7 +474,69 @@
 				}
 			}
 		}
+		
+		/**
+		 * Delete tab entries, when parent entry is deleted
+		 *
+		 * @param object $context
+		 */
+		public function __deleteTabs($context) {
+		
+			// Get Subsection Tab field
+			$callback = Symphony::Engine()->getPageCallback();	
+			$sectionManager = new SectionManager(Symphony::Engine());
+			$section_id = $sectionManager->fetchIDFromHandle($callback['context']['section_handle']);
+			$field_id = Symphony::Database()->fetchCol('id', "
+				SELECT `id`  
+				FROM `tbl_fields` 
+				WHERE `type` = 'subsectiontabs' 
+				AND `parent_section` = '$section_id'
+			");
+			
+			// Section with Tabs
+			if($field_id) {
+				$relation_id = Symphony::Database()->fetchCol('relation_id', "
+					SELECT `relation_id` 
+					FROM sym_entries_data_" . $field_id[0] . "
+					WHERE `entry_id` IN(" . implode(',', $context['entry_id']) . ")
+				");
+			
+				// Delete existing tabs
+				if(!empty($relation_id)) {
+					$entryManager = new EntryManager(Symphony::Engine());
+					$entryManager->delete($relation_id);
+				}
+			}
+		}
 
+		/**
+		 * Upgrade Mediathek fields to make use of this extension
+		 */
+		public function __upgradeMediathek() {
+
+			// Do not use Administration::instance() in this context, see:
+			// http://github.com/nilshoerrmann/subsectionmanager/issues#issue/27
+			$callback = $this->_Parent->getPageCallback();
+
+			// Append upgrade notice
+			if($callback['driver'] == 'systemextensions') {
+
+				require_once(TOOLKIT . '/class.extensionmanager.php');
+				$ExtensionManager = new ExtensionManager(Administration::instance());
+
+				// Check if Mediathek field is installed
+				$mediathek = $ExtensionManager->fetchStatus('mediathek');
+				if($mediathek == EXTENSION_ENABLED || $mediathek == EXTENSION_DISABLED) {
+
+					// Append upgrade notice to page
+					Symphony::Engine()->Page->Alert = new Alert(
+						__('You are using Mediathek and Subsection Manager simultaneously.') . ' <a href="http://' . DOMAIN . '/symphony/extension/subsectionmanager/">' . __('Upgrade') . '?</a> <a href="http://' . DOMAIN . '/symphony/extension/subsectionmanager/uninstall/mediathek">' . __('Uninstall Mediathek') . '</a> <a href="http://' . DOMAIN . '/symphony/extension/subsectionmanager/uninstall/subsectionmanager">' . __('Uninstall Subsection Manager') . '</a>',
+						Alert::ERROR
+					);
+				}
+			}
+		}
+		
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/extension/#install
 		 */
