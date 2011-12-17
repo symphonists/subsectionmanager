@@ -90,7 +90,7 @@
 			subsections.hide();
 
 			// Tab already loaded
-			if(current.size() > 0) {
+			if(current.length > 0) {
 				resize(current);
 				current.show();
 			}
@@ -248,13 +248,13 @@
 			// Get clones
 			count = controls.find('li:contains(' + name + ')').map(function() {
 				return ($(this).text() == name);
-			}).size();
+			}).length;
 			
 			if(count > 0) {
 				for(i = 1; i < 100; i++) {
 					count = controls.find('li:contains(' + name + ')').map(function() {
 						return ($(this).text() == name + ' ' + i.toString());
-					}).size();
+					}).length;
 				
 					if(count == 0) {
 						count = i;
@@ -284,7 +284,7 @@
 			body.addClass('saving');
 			
 			// Tab loaded
-			if(tab.size() > 0 && post != tab.data('post') && !control.is('.delete')) {
+			if(tab.length > 0 && post != tab.data('post') && !control.is('.delete')) {
 			
 				// Callback
 				tab.one('load', function(event) {
@@ -299,7 +299,7 @@
 					}
 					
 					// Store errors
-					if(tab.contents().find('#header .error').size() > 0) {
+					if(tab.contents().find('#header .error').length > 0) {
 						control.addClass('error');
 					}
 					else {
@@ -336,7 +336,7 @@
 			}
 			
 			// Process next tab
-			if(next.size() > 0) {
+			if(next.length > 0) {
 				save(next);
 			}
 			
@@ -344,7 +344,7 @@
 			else {
 						
 				// Errors
-				if(controls.find('li.error').size() > 0) {
+				if(controls.find('li.error').length > 0) {
 					Symphony.Message.post(Symphony.Language.get('Some errors were encountered while attempting to save.'), 'error');
 					controls.find('li.error:first').click();
 				}
@@ -436,9 +436,7 @@
 				name = item.find('input:eq(1)').val(),
 				id = item.find('input:eq(0)').val() || name,
 				link = item.find('a').attr('href'),
-				static = false,
-				selected = false,
-				active;
+				selected = false;
 				
 			// Set tabs height
 			if(state.height) {
@@ -446,17 +444,22 @@
 			}
 			
 			// Selection
-			if((Symphony.Context.get('env').page == 'new' && count == 0) || (state.tab < 1 && count == 0) || id == state.tab) {
+			if(id == state.tab) {
 				selected = true;
 			}
 
 			// Create control
 			control = create(name, id, link, selected);
 			controls.append(control);
-			
+
 			// Preload tab
 			load(control);
 		});
+		
+		// Select tab
+		if(controls.find('.selected').length == 0) {
+			controls.find(':first').click();
+		}
 	});
 	
 })(jQuery.noConflict());
