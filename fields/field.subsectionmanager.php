@@ -57,7 +57,7 @@
 			return true;
 		}
 
-		/** 
+		/**
 		 * Test whether this field requires grouping. If this function returns true
 		 * SQL statements generated in the `EntryManager` will include the `DISTINCT` keyword
 		 * to only return a single row for an entry regardless of how many 'matches' it
@@ -704,7 +704,7 @@
 						$field = extension_subsectionmanager::$entryManager->fieldManager->fetch($field_id);
 
 						// Omit fields that were removed in meantime
-						if (empty($field)) continue;
+						if(empty($field)) continue;
 
 						$entry_data = $entry->getData($field_id);
 
@@ -741,7 +741,7 @@
 								if(empty($field_id)) continue;
 
 								$field = extension_subsectionmanager::$entryManager->fieldManager->fetch($field_id);
-								if (empty($field)) continue;
+								if(empty($field)) continue;
 
 								$field->appendFormattedElement($item, $values, $encode, null, $entry_id);
 							}
@@ -795,7 +795,7 @@
 		 * @return array
 		 */
 		public function prepareImportValue($value, $entry_id = null) {
-			if ($this->get('allow_multiple_selection') == 'no') {
+			if($this->get('allow_multiple_selection') == 'no') {
 				$value = array(implode('', $value));
 			}
 
@@ -866,7 +866,7 @@
 			// Filters connected with AND
 			if($andOperation) {
 				$op = '=';
-				if (preg_match('/^not:\s*/i', $data[0], $m)) {
+				if(preg_match('/^not:\s*/i', $data[0], $m)) {
 					$data[0] = str_replace($m[0], '', $data[0]);
 					$op = '!=';
 				}
@@ -881,7 +881,7 @@
 			// Filters connected with OR
 			else {
 				$op = 'IN';
-				if (preg_match('/^not:\s*/i', $data[0], $m)) {
+				if(preg_match('/^not:\s*/i', $data[0], $m)) {
 					$data[0] = str_replace($m[0], '', $data[0]);
 					$op = 'NOT IN';
 				}
@@ -893,7 +893,7 @@
 
 			return true;
 		}
-		
+
 
 	/*-------------------------------------------------------------------------
 		Grouping:
@@ -939,7 +939,7 @@
 
 		/**
 		 * Keep compatibility with Symphony pre 2.2.1 for a little longer.
-		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#buildDSRetrivalSQL
+		 * @see http://symphony-cms.com/learn/api/2.2.1/toolkit/field/#buildDSRetrivalSQL
 		 */
 		public function buildDSRetrivalSQL($data, &$joins, &$where, $andOperation=false) {
 			return $this->buildDSRetrievalSQL($data, $joins, $where, $andOperation);

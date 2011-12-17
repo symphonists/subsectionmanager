@@ -45,15 +45,15 @@
 					throw new SymphonyErrorPage(__('Please make sure that the Stage submodule is initialised and available at %s.', array('<code>' . EXTENSIONS . '/subsectionmanager/lib/stage/</code>')) . '<br/><br/>' . __('It\'s available at %s.', array('<a href="https://github.com/nilshoerrmann/stage">github.com/nilshoerrmann/stage</a>')), __('Stage not found'));
 				}
 			}
-			
+
 			// Prepare cache
 			if(file_exists(MANIFEST . '/subsectionmanager-storage')) {
-				
+
 				// Data Source files have not been changed
 				if(filemtime(DATASOURCES) < filemtime(MANIFEST . '/subsectionmanager-storage')) {
 					self::$updateCache = false;
 				}
-				
+
 				// Get cache
 				elseif(!isset(self::$storage['cache'])) {
 					self::$storage = unserialize(file_get_contents(MANIFEST . '/subsectionmanager-storage'));
@@ -90,7 +90,7 @@
 		 */
 		public function getSubscribedDelegates(){
 			return array(
-				
+
 				// Subsection Manager
 				array(
 					'page' => '/backend/',
@@ -112,14 +112,14 @@
 					'delegate' => 'DataSourceEntriesBuilt',
 					'callback' => '__prepareSubsection'
 				),
-				
+
 				// Subsection Tabs
 				array(
 					'page' => '/publish/',
 					'delegate' => 'Delete',
 					'callback' => '__deleteTabs'
 				),
-				
+
 				// Mediathek
 				array(
 					'page' => '/backend/',
@@ -170,15 +170,15 @@
 				}
 			}
 		}
-		
+
 		/**
 		 * Fetch all subsection elements included in a data source and
 		 * join modes into a single call to `appendFormattedElement()`.
 		 * Cache results, so `__prepareSubsection` can use it later.
 		 *
-		 * We cannot use DatasourcePostCreate and DatasourcePostEdit because 
-		 * when they are called, Data Source class was not updated yet and 
-		 * Data Source Manager will be using "old" version of Data Source class 
+		 * We cannot use DatasourcePostCreate and DatasourcePostEdit because
+		 * when they are called, Data Source class was not updated yet and
+		 * Data Source Manager will be using "old" version of Data Source class
 		 * (with old list of elements, rootname, etc.).
 		 *
 		 * @see http://symphony-cms.com/learn/api/2.2/delegates/#DatasourcePostCreate
@@ -298,7 +298,7 @@
 		 *	The data source class to parse
 		 */
 		private function __parseSubsectionFields($fields, $context, $datasource = null) {
-		
+
 			// Get source
 			$section = 0;
 			$updateCache = false;
@@ -474,33 +474,33 @@
 				}
 			}
 		}
-		
+
 		/**
 		 * Delete tab entries, when parent entry is deleted
 		 *
 		 * @param object $context
 		 */
 		public function __deleteTabs($context) {
-		
+
 			// Get Subsection Tab field
-			$callback = Symphony::Engine()->getPageCallback();	
+			$callback = Symphony::Engine()->getPageCallback();
 			$sectionManager = new SectionManager(Symphony::Engine());
 			$section_id = $sectionManager->fetchIDFromHandle($callback['context']['section_handle']);
 			$field_id = Symphony::Database()->fetchCol('id', "
-				SELECT `id`  
-				FROM `tbl_fields` 
-				WHERE `type` = 'subsectiontabs' 
+				SELECT `id`
+				FROM `tbl_fields`
+				WHERE `type` = 'subsectiontabs'
 				AND `parent_section` = '$section_id'
 			");
-			
+
 			// Section with Tabs
 			if($field_id) {
 				$relation_id = Symphony::Database()->fetchCol('relation_id', "
-					SELECT `relation_id` 
+					SELECT `relation_id`
 					FROM sym_entries_data_" . $field_id[0] . "
 					WHERE `entry_id` IN(" . implode(',', $context['entry_id']) . ")
 				");
-			
+
 				// Delete existing tabs
 				if(!empty($relation_id)) {
 					$entryManager = new EntryManager(Symphony::Engine());
@@ -536,7 +536,7 @@
 				}
 			}
 		}
-		
+
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/extension/#install
 		 */
@@ -629,7 +629,7 @@
 					if(is_array($sortings)) {
 						foreach($sortings as $sorting) {
 							$status[] = Symphony::Database()->query("
-								INSERT INTO tbl_fields_stage_sorting (`entry_id`, `field_id`, `order`, `context`) 
+								INSERT INTO tbl_fields_stage_sorting (`entry_id`, `field_id`, `order`, `context`)
 								VALUES (" . $sorting['entry_id'] . ", " . $sorting['field_id'] . ", '" . $sorting['order'] . "', 'subsectionmanager')
 							");
 						}
@@ -719,14 +719,14 @@
 						"ALTER TABLE `tbl_fields_subsectionmanager` ADD COLUMN `recursion_levels` tinyint DEFAULT '0'"
 					);
 				}
-				
+
 				// Remove nonunique setting available in early development versions
 				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'allow_nonunique'") == true) {
 					$status[] = Symphony::Database()->query(
 						"ALTER TABLE `tbl_fields_subsectionmanager` DROP `allow_nonunique`"
 					);
 				}
-				
+
 				// Remove quantities setting available in early development versions
 				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'allow_quantities'") == true) {
 					$status[] = Symphony::Database()->query(

@@ -37,7 +37,7 @@
 		public function canPrePopulate() {
 			return true;
 		}
-		
+
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#displaySettingsPanel
 		 */
@@ -540,7 +540,7 @@
 					FROM `tbl_entries_data_" . $subfield_id . "`
 					WHERE `handle` = '" . $data . "'"
 				);
-				
+
 				// Query
 				$joins .= " LEFT JOIN `tbl_entries_data_$field_id` AS `t$field_id$key` ON (`e`.`id` = `t$field_id$key`.entry_id) ";
 				$where .= " AND `t$field_id`.relation_id IN ('" . @implode("', '", $entry_id) . "') ";

@@ -1,7 +1,7 @@
 /**
  * Subsection Manager for Symphony
  *
- * @author: Nils Hörrmann, http://nilshoerrmann.de
+ * @author: Nils HÃ¶rrmann, http://nilshoerrmann.de
  * @source: http://github.com/nilshoerrmann/subsectionmanager
  */
 
@@ -138,7 +138,7 @@ div.field-subsectionmanager div.stage li em, div.field-subsectionmanager div.sta
 	font-style: inherit;
 	margin-right: 0;
 	text-decoration: none;
-	width: auto;	
+	width: auto;
 }
 
 div.field-subsectionmanager div.stage li.preview a.file, div.field-subsectionmanager div.stage li.preview span, div.dragger a.file {

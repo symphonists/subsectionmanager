@@ -45,7 +45,7 @@
 								<input type="hidden" value="{$value}" />
 								<strong class="file">{$type}</strong>
 								<a href="{$href}" class="file handle">{$caption}</a>
-							 </li>'					
+							 </li>'
 			),
 			'index' => array(
 				'text' =>	'{$caption}',
@@ -56,7 +56,7 @@
 
 		public function generate($subsection_field, $subsection_id, $items=NULL, $recurse=0, $flags=self::GETEVERYTHING) {
 			static $done = array();
-			
+
 			if($done[$subsection_field] >= $recurse + 1) {
 				return array('options' => array(), 'html' => '', 'preview' => '');
 			}
@@ -69,14 +69,14 @@
 				WHERE field_id = '" . intval($subsection_field) . "'
 				LIMIT 1"
 			);
-			
+
 			// Get display mode
 			if($meta[0]['show_preview'] == 1) {
 				$mode = 'preview';
 				$flags |= self::GETPREVIEW;
 			}
 			else {
-				$mode = 'plain';			
+				$mode = 'plain';
 			}
 
 			// Fetch entry data
@@ -85,11 +85,11 @@
 		  	$fields = $subsection->fetchFields();
 		  	$entries = $this->__filterEntries($subsection_id, $fields, $meta[0]['filter_tags'], $items, ($flags & self::GETALLITEMS));
 		  	$droptext = $meta[0]['droptext'];
-		  	
+
 		  	// Check caption
 		  	$caption = $meta[0]['caption'];
 		  	if($caption == '') {
-		  		
+
 		  		// Fetch name of primary field in subsection
 				$primary = Symphony::Database()->fetch(
 					"SELECT element_name
@@ -99,16 +99,16 @@
 					LIMIT 1"
 				);
 				$caption = '{$' . $primary[0]['element_name'] . '}';
-			  		
+
 		  	}
-		  	
+
 		  	// Layout subsection data
 		  	$data = $this->__layoutSubsection($entries, $fields, $caption, $droptext, $mode, $flags);
 
 			$done[$subsection_field] -= 1;
 		  	return $data;
 		}
-		
+
 		private function __filterEntries($subsection_id, $fields, $filter = '', $items = NULL, $full = false) {
 
 			// Fetch entry data
@@ -126,7 +126,7 @@
 			$nonos = array();
 			$filters = (empty($filter) ? array() : explode(', ', $filter));
 			if(!empty($filters)) {
-			
+
 			  	// Fetch taglist, select and upload fields
 			  	if(is_array($fields)) {
 					foreach($fields as $field) {
@@ -153,7 +153,7 @@
 				$data = $entry->getData();
 
 				if(!empty($filters)) {
-				
+
 					// Collect taglist and select field values
 					$tags = array();
 					foreach($tag_fields as $field_id) {
@@ -163,10 +163,10 @@
 						}
 						$tags = array_merge($tags, $tag_values);
 					}
-	
+
 					// Investigate entry exclusion
 					$filter_nonos = array_intersect($tags, $nonos);
-	
+
 					// Investigate entry inclusion
 					$filter_gogoes = array_intersect($tags, $gogoes);
 
@@ -182,7 +182,7 @@
 					'id' => $entry->get('id')
 				);
 			}
-			
+
 			// Keep custom sort order if items given
 			if(is_array($items)) {
 				if(!is_array($items['relation_id'])) $items['relation_id'] = array($items['relation_id']);
@@ -196,9 +196,9 @@
 			// Return filtered entry data
 			return $entry_data;
 		}
-		
+
 		private function __layoutSubsection($entries, $fields, $caption_template, $droptext_template, $mode, $flags = self::GETEVERYTHING) {
-		
+
 			// Return early if there is nothing to do
 			if(empty($entries) || !is_array($entries)) return array('options' => array(), 'html' => '', 'preview' => '');
 
@@ -206,12 +206,10 @@
 			$token_names = array();
 			$token_values = array();
 			if(!empty($fields)) {
-				// Check which fields we should handle. There is no point in looping through all of them for every entry,
-				// if caption and/or droptext template use only 1 or two of them (or none at all :).
 
 				// Get all field names used in templates
 				if(preg_match_all('@{\$([^}:]+)(:([^}]*))?}@U', $caption_template . $droptext_template, $m, PREG_PATTERN_ORDER) && is_array($m[0])) {
-				
+
 					// $m[0] is "context", i.e., {$field_name:default_value} and {$field_name:other_value}
 					// $m[1] is "field name"
 					// $m[2] is ":default value"
@@ -284,13 +282,13 @@
 							$preview = $entry['data'][$field_id]['file'];
 							$href = URL . '/workspace' . $preview;
 						}
-								
+
 						// File
 						else {
 							$type = 'file';
 							$preview = pathinfo($entry['data'][$field_id]['file'], PATHINFO_EXTENSION);
 							$href = $entry['data'][$field_id]['file'];
-						}		
+						}
 					}
 				}
 
@@ -324,7 +322,7 @@
 					$template = str_replace('{$droptext}', htmlspecialchars($droptext), $template);
 					$tmp = str_replace('{$caption}', $caption, $template);
 				}
-						
+
 				// Remove empty drop texts
 				// Use "z" to make sure that empty captions/texts are sorted last.
 				// Use ID to make sure that they are not removed from the list.
@@ -341,6 +339,7 @@
 
 			// Generate preview
 			if($flags & self::GETPREVIEW) {
+
 				// Create publish index preview for last item
 				// This has to be checked right after loop above, so nothing will invalidate $type, $preview and $caption variables
 				// that were last set inside the loop.
@@ -354,17 +353,17 @@
 
 			// Get HTML
 			if($flags & self::GETHTML) {
-				
+
 				// Sort items
 				if($flags & self::GETALLITEMS) {
 					ksort($html);
 				}
-				
+
 				$result['html'] = implode('', $html);
 			}
 
 			// Return result
-			return $result;	
+			return $result;
 		}
-		
+
 	}

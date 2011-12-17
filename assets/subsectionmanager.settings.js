@@ -1,6 +1,6 @@
 
 (function($) {
-	
+
 	/**
 	 * Subsection Manager Settings
 	 *
@@ -9,7 +9,7 @@
 	 */
 	$(document).ready(function() {
 		var duplicator = $('#fields-duplicator');
-	
+
 		// Subsection setup on change
 		duplicator.delegate('select.subsectionmanager', 'change', function(event) {
 			var select = $(event.target),
@@ -17,10 +17,10 @@
 				manager = select.parents('li').filter('li'),
 				groups = manager.find('select.datasource optgroup'),
 				filter = manager.find('ul.negation li[rel~=section' + id + ']');
-	
+
 			// Reset subsectionmanager height
 			manager.css('height', 'auto');
-	
+
 			// Show and hide filter and filter suggestions
 			if(filter.length > 0) {
 				manager.find('label.filter').show();
@@ -31,10 +31,10 @@
 				manager.find('label.filter').hide();
 				manager.find('ul.negation li').hide();
 			}
-	
+
 			// Show and hide caption suggestions
 			manager.find('ul.inline li').hide().filter('[rel~=section' + id + ']').show();
-	
+
 			// Show and hide data source sections
 			if(groups.length > 0) {
 				groups.each(function() {
@@ -48,11 +48,11 @@
 				manager.data(id).appendTo(manager.find('select.datasource'));
 			}
 		});
-		
+
 		// Subsection setup on start up
 		duplicator.find('select.subsectionmanager').trigger('change');
 
-		// Subsection setup on click			
+		// Subsection setup on click
 		$('div.controls a').click(function() {
 			duplicator.find('select.subsectionmanager').trigger('change');
 		});
@@ -62,12 +62,12 @@
 			var multiple = $(this),
 				manager = multiple.parents('li:first'),
 				related = manager.find('input[name*="draggable"]');
-				
+
 			// Activate multiple selection
 			if(multiple.is(':checked')) {
 				related.parent().removeClass('disabled');
 				related.removeAttr('disabled');
-				
+
 				// Restore state
 				related.each(function() {
 					var input = $(this);
@@ -76,12 +76,12 @@
 					}
 				});
 			}
-			
+
 			// Deactivate multiple selection
 			else {
 				related.parent().addClass('disabled');
 				related.attr('disabled', 'disabled');
-				
+
 				// Store state
 				related.each(function() {
 					var input = $(this);
@@ -115,5 +115,5 @@
 			}
 		});
 	});
-	
+
 })(jQuery.noConflict());
