@@ -216,6 +216,7 @@
 					// $m[3] is "default value"
 					foreach($m[0] as $index => $context) {
 						$token_fields[$m[1][$index]][$context] = true;
+						
 						// Keep'em sorted, so we can use only a single str_replace call.
 						$token_names[$context] = $context;
 						$token_values[$context] = $m[3][$index];
@@ -258,6 +259,7 @@
 					$field_id = $field->get('id');
 
 					if(isset($field->ssm_tokens)) {
+					
 						// Get value
 						if(is_callable(array($field, 'preparePlainTextValue'))) {
 							$field_value = $field->preparePlainTextValue($entry['data'][$field_id], $entry['id']);
@@ -276,6 +278,7 @@
 
 					// Find upload fields
 					if(isset($field->ssm_preview) && !empty($entry['data'][$field_id]['file'])) {
+					
 						// Image
 						if(strpos($entry['data'][$field_id]['mimetype'], 'image') !== false) {
 							$type = 'image';
