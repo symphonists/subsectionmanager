@@ -6,6 +6,12 @@ Symphony offers an easy way to [create sections](http://symphony-cms.com/learn/c
 
 Subsection Manager is the successor of [Mediathek](http://github.com/nilshoerrmann/mediathek/) and requires [Symphony 2.1 or newer](http://github.com/symphonycms/symphony-2/). Subsection Manager and Mediathek should not be used simultaneously. This extension comes with an upgrade script that automatically replaces all Mediathek fields with the Subsection Manager (see below).
 
+## Subsection Tab
+
+![Subsection Manager](http://projekte.nilshoerrmann.de/extensions/subsectionmanager/sym_subsectiontabs.png)
+
+As of version 2.0 this extension bundles a second field type: Subsection Tab. It provides a tabbed interface of subsection entries that is well suited to manage multilingual content. All tabs are static and have to be set up in the field settings.
+
 ## Installation
 
 Subsection Manager contains two components:
