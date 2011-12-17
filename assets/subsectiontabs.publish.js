@@ -99,6 +99,8 @@
 			else {
 				load(control);
 			}
+			
+			return true;
 		});
 
 		// Clear tab
@@ -150,11 +152,11 @@
 			}
 
 			return control;
-		}
+		};
 
 		// Load tab
 		var load = function(control) {
-			var id = control.attr('data-id') || control.find('span').text(),
+			var id = control.attr('data-id') || control.find('span').text(),
 				link = control.attr('data-link'),
 				subsection;
 
@@ -212,7 +214,7 @@
 					control.click();
 				});
 			});
-		}
+		};
 
 		// Delete a tab
 		var clear = function(control) {
@@ -233,7 +235,7 @@
 					load(control);
 				});
 			}
-		}
+		};
 
 		// Get name, making sure there are no duplicates
 		var getName = function(name) {
@@ -277,7 +279,7 @@
 				tab = tabs.find('iframe[name=' + id + ']'),
 				next = control.next('li:not(.new)'),
 				button = tab.contents().find('div.actions input'),
-				name = $.trim(control.find('span').text())
+				name = $.trim(control.find('span').text()),
 				post = tab.contents().find('form').serialize();
 
 			// Set status
@@ -376,7 +378,7 @@
 
 		var getHeight = function(subsection) {
 			return subsection.contents().find('#wrapper').height();
-		}
+		};
 
 		// Remember subsection name and height
 		var remember = function(subsection, height) {
@@ -394,7 +396,7 @@
 					'height': height
 				}));
 			}
-		}
+		};
 
 	/*-----------------------------------------------------------------------*/
 
