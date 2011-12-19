@@ -828,8 +828,7 @@
 
 			foreach($fields as $field) {
 				$field_id = $field->get('id');
-
-					$elements = $field->fetchIncludableElements(true);
+				$elements = $field->fetchIncludableElements(true);
 
 				foreach($elements as $element) {
 					$includable[] = $this->get('element_name') . ': ' . $element;

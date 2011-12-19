@@ -19,8 +19,7 @@
 		 */
 		public static $storage = array(
 			'fields' => array(),
-			'entries' => array(),
-			'elements' => array()
+			'entries' => array()
 		);
 
 		/**
@@ -49,14 +48,15 @@
 			// Prepare cache
 			if(file_exists(MANIFEST . '/subsectionmanager-storage')) {
 
-				// Data Source files have not been changed
+				// If Data Source files have not changed, get cache
 				if(filemtime(DATASOURCES) < filemtime(MANIFEST . '/subsectionmanager-storage')) {
-					self::$updateCache = false;
+					$cache = unserialize(file_get_contents(MANIFEST . '/subsectionmanager-storage'));
 				}
 
-				// Get cache
-				elseif(!isset(self::$storage['cache'])) {
-					self::$storage = unserialize(file_get_contents(MANIFEST . '/subsectionmanager-storage'));
+				// Check store cache
+				if(!empty($cache)) {
+					self::$storage['fields'] = $cache['fields'];			
+					self::$updateCache = false;
 				}
 			}
 
@@ -99,13 +99,18 @@
 				),
 				array(
 					'page' => '/blueprints/datasources/',
-					'delegate' => 'DatasourcePreDelete',
+					'delegate' => 'DatasourcePostCreate',
 					'callback' => '__clearSubsectionCache'
 				),
 				array(
-					'page' => '/backend/',
-					'delegate' => 'AdminPagePreGenerate',
-					'callback' => '__updateSubsectionCache'
+					'page' => '/blueprints/datasources/',
+					'delegate' => 'DatasourcePostEdit',
+					'callback' => '__clearSubsectionCache'
+				),
+				array(
+					'page' => '/blueprints/datasources/',
+					'delegate' => 'DatasourcePreDelete',
+					'callback' => '__clearSubsectionCache'
 				),
 				array(
 					'page' => '/frontend/',
@@ -155,95 +160,15 @@
 		}
 
 		/**
-		 * Update Cache
-		 *
-		 * @param object $context
-		 */
-		public function __updateSubsectionCache($context) {
-			$callback = Symphony::Engine()->getPageCallback();
-
-			// Update cache if Data Source was saved/created.
-			if($callback['driver'] == 'blueprintsdatasources' && is_array($callback['context']) && $callback['context'][0] == 'edit') {
-				if($callback['context'][2] == 'saved' || $callback['context'][2] == 'created') {
-					$classname = $callback['context'][1];
-					$this->__prepareSubsectionCache($classname);
-				}
-			}
-		}
-
-		/**
-		 * Fetch all subsection elements included in a data source and
-		 * join modes into a single call to `appendFormattedElement()`.
-		 * Cache results, so `__prepareSubsection` can use it later.
-		 *
-		 * We cannot use DatasourcePostCreate and DatasourcePostEdit because
-		 * when they are called, Data Source class was not updated yet and
-		 * Data Source Manager will be using "old" version of Data Source class
-		 * (with old list of elements, rootname, etc.).
-		 *
-		 * @see http://symphony-cms.com/learn/api/2.2/delegates/#DatasourcePostCreate
-		 * @see http://symphony-cms.com/learn/api/2.2/delegates/#DatasourcePostEdit
-		 */
-		public function __prepareSubsectionCache($classname) {
-			$datasourceManager = new DatasourceManager(Symphony::Engine());
-			$handle = $datasourceManager->__getHandleFromFilename($classname);
-			$existing =& $datasourceManager->create($handle, NULL, false);
-
-			$ctx = array('datasource' => $existing);
-
-			self::$updateCache = true;
-			$this->__clearSubsectionCache($existing);
-			$this->__prepareSubsection($ctx);
-			self::$updateCache = false;
-
-			file_put_contents(MANIFEST . '/subsectionmanager-storage', serialize(self::$storage));
-		}
-
-		/**
 		 * Clear cache.
 		 *
 		 * @see http://symphony-cms.com/learn/api/2.2/delegates/#DatasourcePreDelete
 		 */
-		public function __clearSubsectionCache(&$context) {
-			$existing = NULL;
-
-			// When called by Symphony
-			if(is_array($context)) {
-				$datasourceManager = new DatasourceManager(Symphony::Engine());
-				$handle = $datasourceManager->__getHandleFromFilename(basename($context['file']));
-				$existing =& $datasourceManager->create($handle, NULL, false);
+		public function __clearSubsectionCache() {
+			if(file_exists(MANIFEST . '/subsectionmanager-storage')) {
+				unlink(MANIFEST . '/subsectionmanager-storage');
 			}
-
-			// When called from __prepareSubsectionCache()
-			else if(!empty(self::$updateCache)) {
-				$existing = &$context;
-			}
-
-			$parent = get_parent_class($existing);
-
-			// Default Data Source
-			if($parent == 'DataSource') {
-				unset(self::$storage['elements'][$existing->dsParamROOTELEMENT]);
-				$regex = '%^'.preg_quote($existing->dsParamROOTELEMENT).'(/|$)%';
-				foreach(array_keys(self::$storage['fields']) as $ctx) {
-					if(preg_match($regex, $ctx)) unset(self::$storage['fields'][$ctx]);
-				}
-			}
-
-			// Union Data Source
-			elseif($parent == 'UnionDatasource') {
-				foreach($existing->datasources as $datasource) {
-					unset(self::$storage['elements'][$datasource['datasource']->dsParamROOTELEMENT]);
-					$regex = '%^'.preg_quote($datasource['datasource']->dsParamROOTELEMENT).'(/|$)%';
-					foreach(array_keys(self::$storage['fields']) as $ctx) {
-						if(preg_match($regex, $ctx)) unset(self::$storage['fields'][$ctx]);
-					}
-				}
-			}
-
-			if(empty(self::$updateCache)) {
-				file_put_contents(MANIFEST . '/subsectionmanager-storage', serialize(self::$storage));
-			}
+			self::$updateCache = true;
 		}
 
 		/**
@@ -255,11 +180,6 @@
 		 */
 		public function __prepareSubsection(&$context) {
 			$parent = get_parent_class($context['datasource']);
-
-			// Initialise Entry Manager
-			if(empty(self::$entryManager)) {
-				self::$entryManager = new EntryManager(Symphony::Engine());
-			}
 
 			// Default Data Source
 			if($parent == 'DataSource') {
@@ -283,12 +203,13 @@
 
 			// Update field cache
 			if(self::$updateCache == true) {
-				file_put_contents(MANIFEST . '/subsectionmanager-storage', serialize(self::$storage));
-				self::$updateCache = false;
+				$cache = self::$storage;
+				unset($cache['entries']);
+				file_put_contents(MANIFEST . '/subsectionmanager-storage', serialize($cache));
 			}
 
 			// Preload entries
-			self::preloadSubsectionEntries($context['entries']['records']);
+			self::preloadSubsectionEntries($context['entries']['records']);		
 		}
 
 		/**
@@ -301,23 +222,12 @@
 
 			// Get source
 			$section = 0;
-			$updateCache = false;
-			if(isset($datasource)) {
-				if(is_numeric($datasource)) {
-					$section = $datasource;
-				}
-				else if(is_object($datasource)) {
-
-					// Try cached version first
-					$updateCache = self::$updateCache;
-					if($updateCache == true && isset(self::$storage['elements'][$context])) {
-						$datasource->dsParamINCLUDEDELEMENTS = self::$storage['elements'][$context];
-						return;
-					}
-
-					if(method_exists($datasource, 'getSource')) {
-						$section = $datasource->getSource();
-					}
+			if(is_numeric($datasource)) {
+				$section = $datasource;
+			}
+			elseif(is_object($datasource)) {
+				if(method_exists($datasource, 'getSource')) {
+					$section = $datasource->getSource();
 				}
 			}
 
@@ -333,12 +243,14 @@
 					if($field != 'formatted' && $field != 'unformatted' && $field != 'increment' && !empty($field)) {
 
 						// Get field id and mode
-						if($remainder == 'formatted' || $remainder == 'unformatted' || $reminder == 'increment' || empty($remainder)) {
-							$this->__fetchFields($section, $context, $subsection, $field, $remainder);
-						}
-						else {
-							$subsection_id = $this->__fetchFields($section, $context, $subsection, $field, "{$context}/{$subsection}");
-							$this->__parseSubsectionFields(array($field . ': ' . $remainder), "{$context}/{$subsection}", $subsection_id);
+						if(!isset(self::$storage['fields'][$context]) || self::$updateCache == true) {
+							if($remainder == 'formatted' || $remainder == 'unformatted' || $reminder == 'increment' || empty($remainder)) {
+								$this->__fetchFields($section, $context, $subsection, $field, $remainder);
+							}
+							else {
+								$subsection_id = $this->__fetchFields($section, $context, $subsection, $field, "{$context}/{$subsection}");
+								$this->__parseSubsectionFields(array($field . ': ' . $remainder), "{$context}/{$subsection}", $subsection_id);
+							}
 						}
 
 						// Set a single field call for subsection fields
@@ -353,19 +265,10 @@
 					}
 				}
 			}
-
-			// Update cache
-			if($updateCache) {
-				if(is_array($datasource->dsParamINCLUDEDELEMENTS)) {
-					self::$storage['elements'][$context] = $datasource->dsParamINCLUDEDELEMENTS;
-				}
-				else {
-					unset(self::$storage['elements'][$context]);
-				}
-			}
 		}
 
 		private function __fetchFields($section, $context, $subsection, $field, $mode = '') {
+		
 			// Section context
 			if($section !== 0) {
 				$section = " AND t2.`parent_section` = '".intval($section)."' ";
