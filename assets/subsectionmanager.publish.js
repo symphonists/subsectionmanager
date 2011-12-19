@@ -106,6 +106,11 @@
 				// Update item
 				update(id, item, iframe);
 			});
+			
+			// Naming
+			stage.bind('update', function(event) {
+				selection.find('input:hidden').attr('name', manager_name + '[]');
+			});
 
 			// Searching
 			stage.bind('browsestart', function(event) {
@@ -311,12 +316,14 @@
 			var create = function(item) {
 				stage.trigger('createstart', [item]);
 
-				var editor = drawer.clone().hide().addClass('new');
-
+				var editor = drawer.clone().hide().animate({
+					height: 50
+				});
+				
 				// Prepare iframe
 				editor.find('iframe').css({
-					'opacity': 0.01,
-					'height': 0
+					opacity: 0.01,
+					height: 0
 				}).attr('src', subsection_link + '/new/').load(function() {
 					iframe = $(this);
 					load(item, editor, iframe);
@@ -361,8 +368,7 @@
 					},
 					dataType: 'html',
 					success: function(result) {
-						var result = $(result),
-							destructor = item.find('a.destructor').clone();
+						var result = $(result);
 
 						// Get queue item
 						var queue_item = queue.find('li[data-value="' + item.attr('data-value') + '"]');
@@ -374,29 +380,20 @@
 
 						// New item
 						if(queue_item.length == 0) {
-
-							// Update queue
 							stage.find('div.queue ul').prepend(result.clone());
-
-							// Update selected item
-							item.children(':not(.destructor), :not(div.drawer)').fadeOut('fast', function() {
-								$(this).remove();
-								result.children().hide().prependTo(item);
-								item.attr('class', result.attr('class')).attr('data-value', result.attr('data-value')).children().fadeIn();
-								stage.trigger('update');
-							});
-
-							// Remove empty queue message
 							queue.find('li.message').remove();
 						}
 
 						// Existing item
 						else {
 							queue_item.html(result.html()).addClass(result.attr('class')).attr('data-value', result.attr('data-value'));
-							item.find('div.drawer').siblings().remove();
-							item.prepend(result.children()).addClass(result.attr('class')).attr('data-value', result.attr('data-value')).append(destructor);
-							stage.trigger('update');
 						}
+
+						// Update item
+						item.children().not('.destructor').not('.drawer').remove();
+						result.children().prependTo(item);
+						item.attr('class', result.attr('class')).attr('data-value', result.attr('data-value'));
+						stage.trigger('update');
 					}
 				});
 			};
@@ -466,7 +463,7 @@
 			}
 
 			// Name existing items
-			selection.find('input:hidden').attr('name', manager_name + '[]');
+			stage.trigger('update');
 		});
 
 	});

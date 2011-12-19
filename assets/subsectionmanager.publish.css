@@ -76,12 +76,13 @@ div.dragger div.drawer {
 }
 
 div.field-subsectionmanager div.stage li.new {
-	padding-left: 52px;
+/*	padding-left: 52px;*/
 	min-height: 52px;
 }
 
 div.field-subsectionmanager div.stage li.new span, div.field-subsectionmanager div.stage li.new span:hover,
 div.field-subsectionmanager div.stage li.empty span, div.field-subsectionmanager div.stage li.empty span:hover {
+	padding: 7px 14px 7px 66px;
 	background: none;
 }
 
@@ -92,10 +93,6 @@ div.field-subsectionmanager div.stage .drawer {
 	border-right: 1px solid #353533;
 	padding: 0;
 	margin: 0 -43px 0 -1px;
-}
-
-div.field-subsectionmanager div.stage .drawer.new {
-	margin-left: -53px;
 }
 
 div.field-subsectionmanager div.stage.preview img, div.field-subsectionmanager li.preview.new img, div.dragger img {
