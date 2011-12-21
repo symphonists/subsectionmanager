@@ -251,6 +251,9 @@
 								$subsection_id = $this->__fetchFields($section, $context, $subsection, $field, "{$context}/{$subsection}");
 								$this->__parseSubsectionFields(array($field . ': ' . $remainder), "{$context}/{$subsection}", $subsection_id);
 							}
+						
+							// Make sure fields will be stored
+							self::$updateCache = true;
 						}
 
 						// Set a single field call for subsection fields
