@@ -92,7 +92,7 @@
 			// Tab already loaded
 			if(current.length > 0) {
 				resize(current);
-				current.show();
+				current.css('visibility', 'visible').show();
 			}
 
 			// Tab not loaded yet
@@ -300,6 +300,7 @@
 				// Callback
 				tab.one('load', function(event) {
 					var tab = $(this),
+						contents = tab.contents(),
 						regexp;
 
 					// Get entry id
@@ -310,8 +311,13 @@
 					}
 
 					// Store errors
-					if(tab.contents().find('#header .error').length > 0) {
+					if(contents.find('#header .error').length > 0) {
 						control.addClass('error');
+					}
+					else if(contents.find('b:contains("Fatal error")').length > 0) {
+						control.addClass('error');
+						contents.find('body').attr('id', 'fatal').wrapInner('<div />');
+						body.parent().find('link[href*="subsectiontabs.publish.css"]').clone().appendTo(contents.find('head'));
 					}
 					else {
 						control.removeClass('error');

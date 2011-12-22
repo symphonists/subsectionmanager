@@ -92,7 +92,7 @@ body.subsectiontabs iframe.subsectiontab {
 	background: #dd4422;
 	border-bottom: 1px solid;
 	border-color: #bb2211;
-	color: rgba(255, 255, 255, 0.8);
+	color: #fb9;
 	text-shadow: 1px 1px 1px rgba(187, 34, 17, 1);
 }
 
@@ -120,6 +120,16 @@ body.subsectiontabs iframe.subsectiontab {
 	color: rgba(0, 0, 0, 0.5);
 }
 
+#subsectiontabs li.error a.destructor {
+	color: #fb9;
+	text-shadow: none;
+}
+
+#subsectiontabs li.selected.error a.destructor {
+	color: rgba(0, 0, 0, 0.15);
+	text-shadow: 1px 1px #fff !important;
+}
+
 #subsectiontabs li.new, #subsectiontabs.destructable li.static {
 	padding-right: 7px;
 }
@@ -130,4 +140,22 @@ body.subsectiontabs iframe.subsectiontab {
 	padding-right: 0 !important;
 	margin-left: 0 !important;
 	margin-right: 0 !important;
+}
+
+#fatal {
+	margin: 0;
+	padding: 19px;
+}
+
+#fatal div {
+	font: 68.75%/1.5 Lucida Grande, Tahoma, Verdana, sans-serif;
+	background-color: #D42;
+	border: 1px solid #C31;
+	margin: 0;
+	padding: 0 1em 0.75em;
+	color: #fff;
+}
+
+#fatal div a {
+	color: #fb9;
 }
