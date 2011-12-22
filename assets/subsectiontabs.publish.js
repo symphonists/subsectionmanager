@@ -171,7 +171,16 @@
 			subsection.load(function() {
 				var content = subsection.contents(),
 					current = subsection.attr('name'),
-					selected = controls.find('li.selected').attr('data-id');
+					selected = controls.find('li.selected').attr('data-id'),
+					form = content.find('#contents form'),
+					tab = $('<input />', {
+						type: 'hidden',
+						name: 'fields[tab]',
+						value: control.find('span').text()
+					});
+					
+				// Add tab name to form
+				form.prepend(tab);
 
 				// Adjust interface
 				content.find('body').addClass('tabbed subsection');
