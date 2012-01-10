@@ -74,8 +74,8 @@
 			return array(
 				'name' => 'Subsection Manager',
 				'type' => 'Field, Interface',
-				'version' => '2.0beta2',
-				'release-date' => '2011-12-23',
+				'version' => '2.0',
+				'release-date' => '2012-01-10',
 				'author' => array(
 					'name' => 'Nils Hörrmann',
 					'website' => 'http://nilshoerrmann.de',
@@ -504,7 +504,7 @@
 				$this->install();
 
 				// Add context row and return status
-				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'context'") == false) {
+				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_stage` LIKE 'context'") == false) {
 					$status[] = Symphony::Database()->query(
 						"ALTER TABLE `tbl_fields_stage` ADD `context` varchar(255) default NULL"
 					);
@@ -515,6 +515,13 @@
 		/*-----------------------------------------------------------------------*/
 
 			if(version_compare($previousVersion, '1.1', '<')) {
+
+				// Rename allow multiple column
+				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'allow_multiple_selection'") == false) {
+					$status[] = Symphony::Database()->query(
+						"ALTER TABLE `tbl_fields_subsectionmanager` CHANGE COLUMN `allow_multiple_selection` `allow_multiple` tinyint(1) default '0'"
+					);
+				}
 
 				// Add droptext column
 				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'droptext'") == false) {
@@ -566,17 +573,19 @@
 							WHERE f.field_id = '{$id}'
 							LIMIT 1
 						");
-						$associations[] = array(
-							'parent_section_id' => $parent_section_id,
-							'parent_section_field_id' => $id,
-							'child_section_id' => $child_section_id,
-							'child_section_field_id' => $id,
-							'hide_association' => 'yes',
-						);
+						if(!empty($parent_section_id) && !empty($child_section_id)) {
+							$associations[] = array(
+								'parent_section_id' => $parent_section_id,
+								'parent_section_field_id' => $id,
+								'child_section_id' => $child_section_id,
+								'child_section_field_id' => $id,
+								'hide_association' => 'yes',
+							);
+						}
 					}
 				}
 				if(!empty($associations)) {
-					foreach ($associations as $association) {
+					foreach($associations as $association) {
 						$status[] = Symphony::Database()->insert($association, 'tbl_sections_association');
 					}
 				}
