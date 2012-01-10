@@ -1,12 +1,37 @@
 /**
  * Subsection Manager for Symphony
  *
- * @author: Nils Hörrmann, http://nilshoerrmann.de
+ * @author: Nils HÃ¶rrmann, http://nilshoerrmann.de
  * @source: http://github.com/nilshoerrmann/subsectionmanager
  */
 
-div.field-subsectionmanager select {
+
+div.field-subsectionmanager input.subsectionmanager.storage {
+	float: right;
+	vertical-align: middle;
+	width: 50px;
+	height: 29px;
+	padding-right: 15px;
+	border: 0px none;
+	text-indent: 5px;
+	text-align: right;
+	line-height: 30px;
+	background: transparent;
+	cursor: pointer;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+}
+
+div.field-subsectionmanager input.subsectionmanager.storage.template, div.field-subsectionmanager div.stage.nonquantifiable input.subsectionmanager.storage {
 	display: none;
+}
+
+div.field-subsectionmanager div.stage li:hover input.storage, div.field-subsectionmanager div.stage li input.storage:focus {
+	background-color: #fff;
+	background-image: url('images/arrows.png');
+	background-repeat: no-repeat;
+	background-position: right center;
 }
 
 div.field-subsectionmanager div.stage li a {
@@ -46,24 +71,27 @@ div.dragger a.file {
 	padding: 0 0 0 52px;
 }
 
+div.dragger div.drawer {
+	display: none !important;
+}
+
 div.field-subsectionmanager div.stage li.new {
-	padding-left: 52px;
 	min-height: 52px;
 }
 
 div.field-subsectionmanager div.stage li.new span, div.field-subsectionmanager div.stage li.new span:hover,
 div.field-subsectionmanager div.stage li.empty span, div.field-subsectionmanager div.stage li.empty span:hover {
+	padding: 7px 14px 7px 66px;
 	background: none;
 }
 
-div.field-subsectionmanager div.stage li.drawer {
-	background-image: url(images/loading.gif) !important;
-	background-position: center !important;
-	background-repeat: no-repeat !important;
-}
-
-div.field-subsectionmanager div.stage li.drawer.new {
+div.field-subsectionmanager div.stage .drawer {
+	background: #353533 url(images/loading.gif) center no-repeat;
+	border-bottom: 1px solid #353533;
+	border-left: 1px solid #353533;
+	border-right: 1px solid #353533;
 	padding: 0;
+	margin: 0 -43px 0 -1px;
 }
 
 div.field-subsectionmanager div.stage.preview img, div.field-subsectionmanager li.preview.new img, div.dragger img {
@@ -89,7 +117,7 @@ div.field-subsectionmanager div.stage li.empty, div.field-subsectionmanager div.
 	cursor: auto;
 }
 
-div.field-subsectionmanager div.stage li.drawer iframe {
+div.field-subsectionmanager div.stage .drawer iframe {
 	width: 100%;
 	display: block;
 }
@@ -106,7 +134,7 @@ div.field-subsectionmanager div.stage li em, div.field-subsectionmanager div.sta
 	font-style: inherit;
 	margin-right: 0;
 	text-decoration: none;
-	width: auto;	
+	width: auto;
 }
 
 div.field-subsectionmanager div.stage li.preview a.file, div.field-subsectionmanager div.stage li.preview span, div.dragger a.file {
@@ -123,4 +151,23 @@ div.field-subsectionmanager div.stage div.queue li.selected em {
 
 div.field-subsectionmanager div.stage div.queue li.selected img, div.field-subsectionmanager div.stage div.queue li.selected strong.file {
 	border-color: #335e9e;
+}
+
+/* Field error */
+
+div.field-subsectionmanager #error {
+	margin: -1.5em 0 1.5em;
+	padding: 1em 1em 0.75em;
+	background-color: #D42;
+	border: 1px solid #C31;
+	border-bottom-color: #B21;
+}
+
+div.field-subsectionmanager #error > p {
+	padding: 0;
+	border: none;
+}
+
+div.field-subsectionmanager #error div.stage {
+	margin: 0 0 0.75em !important;
 }

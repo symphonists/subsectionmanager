@@ -14,8 +14,16 @@
 		 * Used to fetch subsection items via an AJAX request.
 		 */
 		public function __viewIndex() {
-			$subsection = new SubsectionManager;
-			$content = $subsection->generate(null, intval($_GET['id']), intval($_GET['section']), (intval($_GET['entry']) ? intval($_GET['entry']) : NULL), true);
+			$subsection = new SubsectionManager();
+			
+			// Set flags
+			$flags = SubsectionManager::GETHTML;
+			if(!isset($_GET['entry'])) {
+				$flags |= SubsectionManager::GETALLITEMS;
+			}
+
+			// Get items
+			$content = $subsection->generate(intval($_GET['id']), intval($_GET['section']), (intval($_GET['entry']) ? intval($_GET['entry']) : NULL), 0, $flags);
 			echo $content['html'];
 			exit;
 		}
