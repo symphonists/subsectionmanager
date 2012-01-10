@@ -1,14 +1,16 @@
-# Subsection Manager 1.3
+# Subsection Manager 2.0
 
-![Subsection Manager](http://projekte.nilshoerrmann.de/extensions/subsectionmanager/sym_subsectionmanager.png)
+<img src="http://projekte.nilshoerrmann.de/extensions/subsectionmanager/sym_subsectionmanager.png" width="500" height="500" style="margin: 0 auto;" />
 
-Symphony offers an easy way to [create sections](http://symphony-cms.com/learn/concepts/view/sections/) and [model the fields](http://symphony-cms.com/learn/concepts/view/fields/) the way you like. Nevertheless, from time to time you need to connect the content of two sections: you might have an articles section you'd like to link images to, or you are building a books section you'd like to connect with authors. With a default Symphony install, you can use select boxes or selectbox links to create these connections, but you will not be able to see and manage all your content at once. The Subsection Manager tries to solve this problem by providing an inline management of another section's content. By adding the Subsection Manager field to your parent section, you can integrate another section as a subsection. The subsection's entries can be managed  through the inline interface as well as the regular Symphony section entry list. You can opt for inline editing only by simply hiding the specified section from the menu. 
+Symphony offers an easy way to [create sections](http://symphony-cms.com/learn/concepts/view/sections/) and [model the fields](http://symphony-cms.com/learn/concepts/view/fields/) the way you like. Nevertheless, from time to time you need to connect the content of two sections: you might have an articles section you'd like to link images to, or you are building a books section you'd like to connect with authors. With a default Symphony install, you can use select boxes or selectbox links to create these connections, but you will not be able to see and manage all your content at once. The Subsection Manager tries to solve this problem by providing an inline management of another section's content. By adding the Subsection Manager field to your parent section, you can integrate another section as a subsection. The subsection's entries can be managed  through the inline interface as well as the regular Symphony section entry list. You can opt for inline editing only by simply hiding the specified section from the menu.
 
 Subsection Manager is the successor of [Mediathek](http://github.com/nilshoerrmann/mediathek/) and requires [Symphony 2.1 or newer](http://github.com/symphonycms/symphony-2/). Subsection Manager and Mediathek should not be used simultaneously. This extension comes with an upgrade script that automatically replaces all Mediathek fields with the Subsection Manager (see below).
 
-## Compatibility
+## Subsection Tab
 
-Please note that Symphony 2.2 introduces new features that Subsection Manager 1.1+ relies on. If you are using Symphony 2.1.x, please [download or checkout Subsection Manager 1.0.1](https://github.com/nilshoerrmann/subsectionmanager/tree/1.0.1) which does not have these dependencies.
+<img src="http://projekte.nilshoerrmann.de/extensions/subsectionmanager/sym_subsectiontabs.png" width="688" height="761" style="margin: 0 auto;" />
+
+As of version 2.0 this extension bundles a second field type: Subsection Tab. It provides a tabbed interface of subsection entries that is well suited to manage multilingual content. All tabs are static and have to be set up in the field settings.
 
 ## Installation
 
@@ -17,7 +19,7 @@ Subsection Manager contains two components:
 - The Subsection Manager itself which handles the section interactions,
 - [Stage](http://github.com/nilshoerrmann/stage/) which offers the interface for the inline section management and
 
-If you are working with Git, please clone the `1.x` branch of this extension which contains all additional components as submodules. Please don't forget to pull the submodules as well. If you are not using Git and want to install this extension using FTP, please just download a copy of the `master` branch which bundles all needed submodules. More information about [installing and updating extensions](http://symphony-cms.com/learn/tasks/view/install-an-extension/) can be found in the Symphony documentation at <http://symphony-cms.com/learn/>. 
+If you are working with Git, please clone the `1.x` branch of this extension which contains all additional components as submodules. Please don't forget to pull the submodules as well. If you are not using Git and want to install this extension using FTP, please just download a copy of the `master` branch which bundles all needed submodules. More information about [installing and updating extensions](http://symphony-cms.com/learn/tasks/view/install-an-extension/) can be found in the Symphony documentation at <http://symphony-cms.com/learn/>.
 
 All interface related components of the Subsection Manager are JavaScript based. If you are upgrading from an earlier version, please make sure to clear your browser cache to avoid interface issues. If another extension or the Symphony core throws a JavaScript error, the Subsection Manager will stop working.
 
@@ -28,6 +30,8 @@ To update Subsection Manager to a newer version perform the following steps:
 - Make sure that you have a working backup of your Symphony install.
 - Update the Subsection Manager folder by either updating the submodule or by replacing the files manually.
 - Log into the backend and enable the Subsection Manager extension to run the update script.
+
+**Updating to version 2.0:** Please note that this is major release and that you will have to reset item sorting and included elements manually.
 
 ## Upgrading Mediathek Fields
 

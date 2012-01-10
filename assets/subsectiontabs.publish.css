@@ -1,0 +1,161 @@
+/* This is based on Nick Dunn's Publish tabs, https://github.com/nickdunn/publish_tabs */
+
+body.subsectiontabs #nav {
+	z-index: 2000;
+}
+
+body.subsectiontabs h2 {
+	border-bottom: 0;
+}
+
+body.subsectiontabs form {
+	border-top: 1px solid #DDC;
+}
+
+body.subsectiontabs div.tabs {
+	margin: 0 -19px;
+	min-height: 100px;
+	overflow: hidden;
+	background: url(../lib/stage/images/loading.gif) center no-repeat;
+}
+
+body.subsectiontabs iframe.subsectiontab {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+#subsectiontabs {
+	list-style-type: none;
+	margin: 5px -19px 10px;
+	padding: 0 19px;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+	background: -moz-linear-gradient(bottom, #eee 0%, #fff 15%, #fff 100%);
+	background: -webkit-gradient(linear, left bottom, left top, from(#eee), to(#fff), color-stop(0.15, #fff));
+	height: 23px;
+}
+
+#subsectiontabs li {
+	list-style-type: none;
+	float: left;
+	padding: 2px 7px 0;
+	margin: 0 3px 0 0;
+	cursor: pointer;
+	background: rgba(0, 0, 0, 0.02);
+	-moz-border-radius: 5px 5px 0 0;
+	-webkit-border-radius: 5px 5px 0 0;
+	border-radius: 5px 5px 0 0;
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	border-bottom: transparent;
+	color: rgba(0, 0, 0, 0.5);
+	height: 20px;
+}
+
+#subsectiontabs li:hover {
+	background: rgba(0, 0, 0, 0.04);
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	border-bottom: transparent;
+	color: rgba(0, 0, 0, 0.65);
+}
+
+#subsectiontabs li.selected, #subsectiontabs li.error.selected {
+	background: #fff;
+	border: 1px solid rgba(0, 0, 0, 0.2);
+	border-bottom: 1px solid #fff;
+	color: rgba(0, 0, 0, 0.8);
+	text-shadow: none;
+	z-index: 1000;
+}
+
+#subsectiontabs li span {
+	padding: 2px 4px 0;
+	cursor: pointer;
+	display: block;
+}
+
+#subsectiontabs li input {
+	padding: 2px 2px 3px;
+	cursor: pointer;
+	border: 1px solid transparent;
+	background: transparent;
+	outline: none;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	border-radius: 2px;
+}
+
+#subsectiontabs li.selected input, #subsectiontabs li.new input {
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	background: #fff;
+}
+
+#subsectiontabs li.error {
+	background: #dd4422;
+	border-bottom: 1px solid;
+	border-color: #bb2211;
+	color: #fb9;
+	text-shadow: 1px 1px 1px rgba(187, 34, 17, 1);
+}
+
+#subsectiontabs li {
+	padding-right: 20px;
+	position: relative;
+}
+
+#subsectiontabs li a.destructor, #subsectiontabs.destructable li.selected:hover a.destructor {
+	position: absolute;
+	top: 3px;
+	right: 4px;
+	line-height: 1;
+	text-decoration: none;
+	color: rgba(0, 0, 0, 0.15);
+	text-shadow: 1px 1px #fff;
+	padding: 3px;
+}
+
+#subsectiontabs li:hover a.destructor {
+	color: rgba(0, 0, 0, 0.2);
+}
+
+#subsectiontabs li a.destructor:hover, #subsectiontabs li.selected a.destructor:hover {
+	color: rgba(0, 0, 0, 0.5);
+}
+
+#subsectiontabs li.error a.destructor {
+	color: #fb9;
+	text-shadow: none;
+}
+
+#subsectiontabs li.selected.error a.destructor {
+	color: rgba(0, 0, 0, 0.15);
+	text-shadow: 1px 1px #fff !important;
+}
+
+#subsectiontabs li.new, #subsectiontabs.destructable li.static {
+	padding-right: 7px;
+}
+
+#subsectiontabs li.delete {
+	border-width: 0 !important;
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+}
+
+#fatal {
+	margin: 0;
+	padding: 19px;
+}
+
+#fatal div {
+	font: 68.75%/1.5 Lucida Grande, Tahoma, Verdana, sans-serif;
+	background-color: #D42;
+	border: 1px solid #C31;
+	margin: 0;
+	padding: 0 1em 0.75em;
+	color: #fff;
+}
+
+#fatal div a {
+	color: #fb9;
+}

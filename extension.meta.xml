@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<extension id="subsectionmanager" status="released" xmlns="http://symphony-cms.com/schemas/extension/1.0">
+<extension id="subsectionmanager" status="beta" xmlns="http://symphony-cms.com/schemas/extension/1.0">
 	<name>Subsection Manager</name>
 	<description>Subsection Management for Symphony.</description>
 	<repo type="github">https://github.com/nilshoerrmann/subsectionmanager</repo>
@@ -15,9 +15,24 @@
 		</author>
 	</authors>
 	<dependencies>
-		<dependency version="1.3">https://github.com/nilshoerrmann/stage</dependency>
+		<dependency version="1.5">https://github.com/nilshoerrmann/stage</dependency>
 	</dependencies>
 	<releases>
+		<release version="2.0" min="2.2.5">
+			- Introduced subsection caching (thanks, Marcin!)
+			- Introduced new field type Subsection Tabs
+			- Moved included fields to Data Source editor (thanks, Marcin!) – this will break compatibility!
+			- Moved to simpler sorting – this will break compatibility!
+			- Fixed several JavaScript and style bugs
+			- Fixed `iframe` resizing when content height changes
+			- Added `not: ` as negation filter in Data Sources (thanks, Marcin!)
+			- Added Data Source grouping if field allows multiple items (thanks, Marcin!)
+			- Added basic support for XML Importer
+			- Added new setting for recursion levels handled by Subsection Manager (thanks, Marcin!)
+			- Added Russian translation (thanks, Alexander!)
+			- Updated Stage to version 1.5
+			- Updated codebase to reflect latest Symphony core changes
+		</release>
 		<release version="1.3.2" date="2011-12-13" min="2.2">
 			- Updated extension information
 		</release>
@@ -25,14 +40,14 @@
 			- Added `extension.meta.xml` file
 		</release>
 		<release version="1.3" date="2011-10-11" min="2.2">
-			- Reflect latest Symphony core changes (Thanks, Brendan!)
-			- Updates Stage to 1.3 (Thanks, Brendan!)
-			- Field now correctly outputs parameters (Thanks, Brendan!)
-			- Improve compatibility with Reflection Field (Thanks, Marcin!)
-			- Fix potential SQL Injection vulnerability (Thanks, Marcin!)
-			- Fix bug where only the latest linked entry will be remembered (Thanks, Marcin!)
-			- Fix potential encoding issue (Thanks, Marcin!)
-			- Fix Call-time pass-by-reference warning that appeared in some environments (Thanks, Marcin!)
+			- Reflect latest Symphony core changes (thanks, Brendan!)
+			- Updates Stage to version 1.3 (thanks, Brendan!)
+			- Field now correctly outputs parameters (thanks, Brendan!)
+			- Improve compatibility with Reflection Field (thanks, Marcin!)
+			- Fix potential SQL Injection vulnerability (thanks, Marcin!)
+			- Fix bug where only the latest linked entry will be remembered (thanks, Marcin!)
+			- Fix potential encoding issue (thanks, Marcin!)
+			- Fix Call-time pass-by-reference warning that appeared in some environments (thanks, Marcin!)
 		</release>
 		<release version="1.2" min="2.2">
 			- New setting to disable inline subsection editing
