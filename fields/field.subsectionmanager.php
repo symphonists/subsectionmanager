@@ -597,20 +597,6 @@
 				$wrapper->appendChild($stage);
 			}
 		}
-		
-		/**
-		 * Get default publish content
-		 */
-		function getDefaultPublishContent(&$wrapper) {
-			
-			// Get items
-			$subsection = new SubsectionManager;
-			$content = $subsection->generate(null, $this->get('id'), $this->get('subsection_id'), NULL, true);
-			
-			// Append items
-			$select = Widget::Select(null, $content['options']);
-			$wrapper->appendChild($select);
-		}
 
 		/**
 		 * Get default publish content

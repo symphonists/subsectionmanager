@@ -18,6 +18,9 @@
 		<dependency version="1.5">https://github.com/nilshoerrmann/stage</dependency>
 	</dependencies>
 	<releases>
+		<release version="2.0.2" min="2.2.5">
+			- Fix merging error
+		</release>
 		<release version="2.0.1" min="2.2.5">
 			- Simplify image integration in readme
 		</release>
