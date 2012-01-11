@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <extension id="subsectionmanager" status="beta" xmlns="http://symphony-cms.com/schemas/extension/1.0">
 	<name>Subsection Manager</name>
-	<description>Subsection Management for Symphony.</description>
+	<description>Subsection management for Symphony.</description>
 	<repo type="github">https://github.com/nilshoerrmann/subsectionmanager</repo>
 	<url type="discuss">http://symphony-cms.com/discuss/thread/50421/</url>
 	<types>
@@ -18,6 +18,9 @@
 		<dependency version="1.5">https://github.com/nilshoerrmann/stage</dependency>
 	</dependencies>
 	<releases>
+		<release version="2.0.1" min="2.2.5">
+			- Simplify image integration in readme
+		</release>
 		<release version="2.0" min="2.2.5">
 			- Introduced subsection caching (thanks, Marcin!)
 			- Introduced new field type Subsection Tabs

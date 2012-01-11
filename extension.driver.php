@@ -73,14 +73,14 @@
 			return array(
 				'name' => 'Subsection Manager',
 				'type' => 'Field, Interface',
-				'version' => '2.0',
-				'release-date' => '2012-01-10',
+				'version' => '2.0.1',
+				'release-date' => '2012-01-11',
 				'author' => array(
 					'name' => 'Nils Hörrmann',
 					'website' => 'http://nilshoerrmann.de',
 					'email' => 'post@nilshoerrmann.de'
 				),
-				'description' => 'Subsection Management for Symphony.'
+				'description' => 'Subsection management for Symphony.'
 			);
 		}
 
