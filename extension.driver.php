@@ -40,7 +40,7 @@
 					}
 				}
 				catch(Exception $e) {
-					throw new SymphonyErrorPage(__('Please make sure that the Stage submodule is initialised and available at %s.', array('<code>' . EXTENSIONS . '/subsectionmanager/lib/stage/</code>')) . '<br/><br/>' . __('It\'s available at %s.', array('<a href="https://github.com/nilshoerrmann/stage">github.com/nilshoerrmann/stage</a>')), __('Stage not found'));
+					throw new SymphonyErrorPage(__('Please make sure that the Stage submodule is initialised and available at %s.', array('<code>' . EXTENSIONS . '/subsectionmanager/lib/stage/</code>')) . '<br/><br/>' . __('It\'s available at %s.', array('<a href="https://github.com/hananils/stage">github.com/nilshoerrmann/stage</a>')), __('Stage not found'));
 				}
 			}
 
@@ -73,12 +73,19 @@
 			return array(
 				'name' => 'Subsection Manager',
 				'type' => 'Field, Interface',
-				'version' => '2.0.3',
-				'release-date' => '2012-01-11',
+				'version' => '2.1.1',
+				'release-date' => '2012-01-17',
 				'author' => array(
-					'name' => 'Nils Hörrmann',
-					'website' => 'http://nilshoerrmann.de',
-					'email' => 'post@nilshoerrmann.de'
+					array(
+						'name' => 'Büro für Web- und Textgestaltung',
+						'website' => 'http://hananils.de',
+						'email' => 'buero@hananils.de'
+					),
+					array(
+						'name' => 'Nils Hörrmann',
+						'website' => 'http://nilshoerrmann.de',
+						'email' => 'post@nilshoerrmann.de'
+					)
 				),
 				'description' => 'Subsection management for Symphony.'
 			);

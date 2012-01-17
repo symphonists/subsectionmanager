@@ -2,13 +2,17 @@
 
 This is a utility for Symphony extensions that helps creating a stage for managing multiple inline elements in the backend (adding new items, removing items, sorting items).
 
-- Version: 1.5
-- Date: 17th December 2011
-- Author: Nils Hörrmann, post@nilshoerrmann.de
-- Repository: <http://github.com/nilshoerrmann/stage/>
+- Version: 1.6
+- Date: 17th January 2012
+- Author: hana+nils · Büro für Web- und Textgestaltung, http://hananils.de
+- Repository: <http://github.com/hananils/stage/>
 - Requirements: Symphony CMS 2.2 or newer, <http://github.com/symphony/symphony-2/>
 
 ## Release Notes
+
+**Version 1.6**
+
+- Moved repository
 
 **Version 1.5**
 
