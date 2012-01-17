@@ -73,7 +73,7 @@
 			return array(
 				'name' => 'Subsection Manager',
 				'type' => 'Field, Interface',
-				'version' => '2.1',
+				'version' => '2.1.1',
 				'release-date' => '2012-01-17',
 				'author' => array(
 					array(
