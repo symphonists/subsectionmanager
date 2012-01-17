@@ -8,7 +8,7 @@ Subsection Manager is the successor of [Mediathek](http://github.com/nilshoerrma
 
 ## Subsection Tab
 
-![Subsection Tabs[(http://projekte.nilshoerrmann.de/extensions/subsectionmanager/sym_subsectiontabs.png)
+![Subsection Tabs](http://projekte.nilshoerrmann.de/extensions/subsectionmanager/sym_subsectiontabs.png)
 
 As of version 2.0 this extension bundles a second field type: Subsection Tab. It provides a tabbed interface of subsection entries that is well suited to manage multilingual content. All tabs are static and have to be set up in the field settings.
 
