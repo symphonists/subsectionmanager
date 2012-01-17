@@ -395,7 +395,7 @@
 						// Update item
 						item.children().not('.destructor').not('.drawer').remove();
 						result.children().prependTo(item);
-						item.attr('class', result.attr('class')).attr('data-value', result.attr('data-value'));
+						item.attr('class', result.attr('class')).attr('data-value', result.attr('data-value')).attr('data-drop', result.attr('data-drop'));
 						stage.trigger('update');
 					}
 				});
