@@ -17,7 +17,7 @@ As of version 2.0 this extension bundles a second field type: Subsection Tab. It
 Subsection Manager contains two components:
 
 - The Subsection Manager itself which handles the section interactions,
-- [Stage](http://github.com/nilshoerrmann/stage/) which offers the interface for the inline section management and
+- [Stage](http://github.com/hananils/stage/) which offers the interface for the inline section management and
 
 If you are working with Git, please clone the `1.x` branch of this extension which contains all additional components as submodules. Please don't forget to pull the submodules as well. If you are not using Git and want to install this extension using FTP, please just download a copy of the `master` branch which bundles all needed submodules. More information about [installing and updating extensions](http://symphony-cms.com/learn/tasks/view/install-an-extension/) can be found in the Symphony documentation at <http://symphony-cms.com/learn/>.
 

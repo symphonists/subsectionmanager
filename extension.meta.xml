@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <extension id="subsectionmanager" status="beta" xmlns="http://symphony-cms.com/schemas/extension/1.0">
 	<name>Subsection Manager</name>
-	<description>Subsection Management for Symphony.</description>
-	<repo type="github">https://github.com/nilshoerrmann/subsectionmanager</repo>
+	<description>Subsection management for Symphony.</description>
+	<repo type="github">https://github.com/hananils/subsectionmanager</repo>
 	<url type="discuss">http://symphony-cms.com/discuss/thread/50421/</url>
 	<types>
 		<type>Field Types</type>
@@ -10,14 +10,21 @@
 	</types>
 	<authors>
 		<author>
+			<name github="hananils" symphony="hananils">Büro für Web- und Textgestaltung</name>
+			<website>http://hananils.de</website>
+		</author>
+		<author>
 			<name github="nilshoerrmann" symphony="Nils">Nils Hörrmann</name>
 			<website>http://nilshoerrmann.de</website>
 		</author>
 	</authors>
 	<dependencies>
-		<dependency version="1.5">https://github.com/nilshoerrmann/stage</dependency>
+		<dependency version="1.6">https://github.com/hananils/stage</dependency>
 	</dependencies>
 	<releases>
+		<release version="2.1" min="2.2.5">
+			- Moving Subsection Manager to a new home
+		</release>
 		<release version="2.0" min="2.2.5">
 			- Introduced subsection caching (thanks, Marcin!)
 			- Introduced new field type Subsection Tabs
