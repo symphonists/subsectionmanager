@@ -534,7 +534,12 @@
 
 			// Houston, we have problem: we've been called out of context!
 			$callback = Administration::instance()->getPageCallback();
-			if($callback['context']['page'] != 'edit' && $callback['context']['page'] != 'new') {
+			if(
+				// if not Standard Section
+				($callback['context']['page'] != 'edit' && $callback['context']['page'] != 'new')
+				// and not Custom Preferences
+				&& ($callback['pageroot'] != '/extension/custompreferences/preferences/' && $callback['driver'] != 'preferences' )
+			) {
 				$this->getDefaultPublishContent($wrapper, $data);
 				return;
 			}
