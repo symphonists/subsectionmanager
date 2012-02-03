@@ -79,7 +79,7 @@ div.field-subsectionmanager div.stage li.new {
 	min-height: 52px;
 }
 
-div.field-subsectionmanager div.stage li.new span
+div.field-subsectionmanager div.stage li.new span,
 div.field-subsectionmanager div.stage li.new span:hover {
 	padding: 7px 14px 7px 66px;
 	background: none;
