@@ -40,7 +40,7 @@
 					}
 				}
 				catch(Exception $e) {
-					throw new SymphonyErrorPage(__('Please make sure that the Stage submodule is initialised and available at %s.', array('<code>' . EXTENSIONS . '/subsectionmanager/lib/stage/</code>')) . '<br/><br/>' . __('It\'s available at %s.', array('<a href="https://github.com/hananils/stage">github.com/nilshoerrmann/stage</a>')), __('Stage not found'));
+					throw new SymphonyErrorPage(__('Please make sure that the Stage submodule is initialised and available at %s.', array('<code>' . EXTENSIONS . '/subsectionmanager/lib/stage/</code>')) . '<br/><br/>' . __('It\'s available at %s.', array('<a href="https://github.com/hananils/stage">github.com/hananils/stage</a>')), __('Stage not found'));
 				}
 			}
 
@@ -73,8 +73,8 @@
 			return array(
 				'name' => 'Subsection Manager',
 				'type' => 'Field, Interface',
-				'version' => '2.1.1',
-				'release-date' => '2012-01-17',
+				'version' => '2.1.2',
+				'release-date' => '2012-02-03',
 				'author' => array(
 					array(
 						'name' => 'Büro für Web- und Textgestaltung',
