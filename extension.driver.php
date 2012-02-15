@@ -22,7 +22,7 @@
 		private static $updateCache = true;
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/extension/#__construct
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/extension/#__construct
 		 */
 		public function __construct(Array $args){
 			parent::__construct($args);
@@ -56,7 +56,7 @@
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/extension/#about
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/extension/#about
 		 */
 		public function about() {
 			return array(
@@ -81,7 +81,7 @@
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/extension/#getSubscribedDelegates
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/extension/#getSubscribedDelegates
 		 */
 		public function getSubscribedDelegates(){
 			return array(
@@ -157,7 +157,7 @@
 		/**
 		 * Clear cache.
 		 *
-		 * @see http://symphony-cms.com/learn/api/2.2/delegates/#DatasourcePreDelete
+		 * @see http://symphony-cms.com/learn/api/2.3/delegates/#DatasourcePreDelete
 		 */
 		public function __clearSubsectionCache() {
 			if(file_exists(MANIFEST . '/subsectionmanager-storage')) {
@@ -171,7 +171,7 @@
 		 * join modes into a single call to `appendFormattedElement()`.
 		 * Preprocess all subsection entry for performance reasons.
 		 *
-		 * @see http://symphony-cms.com/learn/api/2.2/delegates/#DataSourceEntriesBuilt
+		 * @see http://symphony-cms.com/learn/api/2.3/delegates/#DataSourceEntriesBuilt
 		 */
 		public function __prepareSubsection(&$context) {
 			$parent = get_parent_class($context['datasource']);
@@ -437,7 +437,7 @@
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/extension/#install
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/extension/#install
 		 */
 		public function install() {
 			$status = array();
@@ -486,7 +486,7 @@
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/extension/#update
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/extension/#update
 		 */
 		public function update($previousVersion) {
 			$status = array();
@@ -655,7 +655,7 @@
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/extension/#uninstall
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/extension/#uninstall
 		 */
 		public function uninstall() {
 

@@ -9,7 +9,7 @@
 	Class fieldSubsectiontabs extends Field {
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#__construct
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#__construct
 		 */
 		public function __construct() {
 			parent::__construct();
@@ -18,28 +18,28 @@
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#mustBeUnique
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#mustBeUnique
 		 */
 		public function mustBeUnique(){
 			return true;
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#canFilter
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#canFilter
 		 */
 		public function canFilter(){
 			return true;
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#canPrePopulate
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#canPrePopulate
 		 */
 		public function canPrePopulate() {
 			return true;
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#displaySettingsPanel
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#displaySettingsPanel
 		 */
 		public function displaySettingsPanel(&$wrapper, $errors=NULL) {
 
@@ -81,7 +81,7 @@
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#commit
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#commit
 		 */
 		public function commit(){
 
@@ -105,7 +105,7 @@
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#displayPublishPanel
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#displayPublishPanel
 		 */
 		function displayPublishPanel(&$wrapper, $data=NULL, $flagWithError=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL, $entry_id=NULL) {
 
@@ -278,7 +278,7 @@
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#processRawFieldData
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#processRawFieldData
 		 */
 		public function processRawFieldData($data, &$status, &$message=null, $simulate=false, $entry_id=null) {
 			$status = self::__OK__;
@@ -302,7 +302,7 @@
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#fetchIncludableElements
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#fetchIncludableElements
 		 */
 		public function fetchIncludableElements() {
 			$includable = array();
@@ -329,7 +329,7 @@
 		 * to store subsection fields and extension_subsectionmanager::preloadSubsectionEntries()
 		 * to preload subsection entries.
 		 *
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#appendFormattedElement
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#appendFormattedElement
 		 */
 		public function appendFormattedElement(XMLElement &$wrapper, $data, $encode = false, $context) {
 
@@ -387,7 +387,7 @@
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#prepareTableValue
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#prepareTableValue
 		 */
 		public function prepareTableValue($data, XMLElement $link = null) {
 			// Prepare data
@@ -436,7 +436,7 @@
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#displayDatasourceFilterPanel
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#displayDatasourceFilterPanel
 		 */
 		public function displayDatasourceFilterPanel(XMLElement &$wrapper, $data = null, $errors = null, $fieldnamePrefix = null, $fieldnamePostfix = null) {
 			$wrapper->appendChild(new XMLElement('h4', $this->get('label') . ' <i>' . $this->Name() . '</i>'));
@@ -469,14 +469,14 @@
 
 		/**
 		 * Keep compatibility with Symphony pre 2.2.1 for a little longer.
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#buildDSRetrivalSQL
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#buildDSRetrivalSQL
 		 */
 		public function buildDSRetrivalSQL($data, &$joins, &$where, $andOperation=false) {
 			return $this->buildDSRetrievalSQL($data, $joins, $where, $andOperation);
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#buildDSRetrievalSQL
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#buildDSRetrievalSQL
 		 */
 		public function buildDSRetrievalSQL($data, &$joins, &$where, $andOperation = false) {
 			$field_id = $this->get('id');
@@ -567,7 +567,7 @@
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#createTable
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#createTable
 		 */
 		public function createTable(){
 			return Symphony::Database()->query(

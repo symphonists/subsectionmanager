@@ -18,7 +18,7 @@
 		static $sortOrder = NULL;
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#__construct
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#__construct
 		 */
 		function __construct() {
 			parent::__construct();
@@ -32,28 +32,28 @@
 	-------------------------------------------------------------------------*/
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#canFilter
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#canFilter
 		 */
 		function canFilter(){
 			return true;
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#isSortable
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#isSortable
 		 */
 		public function isSortable(){
 			return false;
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#allowDatasourceOutputGrouping
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#allowDatasourceOutputGrouping
 		 */
 		public function allowDatasourceOutputGrouping(){
 			return ($this->get('allow_multiple') == 0 ? true : false);
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#allowDatasourceParamOutput
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#allowDatasourceParamOutput
 		 */
 		function allowDatasourceParamOutput(){
 			return true;
@@ -74,7 +74,7 @@
 	-------------------------------------------------------------------------*/
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#createTable
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#createTable
 		 */
 		function createTable(){
 			return Symphony::Database()->query(
@@ -95,7 +95,7 @@
 	-------------------------------------------------------------------------*/
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#fetchAssociatedEntrySearchValue
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#fetchAssociatedEntrySearchValue
 		 *
 		 * `$data` would contain the related entries, but is usually `null` when called from the frontend
 		 * (when the field is not included in the DS, and only then "associated entry count" makes sense)
@@ -107,7 +107,7 @@
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#fetchAssociatedEntryCount
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#fetchAssociatedEntryCount
 		 */
 		public function fetchAssociatedEntryCount($value){
 			if(isset($value)) {
@@ -125,7 +125,7 @@
 
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#displaySettingsPanel
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#displaySettingsPanel
 		 */
 		function displaySettingsPanel(&$wrapper, $errors=NULL) {
 
@@ -358,7 +358,7 @@
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#checkFields
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#checkFields
 		 */
 		function checkFields(&$errors, $checkForDuplicates=true) {
 
@@ -393,7 +393,7 @@
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#commit
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#commit
 		 */
 		function commit() {
 
@@ -495,7 +495,7 @@
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#createSectionAssociation
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#createSectionAssociation
 		 */
 		public function createSectionAssociation($parent_section_id = null, $child_section_id = null, $child_field_id = null, $parent_field_id = null, $show_association = false){
 
@@ -526,7 +526,7 @@
 		/**
 		 * If you need to fetch the pure data this field returns, please use getDefaultPublishContent()
 		 *
-		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#displayPublishPanel
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#displayPublishPanel
 		 */
 		function displayPublishPanel(&$wrapper, $data=NULL, $flagWithError=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL, $entry_id=NULL) {
 			if(!is_array($data['relation_id'])) $data['relation_id'] = array($data['relation_id']);
@@ -612,7 +612,7 @@
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#checkPostFieldData
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#checkPostFieldData
 		 */
 		public function checkPostFieldData($data, &$message, $entry_id = null) {
 			if(!is_array($data)) $data = array($data);
@@ -632,7 +632,7 @@
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#processRawFieldData
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#processRawFieldData
 		 */
 		public function processRawFieldData($data, &$status, &$message=null, $simulate=false, $entry_id=null) {
 			$status = self::__OK__;
@@ -654,7 +654,7 @@
 		 * to store subsection fields and extension_subsectionmanager::preloadSubsectionEntries()
 		 * to preload subsection entries.
 		 *
-		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#appendFormattedElement
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#appendFormattedElement
 		 */
 		public function appendFormattedElement(&$wrapper, $data, $encode = false, $mode = null) {
 			static $done = array();
@@ -758,7 +758,7 @@
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#prepareTableValue
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#prepareTableValue
 		 */
 		function prepareTableValue($data, XMLElement $link=NULL) {
 			if(empty($data['relation_id'])) return NULL;
@@ -803,14 +803,14 @@
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#getParameterPoolValue
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#getParameterPoolValue
 		 */
 		public function getParameterPoolValue($data) {
 			return $data['relation_id'];
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#fetchIncludableElements
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#fetchIncludableElements
 		 */
 		public function fetchIncludableElements($break = false) {
 			static $done = array();
@@ -844,7 +844,7 @@
 	-------------------------------------------------------------------------*/
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#displayDatasourceFilterPanel
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#displayDatasourceFilterPanel
 		 */
 		function displayDatasourceFilterPanel(&$wrapper, $data=NULL, $errors=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL) {
 			parent::displayDatasourceFilterPanel($wrapper, $data, $errors, $fieldnamePrefix, $fieldnamePostfix);
@@ -854,7 +854,7 @@
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#buildDSRetrievalSQL
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#buildDSRetrievalSQL
 		 */
 		public function buildDSRetrievalSQL($data, &$joins, &$where, $andOperation=false) {
 
@@ -924,7 +924,7 @@
 	-------------------------------------------------------------------------*/
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#getExampleFormMarkup
+		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#getExampleFormMarkup
 		 */
 		public function getExampleFormMarkup() {
 			return Widget::Select('fields['.$this->get('element_name').']', array(array('...')));
