@@ -11,8 +11,8 @@
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#__construct
 		 */
-		public function __construct(&$parent) {
-			parent::__construct($parent);
+		public function __construct() {
+			parent::__construct();
 			$this->_name = __('Subsection Tabs');
 			$this->_required = true;
 		}
@@ -48,8 +48,7 @@
 			$div = new XMLElement('div', NULL, array('class' => 'group'));
 
 			// Subsection
-			$sectionManager = new SectionManager(Symphony::Engine());
-			$sections = $sectionManager->fetch(NULL, 'ASC', 'name');
+			$sections = SectionManager::fetch(NULL, 'ASC', 'name');
 			$options = array();
 
 			// Options
@@ -281,7 +280,7 @@
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#processRawFieldData
 		 */
-		public function processRawFieldData($data, &$status, $simulate=false, $entry_id=NULL) {
+		public function processRawFieldData($data, &$status, &$message=null, $simulate=false, $entry_id=null) {
 			$status = self::__OK__;
 			if(empty($data)) return NULL;
 
@@ -294,8 +293,7 @@
 
 			// Delete removed tab entries
 			if(is_array($data['delete'])) {
-				$entryManager = new EntryManager(Symphony::Engine());
-				$entryManager->delete($data['delete']);
+				EntryManager::delete($data['delete']);
 				unset($data['delete']);
 			}
 
@@ -310,8 +308,7 @@
 			$includable = array();
 
 			// Fetch subsection fields
-			$sectionManager = new SectionManager(Symphony::Engine());
-			$section = $sectionManager->fetch($this->get('subsection_id'));
+			$section = SectionManager::fetch($this->get('subsection_id'));
 			$fields = $section->fetchFields();
 
 			foreach($fields as $field) {
@@ -342,7 +339,6 @@
 			if(!is_array($data['relation_id'])) $data['relation_id'] = array($data['relation_id']);
 
 			// Create tabs
-			$entryManager = new EntryManager(Symphony::Engine());
 			$subsection = new XMLElement($this->get('element_name'));
 
 			for($i = 0; $i < count($data['name']); $i++) {
@@ -360,7 +356,7 @@
 
 				// Fetch missing entries
 				if(empty($entry)) {
-					$entry = $entryManager->fetch($entry_id, $this->get('subsection_id'));
+					$entry = EntryManager::fetch($entry_id, $this->get('subsection_id'));
 
 					// Store entry
 					$entry = $entry[0];
@@ -371,7 +367,7 @@
 				if(!empty($entry) && !empty(extension_subsectionmanager::$storage['fields'][$context][$this->get('id')])) {
 					foreach(extension_subsectionmanager::$storage['fields'][$context][$this->get('id')] as $field_id => $modes) {
 						$entry_data = $entry->getData($field_id);
-						$field = $entryManager->fieldManager->fetch($field_id);
+						$field = FieldManager::fetch($field_id);
 
 						// No modes
 						if(empty($modes) || empty($modes[0])) {
@@ -394,8 +390,6 @@
 		 * @see http://symphony-cms.com/learn/api/2.2/toolkit/field/#prepareTableValue
 		 */
 		public function prepareTableValue($data, XMLElement $link = null) {
-			$entryManager = new EntryManager(Symphony::Engine());
-
 			// Prepare data
 			if(!is_array($data['name'])) $data['name'] = array($data['name']);
 			if(!is_array($data['relation_id'])) $data['relation_id'] = array($data['relation_id']);
@@ -420,7 +414,7 @@
 					ORDER BY `sortorder`
 					LIMIT 1"
 				);
-				$entry = $entryManager->fetch($data['relation_id'][0], $this->get('subsection_id'));
+				$entry = EntryManager::fetch($data['relation_id'][0], $this->get('subsection_id'));
 				if(is_object($entry[0])){
 					$title = $entry[0]->getData($field_id);
 				}

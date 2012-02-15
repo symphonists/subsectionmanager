@@ -20,8 +20,8 @@
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#__construct
 		 */
-		function __construct(&$parent) {
-			parent::__construct($parent);
+		function __construct() {
+			parent::__construct();
 			$this->_name = __('Subsection Manager');
 			$this->_required = true;
 		}
@@ -139,8 +139,7 @@
 
 			// Related section
 			$label = new XMLElement('label', __('Subsection'));
-			$sectionManager = new SectionManager(Symphony::Engine());
-			$sections = $sectionManager->fetch(NULL, 'ASC', 'name');
+			$sections = SectionManager::fetch(NULL, 'ASC', 'name');
 			$options = array(
 				array('', false, __('None Selected')),
 			);
@@ -635,7 +634,7 @@
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.2.5/toolkit/field/#processRawFieldData
 		 */
-		function processRawFieldData($data, &$status, $simulate=false, $entry_id=NULL) {
+		public function processRawFieldData($data, &$status, &$message=null, $simulate=false, $entry_id=null) {
 			$status = self::__OK__;
 			if(!is_array($data)) $data = array($data);
 			if(empty($data)) return NULL;
@@ -702,7 +701,7 @@
 				// Process entry for Data Source
 				if(!empty(extension_subsectionmanager::$storage['fields'][$mode][$this->get('id')])) {
 					foreach(extension_subsectionmanager::$storage['fields'][$mode][$this->get('id')] as $field_id => $modes) {
-						$field = extension_subsectionmanager::$entryManager->fieldManager->fetch($field_id);
+						$field = FieldManager::fetch($field_id);
 
 						// Omit fields that were removed in meantime
 						if(empty($field)) continue;
@@ -741,7 +740,7 @@
 							foreach($data as $field_id => $values) {
 								if(empty($field_id)) continue;
 
-								$field = extension_subsectionmanager::$entryManager->fieldManager->fetch($field_id);
+								$field = FieldManager::fetch($field_id);
 								if(empty($field)) continue;
 
 								$field->appendFormattedElement($item, $values, $encode, null, $entry_id);
@@ -823,8 +822,7 @@
 			$includable = array();
 
 			// Fetch subsection fields
-			$sectionManager = new SectionManager(Symphony::Engine());
-			$section = $sectionManager->fetch($this->get('subsection_id'));
+			$section = SectionManager::fetch($this->get('subsection_id'));
 			$fields = $section->fetchFields();
 
 			foreach($fields as $field) {

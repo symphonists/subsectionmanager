@@ -9,11 +9,6 @@
 	Class extension_subsectionmanager extends Extension {
 
 		/**
-		 * Public instance of EntryManager
-		 */
-		public static $entryManager = null;
-
-		/**
 		 * Storage for subsection entries
 		 */
 		public static $storage = array(
@@ -57,12 +52,6 @@
 					self::$storage['fields'] = $cache['fields'];			
 					self::$updateCache = false;
 				}
-			}
-
-			// Initialise Entry Manager
-			if(empty(self::$entryManager)) {
-				require_once(TOOLKIT . '/class.entrymanager.php');
-				self::$entryManager = new EntryManager(Symphony::Engine());
 			}
 		}
 
@@ -309,7 +298,7 @@
 			);
 
 			// Get subfield id
-			$subfield_id = self::$entryManager->fieldManager->fetchFieldIDFromElementName($field, $id[0]['subsection_id']);
+			$subfield_id = FieldManager::fetchFieldIDFromElementName($field, $id[0]['subsection_id']);
 
 			// Store field data
 			$field_id = $id[0]['field_id'];
@@ -373,10 +362,10 @@
 				if(!empty($entry_id)) {
 
 					// Get subsection id
-					$subsection_id = self::$entryManager->fetchEntrySectionID($entry_id[0]);
+					$subsection_id = EntryManager::fetchEntrySectionID($entry_id[0]);
 
 					// Fetch entries
-					$entries = self::$entryManager->fetch($entry_id, $subsection_id);
+					$entries = EntryManager::fetch($entry_id, $subsection_id);
 
 					if(!empty($entries)) {
 						foreach($entries as $entry) {
@@ -396,8 +385,7 @@
 
 			// Get Subsection Tab field
 			$callback = Symphony::Engine()->getPageCallback();
-			$sectionManager = new SectionManager(Symphony::Engine());
-			$section_id = $sectionManager->fetchIDFromHandle($callback['context']['section_handle']);
+			$section_id = SectionManager::fetchIDFromHandle($callback['context']['section_handle']);
 			$field_id = Symphony::Database()->fetchCol('id', "
 				SELECT `id`
 				FROM `tbl_fields`
@@ -415,8 +403,7 @@
 
 				// Delete existing tabs
 				if(!empty($relation_id)) {
-					$entryManager = new EntryManager(Symphony::Engine());
-					$entryManager->delete($relation_id);
+					EntryManager::delete($relation_id);
 				}
 			}
 		}
@@ -428,7 +415,7 @@
 
 			// Do not use Administration::instance() in this context, see:
 			// http://github.com/nilshoerrmann/subsectionmanager/issues#issue/27
-			$callback = $this->_Parent->getPageCallback();
+			$callback = Administration::instance()->getPageCallback();
 
 			// Append upgrade notice
 			if($callback['driver'] == 'systemextensions') {

@@ -80,8 +80,7 @@
 			}
 
 			// Fetch entry data
-			$sectionManager = new SectionManager(Symphony::Engine());
-		  	$subsection = $sectionManager->fetch($subsection_id, 'ASC', 'name');
+		  	$subsection = SectionManager::fetch($subsection_id, 'ASC', 'name');
 		  	$fields = $subsection->fetchFields();
 		  	$entries = $this->__filterEntries($subsection_id, $fields, $meta[0]['filter_tags'], $items, ($flags & self::GETALLITEMS));
 		  	$droptext = $meta[0]['droptext'];
@@ -112,8 +111,7 @@
 		private function __filterEntries($subsection_id, $fields, $filter = '', $items = NULL, $full = false) {
 
 			// Fetch entry data
-			$entryManager = new EntryManager(Symphony::Engine());
-			$entries = $entryManager->fetch(($full ? NULL : (isset($items['relation_id']) ? $items['relation_id'] : $items)), $subsection_id);
+			$entries = EntryManager::fetch(($full ? NULL : (isset($items['relation_id']) ? $items['relation_id'] : $items)), $subsection_id);
 
 			// Return early if there were no $entries found
 			if(empty($entries) || !is_array($entries)) {
