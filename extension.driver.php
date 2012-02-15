@@ -49,7 +49,7 @@
 
 				// Check store cache
 				if(!empty($cache)) {
-					self::$storage['fields'] = $cache['fields'];			
+					self::$storage['fields'] = $cache['fields'];
 					self::$updateCache = false;
 				}
 			}
@@ -204,7 +204,7 @@
 			}
 
 			// Preload entries
-			self::preloadSubsectionEntries($context['entries']['records']);		
+			self::preloadSubsectionEntries($context['entries']['records']);
 		}
 
 		/**
@@ -246,7 +246,7 @@
 								$subsection_id = $this->__fetchFields($section, $context, $subsection, $field, "{$context}/{$subsection}");
 								$this->__parseSubsectionFields(array($field . ': ' . $remainder), "{$context}/{$subsection}", $subsection_id);
 							}
-						
+
 							// Make sure fields will be stored
 							self::$updateCache = true;
 						}
@@ -266,7 +266,7 @@
 		}
 
 		private function __fetchFields($section, $context, $subsection, $field, $mode = '') {
-		
+
 			// Section context
 			if($section !== 0) {
 				$section = " AND t2.`parent_section` = '".intval($section)."' ";
