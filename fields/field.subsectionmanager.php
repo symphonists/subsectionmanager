@@ -266,7 +266,7 @@
 
 			// Preview options
 			$label = new XMLElement('label');
-			$input = Widget::Input('fields[' . $this->get('sortorder') . '][show_preview]', 1, 'checkbox');
+			$input = Widget::Input('fields[' . $this->get('sortorder') . '][show_preview]', NULL, 'checkbox');
 			if($this->get('show_preview') != 0) {
 				$input->setAttribute('checked', 'checked');
 			}
