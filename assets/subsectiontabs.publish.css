@@ -22,11 +22,8 @@ body.subsectiontabs iframe.subsectiontab {
 
 #subsectiontabs {
 	list-style-type: none;
-	margin: -23px 0 10px -10px;
+	margin: -24px 0 10px -10px;
 	padding: 0 19px;
-/*	border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-	background: -moz-linear-gradient(bottom, #eee 0%, #fff 15%, #fff 100%);
-	background: -webkit-gradient(linear, left bottom, left top, from(#eee), to(#fff), color-stop(0.15, #fff));*/
 	height: 23px;
 }
 
@@ -36,18 +33,17 @@ body.subsectiontabs iframe.subsectiontab {
 	padding: 2px 5px 0;
 	margin: 0 3px 0 0;
 	cursor: pointer;
-	background: rgba(0, 0, 0, 0.02);
-	-moz-border-radius: 5px 5px 0 0;
-	-webkit-border-radius: 5px 5px 0 0;
-	border-radius: 5px 5px 0 0;
+	background: #fafafa;
+	border-radius: 4px 4px 0 0;
 	border: 1px solid rgba(0, 0, 0, 0.1);
-	border-bottom: transparent;
+	border-bottom-color: #d5d5d0;
 	color: rgba(0, 0, 0, 0.5);
 	height: 20px;
+	position: relative;
 }
 
 #subsectiontabs li:hover {
-	background: rgba(0, 0, 0, 0.04);
+	background: #f5f5f5;
 	border: 1px solid rgba(0, 0, 0, 0.2);
 	border-bottom: transparent;
 	color: rgba(0, 0, 0, 0.65);
@@ -56,10 +52,38 @@ body.subsectiontabs iframe.subsectiontab {
 #subsectiontabs li.selected, #subsectiontabs li.error.selected {
 	background: #fff;
 	border: 1px solid rgba(0, 0, 0, 0.2);
-	border-bottom: 1px solid #fff;
+	border-bottom: 2px solid #fff;
 	color: rgba(0, 0, 0, 0.8);
 	text-shadow: none;
 	z-index: 1000;
+}
+
+#subsectiontabs li.selected:before {
+	content: "";
+	width: 3px;
+	height: 3px;
+	position: absolute;
+	left: -4px;
+	bottom: -1px;
+	display: block;
+	border-radius: 0 0 2px 0;
+	border: none;
+	border-bottom: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+}
+
+#subsectiontabs li.selected:after {
+	content: "";
+	width: 3px;
+	height: 3px;
+	position: absolute;
+	right: -4px;
+	bottom: -1px;
+	display: block;
+	border-radius: 0 0 0 2px;
+	border: none;
+	border-bottom: 1px solid #ccc;
+	border-left: 1px solid #ccc;
 }
 
 #subsectiontabs li span {

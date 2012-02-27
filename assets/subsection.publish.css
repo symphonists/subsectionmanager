@@ -46,10 +46,8 @@ body.inline.subsection #contents {
 
 body.tabbed.subsection #contents {
 	padding: 0 19px;
-}
-
-body.tabbed.subsection #contents {
 	margin: 0;
+	border: none;
 }
 
 body.inline.subsection form {
