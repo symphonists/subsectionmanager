@@ -15,10 +15,11 @@
 	 */
 	$(document).ready(function() {
 		var body = $('body'),
+			contents = $('#contents'),
 			field = $('div.field-subsectiontabs'),
 			label = field.find('label'),
 			handle = label.attr('data-handle'),
-			title = $('h2:not(#documenter-title)').filter(':first'),
+			title = $('#breadcrumbs h2'),
 			storage = field.find('ul'),
 			references = field.find('a'),
 			state, controls, tabs,
@@ -33,7 +34,7 @@
 		}
 
 		// Create interface
-		controls = $('<ul id="subsectiontabs" />').insertAfter(title);
+		controls = $('<ul id="subsectiontabs" />').prependTo(contents);
 		tabs = $('<div class="tabs" />').insertAfter(controls);
 
 		// Set height
@@ -184,7 +185,7 @@
 
 				// Adjust interface
 				content.find('body').addClass('tabbed subsection');
-				content.find('h1, h2, #nav, #notice:not(.error):not(.success), #notice a, #footer').remove();
+				content.find('#header, #context, #notice:not(.error):not(.success), #notice a').remove();
 				content.find('div.actions').css({
 					'height': 0,
 					'overflow': 'hidden'
