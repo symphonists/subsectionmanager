@@ -41,11 +41,13 @@ body.tabbed.subsection #notice {
 }
 
 body.inline.subsection #contents {
-	padding: 0;
+	padding: 10px 0 0;
+	padding-top: 10px;
+	background: #353533;
 }
 
 body.tabbed.subsection #contents {
-	padding: 0 19px;
+	padding: 0 36px;
 	margin: 0;
 	border: none;
 }
@@ -126,6 +128,10 @@ body.inline.subsection form input[type="checkbox"] {
 
 body.inline.subsection .group label > i:hover, body.inline.subsection .secondary label > i {
 	background-color: transparent !important;
+}
+
+body.inline.subsection .secondary {
+	padding-top: 10px;
 }
 
 /* Stage inside Stage */

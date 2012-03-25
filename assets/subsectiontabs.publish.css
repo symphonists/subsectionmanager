@@ -1,9 +1,5 @@
 /* This is based on Nick Dunn's Publish tabs, https://github.com/nickdunn/publish_tabs */
 
-body.subsectiontabs #nav {
-	z-index: 2000;
-}
-
 body.subsectiontabs #context {
 	padding-bottom: 40px;
 }
