@@ -163,7 +163,7 @@
 
 				// Adjust interface
 				content.find('body').addClass('inline subsection');
-				content.find('h1, h2, #nav, #notice:not(.error):not(.success), #notice a, #footer').remove();
+				content.find('header, #context').remove();
 				content.find('fieldset input:first').focus();
 
 				// Frame resizing
