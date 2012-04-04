@@ -607,7 +607,7 @@
 			$content = $subsection->generate($this->get('id'), $this->get('subsection_id'), $data, $this->get('recursion_levels'), SubsectionManager::GETOPTIONS | SubsectionManager::GETALLITEMS);
 
 			// Append items
-			$select = Widget::Select(null, $content['options'], ($this->get('allow_multiple') == 0 ? array() : array('multiple' => 'multiple')));
+			$select = Widget::Select('', $content['options'], ($this->get('allow_multiple') == 0 ? array() : array('multiple' => 'multiple')));
 			$wrapper->appendChild($select);
 		}
 
