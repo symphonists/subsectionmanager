@@ -136,18 +136,14 @@
 			});
 
 			// Dropping
-			if(textarea.length > 0) {
-				if(!('drop' in textarea.data('events'))) {
-					textarea.bind('drop.stage', function(event, item) {
-						var target = $(this);
+			textarea.unbind('drop.stage').bind('drop.stage', function(event, item) {
+				var target = $(this);
 
-						// Insert text
-						if(target.is('.droptarget')) {
-							drop(target, item);
-						}
-					});
+				// Insert text
+				if(target.is('.droptarget')) {
+					drop(target, item);
 				}
-			}
+			});
 
 		/*-----------------------------------------------------------------------*/
 
