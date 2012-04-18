@@ -824,19 +824,23 @@
 
 			// Fetch subsection fields
 			$sectionManager = new SectionManager(Symphony::Engine());
-			$section = $sectionManager->fetch($this->get('subsection_id'));
-			$fields = $section->fetchFields();
-
-			foreach($fields as $field) {
-				$field_id = $field->get('id');
-				$elements = $field->fetchIncludableElements(true);
-
-				foreach($elements as $element) {
-					$includable[] = $this->get('element_name') . ': ' . $element;
+			
+			if( $section !== false ){
+				$fields = $section->fetchFields();
+	
+				foreach($fields as $field) {
+					$field_id = $field->get('id');
+					$elements = $field->fetchIncludableElements(true);
+	
+					foreach($elements as $element) {
+						$includable[] = $this->get('element_name') . ': ' . $element;
+					}
 				}
+	
+				$done[$id] -= 1;
 			}
 
-			$done[$id] -= 1;
+			
 			return $includable;
 		}
 
