@@ -44,31 +44,6 @@
 		}
 
 		/**
-		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/extension/#about
-		 */
-		public function about() {
-			return array(
-				'name' => 'Subsection Manager',
-				'type' => 'Field, Interface',
-				'version' => '2.1.2',
-				'release-date' => '2012-02-03',
-				'author' => array(
-					array(
-						'name' => 'Büro für Web- und Textgestaltung',
-						'website' => 'http://hananils.de',
-						'email' => 'buero@hananils.de'
-					),
-					array(
-						'name' => 'Nils Hörrmann',
-						'website' => 'http://nilshoerrmann.de',
-						'email' => 'post@nilshoerrmann.de'
-					)
-				),
-				'description' => 'Subsection management for Symphony.'
-			);
-		}
-
-		/**
 		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/extension/#getSubscribedDelegates
 		 */
 		public function getSubscribedDelegates(){

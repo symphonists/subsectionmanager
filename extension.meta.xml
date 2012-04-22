@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<extension id="subsectionmanager" status="released" xmlns="http://symphony-cms.com/schemas/extension/1.0">
+<extension id="subsectionmanager" status="development" xmlns="http://symphony-cms.com/schemas/extension/1.0">
 	<name>Subsection Manager</name>
 	<description>Subsection management for Symphony.</description>
 	<repo type="github">https://github.com/hananils/subsectionmanager</repo>
@@ -18,10 +18,11 @@
 			<website>http://nilshoerrmann.de</website>
 		</author>
 	</authors>
-	<dependencies>
-		<dependency version="1.6">https://github.com/hananils/stage</dependency>
-	</dependencies>
 	<releases>
+		<release version="3.0dev" date="" min="2.3">
+			- Symphony 2.3 compatibility
+			- Replaced Stage interface by core Duplicators
+		</release>
 		<release version="2.1.2" date="2012-02-03" min="2.2.5">
 			- Fix invalid `extension.meta.xml` and solve merging errors
 		</release>
