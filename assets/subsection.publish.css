@@ -4,15 +4,54 @@
  * @author: Nils Hörrmann, http://nilshoerrmann.de
  * @source: http://github.com/nilshoerrmann/subsectionmanager
  */
+ 
+/* Inline subsection */
 
 body.inline.subsection {
-	background: #353533;
-	border: none;
-	padding: 0;
-	margin: 0;
 	overflow: hidden;
 }
 
+body.inline.subsection #contents {
+	background: #323230;
+	border: none;
+	padding-bottom: 30px;
+}
+
+body.inline.subsection form {
+	padding: 0;
+	background: none;
+}
+
+body.inline.subsection .primary {
+	padding: 5px 0 0;
+}
+
+body.inline.subsection .secondary {
+	padding: 16px 0 0;
+	border-top: 1px solid rgba(255, 255, 255, 0.15);	
+}
+
+body.inline.subsection label {
+	color: rgba(255, 255, 255, 0.9);
+	-webkit-font-smoothing: antialiased;
+}
+
+body.inline.subsection i {
+	color: rgba(255, 255, 255, 0.4);
+}
+
+body.inline.subsection #contents .actions {
+	margin: 0;
+	border-top-color: rgba(255, 255, 255, 0.15);
+	padding-bottom: 0;
+}
+
+/* Tabbed subsection */
+
+
+/* Old styles */
+
+/*
 body.tabbed.subsection {
 	padding: 0;
 	border: none;
@@ -134,7 +173,7 @@ body.inline.subsection .secondary {
 	padding-top: 10px;
 }
 
-/* Stage inside Stage */
+/* Stage inside Stage *!/
 
 body.inline.subsection div.stage ul.selection {
 	border-top: none;
@@ -155,4 +194,4 @@ body.inline.subsection div.stage li.drawer {
 	border-left-color: #616057;
 	border-right-color: #616057;
 	overflow: hidden;
-}
+}*/

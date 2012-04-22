@@ -6,7 +6,38 @@
  */
 
 
-div.field-subsectionmanager input.subsectionmanager.storage {
+.field-subsectionmanager label {
+	margin-bottom: 2px;
+}
+
+.field-subsectionmanager .frame img {
+	float: left;
+	margin: 0 10px 10px 0;
+}
+
+.field-subsectionmanager .frame em {
+	font-style: normal;
+	color: #908e88;
+	cursor: auto;
+	float: none;
+	font-style: inherit;
+	margin-right: 0;
+	text-decoration: none;
+	width: auto;
+}
+
+.field-subsectionmanager .frame .content {
+	overflow: hidden;
+	height: 50px;
+	background: url(images/loading.gif) center no-repeat;
+}
+
+.field-subsectionmanager .frame iframe {
+	width: 100%;
+	opacity: 0.01;
+}
+
+/*div.field-subsectionmanager input.subsectionmanager.storage {
 	float: right;
 	vertical-align: middle;
 	width: 50px;
@@ -157,11 +188,11 @@ div.field-subsectionmanager div.stage div.queue li.selected em {
 
 div.field-subsectionmanager div.stage div.queue li.selected img, div.field-subsectionmanager div.stage div.queue li.selected strong.file {
 	border-color: #335e9e;
-}
+}*/
 
 /* Field error */
 
-div.field-subsectionmanager #error {
+/*div.field-subsectionmanager #error {
 	margin: -1.5em 0 1.5em;
 	padding: 1em 1em 0.75em;
 	background-color: #D42;
@@ -176,4 +207,4 @@ div.field-subsectionmanager #error > p {
 
 div.field-subsectionmanager #error div.stage {
 	margin: 0 0 0.75em !important;
-}
+}*/

@@ -23,7 +23,6 @@
 			$this->_required = true;
 		}
 
-
 	/*-------------------------------------------------------------------------
 		Definition:
 	-------------------------------------------------------------------------*/
@@ -119,7 +118,6 @@
 	/*-------------------------------------------------------------------------
 		Settings:
 	-------------------------------------------------------------------------*/
-
 
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#displaySettingsPanel
@@ -219,11 +217,11 @@
 		/*-----------------------------------------------------------------------*/
 
 			// Behaviour
-			$fieldset = Stage::displaySettings(
-				$this->get('id'),
-				$this->get('sortorder'),
-				__('Behaviour')
-			);
+//			$fieldset = Stage::displaySettings(
+//				$this->get('id'),
+//				$this->get('sortorder'),
+//				__('Behaviour')
+//			);
 
 			// Handle missing settings
 			if(!$this->get('id') && $errors == NULL) {
@@ -233,18 +231,18 @@
 			}
 
 			// Get settings
-			$div = $fieldset->getChildren();
+//			$div = $fieldset->getChildren();
 
 			// Setting: allow multiple
 			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][allow_multiple]" value="1" type="checkbox"' . ($this->get('allow_multiple') == 0 ? '' : ' checked="checked"') . '/> ' . __('Allow selection of multiple items') . ' <i>' . __('This will switch between single and multiple item lists') . '</i>');
-			$div[0]->appendChild($setting);
+//			$div[0]->appendChild($setting);
 
 			// Setting: disallow editing
 			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][lock]" value="1" type="checkbox"' . ($this->get('lock') == 0 ? '' : ' checked="checked"') . '/> ' . __('Disallow item editing') . ' <i>' . __('This will lock items and disable the inline editor') . '</i>');
-			$div[0]->appendChild($setting);
+//			$div[0]->appendChild($setting);
 
 			// Append behaviour settings
-			$wrapper->appendChild($fieldset);
+//			$wrapper->appendChild($fieldset);
 
 		/*-----------------------------------------------------------------------*/
 
@@ -408,7 +406,7 @@
 			$fields['lock'] = ($this->get('lock') ? 1 : 0);
 
 			// Save new stage settings for this field
-			Stage::saveSettings($this->get('id'), $this->get('stage'), 'subsectionmanager');
+			//Stage::saveSettings($this->get('id'), $this->get('stage'), 'subsectionmanager');
 
 			// Clean up filter values
 			if($this->get('filter_tags') != '') {
@@ -536,11 +534,9 @@
 			}
 
 			// Append styles
-			Symphony::Engine()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/lib/stage/stage.publish.css', 'screen', 101, false);
 			Symphony::Engine()->Page->addStylesheetToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.publish.css', 'screen', 102, false);
 
 			// Append scripts
-			Symphony::Engine()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/lib/stage/stage.publish.js', 103, false);
 			Symphony::Engine()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.publish.js', 104, false);
 			Symphony::Engine()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/lib/resize/jquery.ba-resize.js', 105, false);
 
@@ -559,38 +555,40 @@
 			$subsection = new SubsectionManager();
 			$content = $subsection->generate($this->get('id'), $this->get('subsection_id'), $data, $this->get('recursion_levels'), SubsectionManager::GETHTML);
 
-			// Get stage settings
-			$settings = ' ' . implode(' ', Stage::getComponents($this->get('id')));
-
-			// Create stage
-			$stage = new XMLElement('div', NULL, array('class' => 'stage' . $settings . ($this->get('show_preview') == 1 ? ' preview' : '') . ($this->get('allow_multiple') == 1 ? ' multiple' : ' single') . ($this->get('lock') == 1 ? ' locked' : '')));
-			$content['empty'] = '<li class="empty message"><span>' . __('There are no selected items') . '</span></li>';
-			$selected = new XMLElement('ul', $content['empty'] . $content['html'], array('class' => 'selection'));
-			$stage->appendChild($selected);
+			// Create interface
+			$duplicator = new XMLElement('div', NULL, array('class' => 'dark frame' . ($this->get('show_preview') == 1 ? ' preview' : '') . ($this->get('allow_multiple') == 1 ? ' multiple' : ' single') . ($this->get('lock') == 1 ? ' locked' : '')));
+			$selected = new XMLElement('ol', $content['html']);
+			$duplicator->appendChild($selected);
 
 			// Append item template
-			$thumb = '<img src="' . URL . '/extensions/subsectionmanager/assets/images/new.gif" width="40" height="40" class="thumb" />';
-			$item = new XMLElement('li', $thumb . '<span>' . __('New item') . '<br /><em>' . __('Please fill out the form below.') . '</em></span><a class="destructor">&#215;</a>', array('class' => 'template create preview'));
+			$item = new XMLElement('li', 
+				'<header>
+					<strong>' . __('New item') . '</strong>
+					<span>' . __('Please fill out the form below') . '</span>
+				</header>
+				<div class="content">
+					<iframe></iframe>
+				</div>', 
+				array(
+					'class' => 'template',
+					'data-type' => 'subsection'
+				)
+			);
 			$selected->appendChild($item);
 
 			// Append subsection information
-			$subsection_handle = Symphony::Database()->fetchVar('handle', 0,
-				"SELECT `handle`
-				FROM `tbl_sections`
-				WHERE `id` = '" . $this->get('subsection_id') . "'
-				LIMIT 1"
-			);
+			$subsection = SectionManager::fetch($this->get('subsection_id'));
 			$wrapper->setAttribute('data-field-id', $this->get('id'));
 			$wrapper->setAttribute('data-field-name', $fieldname);
 			$wrapper->setAttribute('data-subsection-id', $this->get('subsection_id'));
-			$wrapper->setAttribute('data-subsection-new', SYMPHONY_URL . '/publish/' . $subsection_handle);
+			$wrapper->setAttribute('data-subsection-new', SYMPHONY_URL . '/publish/' . $subsection->get('handle'));
 
 			// Error handling
 			if($flagWithError != NULL) {
-				$wrapper->appendChild(Widget::wrapFormElementWithError($stage, $flagWithError));
+				$wrapper->appendChild(Widget::Error($duplicator, $flagWithError));
 			}
 			else {
-				$wrapper->appendChild($stage);
+				$wrapper->appendChild($duplicator);
 			}
 		}
 

@@ -16,9 +16,73 @@
 			'There are currently no items available. Perhaps you want create one first?': false,
 			'New item': false
 		});
+		
+		// Subsection Manager
+		$('div.field-subsectionmanager').each(function subsectionmanager() {
+			var manager = $(this),
+				duplicator = manager.find('div.frame'),
+				manager_id = manager.attr('data-field-id'),
+				manager_name = manager.attr('data-field-name'),
+				subsection = manager.attr('data-subsection-id'),
+				subsection_link = manager.attr('data-subsection-new');
+				
+		/*-------------------------------------------------------------------------
+			Events
+		-------------------------------------------------------------------------*/
+		
+			duplicator.on('constructshow.duplicator', 'li', function create(event) {
+				var item = $(this),
+					iframe = item.find('iframe');
 
-		// Initialize Subsection Manager
-		$('div.field-subsectionmanager').each(function() {
+				// Load subsection
+				iframe.attr('src', subsection_link + '/new/').load(function() {
+					load(iframe);
+				});
+			});
+				
+		/*-------------------------------------------------------------------------
+			Functions
+		-------------------------------------------------------------------------*/
+			
+			var load = function(iframe) {
+				var content = iframe.parent(),
+					contents = iframe.contents(),
+					body = contents.find('body').addClass('inline subsection'),
+					form = body.find('form').removeClass('columns'),
+					height;
+
+				// Simplify UI
+				contents.find('header, #context').remove();
+				
+				// Set iframe height
+				height = contents.find('#contents').outerHeight();
+				iframe.height(height).animate({
+					opacity: 1,
+					visibility: 'visible'
+				}, 'fast');
+				
+				// Set scroll position
+				body[0].scrollTop = 0;
+				
+				// Set content height
+				content.animate({
+					height: height
+				}, 'fast');
+			};
+				
+		/*-------------------------------------------------------------------------
+			Initialisation
+		-------------------------------------------------------------------------*/
+				
+			// Initialise Duplicators
+			duplicator.symphonyDuplicator({
+				'collapsible': true
+			});
+		});
+		
+
+		// OLD CODE
+		$('div.field-subsectionmanagerOLD').each(function() {
 			var manager = $(this),
 				stage = manager.find('div.stage'),
 				selection = stage.find('ul.selection'),
