@@ -27,18 +27,6 @@
 		public function __construct(Array $args){
 			parent::__construct($args);
 
-			// Include Stage
-			if(!class_exists('Stage')) {
-				try {
-					if((include_once(EXTENSIONS . '/subsectionmanager/lib/stage/class.stage.php')) === FALSE) {
-						throw new Exception();
-					}
-				}
-				catch(Exception $e) {
-					throw new SymphonyErrorPage(__('Please make sure that the Stage submodule is initialised and available at %s.', array('<code>' . EXTENSIONS . '/subsectionmanager/lib/stage/</code>')) . '<br/><br/>' . __('It\'s available at %s.', array('<a href="https://github.com/hananils/stage">github.com/hananils/stage</a>')), __('Stage not found'));
-				}
-			}
-
 			// Prepare cache
 			if(file_exists(MANIFEST . '/subsectionmanager-storage')) {
 
