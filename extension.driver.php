@@ -118,13 +118,6 @@
 					'page' => '/publish/',
 					'delegate' => 'Delete',
 					'callback' => '__deleteTabs'
-				),
-
-				// Mediathek
-				array(
-					'page' => '/backend/',
-					'delegate' => 'AppendPageAlert',
-					'callback' => '__upgradeMediathek'
 				)
 			);
 		}
@@ -404,34 +397,6 @@
 				// Delete existing tabs
 				if(!empty($relation_id)) {
 					EntryManager::delete($relation_id);
-				}
-			}
-		}
-
-		/**
-		 * Upgrade Mediathek fields to make use of this extension
-		 */
-		public function __upgradeMediathek() {
-
-			// Do not use Administration::instance() in this context, see:
-			// http://github.com/nilshoerrmann/subsectionmanager/issues#issue/27
-			$callback = Administration::instance()->getPageCallback();
-
-			// Append upgrade notice
-			if($callback['driver'] == 'systemextensions') {
-
-				require_once(TOOLKIT . '/class.extensionmanager.php');
-				$ExtensionManager = new ExtensionManager(Administration::instance());
-
-				// Check if Mediathek field is installed
-				$mediathek = $ExtensionManager->fetchStatus('mediathek');
-				if($mediathek == EXTENSION_ENABLED || $mediathek == EXTENSION_DISABLED) {
-
-					// Append upgrade notice to page
-					Symphony::Engine()->Page->Alert = new Alert(
-						__('You are using Mediathek and Subsection Manager simultaneously.') . ' <a href="http://' . DOMAIN . '/symphony/extension/subsectionmanager/">' . __('Upgrade') . '?</a> <a href="http://' . DOMAIN . '/symphony/extension/subsectionmanager/uninstall/mediathek">' . __('Uninstall Mediathek') . '</a> <a href="http://' . DOMAIN . '/symphony/extension/subsectionmanager/uninstall/subsectionmanager">' . __('Uninstall Subsection Manager') . '</a>',
-						Alert::ERROR
-					);
 				}
 			}
 		}
