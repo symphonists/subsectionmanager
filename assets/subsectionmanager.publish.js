@@ -14,23 +14,27 @@
 			'There are no selected items': false,
 			'Are you sure you want to delete {$item}? It will be removed from all entries. This step cannot be undone.': false,
 			'There are currently no items available. Perhaps you want create one first?': false,
-			'New item': false
+			'New item': false,
+			'Search existing items': false
 		});
 		
 		// Subsection Manager
 		$('div.field-subsectionmanager').each(function subsectionmanager() {
 			var manager = $(this),
 				duplicator = manager.find('div.frame'),
+				selection = manager.find('ol'),
 				manager_id = manager.attr('data-field-id'),
 				manager_name = manager.attr('data-field-name'),
 				subsection = manager.attr('data-subsection-id'),
-				subsection_link = manager.attr('data-subsection-new');
+				subsection_link = manager.attr('data-subsection-new'),
+				controls, browser, search, existing, controlsWidth;
 				
 		/*-------------------------------------------------------------------------
 			Events
 		-------------------------------------------------------------------------*/
 		
-			duplicator.on('constructshow.duplicator', 'li', function create(event) {
+			// Add new item
+			duplicator.on('constructshow.duplicator', 'li', function addItem(event) {
 				var item = $(this),
 					iframe = item.find('iframe');
 
@@ -39,11 +43,37 @@
 					load(iframe);
 				});
 			});
+			
+			// Toggle search
+			manager.on('focus.subsectionmanager', '.browser input', function toggleSearch(event) {
+				browser.addClass('opened');
+			});
+			manager.on('blur.subsectionmanager', '.browser input', function toggleSearch(event) {
+				browser.removeClass('opened');
+			});
+		
+			// Search
+			manager.on('input.subsectionmanager keyup.subsectionmanager', '.browser input', function search(event) {
+				var strings = $.trim($(event.target).val()).toLowerCase().split(' ');
+				event.stopPropagation();
+				
+				// Show filtered items
+				if(strings.length > 0 && strings[0] != '') {
+				
+				}
+				
+				// Show all items
+				else {
+					existing.find('li').show();
+				}
+			});
+			
 				
 		/*-------------------------------------------------------------------------
 			Functions
 		-------------------------------------------------------------------------*/
 			
+			// Load single subsection entry
 			var load = function(iframe) {
 				var content = iframe.parent(),
 					contents = iframe.contents(),
@@ -69,7 +99,98 @@
 					height: height
 				}, 'fast');
 			};
-				
+			
+			// Load subsection entry overview
+			var list = function() {
+				$.ajax({
+					async: true,
+					type: 'GET',
+					dataType: 'html',
+					url: Symphony.Context.get('root') + '/symphony/extension/subsectionmanager/get/',
+					data: {
+						id: manager_id,
+						section: subsection
+					},
+					success: function(result) {
+						existing.empty().append(result);
+					}
+				});			
+			};
+			
+			// Search the queue
+			var search = function(strings) {
+				var items = queue.find('li'),
+					size = 0;
+
+				// Search
+				items.hide().removeClass('found odd').each(function(position) {
+					var found = true,
+						current = $(this),
+						text = current.text();
+
+					// Items have to match all search strings
+					$.each(strings, function(count, string) {
+						var expression = new RegExp(string, 'i');
+						if(text.search(expression) == -1) {
+							found = false;
+						}
+					});
+
+					// Show matching items
+					if(found) {
+						size++;
+						current.addClass('found').show();
+
+						// Restore zebra
+						if(size % 2 == 0) {
+							current.addClass('odd');
+						}
+					}
+				});
+
+				// Show count
+				count(size);
+
+				// Found
+				if(size > 0) {
+					stage.trigger('searchfound');
+				}
+
+				// None found
+				else {
+					stage.trigger('searchnonfound');
+				}
+			};
+
+			// Count items
+			var count = function(size) {
+
+				// No size
+				if(!size && size !== 0) {
+					counter.hide();
+				}
+
+				// Show counter
+				else {
+					counter.fadeIn('fast');
+
+					// No items
+					if(size == 0) {
+						counter.html(Symphony.Language.get('no results') + '<span>&#215;</span>');
+					}
+
+					// Single item
+					else if(size == 1) {
+						counter.html(Symphony.Language.get('1 result', { count: 1 }) + '<span>&#215;</span>');
+					}
+
+					// Multiple items
+					else{
+						counter.html(Symphony.Language.get('{$count} results', { count: size }) + '<span>&#215;</span>');
+					}
+				}
+			};
+							
 		/*-------------------------------------------------------------------------
 			Initialisation
 		-------------------------------------------------------------------------*/
@@ -78,6 +199,25 @@
 			duplicator.symphonyDuplicator({
 				'collapsible': true
 			});
+			
+			// Create search
+			// @todo: Check if manager is searchable
+			controls = manager.find('fieldset.apply');
+			browser = $('<div class="browser" />').insertAfter(duplicator);
+			search = $('<input />', {
+				type: 'text',
+				placeholder: Symphony.Language.get('Search existing items') + ' …'
+			}).appendTo(browser);
+			existing = $('<ul />').appendTo(browser);
+			
+			// Adjust to button width
+			if(controls.length > 0) {
+				browser.css('margin-right', controls.find('button').outerWidth() + 10);
+			}
+			
+			// Get existing items
+			list();
+			
 		});
 		
 

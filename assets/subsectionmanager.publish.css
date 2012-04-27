@@ -37,6 +37,58 @@
 	opacity: 0.01;
 }
 
+.field-subsectionmanager .browser {
+	overflow: hidden;
+	height: 22px;
+	position: relative;
+	margin-top: -30px;
+}
+
+.field-subsectionmanager .browser.opened {
+	overflow: visible;
+	height: auto;
+}
+
+.field-subsectionmanager .browser input {
+	margin: 0;
+	background: url(../../../symphony/assets/img/arrows.png) right -34px no-repeat;
+}
+
+.field-subsectionmanager .browser.opened input {
+	background-position: right 6px;
+	border-radius: 2px 2px 0 0;
+}
+
+.field-subsectionmanager .browser ul {
+	position: absolute;
+	top: 22px;
+	background: #fff;
+	border-radius: 0 0 4px 4px;
+	border: 1px solid #c0c0c0;
+	border-top: none;
+	margin: 0;
+	width: 100%;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
+}
+
+.field-subsectionmanager .browser li {
+	min-height: 30px;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	padding: 7px 10px;
+	border-bottom: 1px solid #e6e6e5;
+}
+
+.field-subsectionmanager .browser li:nth-child(2n+1) {
+	background: #f5f5f5;
+}
+
+.field-subsectionmanager .browser li:last-child {
+	border-bottom: none;
+}
+
 /*div.field-subsectionmanager input.subsectionmanager.storage {
 	float: right;
 	vertical-align: middle;
