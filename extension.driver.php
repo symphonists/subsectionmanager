@@ -244,9 +244,20 @@
 
 					// TODO: depending on hardcoded mode names is highly error-prone. We should check each field type and
 					//       work only on fields that we know about, i.e., SubsectionManager and SubsectionTabs.
+					$excluded_field_modes = array(
+												'formatted',
+												'unformatted',
+												'increment',
+												'children',
+												'parent',
+												'parents',
+												'current',
+												'siblings',
+												'tree'
+											);
 
 					// Fetch fields
-					if($field != 'formatted' && $field != 'unformatted' && $field != 'increment' && !empty($field)) {
+					if(!in_array($field, $excluded_field_modes) && !empty($field)) {
 
 						// Get field id and mode
 						if(!isset(self::$storage['fields'][$context]) || self::$updateCache == true) {
