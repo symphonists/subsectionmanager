@@ -15,7 +15,11 @@
 			'Are you sure you want to delete {$item}? It will be removed from all entries. This step cannot be undone.': false,
 			'There are currently no items available. Perhaps you want create one first?': false,
 			'New item': false,
-			'Search existing items': false
+			'Search existing items': false,
+			'no matches': false,
+			'1 match': false,
+			'{$count} matches': false,
+			'Remove item': false	
 		});
 		
 		// Subsection Manager
@@ -27,14 +31,19 @@
 				manager_name = manager.attr('data-field-name'),
 				subsection = manager.attr('data-subsection-id'),
 				subsection_link = manager.attr('data-subsection-new'),
-				controls, browser, search, existing, controlsWidth;
+				controls, browser, searchfield, counter, existing, controlsWidth;
 				
 		/*-------------------------------------------------------------------------
 			Events
 		-------------------------------------------------------------------------*/
 		
-			// Add new item
-			duplicator.on('constructshow.duplicator', 'li', function addItem(event) {
+			// Set item names
+			duplicator.on('constructstop.duplicator', 'li', function setName(event) {		
+				$(this).find('input:hidden').attr('name', manager_name + '[]');
+			});
+		
+			// Create new item
+			duplicator.on('constructshow.duplicator', 'li', function createItem(event) {
 				var item = $(this),
 					iframe = item.find('iframe');
 
@@ -44,30 +53,60 @@
 				});
 			});
 			
+			// Add existing item
+			manager.on('click.subsectionmanager', '.browser li:not(.selected)', function addItem(event) {
+				var item = $(this).clone();
+					
+				// Hide browser
+				browser.removeClass('opened');
+				
+				// Prepare item
+				item.find('header').append('<a class="destructor">' + Symphony.Language.get('Remove item') + '</a>');
+				item.find('.content').hide();	
+					
+				// Add item
+				item.trigger('constructstart.duplicator');
+				duplicator.removeClass('empty');
+				item.hide().appendTo(selection).slideDown('fast', function() {
+					item.trigger('constructstop.duplicator');
+				});
+			});
+			
 			// Toggle search
 			manager.on('focus.subsectionmanager', '.browser input', function toggleSearch(event) {
 				browser.addClass('opened');
+				sync();
+				
+				// Get existing items
+				if(existing.children().length == 0) {
+					list();
+				}			
 			});
 			manager.on('blur.subsectionmanager', '.browser input', function toggleSearch(event) {
-				browser.removeClass('opened');
+				setTimeout(function() {
+					browser.removeClass('opened');
+				}, 250);
+			});
+			manager.on('click.subsectionmanager', '.browser > span', function clearSearch(event) {
+				counter.hide();
+				searchfield.val('').trigger('focus').trigger('input');
 			});
 		
-			// Search
-			manager.on('input.subsectionmanager keyup.subsectionmanager', '.browser input', function search(event) {
+			// Find items
+			manager.on('input.subsectionmanager keyup.subsectionmanager', '.browser input', function findMatches(event) {
 				var strings = $.trim($(event.target).val()).toLowerCase().split(' ');
-				event.stopPropagation();
 				
 				// Show filtered items
 				if(strings.length > 0 && strings[0] != '') {
-				
+					search(strings);
 				}
 				
 				// Show all items
 				else {
 					existing.find('li').show();
+					counter.hide();
 				}
 			});
-			
 				
 		/*-------------------------------------------------------------------------
 			Functions
@@ -100,7 +139,7 @@
 				}, 'fast');
 			};
 			
-			// Load subsection entry overview
+			// List all subsection entries
 			var list = function() {
 				$.ajax({
 					async: true,
@@ -112,21 +151,34 @@
 						section: subsection
 					},
 					success: function(result) {
-						existing.empty().append(result);
+						existing.removeClass('empty').empty().append(result);
 					}
 				});			
 			};
 			
+			// Clear list of subsection entries
+			var clear = function() {
+				existing.addClass('empty').empty();
+			};
+			
+			// Sync selection and list
+			var sync = function() {
+				var items = existing.find('li').removeClass('selected');
+				selection.find('li').each(function checkSelected() {
+					items.filter('[data-value="' + $(this).attr('data-value') + '"]').addClass('selected');
+				});
+			};
+			
 			// Search the queue
 			var search = function(strings) {
-				var items = queue.find('li'),
+				var items = existing.find('li'),
 					size = 0;
 
 				// Search
-				items.hide().removeClass('found odd').each(function(position) {
-					var found = true,
-						current = $(this),
-						text = current.text();
+				items.hide().addClass('hidden').each(function find(position) {
+					var item = $(this),
+						text = item.text(),
+						found = true;
 
 					// Items have to match all search strings
 					$.each(strings, function(count, string) {
@@ -139,27 +191,12 @@
 					// Show matching items
 					if(found) {
 						size++;
-						current.addClass('found').show();
-
-						// Restore zebra
-						if(size % 2 == 0) {
-							current.addClass('odd');
-						}
+						item.removeClass('hidden').show();
 					}
 				});
 
 				// Show count
 				count(size);
-
-				// Found
-				if(size > 0) {
-					stage.trigger('searchfound');
-				}
-
-				// None found
-				else {
-					stage.trigger('searchnonfound');
-				}
 			};
 
 			// Count items
@@ -172,21 +209,21 @@
 
 				// Show counter
 				else {
-					counter.fadeIn('fast');
+					counter.show();
 
 					// No items
 					if(size == 0) {
-						counter.html(Symphony.Language.get('no results') + '<span>&#215;</span>');
+						counter.text(Symphony.Language.get('no matches'));
 					}
 
 					// Single item
 					else if(size == 1) {
-						counter.html(Symphony.Language.get('1 result', { count: 1 }) + '<span>&#215;</span>');
+						counter.text(Symphony.Language.get('1 match', { count: 1 }));
 					}
 
 					// Multiple items
 					else{
-						counter.html(Symphony.Language.get('{$count} results', { count: size }) + '<span>&#215;</span>');
+						counter.text(Symphony.Language.get('{$count} matches', { count: size }));
 					}
 				}
 			};
@@ -197,6 +234,7 @@
 				
 			// Initialise Duplicators
 			duplicator.symphonyDuplicator({
+				'headers': 'header',
 				'collapsible': true
 			});
 			
@@ -204,20 +242,17 @@
 			// @todo: Check if manager is searchable
 			controls = manager.find('fieldset.apply');
 			browser = $('<div class="browser" />').insertAfter(duplicator);
-			search = $('<input />', {
+			var searchfield = $('<input />', {
 				type: 'text',
 				placeholder: Symphony.Language.get('Search existing items') + ' …'
 			}).appendTo(browser);
-			existing = $('<ul />').appendTo(browser);
+			counter = $('<span />').hide().appendTo(browser);
+			existing = $('<ol class="empty" />').appendTo(browser);
 			
 			// Adjust to button width
 			if(controls.length > 0) {
 				browser.css('margin-right', controls.find('button').outerWidth() + 10);
 			}
-			
-			// Get existing items
-			list();
-			
 		});
 		
 

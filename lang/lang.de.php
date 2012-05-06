@@ -21,8 +21,8 @@
 		'%s has to be well-formed. Please check opening and closing tags.' =>
 		'Dieses Feld muss wohlgeformt sein. Bitte überprüfen Sie öffnende und schließende Tags.',
 
-		'1 result' =>
-		'1 Ergebnis',
+		'1 match' =>
+		'1 Treffer',
 
 		'Allow creation of new items' =>
 		'Erstellen von Einträgen zulassen',
@@ -201,11 +201,11 @@
 		'items' =>
 		'Einträge',
 
-		'no results' =>
-		'Keine Ergebnisse',
+		'no matches' =>
+		'Keine Treffer',
 
-		'{$count} results' =>
-		'{$count} Ergebnisse',
+		'{$count} matches' =>
+		'{$count} Treffer',
 
 		'It\'s available at %s.' =>
 		'Es wird unter %s zur Verfügung gestellt. ',

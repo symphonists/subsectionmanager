@@ -18,33 +18,47 @@
 		// Templates
 		public static $templates = array(
 			'plain' => array(
-				'text' =>	'<li data-value="{$value}" data-drop="{$droptext}">
+				'text' =>	'<li data-value="{$value}" data-drop="{$droptext}" class="instance collapsed">
 								<input type="hidden" value="{$value}" />
-								<span>{$caption}</span>
+								<header>{$caption}</header>
+								<div class="content"></div>
 							 </li>',
-				'image' =>	'<li data-value="{$value}" data-drop="{$droptext}">
+				'image' =>	'<li data-value="{$value}" data-drop="{$droptext}" class="instance collapsed">
 								<input type="hidden" value="{$value}" />
-								<a href="{$href}" class="image file handle">{$caption}</a>
+								<header>
+									<a href="{$href}" class="image file handle">{$caption}</a>
+								</header>
+								<div class="content"></div>
 							 </li>',
-				'file' =>	'<li data-value="{$value}" data-drop="{$droptext}">
+				'file' =>	'<li data-value="{$value}" data-drop="{$droptext}" class="instance collapsed">
 								<input type="hidden" value="{$value}" />
-								<a href="{$href}" class="file handle">{$caption}</a>
+								<header>
+									<a href="{$href}" class="file handle">{$caption}</a>
+								</header>
+								<div class="content"></div>
 							 </li>'
 			),
 			'preview' => array(
-				'text' =>	'<li data-value="{$value}" data-drop="{$droptext}">
+				'text' =>	'<li data-value="{$value}" data-drop="{$droptext}" class="instance collapsed">
 								<input type="hidden" value="{$value}" />
-								<span>{$caption}</span>
+								<header>{$caption}</header>
+								<div class="content"></div>
 							 </li>',
-				'image' =>	'<li data-value="{$value}" data-drop="{$droptext}" class="preview">
+				'image' =>	'<li data-value="{$value}" data-drop="{$droptext}" class="instance collapsed preview">
 								<input type="hidden" value="{$value}" />
-								<img src="{$url}/image/2/40/40/5{$preview}" width="40" height="40" class="handle" />
-								<a href="{$href}" class="image file handle">{$caption}</a>
+								<header>
+									<img src="{$url}/image/2/40/40/5{$preview}" width="40" height="40" class="handle" />
+									<a href="{$href}" class="image file handle">{$caption}</a>
+								</header>
+								<div class="content"></div>
 							 </li>',
-				'file' =>	'<li data-value="{$value}" data-drop="{$droptext}" class="preview">
+				'file' =>	'<li data-value="{$value}" data-drop="{$droptext}" class="instance collapsed preview">
 								<input type="hidden" value="{$value}" />
-								<strong class="file">{$type}</strong>
-								<a href="{$href}" class="file handle">{$caption}</a>
+								<header>
+									<strong class="file">{$type}</strong>
+									<a href="{$href}" class="file handle">{$caption}</a>
+								</header>
+								<div class="content"></div>
 							 </li>'
 			),
 			'index' => array(
