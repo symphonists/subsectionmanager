@@ -72,6 +72,21 @@
 				});
 			});
 			
+			// Edit items
+			duplicator.on('expandstart.collapsible', 'li', function loadItem() {
+				var item = $(this),
+					content = item.find('.content'),
+					iframe = content.find('iframe');
+					
+				// Check if iframe exists
+				if(iframe.length == 0) {
+					iframe = $('<iframe />').appendTo(content);
+				}		
+					
+				// Load iframe
+				iframe.attr('src', subsection_link + '/edit/' + item.attr('data-value') + '/');				
+			});
+			
 			// Toggle search
 			manager.on('focus.subsectionmanager', '.browser input', function toggleSearch(event) {
 				browser.addClass('opened');
