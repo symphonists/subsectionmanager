@@ -67,12 +67,13 @@
 				
 				// Prepare item
 				item.find('header').append('<a class="destructor">' + Symphony.Language.get('Remove item') + '</a>');
-				item.find('.content').hide();	
 					
 				// Add item
 				item.trigger('constructstart.duplicator');
 				duplicator.removeClass('empty');
-				item.hide().appendTo(selection).slideDown('fast', function() {
+				item.hide().appendTo(selection);
+				item.trigger('collapse.collapsible', [0]);
+				item.slideDown('fast', function() {
 					item.trigger('constructstop.duplicator');
 				});
 			});
@@ -86,10 +87,12 @@
 				// Check if iframe exists
 				if(iframe.length == 0) {
 					iframe = $('<iframe />').appendTo(content);
-				}		
+				}
 					
 				// Load iframe
-				iframe.attr('src', subsection_link + '/edit/' + item.attr('data-value') + '/');				
+				iframe.css('opacity', 0.01).attr('src', subsection_link + '/edit/' + item.attr('data-value') + '/').load(function() {
+					load(iframe);
+				});
 			});
 			
 			// Toggle search
@@ -102,11 +105,13 @@
 					list();
 				}			
 			});
+			
 			manager.on('blur.subsectionmanager', '.browser input', function toggleSearch(event) {
 				setTimeout(function() {
 					browser.removeClass('opened');
 				}, 250);
 			});
+			
 			manager.on('click.subsectionmanager', '.browser > span', function clearSearch(event) {
 				counter.hide();
 				searchfield.val('').trigger('focus').trigger('input');
@@ -141,7 +146,7 @@
 					height;
 
 				// Simplify UI
-				contents.find('header, #context').remove();
+				contents.find('header h1, header ul, header nav, #context').remove();
 				
 				// Set iframe height
 				height = contents.find('#contents').outerHeight();
@@ -157,6 +162,16 @@
 				content.animate({
 					height: height
 				}, 'fast');
+			
+				// Fetch saving
+				contents.find('div.actions input').on('click.subsectionmanager', function() {
+					console.log('save');
+					iframe.addClass('saving').animate({
+						opacity: 0.01
+					}, 'fast', function() {
+						iframe.css('visibility', 'hidden');
+					});
+				});
 			};
 			
 			// List all subsection entries
@@ -254,8 +269,9 @@
 				
 			// Initialise Duplicators
 			duplicator.symphonyDuplicator({
-				'headers': 'header',
-				'collapsible': true
+				headers: 'header',
+				collapsible: true,
+				save_state: false
 			});
 			
 			// Create search
@@ -273,8 +289,33 @@
 			if(controls.length > 0) {
 				browser.css('margin-right', controls.find('button').outerWidth() + 10);
 			}
+			
+			// Close existing items, if no states are stored
+			selection.find('li').trigger('collapse.collapsible', [0]);
 		});
 		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 		// OLD CODE
 		$('div.field-subsectionmanagerOLD').each(function() {
