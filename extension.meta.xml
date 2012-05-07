@@ -11,11 +11,11 @@
 	<authors>
 		<author>
 			<name github="hananils" symphony="hananils">Büro für Web- und Textgestaltung</name>
-			<website>http://hananils.de</website>
+			<website>http://hananils.de?symphony=subsectionmanager</website>
 		</author>
 		<author>
 			<name github="nilshoerrmann" symphony="Nils">Nils Hörrmann</name>
-			<website>http://nilshoerrmann.de</website>
+			<website>http://nilshoerrmann.de?symphony=subsectionmanager</website>
 		</author>
 	</authors>
 	<releases>
