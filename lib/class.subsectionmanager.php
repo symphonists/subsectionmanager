@@ -18,19 +18,19 @@
 		// Templates
 		public static $templates = array(
 			'plain' => array(
-				'text' =>	'<li data-value="{$value}" data-drop="{$droptext}" class="instance collapsed">
+				'text' =>	'<li data-value="{$value}" data-drop="{$droptext}" class="instance">
 								<input type="hidden" value="{$value}" />
 								<header>{$caption}</header>
 								<div class="content"></div>
 							 </li>',
-				'image' =>	'<li data-value="{$value}" data-drop="{$droptext}" class="instance collapsed">
+				'image' =>	'<li data-value="{$value}" data-drop="{$droptext}" class="instance">
 								<input type="hidden" value="{$value}" />
 								<header>
 									<a href="{$href}" class="image file handle">{$caption}</a>
 								</header>
 								<div class="content"></div>
 							 </li>',
-				'file' =>	'<li data-value="{$value}" data-drop="{$droptext}" class="instance collapsed">
+				'file' =>	'<li data-value="{$value}" data-drop="{$droptext}" class="instance">
 								<input type="hidden" value="{$value}" />
 								<header>
 									<a href="{$href}" class="file handle">{$caption}</a>
@@ -39,12 +39,12 @@
 							 </li>'
 			),
 			'preview' => array(
-				'text' =>	'<li data-value="{$value}" data-drop="{$droptext}" class="instance collapsed">
+				'text' =>	'<li data-value="{$value}" data-drop="{$droptext}" class="instance">
 								<input type="hidden" value="{$value}" />
 								<header>{$caption}</header>
 								<div class="content"></div>
 							 </li>',
-				'image' =>	'<li data-value="{$value}" data-drop="{$droptext}" class="instance collapsed preview">
+				'image' =>	'<li data-value="{$value}" data-drop="{$droptext}" class="instance preview">
 								<input type="hidden" value="{$value}" />
 								<header>
 									<img src="{$url}/image/2/40/40/5{$preview}" width="40" height="40" class="handle" />
@@ -52,7 +52,7 @@
 								</header>
 								<div class="content"></div>
 							 </li>',
-				'file' =>	'<li data-value="{$value}" data-drop="{$droptext}" class="instance collapsed preview">
+				'file' =>	'<li data-value="{$value}" data-drop="{$droptext}" class="instance preview">
 								<input type="hidden" value="{$value}" />
 								<header>
 									<strong class="file">{$type}</strong>
