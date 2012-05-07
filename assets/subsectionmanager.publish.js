@@ -50,6 +50,11 @@
 				// Load subsection
 				iframe.attr('src', subsection_link + '/new/').load(function() {
 					load(iframe);
+					
+					// Pre-populate first input with browser content
+					if(searchfield.val() != '') {
+						iframe.contents().find('input:visible, textarea').eq(0).val(searchfield.val());
+					}
 				});
 			});
 			
