@@ -55,7 +55,7 @@
 				'file' =>	'<li data-value="{$value}" data-drop="{$droptext}" class="instance preview">
 								<input type="hidden" value="{$value}" />
 								<header>
-									<strong class="file">{$type}</strong>
+									<strong class="file">.{$type}</strong>
 									<a href="{$href}" class="file handle">{$caption}</a>
 								</header>
 								<div class="content"></div>

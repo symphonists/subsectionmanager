@@ -144,6 +144,23 @@ div.dragger img {
 	margin: 0 10px 0 0;
 }
 
+.field-subsectionmanager li strong.file,
+div.dragger strong.file {
+	float: left;
+	margin: 0 10px 0 0;
+	padding: 10px 0 0;
+	width: 38px;
+	height: 38px;
+	border: 1px solid #d6d6d6;
+	background: #fff;
+	text-transform: uppercase;
+	font-weight: normal;
+	letter-spacing: 0.05em;
+	text-align: center;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
 .field-subsectionmanager li em,
 .field-subsectionmanager li em:hover,
 div.dragger em {
