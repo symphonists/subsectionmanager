@@ -380,9 +380,14 @@
 					`caption` text,
 					`droptext` text,
 					`included_fields` text,
-					`allow_multiple` tinyint(1) default '0',
+					`create` tinyint(1) default '1',
+					`remove` tinyint(1) default '1',
+					`allow_multiple` tinyint(1) default '1',
+					`edit` tinyint(1) default '1',
+					`sort` tinyint(1) default '1',
+					`drop` tinyint(1) default '1',
+					`show_search` tinyint(1) default '1',
 					`show_preview` tinyint(1) default '0',
-					`lock` tinyint(1) DEFAULT '0',
 					`recursion_levels` tinyint DEFAULT '0',
 					PRIMARY KEY	 (`id`),
 					KEY `field_id` (`field_id`)
@@ -521,6 +526,9 @@
 					$status[] = Symphony::Database()->query(
 						"ALTER TABLE `tbl_fields_subsectionmanager` ADD `lock` tinyint(1) DEFAULT '0'"
 					);
+					$status[] = Symphony::Database()->query(
+						"ALTER TABLE `tbl_fields_subsectionmanager` ADD `lock` tinyint(1) DEFAULT '0'"
+					);
 				}
 			}
 
@@ -573,6 +581,106 @@
 
 		/*-----------------------------------------------------------------------*/
 
+			if(version_compare($previousVersion, '3.0', '<')) {
+			
+				// Add create setting
+				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'create'") == false) {
+					$status[] = Symphony::Database()->query(
+						"ALTER TABLE `tbl_fields_subsectionmanager` ADD COLUMN `create` tinyint DEFAULT '1'"
+					);
+				}
+				
+				// Add remove setting
+				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'remove'") == false) {
+					$status[] = Symphony::Database()->query(
+						"ALTER TABLE `tbl_fields_subsectionmanager` ADD COLUMN `remove` tinyint DEFAULT '1'"
+					);
+				}
+				
+				// Add edit setting
+				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'edit'") == false) {
+					$status[] = Symphony::Database()->query(
+						"ALTER TABLE `tbl_fields_subsectionmanager` ADD COLUMN `edit` tinyint DEFAULT '1'"
+					);
+				}
+				
+				// Add sort setting
+				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'sort'") == false) {
+					$status[] = Symphony::Database()->query(
+						"ALTER TABLE `tbl_fields_subsectionmanager` ADD COLUMN `sort` tinyint DEFAULT '1'"
+					);
+				}
+				
+				// Add drop setting
+				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'drop'") == false) {
+					$status[] = Symphony::Database()->query(
+						"ALTER TABLE `tbl_fields_subsectionmanager` ADD COLUMN `drop` tinyint DEFAULT '1'"
+					);
+				}
+				
+				// Add search setting
+				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'search'") == false) {
+					$status[] = Symphony::Database()->query(
+						"ALTER TABLE `tbl_fields_subsectionmanager` ADD COLUMN `search` tinyint DEFAULT '1'"
+					);
+				}
+				
+				// Adjust allow multiple setting
+				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'allow_multiple'") == false) {
+					$status[] = Symphony::Database()->query(
+						"ALTER TABLE `tbl_fields_subsectionmanager` MODIFY COLUMN `allow_multiple` tinyint DEFAULT '1'"
+					);
+				}
+			
+				// Drop look setting
+				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'lock'") == true) {
+					$status[] = Symphony::Database()->query(
+						"UPDATE `tbl_fields_subsectionmanager` SET `edit` = 1 WHERE `lock` = 0"
+					);
+					$status[] = Symphony::Database()->query(
+						"ALTER TABLE `tbl_fields_subsectionmanager` DROP `lock"
+					);
+				}
+
+			/*-------------------------------------------------------------------*/
+
+				// Transfer old stage settings: constructable
+				$settings = Symphony::Database()->fetchCol("field_id", "SELECT `field_id` FROM  `tbl_fields_stage` WHERE  `constructable` = 0");
+				if(!empty($settings) && is_array($settings)) {
+					Symphony::Database()->query("UPDATE `tbl_fields_subsectionmanager` SET `create` = 0 WHERE `field_id` IN (" . implode(',', $settings) . ")");
+				}
+
+				// Transfer old stage settings: destructable
+				$settings = Symphony::Database()->fetchCol("field_id", "SELECT `field_id` FROM  `tbl_fields_stage` WHERE  `destructable` = 0");
+				if(!empty($settings) && is_array($settings)) {
+					Symphony::Database()->query("UPDATE `tbl_fields_subsectionmanager` SET `remove` = 0 WHERE `field_id` IN (" . implode(',', $settings) . ")");
+				}
+
+				// Transfer old stage settings: draggable
+				$settings = Symphony::Database()->fetchCol("field_id", "SELECT `field_id` FROM  `tbl_fields_stage` WHERE  `draggable` = 0");
+				if(!empty($settings) && is_array($settings)) {
+					Symphony::Database()->query("UPDATE `tbl_fields_subsectionmanager` SET `sort` = 0 WHERE `field_id` IN (" . implode(',', $settings) . ")");
+				}
+
+				// Transfer old stage settings: droppable
+				$settings = Symphony::Database()->fetchCol("field_id", "SELECT `field_id` FROM  `tbl_fields_stage` WHERE  `droppable` = 0");
+				if(!empty($settings) && is_array($settings)) {
+					Symphony::Database()->query("UPDATE `tbl_fields_subsectionmanager` SET `drop` = 0 WHERE `field_id` IN (" . implode(',', $settings) . ")");
+				}
+
+				// Transfer old stage settings: droppable
+				$settings = Symphony::Database()->fetchCol("field_id", "SELECT `field_id` FROM  `tbl_fields_stage` WHERE  `searchable` = 0");
+				if(!empty($settings) && is_array($settings)) {
+					Symphony::Database()->query("UPDATE `tbl_fields_subsectionmanager` SET `show_search` = 0 WHERE `field_id` IN (" . implode(',', $settings) . ")");
+				}
+				
+				// Remove old Stage instances
+				Symphony::Database()->query("DELETE FROM `tbl_fields_stage` WHERE `context` = 'subsectionmanager'");
+				Symphony::Database()->query("DELETE FROM `tbl_fields_stage_sorting` WHERE `context` = 'subsectionmanager'");
+			}
+
+		/*-----------------------------------------------------------------------*/
+
 			// Report status
 			if(in_array(false, $status, true)) {
 				return false;
@@ -587,8 +695,12 @@
 		 */
 		public function uninstall() {
 
-			// Drop related entries from stage tables
-			Symphony::Database()->query("DELETE FROM `tbl_fields_stage` WHERE `context` = 'subsectionmanager'");
+			// Remove old Stage tables if they are empty
+			$count = Symphony::Database()->query("SELECT COUNT(*) FROM `tbl_fields_stage`");
+			if($count == 0) {
+				Symphony::Database()->query("DROP TABLE `tbl_fields_stage`");
+				Symphony::Database()->query("DROP TABLE `tbl_fields_stage_sorting`");
+			}
 
 			// Drop tables
 			Symphony::Database()->query("DROP TABLE IF EXISTS `tbl_fields_subsectionmanager`");
