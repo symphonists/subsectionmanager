@@ -74,6 +74,12 @@
 	z-index: 10000;
 	max-height: 240px;
 	overflow: auto;
+	-webkit-transition: max-height .25s ease-out;
+	-moz-transition: max-height .25s ease-out;
+	-ms-transition: max-height .25s ease-out;
+	-o-transition: max-height .25s ease-out;
+	transition: max-height .25s ease-out;
+	background: #fff;
 }
 
 .field-subsectionmanager .browser.upwards ol {
@@ -88,6 +94,7 @@
 .field-subsectionmanager .browser ol.empty {
 	background: #fff url(images/loading_light.gif) center no-repeat;
 	min-height: 50px;
+	max-height: 50px;
 }
 
 /* Items */
@@ -169,6 +176,11 @@
 	background-image:      -o-linear-gradient(top, #668abe, #5c83ba);
 	background-image:   linear-gradient(to bottom, #668abe, #5c83ba);
 	border-bottom: 1px solid #7492bc;
+	-webkit-transition: background .25s ease-in;
+	-moz-transition: background .25s ease-in;
+	-ms-transition: background .25s ease-in;
+	-o-transition: background .25s ease-in;
+	transition: background .25s ease-in;
 }
 
 .field-subsectionmanager li.selected,

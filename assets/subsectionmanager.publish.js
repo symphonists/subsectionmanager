@@ -121,12 +121,16 @@
 
 				// Open browser
 				browser.addClass('opened');
+
+				// List existing items
 				if(existing.children().length == 0) {
 					list();
-				}			
+				}
 
 				// Sync selection with list of existing items
-				sync();
+				else {
+					sync();
+				}	
 			});
 			
 			manager.on('blur.subsectionmanager', '.browser input', function toggleSearch(event) {
@@ -209,7 +213,16 @@
 						section: subsection
 					},
 					success: function(result) {
+						var result = $(result).hide();
+
+						// Append existing items
 						existing.removeClass('empty').empty().append(result);
+
+						// Sync selection with list of existing items
+						sync();
+
+						// Reveal items
+						result.fadeIn('fast');
 					}
 				});			
 			};
