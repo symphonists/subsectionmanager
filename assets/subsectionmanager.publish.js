@@ -109,7 +109,7 @@
 			manager.on('blur.subsectionmanager', '.browser input', function toggleSearch(event) {
 				setTimeout(function() {
 					browser.removeClass('opened');
-				}, 250);
+				}, 100);
 			});
 			
 			manager.on('click.subsectionmanager', '.browser > span', function clearSearch(event) {
