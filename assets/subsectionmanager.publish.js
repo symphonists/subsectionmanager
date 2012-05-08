@@ -104,7 +104,7 @@
 				}
 					
 				// Load iframe
-				iframe.css('opacity', 0.01).attr('src', subsection_link + '/edit/' + item.attr('data-value') + '/').load(function() {
+				iframe.addClass('loading').attr('src', subsection_link + '/edit/' + item.attr('data-value') + '/').load(function() {
 					load(iframe);
 				});
 			});
@@ -170,49 +170,40 @@
 				var content = iframe.parent(),
 					subsection = iframe.contents(),
 					body = subsection.find('body').addClass('inline subsection'),
-					form = body.find('form').removeClass('columns'),
-					height;
+					form = body.find('form').removeClass('columns');
 
 				// Simplify UI
 				subsection.find('#header, #context').remove();
 				
 				// Resize iframe
-				subsection.find('#contents').on('resize.subsectionmanager', function() {
-					if(!iframe.is('.saving')) {
-						resize(subsection, content, iframe, body);
+				subsection.find('#contents').on('resize.subsectionmanager', function(event, loading) {
+					var height = subsection.find('#wrapper').outerHeight();
+
+					if(loading == true || (!iframe.is('.loading') && content.data('height') != height)) {
+						resize(content, iframe, body, height);
 					}
-				}).trigger('resize.subsectionmanager');
+				}).trigger('resize.subsectionmanager', [true]);
 			
 				// Fetch saving
-				subsection.find('div.actions input').on('click.subsectionmanager', function() {
-					iframe.addClass('saving').animate({
-						opacity: 0.01
-					}, 'fast', function() {
-						iframe.css('visibility', 'hidden');
-					});
+				subsection.find('div.actions input').on('click.subsectionmanager', function(event) {
+					iframe.addClass('loading');
 				});
 			};
 			
 			// Resize editor
-			var resize = function(subsection, content, iframe, body) {
-				var height = subsection.find('#wrapper').outerHeight();
-
-				if(content.data('height') != height) {
+			var resize = function(content, iframe, body, height) {
+				console.log('resize');
 			
-					// Set iframe height
-					iframe.height(height).animate({
-						opacity: 1,
-						visibility: 'visible'
-					}, 'fast');
-					
-					// Set scroll position
-					body[0].scrollTop = 0;
-					
-					// Set content height
-					content.data('height', height).animate({
-						height: height
-					}, 'fast');
-				}
+				// Set iframe height
+				iframe.height(height).removeClass('loading');
+				
+				// Set scroll position
+				body[0].scrollTop = 0;
+				
+				// Set content height
+				content.data('height', height).animate({
+					height: height
+				}, 'fast');
 			};
 						
 			// List all subsection entries
@@ -550,19 +541,6 @@
 							return false;
 						}
 					});
-				}
-			};
-
-			// Resize editor
-			var resize = function(content, editor, iframe) {
-				var height = content.find('#contents').height() + content.find('#header .error').height(),
-					body = content.find('body');
-
-				if(editor.data('height') != height) {
-					iframe.height(height);
-					editor.data('height', height).animate({
-						'height': height
-					}, 'fast');
 				}
 			};
 

@@ -20,7 +20,19 @@
 
 .field-subsectionmanager .frame iframe {
 	width: 100%;
+	opacity: 1;
+	visibility: visible;
+	-webkit-transition: opacity .25s ease-in;
+	-moz-transition: opacity .25s ease-in;
+	-ms-transition: opacity .25s ease-in;
+	-o-transition: opacity .25s ease-in;
+	transition: opacity .25s ease-in;
+}
+
+.field-subsectionmanager .frame iframe.loading {
+	width: 100%;
 	opacity: 0.01;
+	visibility: hidden;
 }
 
 /* Browser */
