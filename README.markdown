@@ -1,4 +1,4 @@
-# Subsection Manager 2
+# Subsection Manager 3
 
 ![Subsection Manager](http://projekte.nilshoerrmann.de/extensions/subsectionmanager/sym_subsectionmanager.png)
 
