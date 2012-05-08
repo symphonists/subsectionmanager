@@ -87,6 +87,7 @@
 				item.css('height', 0).show().animate({
 					height: height
 				}, 'fast', function() {
+					item.removeAttr('style');
 					item.trigger('constructstop.duplicator');
 				});
 			});
