@@ -269,6 +269,16 @@
 
 				// Show count
 				count(size);
+				
+				// Hide list
+				if(size == 0) {
+					existing.hide();
+				}
+
+				// Show list
+				else {
+					existing.show();
+				}				
 			};
 
 			// Count items
