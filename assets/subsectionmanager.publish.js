@@ -60,6 +60,7 @@
 					
 				// Hide browser
 				browser.removeClass('opened');
+				searchfield.trigger('blur.subsectionmanager');
 				
 				// Prepare item
 				addDestructor(item);
