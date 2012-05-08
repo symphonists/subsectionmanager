@@ -29,7 +29,7 @@
 				selection = manager.find('ol'),
 				manager_id = manager.attr('data-field-id'),
 				manager_name = manager.attr('data-field-name'),
-				subsection = manager.attr('data-subsection-id'),
+				subsection_id = manager.attr('data-subsection-id'),
 				subsection_link = manager.attr('data-subsection-new'),
 				controls, browser, searchfield, counter, existing, controlsWidth;
 				
@@ -38,7 +38,7 @@
 		-------------------------------------------------------------------------*/
 		
 			// Set item names
-			duplicator.on('constructstop.duplicator', 'li', function setName(event) {		
+			duplicator.on('constructstop.duplicator update.subsectionmanager', 'li', function setName(event) {		
 				$(this).find('input:hidden').attr('name', manager_name + '[]');
 			});
 		
@@ -48,13 +48,8 @@
 					iframe = item.find('iframe');
 
 				// Load subsection
-				iframe.attr('src', subsection_link + '/new/').load(function() {
-					load(iframe);
-					
-					// Pre-populate first input with browser content
-					if(searchfield.val() != '') {
-						iframe.contents().find('input:visible, textarea').eq(0).val(searchfield.val());
-					}
+				iframe.addClass('initialise loading new').attr('src', subsection_link + '/new/').load(function() {
+					load(item);
 				});
 			});
 			
@@ -67,7 +62,7 @@
 				browser.removeClass('opened');
 				
 				// Prepare item
-				item.find('header').append('<a class="destructor">' + Symphony.Language.get('Remove item') + '</a>');
+				addDestructor(item);
 					
 				// Add item
 				item.trigger('constructstart.duplicator');
@@ -104,8 +99,8 @@
 				}
 					
 				// Load iframe
-				iframe.addClass('loading').attr('src', subsection_link + '/edit/' + item.attr('data-value') + '/').load(function() {
-					load(iframe);
+				iframe.addClass('initialise loading').attr('src', subsection_link + '/edit/' + item.attr('data-value') + '/').load(function() {
+					load(item);
 				});
 			});
 			
@@ -166,14 +161,26 @@
 		-------------------------------------------------------------------------*/
 			
 			// Load single subsection entry
-			var load = function(iframe) {
-				var content = iframe.parent(),
+			var load = function(item) {
+				var header = item.find('> header'),
+					content = item.find('> .content'),
+					iframe = item.find('iframe'),
 					subsection = iframe.contents(),
 					body = subsection.find('body').addClass('inline subsection'),
 					form = body.find('form').removeClass('columns');
 
 				// Simplify UI
 				subsection.find('#header, #context').remove();
+				
+				// Pre-populate first input with browser content
+				if(iframe.is('.new') && searchfield.val() != '') {
+					iframe.contents().find('input:visible, textarea').eq(0).val(searchfield.val());
+				}
+				
+				// Update item
+				if(!iframe.is('.initialise')) {
+					update(item);
+				}
 				
 				// Resize iframe
 				subsection.find('#contents').on('resize.subsectionmanager', function(event, loading) {
@@ -187,10 +194,51 @@
 				// Fetch saving
 				subsection.find('div.actions input').on('click.subsectionmanager', function(event) {
 					iframe.addClass('loading');
-					clear();
+				});
+				
+				// Remove markers
+				iframe.removeClass('new').removeClass('initialise');
+			};
+
+			// Update item
+			var update = function(item) {
+				item.addClass('updating');
+
+				// Load item data
+				$.ajax({
+					type: 'GET',
+					url: Symphony.Context.get('root') + '/symphony/extension/subsectionmanager/get/',
+					data: {
+						id: manager_id,
+						section: subsection_id,
+						entry: item.find('iframe').contents().find('form').attr('action').match(/(\d+)(?!.*\d)/)[0]
+					},
+					dataType: 'html',
+					success: function(result) {
+						var result = $(result),
+							header = result.find('> header'),
+							id = result.find('input:first');
+
+						if(header.length > 0) {
+							
+							// Update header						
+							item.find('> header').replaceWith(header);
+		
+							// Set id for new items
+							if(item.attr('data-value') == undefined) {
+								addDestructor(item);
+								item.append(id).attr('data-value', id.val()).trigger('update.subsectionmanager');
+							}
+	
+							// Clear browser list
+							clear();
+						}
+
+						item.removeClass('updating');
+					}
 				});
 			};
-			
+						
 			// Resize editor
 			var resize = function(content, iframe, body, height) {
 			
@@ -215,7 +263,7 @@
 					url: Symphony.Context.get('root') + '/symphony/extension/subsectionmanager/get/',
 					data: {
 						id: manager_id,
-						section: subsection
+						section: subsection_id
 					},
 					success: function(result) {
 						var result = $(result).hide();
@@ -313,6 +361,11 @@
 					}
 				}
 			};
+			
+			// Add destructor
+			var addDestructor = function(item) {
+				item.find('header').append('<a class="destructor">' + Symphony.Language.get('Remove item') + '</a>');
+			};
 							
 		/*-------------------------------------------------------------------------
 			Initialisation
@@ -354,57 +407,6 @@
 
 
 /*
-			// Queuing
-			stage.delegate('li.preview a.file', 'click', function() {
-
-				// Prevent clicks on links in queue
-				return false;
-			});
-
-			// Editing
-			if(!stage.is('.locked')) {
-				selection.delegate('li:not(.new, .empty, .message)', 'click', function(event) {
-					var item = $(this),
-						target = $(event.target),
-						editor = item.find('div.drawer');
-
-					// Don't open editor for item that will be removed
-					if(target.is('.destructor, input')) {
-						return true;
-					}
-
-					// Open editor
-					if(editor.length == 0) {
-						item.addClass('active');
-						edit(item);
-					}
-
-					// Close editor
-					else {
-						item.removeClass('active');
-						editor.slideUp('fast', function() {
-							$(this).remove();
-						});
-					}
-
-					// Don't follow links
-					return false;
-				});
-			}
-
-			// Updating
-			stage.bind('edit', function(event, item, iframe) {
-				var id = iframe.contents().find('form').attr('action').match(/\d+/g);
-
-				// Fetch item id
-				if($.isArray(id)) {
-					id = id[id.length - 1];
-				}
-
-				// Update item
-				update(id, item, iframe);
-			});
-
 			// Deleting
 			stage.bind('erase', function(event, item) {
 				erase(item);
@@ -432,162 +434,6 @@
 					drop(target, item);
 				}
 			});
-
-
-			// Load subsection
-			var load = function(item, editor, iframe) {
-				var content = iframe.contents();
-				
-				// Handle Firefox flickering
-				editor.css('overflow', 'hidden');
-
-				// Handle Firefox flickering
-				editor.css('overflow', 'hidden');
-
-				// Adjust interface
-				content.find('body').addClass('inline subsection');
-				content.find('header, #context').remove();
-				content.find('fieldset input:first').focus();
-
-				// Frame resizing
-				content.find('#contents').resize(function() {
-					if(!iframe.is('.saving')) {
-						resize(content, editor, iframe);
-					}
-				});
-
-				// Resize on load
-				resize(content, editor, iframe);
-
-				// Delete item
-				if(item.is('.delete')) {
-
-					// Remove queue item
-					queue.find('li[data-value="' + item.attr('data-value') + '"]').slideUp('fast', function() {
-						$(this).remove();
-
-						// Show empty queue message
-						if(queue.find('li').length == 0) {
-							empty.clone().appendTo(queue.find('ul')).slideDown('fast');
-						}
-					});
-
-					// Remove item
-					item.trigger('destruct');
-					stage.trigger('deletestop', [item]);
-				}
-
-				// Edit item
-				else {
-
-					// Set height
-					var height = content.find('#wrapper').outerHeight() || iframe.height();
-					iframe.css('visibility', 'visible').height(height).animate({
-						opacity: 1
-					}, 'fast', function() {
-
-						// Make sure iframe is defenitly visible
-						$(this).css('visibility', 'visible');
-					});
-					editor.animate({
-						height: height
-					}, 'fast');
-
-					// Handle inline image preview
-					if(content.find('body > img').width() > iframe.width()) {
-					  content.find('body > img').css({
-						'width': iframe.width()
-					  });
-					}
-
-					// Fetch saving
-					content.find('div.actions input').click(function() {
-						iframe.addClass('saving').animate({
-							opacity: 0.01
-						}, 'fast', function() {
-							iframe.css('visibility', 'hidden');
-						});
-					});
-
-					// Trigger update
-					if(content.find('#notice.success').length > 0) {
-						stage.trigger('edit', [item, iframe]);
-					}
-
-					// Trigger delete
-					content.find('button.confirm').click(function(event) {
-						event.stopPropagation();
-
-						var message = Symphony.Language.get('Are you sure you want to delete {$item}? It will be removed from all entries. This step cannot be undone.', {
-							'item': item.find('span:first').text()
-						});
-
-						// Prepare deletion
-						if(confirm(message)) {
-							stage.trigger('deletestart', [item]);
-							item.addClass('delete');
-
-							// Hide iframe
-							iframe.animate({
-								opacity: 0.01
-							}, 'fast');
-
-							// Delete item
-							return true;
-						}
-
-						// Stop deletion
-						else {
-							return false;
-						}
-					});
-				}
-			};
-
-			// Update item
-			var update = function(id, item, iframe) {
-				item.addClass('updating');
-
-				// Load item data
-				$.ajax({
-					type: 'GET',
-					url: Symphony.Context.get('root') + '/symphony/extension/subsectionmanager/get/',
-					data: {
-						id: manager_id,
-						section: subsection,
-						entry: id
-					},
-					dataType: 'html',
-					success: function(result) {
-						var result = $(result);
-
-						// Get queue item
-						var queue_item = queue.find('li[data-value="' + item.attr('data-value') + '"]');
-
-						// Add preview class
-						if(stage.is('.preview') && result.find('strong.file, img').length > 0) {
-							result.addClass('preview');
-						}
-
-						// New item
-						if(queue_item.length == 0) {
-							stage.find('div.queue ul').prepend(result.clone());
-							queue.find('li.message').remove();
-						}
-
-						// Existing item
-						else {
-							queue_item.html(result.html()).addClass(result.attr('class')).attr('data-value', result.attr('data-value'));
-						}
-
-						// Update item
-						item.children().not('.destructor').not('.drawer').remove();
-						result.children().prependTo(item);
-						item.attr('class', result.attr('class')).attr('data-value', result.attr('data-value')).attr('data-drop', result.attr('data-drop'));
-						stage.trigger('update');
-					}
-				});
-			};
 
 			// Dropping items
 			var drop = function(target, item) {
