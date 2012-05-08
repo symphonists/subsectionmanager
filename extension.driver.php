@@ -625,9 +625,9 @@
 				}
 				
 				// Add search setting
-				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'search'") == false) {
+				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'show_search'") == false) {
 					$status[] = Symphony::Database()->query(
-						"ALTER TABLE `tbl_fields_subsectionmanager` ADD COLUMN `search` tinyint DEFAULT '1'"
+						"ALTER TABLE `tbl_fields_subsectionmanager` ADD COLUMN `show_search` tinyint DEFAULT '1'"
 					);
 				}
 				
