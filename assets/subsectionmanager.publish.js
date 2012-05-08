@@ -177,6 +177,11 @@
 				var textarea = $(this);
 				drop(textarea, item);
 			});
+			
+			// Stop dragging
+			manager.on('mouseup.subsectionmanager click.subsectionmanager', 'li', function(event) {
+				$(document).off('mousemove.subsectionmanager mouseup.subsectionmanager');
+			});
 								
 		/*-------------------------------------------------------------------------
 			Functions
