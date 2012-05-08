@@ -174,10 +174,10 @@
 					height;
 
 				// Simplify UI
-				contents.find('header h1, header ul, header nav, #context').remove();
+				contents.find('#header, #context').remove();
 				
 				// Set iframe height
-				height = contents.find('#contents').outerHeight();
+				height = contents.find('#wrapper').outerHeight();
 				iframe.height(height).animate({
 					opacity: 1,
 					visibility: 'visible'
