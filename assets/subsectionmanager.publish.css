@@ -29,7 +29,8 @@
 	transition: opacity .25s ease-in;
 }
 
-.field-subsectionmanager .frame iframe.loading {
+.field-subsectionmanager .frame iframe.loading,
+.field-subsectionmanager .frame iframe.deleting {
 	width: 100%;
 	opacity: 0.01;
 	visibility: hidden;

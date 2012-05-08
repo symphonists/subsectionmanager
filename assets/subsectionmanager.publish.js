@@ -167,7 +167,8 @@
 					iframe = item.find('iframe'),
 					subsection = iframe.contents(),
 					body = subsection.find('body').addClass('inline subsection'),
-					form = body.find('form').removeClass('columns');
+					form = body.find('form').removeClass('columns'),
+					init = true;
 
 				// Simplify UI
 				subsection.find('#header, #context').remove();
@@ -177,23 +178,37 @@
 					iframe.contents().find('input:visible, textarea').eq(0).val(searchfield.val());
 				}
 				
+				// Delete item 
+				if(iframe.is('.deleting')) {
+					init = false;
+					item.slideUp('fast', function() {
+						item.remove();
+						clear();
+					});
+				}
+				
 				// Update item
 				if(!iframe.is('.initialise')) {
 					update(item);
 				}
 				
-				// Resize iframe
-				subsection.find('#contents').on('resize.subsectionmanager', function(event, loading) {
+				// Resize item
+				subsection.find('#contents').on('resize.subsectionmanager', function(event) {
 					var height = subsection.find('#wrapper').outerHeight();
 
-					if(loading == true || (!iframe.is('.loading') && content.data('height') !== height && height !== 0)) {
+					if(init == true || (!iframe.is('.loading') && content.data('height') !== height && height !== 0)) {
 						resize(content, iframe, body, height);
 					}
-				}).trigger('resize.subsectionmanager', [true]);
+				}).trigger('resize.subsectionmanager');
 			
-				// Fetch saving
+				// Save item
 				subsection.find('div.actions input').on('click.subsectionmanager', function(event) {
 					iframe.addClass('loading');
+				});
+				
+				// Delete item
+				subsection.find('div.actions button').on('click.subsectionmanager', function(event) {
+					iframe.addClass('deleting');
 				});
 				
 				// Remove markers
