@@ -179,7 +179,7 @@
 				subsection.find('#contents').on('resize.subsectionmanager', function(event, loading) {
 					var height = subsection.find('#wrapper').outerHeight();
 
-					if(loading == true || (!iframe.is('.loading') && content.data('height') != height)) {
+					if(loading == true || (!iframe.is('.loading') && content.data('height') !== height && height !== 0)) {
 						resize(content, iframe, body, height);
 					}
 				}).trigger('resize.subsectionmanager', [true]);
@@ -187,12 +187,12 @@
 				// Fetch saving
 				subsection.find('div.actions input').on('click.subsectionmanager', function(event) {
 					iframe.addClass('loading');
+					clear();
 				});
 			};
 			
 			// Resize editor
 			var resize = function(content, iframe, body, height) {
-				console.log('resize');
 			
 				// Set iframe height
 				iframe.height(height).removeClass('loading');
