@@ -8,6 +8,7 @@
 /* Inline subsection */
 
 body.inline.subsection {
+	background: #323230;
 	overflow: hidden;
 }
 
@@ -36,14 +37,35 @@ body.inline.subsection label {
 	-webkit-font-smoothing: antialiased;
 }
 
-body.inline.subsection i {
+body.inline.subsection i,
+body.inline.subsection i:hover,
+body.inline.subsection ul.tags {
 	color: rgba(255, 255, 255, 0.4);
+	background: none;
+}
+
+body.inline.subsection i a:hover,
+body.inline.subsection ul.tags li:hover {
+	color: #fff;
 }
 
 body.inline.subsection #contents .actions {
 	margin: 0;
 	border-top-color: rgba(255, 255, 255, 0.15);
 	padding-bottom: 0;
+}
+
+body.inline.subsection #contents .frame,
+body.inline.subsection #contents .frame > ol {
+	box-shadow: none;
+}
+
+body.inline.subsection #contents .frame > ol > li {
+	border: none;
+}
+
+body.inline.subsection #contents .frame.dark .content {
+	background: #2d2d2b;
 }
 
 /* Tabbed subsection */
