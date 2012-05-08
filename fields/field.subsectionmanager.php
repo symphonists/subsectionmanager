@@ -233,7 +233,7 @@
 		/*-----------------------------------------------------------------------*/
 
 			// Behaviour
-			$fieldset = new XMLElement('fieldset', '<legend>' . __('Behaviour') . '</legend>');
+			$fieldset = new XMLElement('fieldset');
 			$div = new XMLElement('div', null, array('class' => 'three columns'));
 			
 			// Create
@@ -275,7 +275,7 @@
 		/*-----------------------------------------------------------------------*/
 
 			// Display
-			$fieldset = new XMLElement('fieldset', '<legend>' . __('Display') . '</legend>');
+			$fieldset = new XMLElement('fieldset');
 			$div = new XMLElement('div', null, array('class' => 'two columns'));
 
 			// Caption input
