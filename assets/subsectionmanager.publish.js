@@ -168,32 +168,23 @@
 			// Load single subsection entry
 			var load = function(iframe) {
 				var content = iframe.parent(),
-					contents = iframe.contents(),
-					body = contents.find('body').addClass('inline subsection'),
+					subsection = iframe.contents(),
+					body = subsection.find('body').addClass('inline subsection'),
 					form = body.find('form').removeClass('columns'),
 					height;
 
 				// Simplify UI
-				contents.find('#header, #context').remove();
+				subsection.find('#header, #context').remove();
 				
-				// Set iframe height
-				height = contents.find('#wrapper').outerHeight();
-				iframe.height(height).animate({
-					opacity: 1,
-					visibility: 'visible'
-				}, 'fast');
-				
-				// Set scroll position
-				body[0].scrollTop = 0;
-				
-				// Set content height
-				content.animate({
-					height: height
-				}, 'fast');
+				// Resize iframe
+				subsection.find('#contents').on('resize.subsectionmanager', function() {
+					if(!iframe.is('.saving')) {
+						resize(subsection, content, iframe, body);
+					}
+				}).trigger('resize.subsectionmanager');
 			
 				// Fetch saving
-				contents.find('div.actions input').on('click.subsectionmanager', function() {
-					console.log('save');
+				subsection.find('div.actions input').on('click.subsectionmanager', function() {
 					iframe.addClass('saving').animate({
 						opacity: 0.01
 					}, 'fast', function() {
@@ -202,6 +193,28 @@
 				});
 			};
 			
+			// Resize editor
+			var resize = function(subsection, content, iframe, body) {
+				var height = subsection.find('#wrapper').outerHeight();
+
+				if(content.data('height') != height) {
+			
+					// Set iframe height
+					iframe.height(height).animate({
+						opacity: 1,
+						visibility: 'visible'
+					}, 'fast');
+					
+					// Set scroll position
+					body[0].scrollTop = 0;
+					
+					// Set content height
+					content.data('height', height).animate({
+						height: height
+					}, 'fast');
+				}
+			};
+						
 			// List all subsection entries
 			var list = function() {
 				$.ajax({
@@ -341,68 +354,15 @@
 			selection.find('li').trigger('collapse.collapsible', [0]);
 		});
 		
+	});
+	
+})(jQuery.noConflict());		
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		// OLD CODE
-		$('div.field-subsectionmanagerOLD').each(function() {
-			var manager = $(this),
-				stage = manager.find('div.stage'),
-				selection = stage.find('ul.selection'),
-				queue = stage.find('div.queue'),
-				queue_loaded = false,
-				drawer = $('<div class="drawer"><iframe name="subsection-' + manager.attr('data-subsection-id') + '" src="about:blank" frameborder="0"></iframe></div>'),
-				manager_id = manager.attr('data-field-id'),
-				manager_name = manager.attr('data-field-name'),
-				subsection = manager.attr('data-subsection-id'),
-				subsection_link = manager.attr('data-subsection-new'),
-				dragger = $('div.dragger'),
-				empty = $('<li class="message"><span>' + Symphony.Language.get('There are currently no items available. Perhaps you want create one first?') + '</li>'),
-				textarea = $('textarea');
-
-		/*-----------------------------------------------------------------------*/
-
-			// Constructing
-			stage.bind('constructstop', function(event, item) {
-
-				// Set name
-				item.find('input:hidden').attr('name', manager_name + '[]');
-
-				// New item
-				if(item.is('.new')) {
-					create(item);
-				}
-			});
-
-			// Destructing
-			stage.bind('destructstart', function(event, item) {
-
-				// Hide drawer
-				item.find('div.drawer').slideUp('fast', function() {
-					$(this).remove();
-				});
-			});
-
+/*
 			// Queuing
 			stage.delegate('li.preview a.file', 'click', function() {
 
@@ -453,16 +413,6 @@
 				// Update item
 				update(id, item, iframe);
 			});
-			
-			// Naming
-			stage.bind('update', function(event) {
-				selection.find('input:hidden').attr('name', manager_name + '[]');
-			});
-
-			// Searching
-			stage.bind('browsestart', function(event) {
-				browse();
-			});
 
 			// Deleting
 			stage.bind('erase', function(event, item) {
@@ -492,7 +442,6 @@
 				}
 			});
 
-		/*-----------------------------------------------------------------------*/
 
 			// Load subsection
 			var load = function(item, editor, iframe) {
@@ -617,88 +566,6 @@
 				}
 			};
 
-			// Browse queue
-			var browse = function(async) {
-				var list = queue.find('ul');
-
-				// Append queue if it's not present yet
-				if(queue_loaded == false && !list.is('.loading')) {
-					list.addClass('loading');
-
-					// Get queue items
-					$.ajax({
-						async: (async == true ? true : false),
-						type: 'GET',
-						dataType: 'html',
-						url: Symphony.Context.get('root') + '/symphony/extension/subsectionmanager/get/',
-						data: {
-							id: manager_id,
-							section: subsection
-						},
-						success: function(result) {
-
-							// Empty queue
-							if(!result) {
-								empty.clone().appendTo(list);
-							}
-
-							// Append queue items
-							else {
-								$(result).appendTo(list);
-
-								// Highlight selected items
-								stage.trigger('update');
-							}
-
-							// Save status
-							list.removeClass('loading');
-							queue_loaded = true;
-						}
-					});
-				}
-			};
-
-			// Create item
-			var create = function(item) {
-				stage.trigger('createstart', [item]);
-
-				var editor = drawer.clone().hide().animate({
-					height: 50
-				});
-				
-				// Prepare iframe
-				editor.find('iframe').css({
-					opacity: 0.01,
-					height: 0
-				}).attr('src', subsection_link + '/new/').load(function() {
-					iframe = $(this);
-					load(item, editor, iframe);
-				});
-
-				// Show subsection editor
-				editor.appendTo(item).slideDown('fast');
-
-				stage.trigger('createstop', [item]);
-			};
-
-			// Edit item
-			var edit = function(item) {
-				stage.trigger('editstart', [item]);
-
-				var editor = drawer.clone().hide();
-
-				// Prepare iframe
-				editor.find('iframe').css('opacity', '0.01').attr('src', subsection_link + '/edit/' + item.attr('data-value') + '/').load(function() {
-					iframe = $(this);
-					load(item, editor, iframe);
-				});
-
-				// Show subsection editor
-				editor.appendTo(item).slideDown('fast');
-
-				stage.trigger('editstop', [item]);
-			};
-
 			// Update item
 			var update = function(id, item, iframe) {
 				item.addClass('updating');
@@ -801,17 +668,4 @@
 				target[0].selectionEnd = start + text.length;
 			};
 
-		/*-----------------------------------------------------------------------*/
-
-			// Preload queue items
-			if(stage.is('.searchable')) {
-				browse(true);
-			}
-
-			// Name existing items
-			stage.trigger('update');
-		});
-
-	});
-
-})(jQuery.noConflict());
+*/
