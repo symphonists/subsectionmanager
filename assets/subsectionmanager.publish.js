@@ -97,13 +97,23 @@
 			
 			// Toggle search
 			manager.on('focus.subsectionmanager', '.browser input', function toggleSearch(event) {
+
+				// Check if browser should open upwards or downwards
+				if($(window).height() - browser.offset().top < 240) {
+					browser.removeClass('downwards').addClass('upwards');
+				}
+				else {
+					browser.removeClass('upwards').addClass('downwards');
+				}
+
+				// Open browser
 				browser.addClass('opened');
-				sync();
-				
-				// Get existing items
 				if(existing.children().length == 0) {
 					list();
 				}			
+
+				// Sync selection with list of existing items
+				sync();
 			});
 			
 			manager.on('blur.subsectionmanager', '.browser input', function toggleSearch(event) {

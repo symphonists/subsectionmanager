@@ -48,6 +48,10 @@
 	border-radius: 2px 2px 0 0;
 }
 
+.field-subsectionmanager .browser.upwards.opened input {
+	border-radius: 0 0 2px 2px;
+}
+
 .field-subsectionmanager .browser > span {
 	position: absolute;
 	top: 3px;
@@ -70,6 +74,15 @@
 	z-index: 10000;
 	max-height: 240px;
 	overflow: auto;
+}
+
+.field-subsectionmanager .browser.upwards ol {
+	top: auto;
+	bottom: 22px;
+	border-radius: 4px 4px 0 0;
+	box-shadow: 0 -5px 12px rgba(0, 0, 0, 0.2);
+	border: 1px solid #c0c0c0;
+	border-bottom: none;
 }
 
 .field-subsectionmanager .browser ol.empty {
@@ -131,8 +144,19 @@
 	background: #f5f5f5;
 }
 
+.field-subsectionmanager .browser li:first-child {
+	border-top: none;
+}
+
 .field-subsectionmanager .browser li:last-child {
 	border-bottom: none;
+}
+
+.field-subsectionmanager .browser.upwards li:first-child {
+	border-radius: 4px 4px 0 0;
+}
+
+.field-subsectionmanager .browser.downwards li:last-child {
 	border-radius: 0 0 4px 4px;
 }
 
