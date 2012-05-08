@@ -60,7 +60,8 @@
 			
 			// Add existing item
 			manager.on('click.subsectionmanager', '.browser li:not(.selected)', function addItem(event) {
-				var item = $(this).clone();
+				var item = $(this).clone(),
+					height, header, top;
 					
 				// Hide browser
 				browser.removeClass('opened');
@@ -71,9 +72,21 @@
 				// Add item
 				item.trigger('constructstart.duplicator');
 				duplicator.removeClass('empty');
-				item.hide().appendTo(selection);
-				item.trigger('collapse.collapsible', [0]);
-				item.slideDown('fast', function() {
+				item.find('.content').hide();
+				item.hide().addClass('collapsed').appendTo(selection);
+				
+				// Prepare animation
+				height = item.height();
+				header = item.find('header');
+				top = header.css('padding-top');				
+			
+				// Reveal item
+				header.css('padding-top', 0).animate({
+					paddingTop: top
+				}, 'fast');
+				item.css('height', 0).show().animate({
+					height: height
+				}, 'fast', function() {
 					item.trigger('constructstop.duplicator');
 				});
 			});
