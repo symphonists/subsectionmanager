@@ -426,19 +426,6 @@
 					}
 
 				});
-
-				// Stop dragging
-				$(document).off('mouseup.subsectionmanager').one('mouseup.subsectionmanager', function(event) {
-
-					// Remove helpers
-					dropper.fadeOut('fast');
-					dragger.fadeOut('fast');
-					$(document).off('mousemove.subsectionmanager');
-
-					// Drop content
-					textareas.trigger('drop.subsectionmanager', [item]);
-					selection.removeClass('dragging');
-				});
 			};
 
 			// Drag items
@@ -463,11 +450,28 @@
 				// Show drag helper
 				if(x < area.left || x > area.right || y < area.top || y > area.bottom) {
 					dragger.fadeIn('fast');
+	
+					// Stop dragging
+					$(document).off('mouseup.subsectionmanager').one('mouseup.subsectionmanager', function(event) {
+						console.log('up');
+	
+						// Remove helpers
+						dropper.fadeOut('fast');
+						dragger.fadeOut('fast');
+						$(document).off('mousemove.subsectionmanager');
+	
+						// Drop content
+						textareas.trigger('drop.subsectionmanager', [item]);
+						selection.removeClass('dragging');
+					});
 				}
 
 				// Hide drag helper
 				else {
 					dragger.fadeOut('fast');
+		
+					// Stop dragging
+					$(document).off('mouseup.subsectionmanager')
 				}
 			};
 
