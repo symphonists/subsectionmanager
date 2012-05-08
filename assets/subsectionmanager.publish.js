@@ -31,7 +31,11 @@
 				manager_name = manager.attr('data-field-name'),
 				subsection_id = manager.attr('data-subsection-id'),
 				subsection_link = manager.attr('data-subsection-new'),
-				controls, browser, searchfield, counter, existing, controlsWidth;
+				dragger = $('<div class="dragger"></div>'),
+				dropper = $('<div class="dropper"></div>'),
+				textareas = $('textarea'),
+				controls, browser, searchfield, counter, existing,
+				controlsWidth;
 				
 		/*-------------------------------------------------------------------------
 			Events
@@ -156,7 +160,24 @@
 					counter.hide();
 				}
 			});
+			
+			// Drag items
+			manager.on('mousedown.subsectionmanager', 'li > header', function(event) {
+				var item = $(event.target).parent('li');
 				
+				// Don't highlight text
+				event.preventDefault();
+				event.stopPropagation();
+				
+				move(item, event);
+			});
+			
+			// Drop items
+			textareas.off('drop.subsectionmanager').on('drop.subsectionmanager', function(event, item) {
+				var textarea = $(this);
+				drop(textarea, item);
+			});
+								
 		/*-------------------------------------------------------------------------
 			Functions
 		-------------------------------------------------------------------------*/
@@ -194,13 +215,13 @@
 				}
 				
 				// Resize item
-				subsection.find('#contents').on('resize.subsectionmanager', function(event) {
+				subsection.find('#contents').on('resize.subsectionmanager', function(event, init) {
 					var height = subsection.find('#wrapper').outerHeight();
 
 					if(init == true || (!iframe.is('.loading') && content.data('height') !== height && height !== 0)) {
 						resize(content, iframe, body, height);
 					}
-				}).trigger('resize.subsectionmanager');
+				}).trigger('resize.subsectionmanager', [init]);
 			
 				// Save item
 				subsection.find('div.actions input').on('click.subsectionmanager', function(event) {
@@ -239,10 +260,10 @@
 							
 							// Update header						
 							item.find('> header').replaceWith(header);
+							addDestructor(item);
 		
 							// Set id for new items
 							if(item.attr('data-value') == undefined) {
-								addDestructor(item);
 								item.append(id).attr('data-value', id.val()).trigger('update.subsectionmanager');
 							}
 	
@@ -382,78 +403,91 @@
 			var addDestructor = function(item) {
 				item.find('header').append('<a class="destructor">' + Symphony.Language.get('Remove item') + '</a>');
 			};
-							
-		/*-------------------------------------------------------------------------
-			Initialisation
-		-------------------------------------------------------------------------*/
-				
-			// Initialise Duplicators
-			duplicator.symphonyDuplicator({
-				headers: 'header',
-				collapsible: true,
-				save_state: false
-			});
-			
-			// Create search
-			// @todo: Check if manager is searchable
-			controls = manager.find('fieldset.apply');
-			browser = $('<div class="browser" />').insertAfter(duplicator);
-			var searchfield = $('<input />', {
-				type: 'text',
-				placeholder: Symphony.Language.get('Search existing items') + ' …'
-			}).appendTo(browser);
-			counter = $('<span />').hide().appendTo(browser);
-			existing = $('<ol class="empty" />').appendTo(browser);
-			
-			// Adjust to button width
-			if(controls.length > 0) {
-				browser.css('margin-right', controls.find('button').outerWidth() + 10);
-			}
-			
-			// Close existing items, if no states are stored
-			selection.find('li').trigger('collapse.collapsible', [0]);
-		});
-		
-	});
-	
-})(jQuery.noConflict());		
 
+			// Drag and drop items
+			var move = function(item, event) {
+				selection.addClass('dragging');
+				dragger.empty().append(item.html()).attr('data-value', item.attr('data-value')).find('.destructor').remove();
 
+				// Dragging
+				$(document).on('mousemove.subsectionmanager', function(event) {
+					var target = $(event.target);
 
+					// Drag item
+					drag(item, event);
 
+					// Highlight drop target
+					if(target.is('textarea')) {
+						hover(target);
+					}
+					else if(!target.is('.dropper') && !target.is('.dragger') && target.parent('.dragger').size() == 0) {
+						textareas.removeClass('droptarget');
+						dropper.fadeOut('fast');
+					}
 
-/*
-			// Deleting
-			stage.bind('erase', function(event, item) {
-				erase(item);
-			});
+				});
 
-			// Dragging
-			selection.delegate('.handle', 'mousedown.stage', function(event) {
-				var handle = $(this);
+				// Stop dragging
+				$(document).off('mouseup.subsectionmanager').one('mouseup.subsectionmanager', function(event) {
 
-				// Set class
-				if(handle.parents('li').hasClass('preview')) {
-					dragger.addClass('preview');
+					// Remove helpers
+					dropper.fadeOut('fast');
+					dragger.fadeOut('fast');
+					$(document).off('mousemove.subsectionmanager');
+
+					// Drop content
+					textareas.trigger('drop.subsectionmanager', [item]);
+					selection.removeClass('dragging');
+				});
+			};
+
+			// Drag items
+			var drag = function(item, event) {
+				var offset = selection.offset(),
+					area = {
+						top: offset.top - 10,
+						left: offset.left - 10,
+						bottom: offset.top + selection.height() + 10,
+						right: offset.left + selection.width() + 10
+					},
+					x = event.pageX,
+					y = event.pageY;
+
+				// Move drag helper
+				dragger.css({
+					position: 'absolute',
+					top: y - 15,
+					left: x + 15
+				});
+
+				// Show drag helper
+				if(x < area.left || x > area.right || y < area.top || y > area.bottom) {
+					dragger.fadeIn('fast');
 				}
+
+				// Hide drag helper
 				else {
-					dragger.removeClass('preview');
+					dragger.fadeOut('fast');
 				}
-			});
+			};
 
-			// Dropping
-			textarea.unbind('drop.stage').bind('drop.stage', function(event, item) {
-				var target = $(this);
+			// Hover over textarea
+			var hover = function(textarea) {
+				var offset = textarea.offset();
 
-				// Insert text
-				if(target.is('.droptarget')) {
-					drop(target, item);
-				}
-			});
+				// Show drop helper
+				textarea.addClass('droptarget');
+				dropper.css({
+					width: textarea.outerWidth(),
+					height: textarea.outerHeight(),
+					top: offset.top - 4,
+					left: offset.left - 4
+				}).fadeIn('fast');
+			}
 
 			// Dropping items
-			var drop = function(target, item) {
-				var formatter = target.attr('class').match(/(?:markdown)|(?:textile)/) || ['html'],
+			var drop = function(textarea, item) {
+				var formatter = textarea.attr('class').match(/(?:markdown)|(?:textile)/) || ['html'],
 					syntax = {
 						markdown: {
 							image: '![{@text}]({@path})',
@@ -500,12 +534,62 @@
 				}
 
 				// Replace text
-				var start = target[0].selectionStart || 0;
-				var end = target[0].selectionEnd || 0;
-				var original = target.val();
-				target.val(original.substring(0, start) + text + original.substring(end, original.length));
-				target[0].selectionStart = start + text.length;
-				target[0].selectionEnd = start + text.length;
+				var start = textarea[0].selectionStart || 0;
+				var end = textarea[0].selectionEnd || 0;
+				var original = textarea.val();
+				textarea.val(original.substring(0, start) + text + original.substring(end, original.length));
+				textarea[0].selectionStart = start + text.length;
+				textarea[0].selectionEnd = start + text.length;
 			};
+							
+		/*-------------------------------------------------------------------------
+			Initialisation
+		-------------------------------------------------------------------------*/
+				
+			// Initialise Duplicators
+			duplicator.symphonyDuplicator({
+				headers: 'header',
+				collapsible: true,
+				save_state: false
+			});
+			
+			// Create search
+			// @todo: Check if manager is searchable
+			controls = manager.find('fieldset.apply');
+			browser = $('<div class="browser" />').insertAfter(duplicator);
+			var searchfield = $('<input />', {
+				type: 'text',
+				placeholder: Symphony.Language.get('Search existing items') + ' …'
+			}).appendTo(browser);
+			counter = $('<span />').hide().appendTo(browser);
+			existing = $('<ol class="empty" />').appendTo(browser);
+			
+			// Adjust to button width
+			if(controls.length > 0) {
+				browser.css('margin-right', controls.find('button').outerWidth() + 10);
+			}
+			
+			// Close existing items, if no states are stored
+			selection.find('li').trigger('collapse.collapsible', [0]);
 
-*/
+			// Add drag helper
+			var body = $('body');
+			if(body.find('div.dragger').length == 0) {
+				body.append(dragger.hide());
+			}
+			else {
+				dragger = body.find('div.dragger');
+			}
+
+			// Add drop helper
+			if(body.find('div.dropper').length == 0) {
+				body.append(dropper.hide());
+			}
+			else {
+				dropper = body.find('div.dropper');
+			}
+		});
+		
+	});
+	
+})(jQuery.noConflict());		
