@@ -379,7 +379,6 @@
 					`filter_tags` text,
 					`caption` text,
 					`droptext` text,
-					`included_fields` text,
 					`create` tinyint(1) default '1',
 					`remove` tinyint(1) default '1',
 					`allow_multiple` tinyint(1) default '1',
@@ -583,6 +582,13 @@
 
 			if(version_compare($previousVersion, '3.0', '<')) {
 			
+				// Remove included fields setting
+				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'included_fields'") == false) {
+					$status[] = Symphony::Database()->query(
+						"ALTER TABLE `tbl_fields_subsectionmanager` DROP `included_fields`"
+					);
+				}
+				
 				// Add create setting
 				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'create'") == false) {
 					$status[] = Symphony::Database()->query(
