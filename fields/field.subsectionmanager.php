@@ -555,7 +555,30 @@
 			$content = $subsection->generate($this->get('id'), $this->get('subsection_id'), $data, $this->get('recursion_levels'), SubsectionManager::GETHTML);
 
 			// Create interface
-			$duplicator = new XMLElement('div', null, array('class' => 'dark frame' . ($this->get('show_preview') == 1 ? ' preview' : '') . ($this->get('allow_multiple') == 1 ? ' multiple' : ' single') . ($this->get('lock') == 1 ? ' locked' : '')));
+			$settings = array('dark', 'frame');
+			if($this->get('create') == 1) {
+				$settings[] = 'constructable';
+			}
+			if($this->get('remove') == 1) {
+				$settings[] = 'destructable';
+			}
+			if($this->get('allow_multiple') == 1) {
+				$settings[] = 'multiple';
+			}
+			if($this->get('edit') == 1) {
+				$settings[] = 'editable';
+			}
+			if($this->get('sort') == 1) {
+				$settings[] = 'sortable';
+			}
+			if($this->get('drop') == 1) {
+				$settings[] = 'droppable';
+			}
+			if($this->get('show_search') == 1) {
+				$settings[] = 'searchable';
+			}
+			
+			$duplicator = new XMLElement('div', null, array('class' => implode(' ', $settings)));
 			$selected = new XMLElement('ol', $content['html']);
 			$duplicator->appendChild($selected);
 

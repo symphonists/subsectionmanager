@@ -34,7 +34,8 @@
 				dragger = $('<div class="dragger"></div>'),
 				dropper = $('<div class="dropper"></div>'),
 				textareas = $('textarea'),
-				controls, browser, searchfield, counter, existing,
+				searchfield = $('<input type="text" />'),
+				controls, browser, counter, existing,
 				controlsWidth;
 				
 		/*-------------------------------------------------------------------------
@@ -202,8 +203,15 @@
 				
 				// Pre-populate first input with browser content
 				if(iframe.is('.new') && searchfield.val() != '') {
-					iframe.contents().find('input:visible, textarea').eq(0).val(searchfield.val());
+					subsection.find('input:visible, textarea').eq(0).val(searchfield.val());
 				}
+				
+				// Lock item
+				if(!duplicator.is('.editable') && !item.is('.new')) {
+					subsection.find('input:visible, textarea').attr('readonly', 'readonly');
+					subsection.find('select').attr('disabled', 'disabled');
+					subsection.find('div.actions, .field-upload .frame em').remove();
+				}	
 				
 				// Delete item 
 				if(iframe.is('.deleting')) {
@@ -406,7 +414,9 @@
 			
 			// Add destructor
 			var addDestructor = function(item) {
-				item.find('header').append('<a class="destructor">' + Symphony.Language.get('Remove item') + '</a>');
+				if(duplicator.is('.destructable')) {
+					item.find('header').append('<a class="destructor">' + Symphony.Language.get('Remove item') + '</a>');
+				}
 			};
 
 			// Drag and drop items
@@ -458,8 +468,7 @@
 	
 					// Stop dragging
 					$(document).off('mouseup.subsectionmanager').one('mouseup.subsectionmanager', function(event) {
-						console.log('up');
-	
+
 						// Remove helpers
 						dropper.fadeOut('fast');
 						dragger.fadeOut('fast');
@@ -558,44 +567,55 @@
 			// Initialise Duplicators
 			duplicator.symphonyDuplicator({
 				headers: 'header',
+				constructable: duplicator.is('.constructable'),
+				destructable: duplicator.is('.destructable'),
 				collapsible: true,
+				orderable: duplicator.is('.sortable'),
+				maximum: (duplicator.is('.multiple') ? 1000 : 1),
 				save_state: false
 			});
 			
-			// Create search
-			// @todo: Check if manager is searchable
-			controls = manager.find('fieldset.apply');
-			browser = $('<div class="browser" />').insertAfter(duplicator);
-			var searchfield = $('<input />', {
-				type: 'text',
-				placeholder: Symphony.Language.get('Search existing items') + ' …'
-			}).appendTo(browser);
-			counter = $('<span />').hide().appendTo(browser);
-			existing = $('<ol class="empty" />').appendTo(browser);
+			// Remove templates
+			if(!duplicator.is('.constructable')) {
+				duplicator.find('li.template').remove();
+			}
 			
-			// Adjust to button width
-			if(controls.length > 0) {
-				browser.css('margin-right', controls.find('button').outerWidth() + 10);
+			// Enable searching
+			if(duplicator.is('.searchable')) {
+				controls = manager.find('fieldset.apply');
+				browser = $('<div class="browser" />').insertAfter(duplicator);
+				searchfield.attr('placeholder', Symphony.Language.get('Search existing items') + ' …').appendTo(browser);
+				counter = $('<span />').hide().appendTo(browser);
+				existing = $('<ol class="empty" />').appendTo(browser);
+				
+				// Adjust to button width
+				if(controls.length > 0) {
+					browser.css('margin-right', controls.find('button').outerWidth() + 10);
+				}
 			}
 			
 			// Close existing items, if no states are stored
 			selection.find('li').trigger('collapse.collapsible', [0]);
-
-			// Add drag helper
-			var body = $('body');
-			if(body.find('div.dragger').length == 0) {
-				body.append(dragger.hide());
-			}
-			else {
-				dragger = body.find('div.dragger');
-			}
-
-			// Add drop helper
-			if(body.find('div.dropper').length == 0) {
-				body.append(dropper.hide());
-			}
-			else {
-				dropper = body.find('div.dropper');
+			
+			// Enable dropping
+			if(duplicator.is('.droppable')) {
+				var body = $('body');
+				
+				// Add drag helper
+				if(body.find('div.dragger').length == 0) {
+					body.append(dragger.hide());
+				}
+				else {
+					dragger = body.find('div.dragger');
+				}
+	
+				// Add drop helper
+				if(body.find('div.dropper').length == 0) {
+					body.append(dropper.hide());
+				}
+				else {
+					dropper = body.find('div.dropper');
+				}
 			}
 		});
 		

@@ -155,10 +155,11 @@ div.dragger strong.file {
 	background: #fff;
 	text-transform: uppercase;
 	font-weight: normal;
-	letter-spacing: 0.05em;
+	letter-spacing: 0.1em;
 	text-align: center;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
+	overflow: hidden;
 }
 
 .field-subsectionmanager li em,
