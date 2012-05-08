@@ -5,6 +5,6 @@
  * @source: http://github.com/nilshoerrmann/subsectionmanager
  */
 
-label.disabled {
-	color: #887;
+.column ul.tags {
+	margin-bottom: 0;
 }

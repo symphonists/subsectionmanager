@@ -12,7 +12,7 @@
 
 	Class fieldSubsectionmanager extends Field {
 
-		static $sortOrder = NULL;
+		static $sortOrder = null;
 
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#__construct
@@ -75,9 +75,9 @@
 		function createTable(){
 			return Symphony::Database()->query(
 				"CREATE TABLE IF NOT EXISTS `tbl_entries_data_" . $this->get('id') . "` (
-				  `id` int(11) unsigned NOT NULL auto_increment,
-				  `entry_id` int(11) unsigned NOT NULL,
-				  `relation_id` int(11) unsigned DEFAULT NULL,
+				  `id` int(11) unsigned NOT null auto_increment,
+				  `entry_id` int(11) unsigned NOT null,
+				  `relation_id` int(11) unsigned DEFAULT null,
 				  PRIMARY KEY (`id`),
 				  KEY `entry_id` (`entry_id`),
 				  KEY `relation_id` (`relation_id`)
@@ -122,19 +122,21 @@
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#displaySettingsPanel
 		 */
-		function displaySettingsPanel(&$wrapper, $errors=NULL) {
+		function displaySettingsPanel(&$wrapper, $errors=null) {
 
 			// Basics
 			parent::displaySettingsPanel($wrapper, $errors);
 
 		/*-----------------------------------------------------------------------*/
+		
+			$div = new XMLElement('div', null, array('class' => 'two columns'));
 
 			// Get current section id
 			$section_id = Symphony::Engine()->Page->_context[1];
 
 			// Related section
-			$label = new XMLElement('label', __('Subsection'));
-			$sections = SectionManager::fetch(NULL, 'ASC', 'name');
+			$label = new XMLElement('label', __('Subsection'), array('class' => 'column'));
+			$sections = SectionManager::fetch(null, 'ASC', 'name');
 			$options = array(
 				array('', false, __('None Selected')),
 			);
@@ -145,11 +147,25 @@
 			}
 			$label->appendChild(Widget::Select('fields[' . $this->get('sortorder') . '][subsection_id]', $options, array('class' => 'subsectionmanager')));
 			if(isset($errors['subsection_id'])) {
-				$wrapper->appendChild(Widget::wrapFormElementWithError($label, $errors['subsection_id']));
+				$div->appendChild(Widget::Error($label, $errors['subsection_id']));
 			}
 			else {
-				$wrapper->appendChild($label);
+				$div->appendChild($label);
 			}
+
+			// Recursion levels
+			$label = new XMLElement('label', null, array('class' => 'column'));
+			$recursion_levels = $this->get('recursion_levels');
+			$select = Widget::Select('fields[' . $this->get('sortorder') . '][recursion_levels]', array(
+				array('0', ($recursion_levels == 0), __('Exclude from XML output')),
+				array('1', ($recursion_levels == 1), __('Include 1 child level in XML output')),
+				array('2', ($recursion_levels == 2), __('Include 2 child levels in XML output')),
+				array('3', ($recursion_levels == 3), __('Include 3 child levels in XML output')),
+			));
+			$label->setValue(__('Nested subsections %s', array($select->generate())));
+			$div->appendChild($label);
+			
+			$wrapper->appendChild($div);
 
 		/*-----------------------------------------------------------------------*/
 
@@ -205,7 +221,7 @@
 
 				// Generate list
 				if(!empty($values)) {
-					$filter = new XMLElement('ul', NULL, array('class' => 'tags negation subsectionmanager'));
+					$filter = new XMLElement('ul', null, array('class' => 'tags negation subsectionmanager'));
 					foreach($values as $handle => $fields) {
 						$filter->appendChild(new XMLElement('li', $handle, array('rel' => implode(' ', $fields))));
 					}
@@ -217,39 +233,50 @@
 		/*-----------------------------------------------------------------------*/
 
 			// Behaviour
-//			$fieldset = Stage::displaySettings(
-//				$this->get('id'),
-//				$this->get('sortorder'),
-//				__('Behaviour')
-//			);
-
-			// Handle missing settings
-			if(!$this->get('id') && $errors == NULL) {
-				$this->set('allow_multiple', 1);
-				$this->set('show_preview', 1);
-				$this->set('recursion_levels', 1);
-			}
-
-			// Get settings
-//			$div = $fieldset->getChildren();
-
-			// Setting: allow multiple
-			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][allow_multiple]" value="1" type="checkbox"' . ($this->get('allow_multiple') == 0 ? '' : ' checked="checked"') . '/> ' . __('Allow selection of multiple items') . ' <i>' . __('This will switch between single and multiple item lists') . '</i>');
-//			$div[0]->appendChild($setting);
-
-			// Setting: disallow editing
-			$setting = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][lock]" value="1" type="checkbox"' . ($this->get('lock') == 0 ? '' : ' checked="checked"') . '/> ' . __('Disallow item editing') . ' <i>' . __('This will lock items and disable the inline editor') . '</i>');
-//			$div[0]->appendChild($setting);
+			$fieldset = new XMLElement('fieldset', '<legend>' . __('Behaviour') . '</legend>');
+			$div = new XMLElement('div', null, array('class' => 'three columns'));
+			
+			// Create
+			$label = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][create]" value="1" type="checkbox"' . ($this->get('create') == 0 ? '' : ' checked="checked"') . '/> ' . __('Allow creation of new items'), array('class' => 'column'));
+			$div->appendChild($label);
+			
+			// Remove
+			$label = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][remove]" value="1" type="checkbox"' . ($this->get('remove') == 0 ? '' : ' checked="checked"') . '/> ' . __('Allow removal of existing items'), array('class' => 'column'));
+			$div->appendChild($label);
+			
+			// Multiple
+			$label = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][allow_multiple]" value="1" type="checkbox"' . ($this->get('allow_multiple') == 0 ? '' : ' checked="checked"') . '/> ' . __('Allow multiple items'), array('class' => 'column'));
+			$div->appendChild($label);
+			
+			// Edit
+			$label = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][edit]" value="1" type="checkbox"' . ($this->get('edit') == 0 ? '' : ' checked="checked"') . '/> ' . __('Enable editing'), array('class' => 'column'));
+			$div->appendChild($label);
+			
+			// Sort
+			$label = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][sort]" value="1" type="checkbox"' . ($this->get('sort') == 0 ? '' : ' checked="checked"') . '/> ' . __('Enable sorting'), array('class' => 'column'));
+			$div->appendChild($label);
+			
+			// Drop
+			$label = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][drop]" value="1" type="checkbox"' . ($this->get('drop') == 0 ? '' : ' checked="checked"') . '/> ' . __('Enable dropping'), array('class' => 'column'));
+			$div->appendChild($label);
+			
+			// Search
+			$label = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][show_search]" value="1" type="checkbox"' . ($this->get('show_search') == 0 ? '' : ' checked="checked"') . '/> ' . __('Show search'), array('class' => 'column'));
+			$div->appendChild($label);
+			
+			// Search
+			$label = new XMLElement('label', '<input name="fields[' . $this->get('sortorder') . '][show_preview]" value="1" type="checkbox"' . ($this->get('show_preview') == 0 ? '' : ' checked="checked"') . '/> ' . __('Show image and file previews'), array('class' => 'column'));
+			$div->appendChild($label);
 
 			// Append behaviour settings
-//			$wrapper->appendChild($fieldset);
+			$fieldset->appendChild($div);
+			$wrapper->appendChild($fieldset);
 
 		/*-----------------------------------------------------------------------*/
 
 			// Display
 			$fieldset = new XMLElement('fieldset', '<legend>' . __('Display') . '</legend>');
-
-			$div = new XMLElement('div', NULL, array('class' => 'group'));
+			$div = new XMLElement('div', null, array('class' => 'two columns'));
 
 			// Caption input
 			$div->appendChild($this->__groupContentGenerator('caption', __('Caption'), $sections, $errors));
@@ -258,54 +285,27 @@
 			$div->appendChild($this->__groupContentGenerator('droptext', __('Drop text'), $sections, $errors));
 
 			$fieldset->appendChild($div);
-
-			// Preview options
-			$label = new XMLElement('label');
-			$input = Widget::Input('fields[' . $this->get('sortorder') . '][show_preview]', NULL, 'checkbox');
-			if($this->get('show_preview') != 0) {
-				$input->setAttribute('checked', 'checked');
-			}
-			$label->setValue(__('%s Show thumbnail images', array($input->generate())));
-			$fieldset->appendChild($label);
-			$wrapper->appendChild($fieldset);
-
-		/*-----------------------------------------------------------------------*/
-
-			// XML Output
-			$fieldset = new XMLElement('fieldset', '<legend>' . __('XML Output') . '</legend>');
-
-			// Recursion levels
-			$label = new XMLElement('label');
-			$recursion_levels = $this->get('recursion_levels');
-			$select = Widget::Select('fields[' . $this->get('sortorder') . '][recursion_levels]', array(
-				array('0', ($recursion_levels == 0), __('Ignore')),
-				array('1', ($recursion_levels == 1), __('Output 1 level down')),
-				array('2', ($recursion_levels == 2), __('Output 2 levels down')),
-				array('3', ($recursion_levels == 3), __('Output 3 levels down')),
-			));
-			$label->setValue(__('Nested subsections %s', array($select->generate())));
-			$fieldset->appendChild($label);
-
 			$wrapper->appendChild($fieldset);
 
 		/*-----------------------------------------------------------------------*/
 
 			// General
-			$fieldset = new XMLElement('fieldset', '<legend>' . __('General') . '</legend>');
-			$this->appendShowColumnCheckbox($fieldset);
-			$this->appendRequiredCheckbox($fieldset);
+			$fieldset = new XMLElement('fieldset');
+			$div = new XMLElement('div', null, array('class' => 'two columns'));
+			$this->appendShowColumnCheckbox($div);
+			$this->appendRequiredCheckbox($div);
+			$fieldset->appendChild($div);
 			$wrapper->appendChild($fieldset);
 
 			// Compatibility with 1.x
 			$wrapper->appendChild(Widget::Input('fields[' . $this->get('sortorder') . '][included_fields]', $this->get('included_fields'), 'hidden'));
-
 		}
 
 		/**
-		 *
+		 * Create caption and droptext settings
 		 */
 		private function __groupContentGenerator($name, $title, $sections, $errors) {
-			$container = new XMLElement('div');
+			$container = new XMLElement('div', null, array('class' => 'column'));
 			$label = new XMLElement('label', $title);
 			$label->appendChild(Widget::Input('fields[' . $this->get('sortorder') . '][' . $name . ']', htmlspecialchars($this->get($name))));
 
@@ -340,7 +340,7 @@
 
 				// Generate list
 				if(is_array($values)) {
-					$filter = new XMLElement('ul', NULL, array('class' => 'tags inline'));
+					$filter = new XMLElement('ul', null, array('class' => 'tags inline'));
 					foreach($values as $handle => $fields) {
 						$filter->appendChild(new XMLElement('li', '{$' . $handle . '}', array('rel' => implode(' ', $fields))));
 					}
@@ -401,12 +401,17 @@
 			$fields = array();
 			$fields['field_id'] = $id;
 			$fields['subsection_id'] = $this->get('subsection_id');
+			
+			$fields['create'] = ($this->get('create') ? 1 : 0);
+			$fields['remove'] = ($this->get('remove') ? 1 : 0);
 			$fields['allow_multiple'] = ($this->get('allow_multiple') ? 1 : 0);
-			$fields['show_preview'] = ($this->get('show_preview') ? 1 : 0);
-			$fields['lock'] = ($this->get('lock') ? 1 : 0);
 
-			// Save new stage settings for this field
-			//Stage::saveSettings($this->get('id'), $this->get('stage'), 'subsectionmanager');
+			$fields['edit'] = ($this->get('edit') ? 1 : 0);
+			$fields['sort'] = ($this->get('sort') ? 1 : 0);
+			$fields['drop'] = ($this->get('drop') ? 1 : 0);
+			
+			$fields['show_search'] = ($this->get('show_search') ? 1 : 0);
+			$fields['show_preview'] = ($this->get('show_preview') ? 1 : 0);
 
 			// Clean up filter values
 			if($this->get('filter_tags') != '') {
@@ -458,13 +463,7 @@
 
 			// XML Output
 			$fields['recursion_levels'] = intval($this->get('recursion_levels'));
-			if(empty($fields['recursion_levels'])) $fields['recursion_levels'] = 0; // Make sure it is 0, not NULL
-
-			// Data source fields - keep them stored for compatibility with 1.x
-			$included_fields = $this->get('included_fields');
-			if(is_array($included_fields)) $included_fields = implode(',', $included_fields);
-			if(empty($included_fields)) $included_fields = NULL;
-			$fields['included_fields'] = $included_fields;
+			if(empty($fields['recursion_levels'])) $fields['recursion_levels'] = 0; // Make sure it is 0, not null
 
 			// Delete old field settings
 			Symphony::Database()->query(
@@ -478,7 +477,7 @@
 			$this->removeSectionAssociation($id);
 
 			// Save new section association
-			$association = $this->createSectionAssociation(NULL, $this->get('subsection_id'), $id, $id, false);
+			$association = $this->createSectionAssociation(null, $this->get('subsection_id'), $id, $id, false);
 
 			if($settings && $association) {
 				return true;
@@ -523,7 +522,7 @@
 		 *
 		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#displayPublishPanel
 		 */
-		function displayPublishPanel(&$wrapper, $data=NULL, $flagWithError=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL, $entry_id=NULL) {
+		function displayPublishPanel(&$wrapper, $data=null, $flagWithError=null, $fieldnamePrefix=null, $fieldnamePostfix=null, $entry_id=null) {
 			if(!is_array($data['relation_id'])) $data['relation_id'] = array($data['relation_id']);
 
 			// Houston, we have problem: we've been called out of context!
@@ -556,7 +555,7 @@
 			$content = $subsection->generate($this->get('id'), $this->get('subsection_id'), $data, $this->get('recursion_levels'), SubsectionManager::GETHTML);
 
 			// Create interface
-			$duplicator = new XMLElement('div', NULL, array('class' => 'dark frame' . ($this->get('show_preview') == 1 ? ' preview' : '') . ($this->get('allow_multiple') == 1 ? ' multiple' : ' single') . ($this->get('lock') == 1 ? ' locked' : '')));
+			$duplicator = new XMLElement('div', null, array('class' => 'dark frame' . ($this->get('show_preview') == 1 ? ' preview' : '') . ($this->get('allow_multiple') == 1 ? ' multiple' : ' single') . ($this->get('lock') == 1 ? ' locked' : '')));
 			$selected = new XMLElement('ol', $content['html']);
 			$duplicator->appendChild($selected);
 
@@ -584,7 +583,7 @@
 			$wrapper->setAttribute('data-subsection-new', SYMPHONY_URL . '/publish/' . $subsection->get('handle'));
 
 			// Error handling
-			if($flagWithError != NULL) {
+			if($flagWithError != null) {
 				$wrapper->appendChild(Widget::Error($duplicator, $flagWithError));
 			}
 			else {
@@ -595,7 +594,7 @@
 		/**
 		 * Get default publish content
 		 */
-		function getDefaultPublishContent(&$wrapper, $data = NULL) {
+		function getDefaultPublishContent(&$wrapper, $data = null) {
 
 			// Get items
 			$subsection = new SubsectionManager();
@@ -632,7 +631,7 @@
 		public function processRawFieldData($data, &$status, &$message=null, $simulate=false, $entry_id=null) {
 			$status = self::__OK__;
 			if(!is_array($data)) $data = array($data);
-			if(empty($data)) return NULL;
+			if(empty($data)) return null;
 
 			return array('relation_id' => $data);
 		}
@@ -690,7 +689,7 @@
 				}
 
 				// Create item
-				$item = new XMLElement('item', NULL, array('id' => $entry_id));
+				$item = new XMLElement('item', null, array('id' => $entry_id));
 				$subsection->appendChild($item);
 
 				// Process entry for Data Source
@@ -755,8 +754,8 @@
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#prepareTableValue
 		 */
-		function prepareTableValue($data, XMLElement $link=NULL) {
-			if(empty($data['relation_id'])) return NULL;
+		function prepareTableValue($data, XMLElement $link=null) {
+			if(empty($data['relation_id'])) return null;
 
 			// Single select
 			if($this->get('allow_multiple') == 0 || count($data['relation_id']) === 1) {
@@ -841,7 +840,7 @@
 		/**
 		 * @see http://symphony-cms.com/learn/api/2.3/toolkit/field/#displayDatasourceFilterPanel
 		 */
-		function displayDatasourceFilterPanel(&$wrapper, $data=NULL, $errors=NULL, $fieldnamePrefix=NULL, $fieldnamePostfix=NULL) {
+		function displayDatasourceFilterPanel(&$wrapper, $data=null, $errors=null, $fieldnamePrefix=null, $fieldnamePostfix=null) {
 			parent::displayDatasourceFilterPanel($wrapper, $data, $errors, $fieldnamePrefix, $fieldnamePostfix);
 
 			$text = new XMLElement('p', __('Use comma separated list of entry ids that has to be associated with filtered entries, e.g., "23, 45, 691" or "not: 23, 45, 691".'), array('class' => 'help') );
