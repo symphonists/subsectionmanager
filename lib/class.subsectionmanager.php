@@ -315,7 +315,7 @@
 				// Generate HTML only when needed
 				if(!($flags & self::GETHTML)) continue;
 
-				// Create stage template
+				// Create template
 				if($type == 'image') {
 					$template = str_replace('{$url}', URL, self::$templates[$mode]['image']);
 					$template = str_replace('{$preview}', $preview, $template);

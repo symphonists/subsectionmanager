@@ -405,9 +405,6 @@
 				) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;"
 			);
 
-			// Create stage
-			$status[] = Stage::install();
-
 			// Report status
 			if(in_array(false, $status, true)) {
 				return false;
@@ -423,19 +420,8 @@
 		public function update($previousVersion) {
 			$status = array();
 
-			if(version_compare($previousVersion, '1.0', '<')) {
-
-				// Install missing tables
-				$this->install();
-
-				// Add context row and return status
-				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_stage` LIKE 'context'") == false) {
-					$status[] = Symphony::Database()->query(
-						"ALTER TABLE `tbl_fields_stage` ADD `context` varchar(255) default NULL"
-					);
-				}
-
-			}
+			// Install missing tables
+			$status[] = $this->install();
 
 		/*-----------------------------------------------------------------------*/
 
@@ -444,37 +430,8 @@
 				// Rename allow multiple column
 				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'allow_multiple_selection'") == false) {
 					$status[] = Symphony::Database()->query(
-						"ALTER TABLE `tbl_fields_subsectionmanager` CHANGE COLUMN `allow_multiple_selection` `allow_multiple` tinyint(1) default '0'"
+						"ALTER TABLE `tbl_fields_subsectionmanager` CHANGE COLUMN `allow_multiple_selection` `allow_multiple` tinyint(1) default '1'"
 					);
-				}
-
-				// Add droptext column
-				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'droptext'") == false) {
-					$status[] = Symphony::Database()->query(
-						"ALTER TABLE `tbl_fields_subsectionmanager` ADD `droptext` text default NULL"
-					);
-				}
-
-				// Create stage tables
-				$status[] = Stage::install();
-
-				// Fetch sort orders
-				$table = Symphony::Database()->fetch("SHOW TABLES LIKE 'tbl_fields_subsectionmanager_sorting'");
-				if(!empty($table)) {
-					$sortings = Symphony::Database()->fetch("SELECT * FROM tbl_fields_subsectionmanager_sorting LIMIT 1000");
-
-					// Move sort orders to stage table
-					if(is_array($sortings)) {
-						foreach($sortings as $sorting) {
-							$status[] = Symphony::Database()->query("
-								INSERT INTO tbl_fields_stage_sorting (`entry_id`, `field_id`, `order`, `context`)
-								VALUES (" . $sorting['entry_id'] . ", " . $sorting['field_id'] . ", '" . $sorting['order'] . "', 'subsectionmanager')
-							");
-						}
-					}
-
-					// Drop old sorting table
-					$status[] = Symphony::Database()->query("DROP TABLE IF EXISTS `tbl_fields_subsectionmanager_sorting`");
 				}
 
 				// Add section associations data to sections_association table
@@ -518,48 +475,28 @@
 
 		/*-----------------------------------------------------------------------*/
 
-			if(version_compare($previousVersion, '1.2', '<')) {
-
-				// Add lock column
-				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'lock'") == false) {
-					$status[] = Symphony::Database()->query(
-						"ALTER TABLE `tbl_fields_subsectionmanager` ADD `lock` tinyint(1) DEFAULT '0'"
-					);
-					$status[] = Symphony::Database()->query(
-						"ALTER TABLE `tbl_fields_subsectionmanager` ADD `lock` tinyint(1) DEFAULT '0'"
-					);
-				}
-			}
-
-		/*-----------------------------------------------------------------------*/
-
 			if(version_compare($previousVersion, '2.0', '<')) {
 
-				// Add subsection tabs
-				$status[] = Symphony::Database()->query(
-					"CREATE TABLE IF NOT EXISTS `tbl_fields_subsectiontabs` (
-						`id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-						`field_id` int(11) unsigned NOT NULL,
-						`subsection_id` varchar(255) NOT NULL,
-						`static_tabs` varchar(255) DEFAULT NULL,
-						PRIMARY KEY (`id`),
-						KEY `field_id` (`field_id`)
-					)"
-				);
-
-				// Remove dynamic tabs available in early development versions
-				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectiontabs` LIKE 'allow_dynamic_tabs'") == true) {
+				// Add droptext column
+				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'droptext'") == false) {
 					$status[] = Symphony::Database()->query(
-						"ALTER TABLE `tbl_fields_subsectiontabs` DROP `allow_dynamic_tabs`"
+						"ALTER TABLE `tbl_fields_subsectionmanager` ADD `droptext` text default NULL"
 					);
 				}
-
-			/*-------------------------------------------------------------------*/
 
 				// Add recursion levels
 				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectionmanager` LIKE 'recursion_levels'") == false) {
 					$status[] = Symphony::Database()->query(
 						"ALTER TABLE `tbl_fields_subsectionmanager` ADD COLUMN `recursion_levels` tinyint DEFAULT '0'"
+					);
+				}
+
+			/*-------------------------------------------------------------------*/
+
+				// Remove dynamic tabs available in early development versions
+				if((boolean)Symphony::Database()->fetchVar('Field', 0, "SHOW COLUMNS FROM `tbl_fields_subsectiontabs` LIKE 'allow_dynamic_tabs'") == true) {
+					$status[] = Symphony::Database()->query(
+						"ALTER TABLE `tbl_fields_subsectiontabs` DROP `allow_dynamic_tabs`"
 					);
 				}
 

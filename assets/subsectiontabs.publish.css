@@ -8,7 +8,7 @@ body.subsectiontabs div.tabs {
 	margin: 0 -19px;
 	min-height: 100px;
 	overflow: hidden;
-	background: url(../lib/stage/images/loading.gif) center no-repeat;
+	background: url(images/loading_light.gif) center no-repeat;
 }
 
 body.subsectiontabs iframe.subsectiontab {
