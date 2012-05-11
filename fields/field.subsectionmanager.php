@@ -697,7 +697,7 @@
 
 				// Fetch missing entries
 				if(empty($entry)) {
-					$entry = extension_subsectionmanager::$entryManager->fetch($entry_id, $this->get('subsection_id'));
+					$entry = EntryManager::fetch($entry_id, $this->get('subsection_id'));
 
 					// Store entry
 					$entry = $entry[0];
