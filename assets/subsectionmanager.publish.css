@@ -42,8 +42,11 @@
 	overflow: hidden;
 	height: 22px;
 	position: relative;
-	margin-top: -30px;
 	margin-bottom: 23px;
+}
+
+.field-subsectionmanager .constructable + .browser {
+	margin-top: -30px;
 }
 
 .field-subsectionmanager .browser.opened {
