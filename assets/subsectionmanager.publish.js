@@ -164,7 +164,7 @@
 			
 			// Drag items
 			manager.on('mousedown.subsectionmanager', 'li > header', function(event) {
-				var item = $(event.target).parent('li');
+				var item = $(event.target).closest('.instance');
 				
 				// Don't highlight text
 				event.preventDefault();
