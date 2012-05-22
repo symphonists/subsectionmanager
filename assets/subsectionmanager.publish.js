@@ -473,9 +473,9 @@
 						dropper.fadeOut('fast');
 						dragger.fadeOut('fast');
 						$(document).off('mousemove.subsectionmanager');
-	
+
 						// Drop content
-						textareas.trigger('drop.subsectionmanager', [item]);
+						textareas.filter('.droptarget').trigger('drop.subsectionmanager', [item]);
 						selection.removeClass('dragging');
 					});
 				}
