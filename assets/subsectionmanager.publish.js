@@ -164,7 +164,7 @@
 			
 			// Drag items
 			manager.on('mousedown.subsectionmanager', 'li > header', function(event) {
-				var item = $(event.target).parent('li');
+				var item = $(event.target).closest('.instance');
 				
 				// Don't highlight text
 				event.preventDefault();
@@ -473,9 +473,9 @@
 						dropper.fadeOut('fast');
 						dragger.fadeOut('fast');
 						$(document).off('mousemove.subsectionmanager');
-	
+
 						// Drop content
-						textareas.trigger('drop.subsectionmanager', [item]);
+						textareas.filter('.droptarget').trigger('drop.subsectionmanager', [item]);
 						selection.removeClass('dragging');
 					});
 				}
