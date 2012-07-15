@@ -133,7 +133,7 @@
 			$parent = get_parent_class($context['datasource']);
 
 			// Default Data Source
-			if($parent == 'DataSource' || $parent = 'SectionDatasource') {
+			if($parent == 'DataSource' || $parent == 'SectionDatasource') {
 				$this->__parseSubsectionFields(
 					$context['datasource']->dsParamINCLUDEDELEMENTS,
 					$context['datasource']->dsParamROOTELEMENT,
