@@ -26,7 +26,7 @@
 				'image' =>	'<li data-value="{$value}" data-drop="{$droptext}" class="instance">
 								<input type="hidden" value="{$value}" />
 								<header>
-									<a href="{$href}" class="image file handle">{$caption}</a>
+									{$caption}
 								</header>
 								<div class="content"></div>
 							 </li>',
@@ -48,7 +48,7 @@
 								<input type="hidden" value="{$value}" />
 								<header>
 									<img src="{$url}/image/2/40/40/5{$preview}" width="40" height="40" class="handle" />
-									<a href="{$href}" class="image file handle">{$caption}</a>
+									{$caption}
 								</header>
 								<div class="content"></div>
 							 </li>',
