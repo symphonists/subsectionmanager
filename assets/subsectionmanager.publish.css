@@ -2,7 +2,7 @@
  * Subsection Manager for Symphony
  *
  * @author: Nils Hörrmann, http://nilshoerrmann.de
- * @source: http://github.com/nilshoerrmann/subsectionmanager
+ * @source: http://github.com/hananils/subsectionmanager
  */
 
 
@@ -57,7 +57,7 @@
 .field-subsectionmanager .browser input {
 	position: relative;
 	margin: 0;
-	background: url(../../../symphony/assets/img/arrows.png) right -34px no-repeat;
+	background: #FFF url(../../../symphony/assets/img/arrows.png) right -34px no-repeat;
 }
 
 .field-subsectionmanager .browser.opened input {
