@@ -28,11 +28,11 @@
 			parent::__construct($args);
 
 			// Prepare cache
-			if(file_exists(MANIFEST . '/subsectionmanager-storage')) {
+			if(file_exists(CACHE . '/subsectionmanager-storage')) {
 
 				// If Data Source files have not changed, get cache
-				if(filemtime(DATASOURCES) < filemtime(MANIFEST . '/subsectionmanager-storage')) {
-					$cache = unserialize(file_get_contents(MANIFEST . '/subsectionmanager-storage'));
+				if(filemtime(DATASOURCES) < filemtime(CACHE . '/subsectionmanager-storage')) {
+					$cache = unserialize(file_get_contents(CACHE . '/subsectionmanager-storage'));
 				}
 
 				// Check store cache
@@ -116,8 +116,8 @@
 		 * @see http://symphony-cms.com/learn/api/2.3/delegates/#DatasourcePreDelete
 		 */
 		public function __clearSubsectionCache() {
-			if(file_exists(MANIFEST . '/subsectionmanager-storage')) {
-				unlink(MANIFEST . '/subsectionmanager-storage');
+			if(file_exists(CACHE . '/subsectionmanager-storage')) {
+				General::deleteFile(CACHE . '/subsectionmanager-storage');
 			}
 			self::$updateCache = true;
 		}
@@ -156,7 +156,7 @@
 			if(self::$updateCache == true) {
 				$cache = self::$storage;
 				unset($cache['entries']);
-				file_put_contents(MANIFEST . '/subsectionmanager-storage', serialize($cache));
+				General::writeFile(CACHE . '/subsectionmanager-storage', serialize($cache), Symphony::Configuration()->get('write_mode', 'file'));
 			}
 
 			// Preload entries
