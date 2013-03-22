@@ -19,6 +19,9 @@
 		</author>
 	</authors>
 	<releases>
+		<release version="3.0" date="2013-03-22" min="2.3">
+			- Fix uninstaller
+		</release>
 		<release version="3.0beta3" date="2012-10-29" min="2.3">
 			- Discontinuing support, see http://getsymphony.com/discuss/thread/83270/7/#position-121
 		</release>
