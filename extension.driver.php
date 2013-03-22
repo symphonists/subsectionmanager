@@ -639,10 +639,10 @@
 		public function uninstall() {
 
 			// Remove old Stage tables if they are empty
-			$count = Symphony::Database()->query("SELECT COUNT(*) FROM `tbl_fields_stage`");
-			if($count == 0) {
-				Symphony::Database()->query("DROP TABLE `tbl_fields_stage`");
-				Symphony::Database()->query("DROP TABLE `tbl_fields_stage_sorting`");
+			$exists = Symphony::Database()->fetch("SHOW TABLES LIKE 'tbl_fields_stage'");
+			if(!empty($exists)) {
+				Symphony::Database()->query("DROP TABLE IF EXISTS `tbl_fields_stage`");
+				Symphony::Database()->query("DROP TABLE IF EXISTS `tbl_fields_stage_sorting`");
 			}
 
 			// Drop tables
@@ -651,7 +651,6 @@
 
 			// Maintenance
 			Symphony::Database()->query("DROP TABLE IF EXISTS `tbl_fields_subsectionmanager_sorting`");
-			Symphony::Database()->query("DELETE FROM `tbl_fields_stage_sorting` WHERE `context` = 'subsectionmanager'");
 		}
 
 	}
