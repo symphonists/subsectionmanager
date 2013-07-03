@@ -19,6 +19,9 @@
 		</author>
 	</authors>
 	<releases>
+		<release version="3.1" date="2013-07-03" min="2.3.3">
+			- Symphony 2.3.3 compatibility – this change is not backwards-compatible (thanks, Alexander)
+		</release>
 		<release version="3.0" date="2013-03-22" min="2.3">
 			- Fix uninstaller
 		</release>
