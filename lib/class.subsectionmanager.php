@@ -294,7 +294,7 @@
 						// Image
 						if(strpos($entry['data'][$field_id]['mimetype'], 'image') !== false) {
 							$type = 'image';
-							$preview = $field->get('destination') . '/' . $entry['data'][$field_id]['file'];
+							$preview = substr($field->get('destination'),10) . '/' . $entry['data'][$field_id]['file'];
 							$href = URL . '/workspace' . $preview;
 						}
 
