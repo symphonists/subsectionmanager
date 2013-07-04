@@ -33,7 +33,7 @@
 				'file' =>	'<li data-value="{$value}" data-drop="{$droptext}" class="instance">
 								<input type="hidden" value="{$value}" />
 								<header>
-									<a href="{$href}" class="file handle">{$caption}</a>
+									{$caption}
 								</header>
 								<div class="content"></div>
 							 </li>'
@@ -56,7 +56,7 @@
 								<input type="hidden" value="{$value}" />
 								<header>
 									<strong class="file">.{$type}</strong>
-									<a href="{$href}" class="file handle">{$caption}</a>
+									{$caption}
 								</header>
 								<div class="content"></div>
 							 </li>'
@@ -294,7 +294,7 @@
 						// Image
 						if(strpos($entry['data'][$field_id]['mimetype'], 'image') !== false) {
 							$type = 'image';
-							$preview = $field->get('destination') . '/' . $entry['data'][$field_id]['file'];
+							$preview = substr($field->get('destination'),10) . '/' . $entry['data'][$field_id]['file'];
 							$href = URL . '/workspace' . $preview;
 						}
 
