@@ -44,7 +44,7 @@
 		
 			// Set item names
 			duplicator.on('constructstop.duplicator update.subsectionmanager', 'li', function setName(event) {		
-				$(this).find('input:hidden').attr('name', manager_name + '[]');
+				$(this).find('input:hidden').prop('name', manager_name + '[]');
 			});
 		
 			// Create new item
@@ -53,7 +53,7 @@
 					iframe = item.find('iframe');
 
 				// Load subsection
-				iframe.addClass('initialise loading new').attr('src', subsection_link + '/new/').load(function() {
+				iframe.addClass('initialise loading new').prop('src', subsection_link + '/new/').load(function() {
 					load(item);
 				});
 			});
@@ -105,7 +105,7 @@
 				}
 					
 				// Load iframe
-				iframe.addClass('initialise loading').attr('src', subsection_link + '/edit/' + item.attr('data-value') + '/').load(function() {
+				iframe.addClass('initialise loading').prop('src', subsection_link + '/edit/' + item.attr('data-value') + '/').load(function() {
 					load(item);
 				});
 			});
@@ -169,7 +169,6 @@
 				// Don't highlight text
 				event.preventDefault();
 				event.stopPropagation();
-				
 				move(item, event);
 			});
 			
@@ -208,8 +207,8 @@
 				
 				// Lock item
 				if(!duplicator.is('.editable') && !item.is('.new')) {
-					subsection.find('input:visible, textarea').attr('readonly', 'readonly');
-					subsection.find('select').attr('disabled', 'disabled');
+					subsection.find('input:visible, textarea').prop('readonly', 'readonly');
+					subsection.find('select').prop('disabled', 'disabled');
 					subsection.find('div.actions, .field-upload .frame em').remove();
 				}	
 				
@@ -230,6 +229,8 @@
 				// Resize item
 				subsection.find('#contents').on('resize.subsectionmanager', function(event, init) {
 					var height = subsection.find('#wrapper').outerHeight();
+					
+					//console.dir(subsection.find('#wrapper'))
 
 					if(init == true || (!iframe.is('.loading') && content.data('height') !== height && height !== 0)) {
 						resize(content, iframe, body, height);
@@ -277,7 +278,7 @@
 		
 							// Set id for new items
 							if(item.attr('data-value') == undefined) {
-								item.append(id).attr('data-value', id.val()).trigger('update.subsectionmanager');
+								item.append(id).prop('data-value', id.val()).trigger('update.subsectionmanager');
 							}
 	
 							// Clear browser list
@@ -291,6 +292,8 @@
 						
 			// Resize editor
 			var resize = function(content, iframe, body, height) {
+			
+        // alert();
 			
 				// Set iframe height
 				iframe.height(height).removeClass('loading');
