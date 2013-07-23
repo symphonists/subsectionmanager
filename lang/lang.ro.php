@@ -7,7 +7,7 @@
 			'email' => 'vlad_micutul@zahoo.com',
 			'website' => ''
 		),
-		'release-date' => '2011-02-09'
+		'release-date' => '2013-07-23'
 	);
 
 	/**
@@ -15,17 +15,58 @@
 	 */
 	$dictionary = array(
 
-		'%s Show thumbnail images' =>
-		'%s Arată imaginile în miniatură',
-
 		'%s has to be well-formed. Please check opening and closing tags.' =>
 		'%s trebuie să fie bine-formatat. Verificaţi împerecherea tag-urilor.',
 
-		'1 result' =>
-		'1 rezultat',
-
 		'Allow creation of new items' =>
 		'Permite crearea de noi elemente',
+
+		'Are you sure you want to delete {$item}? It will be removed from all entries. This step cannot be undone.' =>
+		'Sigur doreşti să ştergi {$item}? Va fi şters din toate înregistrările. Acest pas este ireversibil.',
+
+		'Caption' =>
+		'Descriere',
+
+		'Comma separated, alt+click for negation' =>
+		'Separare prin virgulă, alt+clic pentru negare',
+
+		'Drop text' =>
+		'Drop text',
+
+		'Filter items by tags or categories' =>
+		'Filtrează elementele după etichete sau categorii',
+
+		'New item' =>
+		'Element Nou',
+
+		'None Selected' =>
+		'Niciun element selectat',
+
+		'Subsection' =>
+		'Subsecţiune',
+
+		'Subsection Manager' =>
+		'Administrator Subsecţiune',
+
+		'There are currently no items available. Perhaps you want create one first?' =>
+		'Momentan nu există înregistrări. Creaţi una?',
+
+		'There are no selected items' =>
+		'Nu există elemente selectate',
+
+		'item' =>
+		'element',
+
+		'items' =>
+		'elemente',
+
+		// Obsolete
+
+		'%s Show thumbnail images' =>
+		'%s Arată imaginile în miniatură',
+
+		'1 result' =>
+		'1 rezultat',
 
 		'Allow deselection of items' =>
 		'Permite deselectarea de elemente',
@@ -42,9 +83,6 @@
 		'Allow sorting of items' =>
 		'Permite sortarea elementelor',
 
-		'Are you sure you want to delete {$item}? It will be removed from all entries. This step cannot be undone.' =>
-		'Sigur doreşti să ştergi {$item}? Va fi şters din toate înregistrările. Acest pas este ireversibil.',
-
 		'Before you proceed' =>
 		'Înainte de a continua',
 
@@ -54,12 +92,6 @@
 		'Browse' =>
 		'Browse',
 
-		'Caption' =>
-		'Descriere',
-
-		'Comma separated, alt+click for negation' =>
-		'Separare prin virgulă, alt+clic pentru negare',
-
 		'Data Source XML' =>
 		'XML-ul Sursei de Date',
 
@@ -68,12 +100,6 @@
 
 		'Don&#8217;t forget to include the Subsection Manager field in your Data Source' =>
 		'Nu uita să incluzi câmpul Administrator de Subsecţiune în Sursa ta de Date.',
-
-		'Drop text' =>
-		'Drop text',
-
-		'Filter items by tags or categories' =>
-		'Filtrează elementele după etichete sau categorii',
 
 		'Go back to the extension overview.' =>
 		'}ntoarceţi-vă la descriere extensiei.',
@@ -90,14 +116,8 @@
 		'Introduction' =>
 		'Introducere',
 
-		'New item' =>
-		'Element Nou',
-
 		'No items found.' =>
 		'Niciun element găsit.',
-
-		'None Selected' =>
-		'Niciun element selectat',
 
 		'Please delete the old Mediathek folder from your <code>extensions</code> folder.' =>
 		'Ştergeţi vechiul director Mediathek din folderul <code>extensii</code>.',
@@ -111,12 +131,6 @@
 		'Replace all Mediathek fields with the Subsection Manager, copying all attached information to the new fields.' =>
 		'Înlocuieşte toate câmpurile Mediathek cu Administrator de Subsecţiune cu copierea informaţiei adiacente în noile câmpuri.',
 
-		'Subsection' =>
-		'Subsecţiune',
-
-		'Subsection Manager' =>
-		'Administrator Subsecţiune',
-
 		'Subsection Manager Upgrade' =>
 		'Actualizare Administratorul de Subsecţiune',
 
@@ -128,12 +142,6 @@
 
 		'The Subsection Manager Upgrade will automatically perform the following actions:' =>
 		'Actualizarea Administratorului de Subsecţiune va efectua automat următoarele acţiuni:',
-
-		'There are currently no items available. Perhaps you want create one first?' =>
-		'Momentan nu există înregistrări. Creaţi una?',
-
-		'There are no selected items' =>
-		'Nu există elemente selectate',
 
 		'This process cannot be undone!' =>
 		'Acest proces este ireversibil!',
@@ -189,12 +197,6 @@
 		'Your Mediathek fields have successfully been upgrade to Subsection Manager.' =>
 		'Câmpurile Mediathek au fost actualizate cu succes la Administrator de Subsecţiune.',
 
-		'item' =>
-		'element',
-
-		'items' =>
-		'elemente',
-
 		'no results' =>
 		'lipsă rezultate',
 
@@ -203,13 +205,61 @@
 
 		// Missing
 
-		'Please make sure that the Stage submodule is initialised and available at %s.' =>
+		'Search existing items' =>
 		false,
 
-		'It\'s available at %s.' =>
+		'no matches' =>
 		false,
 
-		'Stage not found' =>
+		'1 match' =>
+		false,
+
+		'{$count} matches' =>
+		false,
+
+		'Exclude from XML output' =>
+		false,
+
+		'Include 1 child level in XML output' =>
+		false,
+
+		'Include 2 child levels in XML output' =>
+		false,
+
+		'Include 3 child levels in XML output' =>
+		false,
+
+		'Nested subsections %s' =>
+		false,
+
+		'Allow removal of existing items' =>
+		false,
+
+		'Allow multiple items' =>
+		false,
+
+		'Enable editing' =>
+		false,
+
+		'Enable sorting' =>
+		false,
+
+		'Enable dropping' =>
+		false,
+
+		'Show search' =>
+		false,
+
+		'Show image and file previews' =>
+		false,
+
+		'Please fill out the form below' =>
+		false,
+
+		'\'%s\' allows single item only.' =>
+		false,
+
+		'Use comma separated list of entry ids that has to be associated with filtered entries, e.g., "23, 45, 691" or "not: 23, 45, 691".' =>
 		false,
 
 	);

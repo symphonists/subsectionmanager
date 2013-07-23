@@ -7,7 +7,7 @@
 			'email' => 'my.ekoes@gmail.com',
 			'website' => 'http://lineheight.net'
 		),
-		'release-date' => '2011-02-09'
+		'release-date' => '2013-07-23'
 	);
 
 	/**
@@ -15,17 +15,58 @@
 	 */
 	$dictionary = array(
 
-		'%s Show thumbnail images' =>
-		'%s Mostra l\'anteprima delle immagini',
-
 		'%s has to be well-formed. Please check opening and closing tags.' =>
 		'Il campo %s deve essere ben formato. Controlla i tag di apertura e chiusura.',
 
-		'1 result' =>
-		'1 risultato',
-
 		'Allow creation of new items' =>
 		'Consenti la creazione di nuove voci',
+
+		'Are you sure you want to delete {$item}? It will be removed from all entries. This step cannot be undone.' =>
+		'Sei sicuro di voler procedere alla cancellazione? Questa operazione non pu&#242; essere annullata.',
+
+		'Caption' =>
+		'Nei risultati',
+
+		'Comma separated, alt+click for negation' =>
+		'Separati da virgola, <code>alt+click</code> per la negazione',
+
+		'Drop text' =>
+		'Al rilascio',
+
+		'Filter items by tags or categories' =>
+		'Filtra le voci per tag',
+
+		'New item' =>
+		'Nuova voce',
+
+		'None Selected' =>
+		'Nessuna sezione selezionata',
+
+		'Subsection' =>
+		'Attingi da',
+
+		'Subsection Manager' =>
+		'Subsection Manager',
+
+		'There are currently no items available. Perhaps you want create one first?' =>
+		'Non &#232; stato possibile trovare alcuna voce.',
+
+		'There are no selected items' =>
+		'Non &#232; stata selezionata alcuna voce',
+
+		'item' =>
+		'voce',
+
+		'items' =>
+		'voci',
+
+		// Obsolete
+
+		'%s Show thumbnail images' =>
+		'%s Mostra l\'anteprima delle immagini',
+
+		'1 result' =>
+		'1 risultato',
 
 		'Allow deselection of items' =>
 		'Consenti la deselezione delle voci',
@@ -42,9 +83,6 @@
 		'Allow sorting of items' =>
 		'Consenti il trascinamento delle voci',
 
-		'Are you sure you want to delete {$item}? It will be removed from all entries. This step cannot be undone.' =>
-		'Sei sicuro di voler procedere alla cancellazione? Questa operazione non pu&#242; essere annullata.',
-
 		'Before you proceed' =>
 		'Prima di procedere',
 
@@ -54,12 +92,6 @@
 		'Browse' =>
 		'Esplora tutte le voci',
 
-		'Caption' =>
-		'Nei risultati',
-
-		'Comma separated, alt+click for negation' =>
-		'Separati da virgola, <code>alt+click</code> per la negazione',
-
 		'Data Source XML' =>
 		'XML per la sorgente dati',
 
@@ -68,12 +100,6 @@
 
 		'Don&#8217;t forget to include the Subsection Manager field in your Data Source' =>
 		'Non dimenticare di includere il campo Subsection Manager nella tua sorgente dati',
-
-		'Drop text' =>
-		'Al rilascio',
-
-		'Filter items by tags or categories' =>
-		'Filtra le voci per tag',
 
 		'Go back to the extension overview.' =>
 		'Torna alla pagina delle estensioni',
@@ -90,14 +116,11 @@
 		'Introduction' =>
 		'Introduzione',
 
-		'New item' =>
-		'Nuova voce',
+		'It\'s available at %s.' =>
+		'Puoi scaricare Stage da qui: %s.',
 
 		'No items found.' =>
 		'Nessuna voce trovata.',
-
-		'None Selected' =>
-		'Nessuna sezione selezionata',
 
 		'Please delete the old Mediathek folder from your <code>extensions</code> folder.' =>
 		'Elimina la vecchia cartella Mediathek dalla cartella <code>extensions</code>.',
@@ -117,12 +140,6 @@
 		'Stage not found' =>
 		'Modulo Stage mancante',
 
-		'Subsection' =>
-		'Attingi da',
-
-		'Subsection Manager' =>
-		'Subsection Manager',
-
 		'Subsection Manager Upgrade' =>
 		'Aggiornamento a Subsection Manager',
 
@@ -134,12 +151,6 @@
 
 		'The Subsection Manager Upgrade will automatically perform the following actions:' =>
 		'L\'aggiornamento eseguir&#224; automaticamente le seguenti operazioni:',
-
-		'There are currently no items available. Perhaps you want create one first?' =>
-		'Non &#232; stato possibile trovare alcuna voce.',
-
-		'There are no selected items' =>
-		'Non &#232; stata selezionata alcuna voce',
 
 		'This process cannot be undone!' =>
 		'L\'operazione non pu&#242; essere annullata!',
@@ -195,19 +206,69 @@
 		'Your Mediathek fields have successfully been upgrade to Subsection Manager.' =>
 		'I campi Mediathek sono stati aggiornati con successo.',
 
-		'item' =>
-		'voce',
-
-		'items' =>
-		'voci',
-
 		'no results' =>
 		'nessun risultato',
 
 		'{$count} results' =>
 		'{$count} risultati',
 
-		'It\'s available at %s.' =>
-		'Puoi scaricare Stage da qui: %s.',
+		// Missing
+
+		'Search existing items' =>
+		false,
+
+		'no matches' =>
+		false,
+
+		'1 match' =>
+		false,
+
+		'{$count} matches' =>
+		false,
+
+		'Exclude from XML output' =>
+		false,
+
+		'Include 1 child level in XML output' =>
+		false,
+
+		'Include 2 child levels in XML output' =>
+		false,
+
+		'Include 3 child levels in XML output' =>
+		false,
+
+		'Nested subsections %s' =>
+		false,
+
+		'Allow removal of existing items' =>
+		false,
+
+		'Allow multiple items' =>
+		false,
+
+		'Enable editing' =>
+		false,
+
+		'Enable sorting' =>
+		false,
+
+		'Enable dropping' =>
+		false,
+
+		'Show search' =>
+		false,
+
+		'Show image and file previews' =>
+		false,
+
+		'Please fill out the form below' =>
+		false,
+
+		'\'%s\' allows single item only.' =>
+		false,
+
+		'Use comma separated list of entry ids that has to be associated with filtered entries, e.g., "23, 45, 691" or "not: 23, 45, 691".' =>
+		false,
 
 	);

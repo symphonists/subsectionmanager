@@ -7,7 +7,7 @@
 			'email' => 'frode@danielsen.net',
 			'website' => 'http://frode.danielsen.net/'
 		),
-		'release-date' => '2011-02-09'
+		'release-date' => '2013-07-23'
 	);
 
 	/**
@@ -15,17 +15,58 @@
 	 */
 	$dictionary = array(
 
-		'%s Show thumbnail images' =>
-		'%s Vis miniatyrbilder',
-
 		'%s has to be well-formed. Please check opening and closing tags.' =>
 		'%s må være velformet. Vennligst kontroller åpne- og lukke-taggene.',
 
-		'1 result' =>
-		'1 resultat',
-
 		'Allow creation of new items' =>
 		'Tillat oppretting av nye innlegg',
+
+		'Are you sure you want to delete {$item}? It will be removed from all entries. This step cannot be undone.' =>
+		'Er du sikker på at du ønsker å slette {$item}? Den vil bli fjernet fra alle innlegg. Dette kan ikke reverseres.',
+
+		'Caption' =>
+		'Tittel',
+
+		'Comma separated, alt+click for negation' =>
+		'Kommaseparert, alt+klikk for negering',
+
+		'Drop text' =>
+		'Tekst ved slipp',
+
+		'Filter items by tags or categories' =>
+		'Filtrer innlegg etter merkelapper eller kategorier',
+
+		'New item' =>
+		'Nytt innlegg',
+
+		'None Selected' =>
+		'Ingen valgte',
+
+		'Subsection' =>
+		'Underseksjon',
+
+		'Subsection Manager' =>
+		'Subsection Manager',
+
+		'There are currently no items available. Perhaps you want create one first?' =>
+		'Det er for øyeblikket ingen innlegg tilgjengelig. Kanskje du ønsker opprette et først?',
+
+		'There are no selected items' =>
+		'Ingen valgte innlegg',
+
+		'item' =>
+		'innlegg',
+
+		'items' =>
+		'innlegg',
+
+		// Obsolete
+
+		'%s Show thumbnail images' =>
+		'%s Vis miniatyrbilder',
+
+		'1 result' =>
+		'1 resultat',
 
 		'Allow deselection of items' =>
 		'Tillat fjerning av markering for innlegg',
@@ -42,9 +83,6 @@
 		'Allow sorting of items' =>
 		'Tillat sortering av innlegg',
 
-		'Are you sure you want to delete {$item}? It will be removed from all entries. This step cannot be undone.' =>
-		'Er du sikker på at du ønsker å slette {$item}? Den vil bli fjernet fra alle innlegg. Dette kan ikke reverseres.',
-
 		'Before you proceed' =>
 		'Før du fortsetter',
 
@@ -54,12 +92,6 @@
 		'Browse' =>
 		'Bla gjennom',
 
-		'Caption' =>
-		'Tittel',
-
-		'Comma separated, alt+click for negation' =>
-		'Kommaseparert, alt+klikk for negering',
-
 		'Data Source XML' =>
 		'XML i datakilde',
 
@@ -68,12 +100,6 @@
 
 		'Don&#8217;t forget to include the Subsection Manager field in your Data Source' =>
 		'Ikke glem å inkludere Subsection Manager-feltet i din datakilde',
-
-		'Drop text' =>
-		'Tekst ved slipp',
-
-		'Filter items by tags or categories' =>
-		'Filtrer innlegg etter merkelapper eller kategorier',
 
 		'Go back to the extension overview.' =>
 		'Gå tilbake til oversikten over tillegg.',
@@ -90,14 +116,11 @@
 		'Introduction' =>
 		'Introduksjon',
 
-		'New item' =>
-		'Nytt innlegg',
+		'It\'s available at %s.' =>
+		'Den er tilgjengelig på %s.',
 
 		'No items found.' =>
 		'Ingen innlegg ble funnet.',
-
-		'None Selected' =>
-		'Ingen valgte',
 
 		'Please delete the old Mediathek folder from your <code>extensions</code> folder.' =>
 		'Vennligst slett den gamle Mediathek-mappen fra din <code>extensions</code>-mappe.',
@@ -105,17 +128,17 @@
 		'Please fill out the form below.' =>
 		'Vennligst fyll ut skjemaet nedenfor.',
 
+		'Please make sure that the Stage submodule is initialised and available at %s.' =>
+		'Vennligst sørg for at undermodulen Stage er initialisert og tilgjengelig på %s.',
+
 		'Please make sure that you have an up-to-date backup of your site, containing all files and folders, and a copy of your database.' =>
 		'Vennligst sørg for at du har en fersk sikkerhetskopi av din nettside, inklusive all filer og mapper samt en kopi av din database.',
 
 		'Replace all Mediathek fields with the Subsection Manager, copying all attached information to the new fields.' =>
 		'Erstatte alle dine Mediathek-felt med Subsection Manager og kopiere all informasjon til de nye feltene.',
 
-		'Subsection' =>
-		'Underseksjon',
-
-		'Subsection Manager' =>
-		'Subsection Manager',
+		'Stage not found' =>
+		'Stage ble ikke funnet',
 
 		'Subsection Manager Upgrade' =>
 		'Oppgradering til Subsection Manager',
@@ -128,12 +151,6 @@
 
 		'The Subsection Manager Upgrade will automatically perform the following actions:' =>
 		'Oppgradering til Subsection Manager vil automatisk gjennomføre følgende:',
-
-		'There are currently no items available. Perhaps you want create one first?' =>
-		'Det er for øyeblikket ingen innlegg tilgjengelig. Kanskje du ønsker opprette et først?',
-
-		'There are no selected items' =>
-		'Ingen valgte innlegg',
 
 		'This process cannot be undone!' =>
 		'Denne prosessen kan ikke reverseres!',
@@ -189,25 +206,69 @@
 		'Your Mediathek fields have successfully been upgrade to Subsection Manager.' =>
 		'Dine Mediathek-felt har blitt vellykket oppgradert til Subsection Manager.',
 
-		'item' =>
-		'innlegg',
-
-		'items' =>
-		'innlegg',
-
 		'no results' =>
 		'ingen resultater',
 
 		'{$count} results' =>
 		'{$count} resultater',
 
-		'Please make sure that the Stage submodule is initialised and available at %s.' =>
-		'Vennligst sørg for at undermodulen Stage er initialisert og tilgjengelig på %s.',
+		// Missing
 
-		'It\'s available at %s.' =>
-		'Den er tilgjengelig på %s.',
+		'Search existing items' =>
+		false,
 
-		'Stage not found' =>
-		'Stage ble ikke funnet',
+		'no matches' =>
+		false,
+
+		'1 match' =>
+		false,
+
+		'{$count} matches' =>
+		false,
+
+		'Exclude from XML output' =>
+		false,
+
+		'Include 1 child level in XML output' =>
+		false,
+
+		'Include 2 child levels in XML output' =>
+		false,
+
+		'Include 3 child levels in XML output' =>
+		false,
+
+		'Nested subsections %s' =>
+		false,
+
+		'Allow removal of existing items' =>
+		false,
+
+		'Allow multiple items' =>
+		false,
+
+		'Enable editing' =>
+		false,
+
+		'Enable sorting' =>
+		false,
+
+		'Enable dropping' =>
+		false,
+
+		'Show search' =>
+		false,
+
+		'Show image and file previews' =>
+		false,
+
+		'Please fill out the form below' =>
+		false,
+
+		'\'%s\' allows single item only.' =>
+		false,
+
+		'Use comma separated list of entry ids that has to be associated with filtered entries, e.g., "23, 45, 691" or "not: 23, 45, 691".' =>
+		false,
 
 	);
