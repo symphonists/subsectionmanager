@@ -8,9 +8,7 @@ Symphony offers an easy way to [create sections](http://symphony-cms.com/learn/c
 
 ## Subsection Tab
 
-![Subsection Tabs](http://projekte.nilshoerrmann.de/extensions/subsectionmanager/sym_subsectiontabs.png)
-
-As of version 2.0 this extension bundles a second field type: Subsection Tab. It provides a tabbed interface of subsection entries that is well suited to manage multilingual content. All tabs are static and have to be set up in the field settings.
+As of version 3.5, Subsection Tabs have been removed. If you need a tabbed interface, please have a look at [Parenthesis Tabs](https://github.com/hananils/parenthesistabs) or [Publish Tabs](https://github.com/symphonists/publish_tabs).
 
 ## Installation
 
@@ -27,6 +25,8 @@ To update Subsection Manager to a newer version perform the following steps:
 **Updating to version 2.0:** Please note that this is major release and that you will have to reset item sorting and included elements manually.
 
 **Updating to version 3.0:** This version drops update support for old Mediathek fields.
+
+**Updating to version 3.5:** This version removes support for Subsection Tabs.
 
 ## Acknowledgement
 

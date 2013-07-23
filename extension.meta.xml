@@ -19,6 +19,9 @@
 		</author>
 	</authors>
 	<releases>
+		<release version="3.5" date="2013-07-23" min="2.3.3">
+			- Remove Subsection Tabs
+		</release>
 		<release version="3.1.1" date="2013-07-04" min="2.3.3">
 			- Bug fix (thanks, Alexander)
 		</release>
