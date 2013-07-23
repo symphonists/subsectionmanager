@@ -570,14 +570,7 @@
 				Symphony::Database()->query("DELETE FROM `tbl_fields_stage` WHERE `context` = 'subsectionmanager'");
 				Symphony::Database()->query("DELETE FROM `tbl_fields_stage_sorting` WHERE `context` = 'subsectionmanager'");
 			}
-
-		/*-----------------------------------------------------------------------*/
-
-			if(version_compare($previousVersion, '3.5', '<')) {
-				Symphony::Database()->query("DROP TABLE IF EXISTS `tbl_fields_subsectiontabs`");
-			}
 			
-
 		/*-----------------------------------------------------------------------*/
 
 			// Report status
