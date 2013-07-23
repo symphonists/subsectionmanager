@@ -538,6 +538,7 @@
 			// Append scripts
 			Symphony::Engine()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.publish.js', 104, false);
 			Symphony::Engine()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/lib/resize/jquery.ba-resize.js', 105, false);
+			Symphony::Engine()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/lib/jquery.migrate.js', 106, false);
 
 			// Setup field name
 			$fieldname = 'fields' . $fieldnamePrefix . '['. $this->get('element_name') . ']' . $fieldnamePostfix;
@@ -583,14 +584,14 @@
 			$duplicator->appendChild($selected);
 
 			// Append item template
-			$item = new XMLElement('li', 
+			$item = new XMLElement('li',
 				'<header>
 					<strong>' . __('New item') . '</strong>
 					<span>' . __('Please fill out the form below') . '</span>
 				</header>
 				<div class="content">
 					<iframe></iframe>
-				</div>', 
+				</div>',
 				array(
 					'class' => 'template',
 					'data-type' => 'subsection'

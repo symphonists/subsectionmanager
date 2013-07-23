@@ -19,7 +19,7 @@
 			'no matches': false,
 			'1 match': false,
 			'{$count} matches': false,
-			'Remove item': false	
+			'Remove item': false
 		});
 		
 		// Subsection Manager
@@ -43,7 +43,7 @@
 		-------------------------------------------------------------------------*/
 		
 			// Set item names
-			duplicator.on('constructstop.duplicator update.subsectionmanager', 'li', function setName(event) {		
+			duplicator.on('constructstop.duplicator update.subsectionmanager', 'li', function setName(event) {
 				$(this).find('input:hidden').attr('name', manager_name + '[]');
 			});
 		
@@ -79,7 +79,7 @@
 				// Prepare animation
 				height = item.height();
 				header = item.find('header');
-				top = header.css('padding-top');				
+				top = header.css('padding-top');
 			
 				// Reveal item
 				header.css('padding-top', 0).animate({
@@ -132,7 +132,7 @@
 				// Sync selection with list of existing items
 				else {
 					sync();
-				}	
+				}
 			});
 			
 			manager.on('blur.subsectionmanager', '.browser input', function toggleSearch(event) {
@@ -211,9 +211,9 @@
 					subsection.find('input:visible, textarea').attr('readonly', 'readonly');
 					subsection.find('select').attr('disabled', 'disabled');
 					subsection.find('div.actions, .field-upload .frame em').remove();
-				}	
+				}
 				
-				// Delete item 
+				// Delete item
 				if(iframe.is('.deleting')) {
 					init = false;
 					item.slideUp('fast', function() {
@@ -271,7 +271,7 @@
 
 						if(header.length > 0) {
 							
-							// Update header						
+							// Update header
 							item.find('> header').replaceWith(header);
 							addDestructor(item);
 		
@@ -327,7 +327,7 @@
 						// Reveal items
 						result.fadeIn('fast');
 					}
-				});			
+				});
 			};
 			
 			// Clear list of subsection entries
@@ -380,7 +380,7 @@
 				// Show list
 				else {
 					existing.show();
-				}				
+				}
 			};
 
 			// Count items
@@ -621,4 +621,4 @@
 		
 	});
 	
-})(jQuery.noConflict());		
+})(jQuery.noConflict());

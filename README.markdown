@@ -14,7 +14,7 @@ As of version 2.0 this extension bundles a second field type: Subsection Tab. It
 
 ## Installation
 
-Information about [installing and updating extensions](http://symphony-cms.com/learn/tasks/view/install-an-extension/) can be found in the Symphony documentation at <http://symphony-cms.com/learn/>. 
+Information about [installing and updating extensions](http://symphony-cms.com/learn/tasks/view/install-an-extension/) can be found in the Symphony documentation at <http://symphony-cms.com/learn/>.
 
 ## Updating
 
