@@ -538,7 +538,6 @@
 			// Append scripts
 			Symphony::Engine()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/assets/subsectionmanager.publish.js', 104, false);
 			Symphony::Engine()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/lib/resize/jquery.ba-resize.js', 105, false);
-			Symphony::Engine()->Page->addScriptToHead(URL . '/extensions/subsectionmanager/lib/jquery.migrate.js', 106, false);
 
 			// Setup field name
 			$fieldname = 'fields' . $fieldnamePrefix . '['. $this->get('element_name') . ']' . $fieldnamePostfix;

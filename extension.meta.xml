@@ -19,6 +19,9 @@
 		</author>
 	</authors>
 	<releases>
+		<release version="3.5.1" date="2013-07-23" min="2.3.3">
+			- Remove jQuery migration plugin
+		</release>
 		<release version="3.5" date="2013-07-23" min="2.3.3">
 			- Remove Subsection Tabs
 		</release>
