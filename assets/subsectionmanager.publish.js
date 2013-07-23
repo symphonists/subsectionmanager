@@ -199,7 +199,7 @@
 					init = true;
 
 				// Simplify UI
-				subsection.find('#header, #context').remove();
+				subsection.find('#header, #context, .drawer').remove();
 				
 				// Pre-populate first input with browser content
 				if(iframe.is('.new') && searchfield.val() != '') {
@@ -228,8 +228,8 @@
 				}
 				
 				// Resize item
-				subsection.find('#contents').on('resize.subsectionmanager', function(event, init) {
-					var height = subsection.find('#wrapper').outerHeight();
+				subsection.find('#contents > form').on('resize.subsectionmanager', function(event, init) {
+					var height = $(this).outerHeight();
 
 					if(init == true || (!iframe.is('.loading') && content.data('height') !== height && height !== 0)) {
 						resize(content, iframe, body, height);

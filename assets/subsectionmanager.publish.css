@@ -27,6 +27,7 @@
 	-ms-transition: opacity .25s ease-in;
 	-o-transition: opacity .25s ease-in;
 	transition: opacity .25s ease-in;
+	overflow: hidden;
 }
 
 .field-subsectionmanager .frame iframe.loading,
