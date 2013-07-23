@@ -254,6 +254,12 @@
 			var update = function(item) {
 				item.addClass('updating');
 
+				// Get entry
+				var entry = item.find('iframe').contents().find('form').attr('action').match(/(\d+)(?!.*\d)/);
+				if(entry != null) {
+					entry = entry[0];
+				}
+
 				// Load item data
 				$.ajax({
 					type: 'GET',
@@ -261,7 +267,7 @@
 					data: {
 						id: manager_id,
 						section: subsection_id,
-						entry: item.find('iframe').contents().find('form').attr('action').match(/(\d+)(?!.*\d)/)[0]
+						entry: entry
 					},
 					dataType: 'html',
 					success: function(result) {
