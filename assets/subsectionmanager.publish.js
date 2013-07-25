@@ -303,6 +303,7 @@
 				
 				// Set scroll position
 				body[0].scrollTop = 0;
+				body[0].querySelector('#wrapper').scrollTop = 0;
 				
 				// Set content height
 				content.data('height', height).animate({
