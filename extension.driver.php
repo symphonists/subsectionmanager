@@ -234,16 +234,7 @@
 					WHERE t2.`element_name` = '{$subsection}'
 					{$section}
 					AND t1.`field_id` = t2.`id`
-					LIMIT 1)
-				UNION
-				(SELECT t1.`subsection_id`, t1.field_id
-					FROM `tbl_fields_subsectiontabs` AS t1
-					INNER JOIN `tbl_fields` AS t2
-					WHERE t2.`element_name` = '{$subsection}'
-					{$section}
-					AND t1.`field_id` = t2.`id`
-					LIMIT 1)
-				LIMIT 1"
+					LIMIT 1)"
 			);
 
 			// Get subfield id
