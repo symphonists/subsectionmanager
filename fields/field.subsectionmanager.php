@@ -712,7 +712,7 @@
 				}
 
 				// Create item
-				$item = new XMLElement('item', null, array('id' => $entry_id, 'creation-date' => $entry->creationDate));
+				$item = new XMLElement('item', null, array('id' => $entry_id, 'creation-date' => $entry->get('creation_date')));
 				$subsection->appendChild($item);
 
 				// Process entry for Data Source
