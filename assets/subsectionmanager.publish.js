@@ -195,11 +195,12 @@
 					iframe = item.find('iframe'),
 					subsection = iframe.contents(),
 					body = subsection.find('body').addClass('inline subsection'),
-					form = body.find('form').removeClass('columns'),
+					form = body.find('form').removeAttr('style').removeClass('columns'),
 					init = true;
 
 				// Simplify UI
 				subsection.find('#header, #context, .drawer').remove();
+				subsection.find('.drawer-vertical-right').removeClass('drawer-vertical-right');
 				
 				// Pre-populate first input with browser content
 				if(iframe.is('.new') && searchfield.val() != '') {
