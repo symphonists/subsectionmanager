@@ -195,7 +195,7 @@
 					iframe = item.find('iframe'),
 					subsection = iframe.contents(),
 					body = subsection.find('body').addClass('inline subsection'),
-					form = body.find('form').removeClass('columns'),
+					form = body.find('form').removeAttr('style').removeClass('columns').parent().parent().removeClass(),
 					init = true;
 
 				// Simplify UI
