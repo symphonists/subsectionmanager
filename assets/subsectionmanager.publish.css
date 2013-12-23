@@ -48,6 +48,7 @@
 
 .field-subsectionmanager .constructable + .browser {
 	margin-top: -30px;
+	margin-right: 80px;
 }
 
 .field-subsectionmanager .browser.opened {
