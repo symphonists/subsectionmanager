@@ -230,7 +230,7 @@
 				
 				// Resize item
 				subsection.find('#contents > form').on('resize.subsectionmanager', function(event, init) {
-					var height = $(this).outerHeight();
+					var height = $(this).outerHeight(false);
 
 					if(init == true || (!iframe.is('.loading') && content.data('height') !== height && height !== 0)) {
 						resize(content, iframe, body, height);
@@ -504,8 +504,8 @@
 				// Show drop helper
 				textarea.addClass('droptarget');
 				dropper.css({
-					width: textarea.outerWidth(),
-					height: textarea.outerHeight(),
+					width: textarea.outerWidth(false),
+					height: textarea.outerHeight(false),
 					top: offset.top - 4,
 					left: offset.left - 4
 				}).fadeIn('fast');
@@ -598,7 +598,7 @@
 				
 				// Adjust to button width
 				if(controls.length > 0) {
-					browser.css('margin-right', controls.find('button').outerWidth() + 10);
+					browser.css('margin-right', controls.find('button').outerWidth(false) + 10);
 				}
 			}
 			
