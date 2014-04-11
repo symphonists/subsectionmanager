@@ -474,7 +474,7 @@
 			$settings = Symphony::Database()->insert($fields, 'tbl_fields_' . $this->handle());
 
 			// Remove old secion association
-			$this->removeSectionAssociation($id);
+			SectionManager::removeSectionAssociation($id);
 
 			// Save new section association
 			$association = $this->createSectionAssociation(null, $this->get('subsection_id'), $id, $id, false);
